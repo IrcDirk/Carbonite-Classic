@@ -1679,6 +1679,7 @@ function Nx.Map.Guide:UpdateTravelIcons (hideFac)
 					map:SetIconTip (icon, L["Connection to"] .. " " ..  Map.MapWorldInfo[con.EndMapId].Name)
 					local wx, wy = con.EndX, con.EndY
 					local icon = map:AddIconPt ("!POI", wx, wy, 0, nil, "Interface\\Icons\\Spell_Nature_FarSight")
+					map:SetIconTip (icon, L["Connection to"] .. " " ..  Map.MapWorldInfo[con.StartMapId].Name)
 				end
 			end
 		end

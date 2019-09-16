@@ -1,5 +1,5 @@
-## Interface: 80200
-## Title: Carbonite Maps @project-version@
+## Interface: 11302
+## Title: Carbonite Maps - Classic @project-version@
 ## Version: @project-version@
 ## Author: No one
 ## Notes: Released Under GPL

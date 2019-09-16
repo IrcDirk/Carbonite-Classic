@@ -1,5 +1,5 @@
-## Interface: 80200
-## Title: Carbonite Quest @project-version@
+## Interface: 11302
+## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One
 ## Notes: Released Under GPL

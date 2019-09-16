@@ -9844,7 +9844,7 @@ function Nx.Quest.Watch:UpdateList()
 			self.Win:SetTitle ("")
 		else
 			local _, i = GetNumQuestLogEntries()
-			self.Win:SetTitle (format ("          |cff40af40%d/25", i))
+			self.Win:SetTitle (format ("          |cff40af40%d/20", i))
 		end
 
 		self.FirstUpdate = nil

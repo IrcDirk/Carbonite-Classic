@@ -6869,11 +6869,11 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 		--Nx.Quest:RecordQuests()
 	elseif event == "QUEST_REMOVED" then
 		local questId = arg1
-		if QuestUtils_IsQuestWorldQuest (questId) then
+		--[[if QuestUtils_IsQuestWorldQuest (questId) then
 			SetSuperTrackedQuestID(0);
 			worldquestdb[questId] = nil
 			Nx.Quest.WQList:UpdateDB()
-		end
+		end]]--
 	elseif event == "QUEST_DETAIL" then		-- Happens when auto accept quest is given
 		--if QuestGetAutoAccept() and QuestIsFromAreaTrigger() then
 			Quest:RecordQuestAcceptOrFinish()

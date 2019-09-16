@@ -3530,16 +3530,16 @@ function Nx.Map:OnEvent (event, ...)
 		if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
 			map.Win.Frm:Hide()
 		end
-		map.Arch:Hide()
+		--map.Arch:Hide()
 		map.QuestWin:Hide()
-		map.Arch:SetParent(nil)
+		--map.Arch:SetParent(nil)
 		map.QuestWin:SetParent(nil)
-		map.Arch:ClearAllPoints()
+		--map.Arch:ClearAllPoints()
 		map.QuestWin:ClearAllPoints()
 	elseif event == "PLAYER_REGEN_ENABLED" then
-		map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
+		--map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
 		map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
-		map.Arch:Show()
+		--map.Arch:Show()
 		map.QuestWin:Hide()
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		-- DETECT EXIT INSTANCE

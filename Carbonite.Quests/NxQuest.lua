@@ -11945,7 +11945,7 @@ function Nx.Quest.WQList:UpdateDB(event, ...)
 		Nx.Quest.WQList:UnregisterEvent("QUEST_LOG_UPDATE")
 		--C_Timer.After(5, function() Nx.Quest.WQList:UpdateDB() end)
 	else
-		WQListUpdateDBTimer = C_Timer.NewTimer(IsInInstance() and 5 or 1, func)
+		--WQListUpdateDBTimer = C_Timer.NewTimer(IsInInstance() and 5 or 1, func)
 	end	
 end
 

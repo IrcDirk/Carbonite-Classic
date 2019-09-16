@@ -10556,9 +10556,9 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
 						end
 						self.Map:ClearTargets()
 						if not InCombatLockdown() then
-							local QMap = NxMap1.NxMap
+							--[[local QMap = NxMap1.NxMap
 							QMap.QuestWin:DrawNone();
-							QMap.QuestWin:Hide()
+							QMap.QuestWin:Hide()]]--
 						end
 					end
 				end

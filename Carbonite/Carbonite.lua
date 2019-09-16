@@ -140,7 +140,7 @@ Nx.GlowOn = false
 Nx.Whatsnew = {}
 Nx.Whatsnew.Categories = {"Maps"}
 Nx.Whatsnew.Maps = {
-  [1504562405] = {"Sept 4th 2017","","Node Data had to be reset due to a duplication bug.","You will need to re-import Gathermate Data if you were using it previously."}
+  [1568657164] = {"Sept 16th 2019","","This is Alpha version of Carbonite Classic, all bugs/issues please report to", "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."}
 }
 Nx.Whatsnew.WhichCat = 1
 Nx.Whatsnew.HasWhatsNew = nil
@@ -583,9 +583,9 @@ function Nx:OnInitialize()
 	end
 
 	if ver > 10000 and ver < 50000 then		-- Old?
-		local s = "|cffff2020" .. L["Carbonite requires v5.0 or higher"]
-		DEFAULT_CHAT_FRAME:AddMessage (s)
-		UIErrorsFrame:AddMessage (s)
+		--local s = "|cffff2020" .. L["Carbonite requires v5.0 or higher"]
+		--DEFAULT_CHAT_FRAME:AddMessage (s)
+		--UIErrorsFrame:AddMessage (s)
 		Nx.NXVerOld = true
 	end
 	Nx.TooltipLastDiffNumLines = 0

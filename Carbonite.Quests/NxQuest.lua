@@ -2847,10 +2847,10 @@ function Nx.Quest:Init()
 
 	local function func()
 --		Nx.prt ("QAccept")
-		if QuestGetAutoAccept() then
+		--[[if QuestGetAutoAccept() then
 --			Nx.prt ("auto")
 			Nx.Quest:RecordQuestAcceptOrFinish()
-		end
+		end]]--
 
 		QuestFrameDetailPanel_OnShow()
 
@@ -5048,9 +5048,9 @@ function Nx.Quest:Abandon (qIndex, qId)
 					
 					-- native blizz
 					AbandonQuest();
-					if ( QuestLogPopupDetailFrame:IsShown() ) then
-						HideUIPanel(QuestLogPopupDetailFrame);
-					end
+					--if ( QuestLogPopupDetailFrame:IsShown() ) then
+					--	HideUIPanel(QuestLogPopupDetailFrame);
+					--end
 					PlaySound(SOUNDKIT.IG_QUEST_LOG_ABANDON_QUEST);					
 					-- carb
 					if qId > 0 then
@@ -6847,7 +6847,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 		Nx.Quest.List:Refresh(event)
 		return
 	elseif event == "QUEST_ACCEPTED" then
-		if QuestGetAutoAccept() then
+		--[[if QuestGetAutoAccept() then
 			local auto = Nx.qdb.profile.Quest.AutoAccept
 			if IsShiftKeyDown() and IsControlKeyDown() then
 				auto = not auto
@@ -6856,7 +6856,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 				QuestFrameDetailPanel:Hide();
 				CloseQuest();
 			end
-		end
+		end]]--
 		if arg1 and Nx.qdb.profile.QuestWatch.AddNew then
 			local qId = Nx.Quest:GetQuestID (arg1)
 			local qStatus = Nx.Quest:GetQuest (qId)

@@ -6865,6 +6865,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 				Quest:PartyStartSend()
 			end
 		end
+		Nx.Quest:RecordQuests()
 		Nx.Quest.List:Refresh(event)
 		--Nx.Quest:RecordQuests()
 	elseif event == "QUEST_REMOVED" then

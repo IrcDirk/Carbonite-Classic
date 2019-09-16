@@ -514,7 +514,7 @@ function Nx.Travel:MakePath (tracking, srcMapId, srcX, srcY, dstMapId, dstX, dst
 									node1.NoSplit = true
 								end
 
-								local name = format (L["Connection: %s to %s"], GetMapNameByID(con.StartMapId), GetMapNameByID(con.EndMapId))
+								local name = format (L["Connection: %s to %s"], Map.MapWorldInfo[con.StartMapId].Name, Map.MapWorldInfo[con.EndMapId].Name)
 
 								local node = {}
 								node.NoSplit = true

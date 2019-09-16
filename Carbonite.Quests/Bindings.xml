@@ -1,0 +1,8 @@
+<Bindings>
+	<Binding name="NxTOGGLEWATCHMINI" header="CarboniteQuests" category="Carbonite">
+		Nx.NXWatchKeyToggleMini();
+	</Binding>
+	<Binding name="NxWATCHUSEITEM" category="Carbonite">
+		Nx.NXWatchKeyUseItem();
+	</Binding>
+</Bindings>

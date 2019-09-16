@@ -1,0 +1,17 @@
+## Interface: 80200
+## Title: Carbonite Quest @project-version@
+## Version: @project-version@
+## Author: No One
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXQuest
+## RequiredDeps: Carbonite 
+
+## X-WoWI-ID: 23404
+
+Locales\locales.xml
+Data\QuestCats.lua
+Data\QuestNPC.lua
+Data\QuestData.xml
+NxQuest.lua

@@ -5573,6 +5573,7 @@ function Nx.Quest.List:Open()
 	CarboniteQuest:RegisterEvent ("QUEST_REMOVED", "OnQuestUpdate")
 	CarboniteQuest:RegisterEvent ("QUEST_TURNED_IN", "OnQuestUpdate")
 	CarboniteQuest:RegisterEvent ("QUEST_DETAIL", "OnQuestUpdate")
+	--CarboniteQuest:RegisterEvent ("QUEST_WATCH_UPDATE", "OnQuestUpdate")
 	--CarboniteQuest:RegisterEvent ("SCENARIO_UPDATE", "OnQuestUpdate")
 	--CarboniteQuest:RegisterEvent ("SCENARIO_CRITERIA_UPDATE", "OnQuestUpdate")
 	CarboniteQuest:RegisterEvent ("WORLD_STATE_TIMER_START", "OnQuestUpdate")
@@ -6908,7 +6909,11 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 		Nx.Quest.Watch:Update()
 	end
 --	Nx.prtD ("OnQuestUpdate %s Done", event)
+
+	QuestWatchFrame:Hide()
 end
+
+hooksecurefunc("QuestWatch_Update", function (...) QuestWatchFrame:Hide(); end);
 
 Nx.Quest.TrackedAchievements = {}
 function CarboniteQuest:OnTrackedAchievementsUpdate (event, ...)

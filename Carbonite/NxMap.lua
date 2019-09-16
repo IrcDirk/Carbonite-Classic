@@ -1198,7 +1198,7 @@ function Nx.Map:Create (index)
 		end
 	end
 
-	--MapIShow = Nx:ScheduleTimer(func, 1, m)
+	MapIShow = Nx:ScheduleTimer(func, 1, m)
 
 	-- Show Quest Log - restore World tooltip
 	--[[hooksecurefunc ("ShowUIPanel", function(...) 
@@ -6837,8 +6837,8 @@ function Nx.Map:UpdateMiniFrames()
 --	local zname, zx, zy
 
 	local miniT, basex, basey = self:GetMiniInfo (mapId)
---	basex = basex + (self.DebugPXOff or 0)
---	basey = basey + (self.DebugPYOff or 0)
+	basex = basex + (self.DebugPXOff or 0)
+	basey = basey + (self.DebugPYOff or 0)
 	
 	if not miniT then
 		self:HideMiniFrames()

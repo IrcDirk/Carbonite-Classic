@@ -1130,11 +1130,11 @@ function Nx.Com:Send (chanId, msg, plName)
 
 		elseif chanId == "P" then	-- Party channel
 			if GetNumSubgroupMembers() > 0 then
-				if (IsPartyLFG()) then
-					self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
-				else
+				--if (IsPartyLFG()) then
+				--	self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
+				--else
 					self:SendChatMessageFixed (msg, "PARTY")
-				end
+				--end
 			end
 
 		else

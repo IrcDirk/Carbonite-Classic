@@ -1,0 +1,24 @@
+## Interface: 80200
+## Title: Carbonite Maps @project-version@
+## Version: @project-version@
+## Author: No one
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: CarbData
+
+## X-WoWI-ID: 12965
+
+Libs\libs.xml
+Locales\Locales.xml
+Carbonite.lua
+NxUI.lua
+NxOptions.lua
+NxCom.lua
+NxHUD.lua
+Data\data.xml
+NxMapData.lua
+NxMap.lua
+NxMapGuide.lua
+NxTravel.lua
+Carbonite.xml

@@ -1,0 +1,45 @@
+<Bindings>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGORIGINAL" header="Carbonite" category="Carbonite">
+		Nx.NXMapKeyTogOriginal();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGNORMMAX" category="Carbonite">
+		Nx.NXMapKeyTogNormalMax();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGNONEMAX" category="Carbonite">
+		Nx.NXMapKeyTogNoneMax();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGNONENORM" category="Carbonite">
+		Nx.NXMapKeyTogNoneNormal();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPSCALERESTORE" category="Carbonite">
+		Nx.NXMapKeyScaleRestore();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGMINIFULL" category="Carbonite">
+		Nx.NXMapKeyTogMiniFull();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGHERB" category="Carbonite">
+		Nx.NXMapKeyTogHerb();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPTOGMINE" category="Carbonite">
+		Nx.NXMapKeyTogMine();
+	</Binding>
+	<Binding name="NxMAPTOGTIMBER" category="Carbonite">
+		Nx.NXMapKeyTogTimber();
+	</Binding>
+	<!-- Carbonite\NxMapGuide.lua -->
+	<Binding name="NxTOGGLEGUIDE" category="Carbonite">
+		Nx.NXGuideKeyToggleShow();
+	</Binding>
+	<!-- Carbonite\NxMap.lua -->
+	<Binding name="NxMAPSKIPTARGET" category="Carbonite">
+		Nx.NXMapKeyTargetSkip();
+	</Binding>
+</Bindings>

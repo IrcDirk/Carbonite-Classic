@@ -1,0 +1,151 @@
+if ( GetLocale() ~= "koKR" ) then
+	return;
+end
+
+local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "koKR")
+if not L then return end
+
+-- General Nodes
+L["Artifact"] = "유물"
+L["Everfrost"] = "영원의 서리"
+L["Gas"] = "가스"
+L["Ooze Covered"] = "진흙으로 덮인"
+
+-- Herbs
+L["Adder's Tongue"] = "얼레지 꽃"
+L["Ancient Lichen"] = "고대 이끼"
+L["Arthas' Tears"] = "아서스의 눈물"
+L["Azshara's Veil"] = "아즈샤라의 신비"
+L["Black Lotus"] = "검은 연꽃"
+L["Blindweed"] = "실명초"
+L["Bloodthistle"] = "피 엉겅퀴"
+L["Briarthorn"] = "찔레가시"
+L["Bruiseweed"] = "생채기풀"
+L["Chameleon Lotus"] = true
+L["Cinderbloom"] = "재투성이꽃"
+L["Dragon's Teeth"] = "용 송곳니"
+L["Dreamfoil"] = "꿈풀"
+L["Dreaming Glory"] = "꿈초롱이"
+L["Earthroot"] = "뱀뿌리"
+L["Fadeleaf"] = "미명초잎"
+L["Felweed"] = "지옥풀"
+L["Firebloom"] = "화염초"
+L["Firethorn"] = "화염가시풀"
+L["Fireweed"] = true
+L["Flame Cap"] =  "불꽃송이"
+L["Fool's Cap"] = "멍텅구리 모자 버섯"
+L["Frost Lotus"] = "서리 연꽃"
+L["Frostweed"] = true
+L["Frozen Herb"] = "얼어붙은 약초"
+L["Ghost Mushroom"] = "유령버섯"
+L["Glowcap"] = "초롱버섯"
+L["Goldclover"] = "황금토끼풀"
+L["Golden Lotus"] = "황금 연꽃"
+L["Golden Sansam"] = "황금 산삼"
+L["Goldthorn"] = "황금가시"
+L["Gorgrond Flytrap"] = true
+L["Grave Moss"] = "무덤이끼"
+L["Green Tea Leaf"] = "녹차 잎"
+L["Gromsblood"] = "그롬의 피"
+L["Heartblossom"] = "심장꽃"
+L["Icecap"] = "얼음송이"
+L["Icethorn"] = "얼음가시"
+L["Khadgar's Whisker"] = "카드가의 수염"
+L["Kingsblood"] = "왕꽃잎풀"
+L["Lichbloom"] = "시체꽃"
+L["Liferoot"] = "생명의 뿌리"
+L["Mageroyal"] = "마법초"
+L["Mana Thistle"] = "마나 엉겅퀴"
+L["Mountain Silversage"] = "은초롱이"
+L["Nagrand Arrowbloom"] = true
+L["Netherbloom"] = "황천꽃"
+L["Netherdust Bush"] = "황천티끌 덤불"
+L["Nightmare Vine"] = "악몽의 덩굴"
+L["Peacebloom"] = "평온초"
+L["Purple Lotus"] = "보라 연꽃"
+L["Ragveil"] = "가림막이버섯"
+L["Rain Poppy"] = "빗방울 백일홍"
+L["Sha-Touched Herb"] = "샤에 물든 약초"
+L["Silkweed"] = "비단풀"
+L["Silverleaf"] = "은엽수 덤불"
+L["Snow Lily"] = "눈 백합"
+L["Sorrowmoss"] = "슬픔이끼"
+L["Starflower"] = true
+L["Stormvine"] = "폭풍덩굴"
+L["Stranglekelp"] = "갈래물풀"
+L["Sungrass"] = "태양풀"
+L["Talador Orchid"] = true
+L["Talandra's Rose"] = "탈란드라의 장미"
+L["Terocone"] = "테로열매"
+L["Tiger Lily"] = "참나리"
+L["Twilight Jasmine"] = "황혼의 말리꽃"
+L["Whiptail"] = "채찍꼬리"
+L["Wild Steelbloom"] = "야생 철쭉"
+L["Withered Herb"] = true
+-- Legion Herbs
+L["Aethril"] = true
+L["Dreamleaf"] = true
+L["Felwort"] = true
+L["Fjarnskaggl"] = true
+L["Foxflower"] = true
+L["Starlight Rose"] = true
+-- 7.3 Changes
+L["Astral Glory"] = true
+
+-- Mines
+L["Adamantite Deposit"] = "아다만타이트 광맥"
+L["Ancient Gem Vein"] = true
+L["Blackrock Deposit"] = true
+L["Cobalt Deposit"] = "코발트 광맥"
+L["Copper Vein"] = "구리 광맥"
+L["Dark Iron Deposit"] = "검은무쇠 광맥"
+L["Elementium Vein"] = "엘레멘티움 광맥"
+L["Fel Iron Deposit"] = "지옥무쇠 광맥"
+L["Ghost Iron Deposit"] = "유령무쇠 광맥"
+L["Gold Vein"] = "금 광맥"
+L["Incendicite Mineral Vein"] = "발연 광석 광맥"
+L["Indurium Mineral Vein"] = "인듀리움 광맥"
+L["Iron Deposit"] = "철 광맥"
+L["Khorium Vein"] = "코륨 광맥"
+L["Kyparite Deposit"] = "키파라이트 광맥"
+L["Large Obsidian Chunk"] = "풍부한 흑요암 광맥"
+L["Lesser Bloodstone Deposit"] = "저급 혈석 광맥"
+L["Mithril Deposit"] = "미스릴 광맥"
+L["Nethercite Deposit"] = "황천연 광맥"
+L["Obsidium Deposit"] = "풍부한 흑요암 광맥"
+L["Pyrite Deposit"] = "황철석 광맥"
+L["Rich Adamantite Deposit"] = "풍부한 아다만타이트 광맥"
+L["Rich Blackrock Deposit"] = true
+L["Rich Cobalt Deposit"] = "풍부한 코발트 광맥"
+L["Rich Elementium Vein"] = "풍부한 엘레멘티움 광맥"
+L["Rich Ghost Iron Deposit"] = "풍부한 유령무쇠 광맥"
+L["Rich Kyparite Deposit"] = "풍부한 키파라이트 광맥"
+L["Rich Obsidium Deposit"] = "풍부한 흑요암 광맥"
+L["Rich Pyrite Deposit"] = "풍부한 황철석 광맥"
+L["Rich Saronite Deposit"] = "풍부한 사로나이트 광맥"
+L["Rich Thorium Vein"] = "풍부한 토륨 광맥"
+L["Rich Trillium Vein"] = "풍부한 트릴리움 광맥"
+L["Rich True Iron Deposit"] = true
+L["Saronite Deposit"] = "사로나이트 광맥"
+L["Silver Vein"] = "은 광맥"
+L["Small Obsidian Chunk"] = "작은 흑요암 광맥"
+L["Small Thorium Vein"] = "작은 토륨 광맥"
+L["Smoldering True Iron Deposit"] = true
+L["Thorium Vein"] = "토륨 광맥" -- Used for Ooze covered even tho it's not a real node
+L["Tin Vein"] = "주석 광맥"
+L["Titanium Vein"] = "티타늄 광맥"
+L["Trillium Vein"] = "트릴리움 광맥"
+L["True Iron Deposit"] = true
+L["Truesilver Deposit"] = "진은 광맥"
+--Legion Mines
+L["Felslate Deposit"] = true
+L["Felslate Seam"] = true
+L["Living Felslate"] = true
+L["Leystone Deposit"] = true
+L["Leystone Seam"] = true
+L["Living Leystone"] = true
+L["Infernal Brimstone"] = true
+-- 7.3 change
+L["Empyrium Deposit"] = true
+L["Rich Empyrium Deposit"] = true
+L["Empyrium Seam"] = true

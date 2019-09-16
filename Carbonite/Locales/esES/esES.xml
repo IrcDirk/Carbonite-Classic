@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Include file="Main.lua" />
+	<Include file="HarvestNodes.lua" />
+	<Include file="Com.lua" />
+	<Include file="Map.lua" />
+	<Include file="Zones.lua" />
+	<Include file="Guide.lua" />
+	<Include file="FlightMasters.lua" />
+	<Include file="Options.lua" />
+	<Include file="Bindings.lua"/>
+</Ui>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/"
+xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+
+	<Script file="LibStub\LibStub.lua" />
+	<Include file="CallbackHandler-1.0\CallbackHandler-1.0.xml" />
+
+	<!--Ace3 Libraries-->
+	<Include file="AceAddon-3.0\AceAddon-3.0.xml" />
+	<Include file="AceBucket-3.0\AceBucket-3.0.xml" />
+	<Include file="AceComm-3.0\AceComm-3.0.xml" />
+	<Include file="AceConsole-3.0\AceConsole-3.0.xml" />
+	<Include file="AceDB-3.0\AceDB-3.0.xml" />
+	<Include file="AceDBOptions-3.0\AceDBOptions-3.0.xml" />
+	<Include file="AceEvent-3.0\AceEvent-3.0.xml" />
+	<Include file="AceGUI-3.0\AceGUI-3.0.xml" />
+	<Include file="AceHook-3.0\AceHook-3.0.xml" />
+	<Include file="AceLocale-3.0\AceLocale-3.0.xml" />
+	<Include file="AceSerializer-3.0\AceSerializer-3.0.xml" />
+	<Include file="AceTimer-3.0\AceTimer-3.0.xml" />
+	<Include file="AceConfig-3.0\AceConfig-3.0.xml" />
+	
+		<!--Other Libraries-->
+	<Include file="LibDataBroker-1.1\LibDataBroker-1.1.lua" />
+	<Include file="LibSharedMedia-3.0\lib.xml"/>
+	<Include file="LibCompress-1.0\LibCompress.xml"/>
+	<Include file="LibGuildBankComm-1.0\LibGuildBankComm-1.0.xml"/>
+</Ui>

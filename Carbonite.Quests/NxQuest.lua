@@ -6867,6 +6867,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 		end
 		Nx.Quest:RecordQuests()
 		Nx.Quest.List:Refresh(event)
+		Nx.Quest.List:Refresh()
 		--Nx.Quest:RecordQuests()
 	elseif event == "QUEST_REMOVED" then
 		local questId = arg1

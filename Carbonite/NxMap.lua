@@ -10520,7 +10520,7 @@ end
 
 function Nx.Map.Dock:MinimapDetachFrms()
 
-	if Nx.Tick % self.UpdateMod ~= 0 then
+	if Nx.Map:GetMap (1).Frm.NxMap.Tick % self.UpdateMod ~= 0 then
 		return
 	end
 

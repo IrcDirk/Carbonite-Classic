@@ -6867,7 +6867,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 			end
 		end
 		Nx.Quest:RecordQuests()
-		Nx.Quest.List:Refresh(event)
+		--Nx.Quest.List:Refresh(event)
 		Nx.Quest.List:Refresh()
 		--Nx.Quest:RecordQuests()
 	elseif event == "QUEST_REMOVED" then
@@ -7880,7 +7880,7 @@ function Nx.Quest:UpdateIcons (map)
 
 	local tracking = self.IconTracking
 
-	if Nx.Tick % 10 == 0 then
+	if Nx.Map:GetMap (1).Frm.NxMap.Tick % 10 == 0 then
 
 --		tracking = {}		-- garbage creator
 		wipe (tracking)

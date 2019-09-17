@@ -2859,11 +2859,7 @@ function Nx.Quest:Init()
 			auto = not auto
 		end
 		if auto then
-			if not QuestGetAutoAccept() then
-				AcceptQuest()
-			else
-				AcknowledgeAutoAcceptQuest()
-			end
+			AcceptQuest()
 		end
 	end
 

@@ -3363,7 +3363,7 @@ function Nx.Warehouse:RecordCharacterSkills()
 	-- Scan professions
 
 --	local prof_1, prof_2, archaeology, fishing, cooking, firstaid = GetProfessions()		-- Indices for GetProfessionInfo
-	local proI = { GetProfessions() }		-- Indices for GetProfessionInfo
+	local proI = {} --{ GetProfessions() }		-- Indices for GetProfessionInfo
 
 	for _, i in pairs (proI) do
 

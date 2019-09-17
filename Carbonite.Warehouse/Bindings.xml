@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="NxTOGGLEWAREHOUSE" header="CarboniteWarehouse" category="Carbonite" >
+		Nx.NXWarehouseKeyToggleShow();
+	</Binding>
+</Bindings>

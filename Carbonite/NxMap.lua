@@ -4737,7 +4737,7 @@ function Nx.Map:Update (elapsed)
 	--local poiNum = 0 --GetNumMapLandmarks()
 	if not IsAltKeyDown() then
 		--for i = 1, poiNum do
-		local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
+		local tPOIs = {}--C_TaxiMap.GetTaxiNodesForMap(rid)
 		local pPOIs = {}--C_PetInfo.GetPetTamersForMap(rid)
 		local dPOIs = {}--C_ResearchInfo.GetDigSitesForMap(rid)
 		

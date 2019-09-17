@@ -5021,7 +5021,7 @@ function Nx.Map:Update (elapsed)
 
 			self.TrackName = "Corpse"
 
-			local x, y = self:GetWorldPos (mapId, cX * 100, cY * 100)
+			local x, y = self:GetWorldPos (C_Map.GetBestMapForUnit("player"), cX * 100, cY * 100)
 			self:DrawTracking (plX, plY, x, y, false, "D")
 
 			local f = self:GetIcon (1)
@@ -5030,7 +5030,7 @@ function Nx.Map:Update (elapsed)
 			f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
 			self:ClipFrameZ (f, cX * 100, cY * 100, 16, 16, 0)
 			-- Override clipping (FIX maybe?)
-			f.texture:SetTexCoord (.56640625, .632812, .001953125, .03515625)	-- 16x16 grid (.0625 uv size)
+			f.texture:SetTexCoord (0.875, 1.0, 0.0, 0.125)	-- 16x16 grid (.0625 uv size)
 
 			self.Level = self.Level + 2
 		end

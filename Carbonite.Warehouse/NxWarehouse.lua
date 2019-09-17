@@ -3463,7 +3463,7 @@ function Nx.Warehouse.OnTrade_skill_update()
 --		Nx.prt ("OnTrade_skill_update")
 --		Nx.prt ("#skills %s", GetNumTradeSkills())
 
-		WarehouseRecProf = Nx:ScheduleTimer(self.RecordProfession,0,self)
+-- #		WarehouseRecProf = Nx:ScheduleTimer(self.RecordProfession,0,self)
 	end
 end
 

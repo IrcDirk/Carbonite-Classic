@@ -3226,7 +3226,10 @@ function Nx.Warehouse:CaptureInvDurabilityTimer()
 
 	ch["DurPercent"] = durAll / durAllMax * 100
 	ch["DurLowPercent"] = durLow * 100
-
+	
+	ch["DurPercent"] = ch["DurPercent"] == math.huge and 0 or ch["DurPercent"]
+	ch["DurLowPercent"] = ch["DurLowPercent"] == math.huge and 0 or ch["DurLowPercent"]
+	
 --	Nx.prt ("GetDur %s", GetTime() - tm)
 
 --PAIDE!

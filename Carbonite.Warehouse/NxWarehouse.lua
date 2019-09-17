@@ -2970,7 +2970,7 @@ end
 function Nx.Warehouse:ScanRBank()
 	local ch = Nx.Warehouse.CurCharacter
 	inv = {}
-	self:AddBag (REAGENTBANK_CONTAINER, true, inv)
+	--self:AddBag (REAGENTBANK_CONTAINER, true, inv)
 	if next (inv) then
 		ch["WareRBank"] = inv
 	end

@@ -30213,11 +30213,11 @@ function Nx:ADDON_LOADED (event, arg1, ...)
 		},
 	}
 	
-	CarbMigr = { FLIGHT_DATA = {} }
+	CarbMigr = { FLIGHT_DATA = {}, INNKEEPERS = {}, BANKERS = {}, AUCTIONEERS = {}, MAILBOXES = {} }
 	
 	for mid, n in pairs(nodes) do
 		for coords, npc in pairs(n) do
-			if npc.category == "flightmasters" then 
+			if npc.category == "innkeepers" then 
 				local x = floor(coords / 10000) / 100
 				local y = (coords % 10000) / 100
 				
@@ -30226,6 +30226,32 @@ function Nx:ADDON_LOADED (event, arg1, ...)
 				if npc.faction == "Horde" then side = 2 end
 			
 				CarbMigr.FLIGHT_DATA[""..side..","..mid..","..x..","..y..""] = "|"..npc.name..", "..Nx.Map.MapWorldInfo[mid].Name.."|"
+			end
+			
+			if npc.category == "innkeepers" or npc.category == "bankers" or npc.category == "auctioneers" or npc.category == "mailboxes" then 
+				local x = floor(coords / 10000) / 100
+				local y = (coords % 10000) / 100
+				
+				local side = 0
+				if npc.faction == "Alliance" then side = 1 end
+				if npc.faction == "Horde" then side = 2 end
+				
+				if npc.category == "innkeepers" then
+					CarbMigr.INNKEEPERS[mid] = (CarbMigr.INNKEEPERS[mid] and CarbMigr.INNKEEPERS[mid].."|" or "") ..side..","..x..","..y
+				end
+				
+				if npc.category == "bankers" then
+					CarbMigr.BANKERS[mid] = (CarbMigr.BANKERS[mid] and CarbMigr.BANKERS[mid].."|" or "") ..side..","..x..","..y
+				end
+				
+				if npc.category == "auctioneers" then
+					CarbMigr.AUCTIONEERS[mid] = (CarbMigr.AUCTIONEERS[mid] and CarbMigr.AUCTIONEERS[mid].."|" or "") ..side..","..x..","..y
+				end
+				
+				if npc.category == "mailboxes" then
+					CarbMigr.MAILBOXES[mid] = (CarbMigr.MAILBOXES[mid] and CarbMigr.MAILBOXES[mid].."|" or "") ..side..","..x..","..y
+				end
+				
 			end
 		end
 	end

@@ -404,7 +404,7 @@ function Nx.ModQuests:Data4()
 		[215] = {
 			Quest = [[Jungle Secrets|1|33|30|200|0]],
 			Start = "1265|1434|32|38.00|3.40",
-			End = "1265|1434|32|38.00|3.00",
+			End = "1091|1434|32|38.00|3.00",
 		},
 		[222] = {
 			Quest = [[Worgen in the Woods|1|31|23|223|0]],
@@ -450,7 +450,7 @@ function Nx.ModQuests:Data4()
 		[223] = {
 			Quest = [[Worgen in the Woods|1|31|23|0|0]],
 			Start = "1262|1431|32|75.20|48.00",
-			End = "1262|1431|32|75.20|48.80",
+			End = "933|1431|32|75.20|48.80",
 		},
 		[225] = {
 			Quest = [[The Weathered Grave|1|35|28|227|0]],
@@ -481,7 +481,7 @@ function Nx.ModQuests:Data4()
 		[229] = {
 			Quest = [[The Daughter Who Lived|1|35|28|231|0]],
 			Start = "1259|1431|32|73.60|46.80",
-			End = "1259|1431|32|74.60|46.00",
+			End = "1256|1431|32|74.60|46.00",
 		},
 		[231] = {
 			Quest = [[A Daughter's Love|1|35|28|0|0]],
@@ -534,7 +534,7 @@ function Nx.ModQuests:Data4()
 		[328] = {
 			Quest = [[The Hidden Key|1|37|30|329|0]],
 			Start = "1211|1434|32|43.70|9.40",
-			End = "1211|1434|32|49.60|7.60",
+			End = "1153|1434|32|49.60|7.60",
 		},
 		[329] = {
 			Quest = [[The Spy Revealed!|1|37|30|330|0]],
@@ -549,7 +549,7 @@ function Nx.ModQuests:Data4()
 		[331] = {
 			Quest = [[Report to Doren|1|37|30|0|0]],
 			Start = "1210|1434|32|37.60|3.40",
-			End = "1210|1434|32|38.00|3.00",
+			End = "1091|1434|32|38.00|3.00",
 		},
 		[338] = {
 			Quest = [[The Green Hills of Stranglethorn|0|40|30|0|0]],
@@ -1293,12 +1293,12 @@ function Nx.ModQuests:Data4()
 		[506] = {
 			Quest = [[Blackmoore's Legacy|2|36|29|507|0]],
 			Start = "1122|1416|32|60.00|43.80",
-			End = "1122|1424|32|63.20|20.60",
+			End = "1113|1424|32|63.20|20.60",
 		},
 		[508] = {
 			Quest = [[Taretha's Gift|2|40|29|0|0]],
 			Start = "1121|1416|32|39.20|14.40",
-			End = "1121|1424|32|63.20|20.60",
+			End = "1113|1424|32|63.20|20.60",
 		},
 		[510] = {
 			Quest = [[Foreboding Plans|1|34|26|512|0]],
@@ -1648,7 +1648,7 @@ function Nx.ModQuests:Data4()
 		[554] = {
 			Quest = [[Stormpike's Deciphering|1|40|28|0|0]],
 			Start = "1103|1424|32|50.40|57.00",
-			End = "1103|1455|32|74.40|12.00",
+			End = "671|1455|32|74.40|12.00",
 		},
 		[555] = {
 			Quest = [[Soothing Turtle Bisque|1|31|28|0|0]],
@@ -1744,7 +1744,7 @@ function Nx.ModQuests:Data4()
 		[561] = {
 			Quest = [[Farren's Proof|1|32|25|562|0]],
 			Start = "1100|1424|32|49.60|58.60",
-			End = "1100|1424|32|51.40|58.60",
+			End = "1098|1424|32|51.40|58.60",
 		},
 		[562] = {
 			Quest = [[Stormwind Ho!|1|32|25|563|0]],
@@ -2220,7 +2220,7 @@ function Nx.ModQuests:Data4()
 		[603] = {
 			Quest = [[Ansirem's Key|1|37|32|610|0]],
 			Start = "1081|1416|32|18.80|78.60",
-			End = "1081|1434|32|27.20|77.60",
+			End = "1079|1434|32|27.20|77.60",
 		},
 		[605] = {
 			Quest = [[Singing Blue Shards|0|35|30|600|0]],
@@ -2243,7 +2243,7 @@ function Nx.ModQuests:Data4()
 		[611] = {
 			Quest = [[The Curse of the Tides|1|40|32|0|0]],
 			Start = "1079|1434|32|27.20|77.60",
-			End = "1079|1434|32|27.20|76.80",
+			End = "882|1434|32|27.20|76.80",
 			Objectives = {
 				[1] = {
 					"nil|1434|35|20.16|20.16|38.48|9.62",
@@ -2317,7 +2317,7 @@ function Nx.ModQuests:Data4()
 		[632] = {
 			Quest = [[The Thandol Span|1|31|28|633|0]],
 			Start = "1070|1417|32|45.60|93.00",
-			End = "1070|1437|32|50.00|18.40",
+			End = "1069|1437|32|50.00|18.40",
 		},
 		[633] = {
 			Quest = [[The Thandol Span|1|31|28|634|0]],
@@ -2327,7 +2327,7 @@ function Nx.ModQuests:Data4()
 		[634] = {
 			Quest = [[Plea To The Alliance|1|31|28|0|0]],
 			Start = "1069|1437|32|50.00|18.40",
-			End = "1069|1417|32|45.80|47.40",
+			End = "1046|1417|32|45.80|47.40",
 		},
 		[635] = {
 			Quest = [[Crystal in the Mountains|0|35|30|0|0]],
@@ -2410,7 +2410,7 @@ function Nx.ModQuests:Data4()
 		[651] = {
 			Quest = [[Stones of Binding|0|38|30|652|0]],
 			Start = "1062|1417|32|84.30|30.90",
-			End = "1062|1417|32|36.10|57.40",
+			End = "1061|1417|32|36.10|57.40",
 			Objectives = {
 				[1] = {
 					"nil|1417|35|24.96|28.80|19.24|9.62",
@@ -2553,7 +2553,7 @@ function Nx.ModQuests:Data4()
 		[663] = {
 			Quest = [[Land Ho!|0|35|35|0|0]],
 			Start = "1056|1417|32|31.60|82.60",
-			End = "1056|1417|32|32.20|81.40",
+			End = "1052|1417|32|32.20|81.40",
 		},
 		[664] = {
 			Quest = [[Drowned Sorrows|0|40|35|0|0]],
@@ -2590,7 +2590,7 @@ function Nx.ModQuests:Data4()
 		[665] = {
 			Quest = [[Sunken Treasure|0|40|35|666|0]],
 			Start = "1054|1417|32|33.80|80.60",
-			End = "1054|1417|32|33.80|80.40",
+			End = "1053|1417|32|33.80|80.40",
 		},
 		[666] = {
 			Quest = [[Sunken Treasure|0|40|35|668|0]],
@@ -2612,7 +2612,7 @@ function Nx.ModQuests:Data4()
 		[668] = {
 			Quest = [[Sunken Treasure|0|40|35|669|0]],
 			Start = "1053|1417|32|33.80|80.40",
-			End = "1053|1417|32|32.20|81.40",
+			End = "1052|1417|32|32.20|81.40",
 		},
 		[669] = {
 			Quest = [[Sunken Treasure|0|40|35|670|0]],
@@ -2744,7 +2744,7 @@ function Nx.ModQuests:Data4()
 		[676] = {
 			Quest = [[The Hammer May Fall|2|32|30|677|0]],
 			Start = "1050|1424|32|61.80|19.60",
-			End = "1050|1417|32|74.20|33.80",
+			End = "1049|1417|32|74.20|33.80",
 			Objectives = {
 				[1] = {
 					"nil|1417|35|34.56|40.32|9.62|9.62",
@@ -3167,7 +3167,7 @@ function Nx.ModQuests:Data4()
 		[695] = {
 			Quest = [[An Apprentice's Enchantment|1|39|30|696|0]],
 			Start = "1042|1417|32|46.20|47.60",
-			End = "1042|1417|32|46.60|46.80",
+			End = "1040|1417|32|46.60|46.80",
 		},
 		[696] = {
 			Quest = [[Attack on the Tower|1|39|30|697|0]],
@@ -3304,7 +3304,7 @@ function Nx.ModQuests:Data4()
 		[700] = {
 			Quest = [[A King's Tribute|1|31|25|0|0]],
 			Start = "1039|1455|32|38.60|87.00",
-			End = "1039|1455|32|39.40|55.80",
+			End = "16|1455|32|39.40|55.80",
 		},
 		[701] = {
 			Quest = [[Guile of the Raptor|2|37|29|702|0]],
@@ -3614,7 +3614,7 @@ function Nx.ModQuests:Data4()
 		[720] = {
 			Quest = [[A Sign of Hope|1|35|35|721|0]],
 			Start = "1038|1418|32|53.00|34.10",
-			End = "1038|1418|32|53.40|43.20",
+			End = "1037|1418|32|53.40|43.20",
 		},
 		[721] = {
 			Quest = [[A Sign of Hope|1|35|35|722|0]],
@@ -3630,7 +3630,7 @@ function Nx.ModQuests:Data4()
 		[724] = {
 			Quest = [[Prospect of Faith|1|40|35|0|0]],
 			Start = "1037|1418|32|53.40|43.20",
-			End = "1037|1455|32|77.20|11.80",
+			End = "115|1455|32|77.20|11.80",
 		},
 		[725] = {
 			Quest = [[Passing Word of a Threat|1|40|35|726|0]],
@@ -3769,7 +3769,7 @@ function Nx.ModQuests:Data4()
 		[1031] = {
 			Quest = [[The Branch of Cenarius|1|32|26|0|0]],
 			Start = "941|1440|32|78.20|44.80",
-			End = "941|1440|32|21.80|53.20",
+			End = "940|1440|32|21.80|53.20",
 			Objectives = {
 				[1] = {
 					"nil|1440|35|77.76|40.32|9.62|9.62",
@@ -4209,12 +4209,12 @@ function Nx.ModQuests:Data4()
 		[1180] = {
 			Quest = [[Goblin Sponsorship|0|37|29|1181|0]],
 			Start = "884|1413|32|62.60|36.20",
-			End = "884|1434|32|26.20|73.40",
+			End = "883|1434|32|26.20|73.40",
 		},
 		[1181] = {
 			Quest = [[Goblin Sponsorship|0|37|29|1182|0]],
 			Start = "883|1434|32|26.20|73.40",
-			End = "883|1434|32|27.20|76.80",
+			End = "882|1434|32|27.20|76.80",
 		},
 		[1182] = {
 			Quest = [[Goblin Sponsorship|0|37|29|1183|0]],
@@ -4229,12 +4229,12 @@ function Nx.ModQuests:Data4()
 		[1183] = {
 			Quest = [[Goblin Sponsorship|0|37|29|1186|0]],
 			Start = "882|1434|32|27.20|76.80",
-			End = "882|1441|32|80.00|75.80",
+			End = "877|1441|32|80.00|75.80",
 		},
 		[1184] = {
 			Quest = [[Parts of the Swarm|2|35|28|0|0]],
 			Start = "881|1413|32|51.00|29.60",
-			End = "881|1454|32|75.00|34.00",
+			End = "520|1454|32|75.00|34.00",
 		},
 		[1186] = {
 			Quest = [[The Eighteenth Pilot|0|37|29|1187|0]],
@@ -4376,7 +4376,7 @@ function Nx.ModQuests:Data4()
 		[1220] = {
 			Quest = [[Captain Vimes|1|35|30|0|0]],
 			Start = "868|1445|32|68.00|48.00",
-			End = "868|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1222] = {
 			Quest = [[Stinky's Escape|1|37|30|0|0]],
@@ -4391,7 +4391,7 @@ function Nx.ModQuests:Data4()
 		[1239] = {
 			Quest = [[The Severed Head|2|35|30|1240|0]],
 			Start = "867|1445|32|55.40|26.00",
-			End = "867|1445|32|35.20|30.60",
+			End = "859|1445|32|35.20|30.60",
 		},
 		[1240] = {
 			Quest = [[The Troll Witchdoctor|2|35|30|0|0]],
@@ -4421,7 +4421,7 @@ function Nx.ModQuests:Data4()
 		[1250] = {
 			Quest = [[The Missing Diplomat|1|33|28|1264|0]],
 			Start = "863|1437|32|10.60|60.40",
-			End = "863|1437|32|10.60|60.60",
+			End = "858|1437|32|10.60|60.60",
 		},
 		[1251] = {
 			Quest = [[The Black Shield|2|35|30|1321|0]],
@@ -4436,7 +4436,7 @@ function Nx.ModQuests:Data4()
 		[1253] = {
 			Quest = [[The Black Shield|1|35|30|1319|0]],
 			Start = "862|1445|32|29.60|48.50",
-			End = "862|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1258] = {
 			Quest = [[... and Bugs|1|40|33|0|0]],
@@ -4517,22 +4517,22 @@ function Nx.ModQuests:Data4()
 		[1261] = {
 			Quest = [[Marg Speaks|2|40|30|1262|0]],
 			Start = "860|1434|32|32.20|27.70",
-			End = "860|1445|32|35.20|30.60",
+			End = "859|1445|32|35.20|30.60",
 		},
 		[1262] = {
 			Quest = [[Report to Zor|2|40|30|0|0]],
 			Start = "859|1445|32|35.20|30.60",
-			End = "859|1454|32|39.00|38.00",
+			End = "87|1454|32|39.00|38.00",
 		},
 		[1264] = {
 			Quest = [[The Missing Diplomat|1|33|28|1265|0]],
 			Start = "858|1437|32|10.60|60.60",
-			End = "858|1445|32|68.00|48.60",
+			End = "857|1445|32|68.00|48.60",
 		},
 		[1265] = {
 			Quest = [[The Missing Diplomat|1|35|28|1266|0]],
 			Start = "857|1445|32|68.00|48.60",
-			End = "857|1445|32|59.60|41.20",
+			End = "109|1445|32|59.60|41.20",
 		},
 		[1266] = {
 			Quest = [[The Missing Diplomat|1|36|28|0|0]],
@@ -4552,12 +4552,12 @@ function Nx.ModQuests:Data4()
 		[1269] = {
 			Quest = [[Lieutenant Paval Reethe|2|37|30|0|0]],
 			Start = "855|1445|32|29.80|48.20",
-			End = "855|1445|32|36.40|31.80",
+			End = "839|1445|32|36.40|31.80",
 		},
 		[1270] = {
 			Quest = [[Stinky's Escape|2|37|30|0|0]],
 			Start = "854|1445|32|46.80|17.60",
-			End = "854|1413|32|62.40|37.60",
+			End = "790|1413|32|62.40|37.60",
 		},
 		[1271] = {
 			Quest = [[Feast at the Blue Recluse|1|37|30|0|0]],
@@ -4567,7 +4567,7 @@ function Nx.ModQuests:Data4()
 		[1273] = {
 			Quest = [[Questioning Reethe|2|37|30|0|0]],
 			Start = "852|1445|32|40.80|36.60",
-			End = "852|1445|32|36.40|31.80",
+			End = "839|1445|32|36.40|31.80",
 		},
 		[1276] = {
 			Quest = [[The Black Shield|2|37|30|0|0]],
@@ -4577,17 +4577,17 @@ function Nx.ModQuests:Data4()
 		[1282] = {
 			Quest = [[They Call Him Smiling Jim|1|35|30|0|0]],
 			Start = "848|1445|32|66.00|46.00",
-			End = "848|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1284] = {
 			Quest = [[Suspicious Hoofprints|1|35|30|0|0]],
 			Start = "847|1445|32|29.70|47.70",
-			End = "847|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1285] = {
 			Quest = [[Daelin's Men|1|38|30|0|0]],
 			Start = "846|1445|32|68.00|48.00",
-			End = "846|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1286] = {
 			Quest = [[The Deserters|0|38|30|1287|0]],
@@ -4597,12 +4597,12 @@ function Nx.ModQuests:Data4()
 		[1287] = {
 			Quest = [[The Deserters|0|38|30|0|0]],
 			Start = "845|1445|32|36.00|54.00",
-			End = "845|1445|32|68.00|48.60",
+			End = "841|1445|32|68.00|48.60",
 		},
 		[1301] = {
 			Quest = [[James Hyal|1|35|30|1302|0]],
 			Start = "844|1453|32|40.40|91.60",
-			End = "844|1437|32|10.80|60.40",
+			End = "842|1437|32|10.80|60.40",
 		},
 		[1302] = {
 			Quest = [[James Hyal|1|35|30|0|0]],
@@ -4637,7 +4637,7 @@ function Nx.ModQuests:Data4()
 		[1324] = {
 			Quest = [[The Missing Diplomat|1|38|28|0|0]],
 			Start = "837|1445|32|46.60|23.60",
-			End = "837|1445|32|59.60|41.20",
+			End = "109|1445|32|59.60|41.20",
 		},
 		[1361] = {
 			Quest = [[Regthar Deathgate|2|32|30|1362|0]],
@@ -4761,7 +4761,7 @@ function Nx.ModQuests:Data4()
 		[1368] = {
 			Quest = [[Gelkis Alliance|2|33|30|0|0]],
 			Start = "830|1443|32|56.20|59.60",
-			End = "830|1443|32|36.20|79.20",
+			End = "829|1443|32|36.20|79.20",
 		},
 		[1369] = {
 			Quest = [[Broken Tears|0|33|30|1371|0]],
@@ -4863,7 +4863,7 @@ function Nx.ModQuests:Data4()
 		[1385] = {
 			Quest = [[Brutal Politics|1|35|30|0|0]],
 			Start = "828|1443|32|66.60|11.00",
-			End = "828|1443|32|74.80|68.00",
+			End = "827|1443|32|74.80|68.00",
 		},
 		[1386] = {
 			Quest = [[Assault on the Kolkar|1|32|30|0|0]],
@@ -5375,7 +5375,7 @@ function Nx.ModQuests:Data4()
 		[1440] = {
 			Quest = [[Return to Vahlarriel|1|33|30|0|0]],
 			Start = "809|1443|32|54.80|26.20",
-			End = "809|1443|32|66.40|11.80",
+			End = "803|1443|32|66.40|11.80",
 		},
 		[1447] = {
 			Quest = [[The Missing Diplomat|1|31|28|1247|0]],
@@ -5395,7 +5395,7 @@ function Nx.ModQuests:Data4()
 		[1455] = {
 			Quest = [[The Karnitol Shipwreck|1|39|30|1456|0]],
 			Start = "804|1443|32|36.10|30.50",
-			End = "804|1443|32|66.20|9.60",
+			End = "800|1443|32|66.20|9.60",
 		},
 		[1456] = {
 			Quest = [[The Karnitol Shipwreck|1|39|30|1457|0]],
@@ -5621,7 +5621,7 @@ function Nx.ModQuests:Data4()
 		[1484] = {
 			Quest = [[The Corrupter|2|33|25|0|0]],
 			Start = "792|1443|32|52.20|53.60",
-			End = "792|1443|32|52.60|54.20",
+			End = "791|1443|32|52.60|54.20",
 		},
 		[1488] = {
 			Quest = [[The Corrupter|2|40|25|0|0]],
@@ -5865,7 +5865,7 @@ function Nx.ModQuests:Data4()
 		[1951] = {
 			Quest = [[Rituals of Power|0|40|30|0|0]],
 			Start = "707|1441|32|78.20|75.80",
-			End = "707|1445|32|46.00|57.00",
+			End = "371|1445|32|46.00|57.00",
 		},
 		[1952] = {
 			Quest = [[Mage's Wand|0|40|30|0|0]],
@@ -6054,7 +6054,7 @@ function Nx.ModQuests:Data4()
 		[2745] = {
 			Quest = [[Infiltrating the Castle|1|31|16|2746|0]],
 			Start = "645|1453|32|60.00|64.40",
-			End = "645|1453|32|69.00|14.60",
+			End = "644|1453|32|69.00|14.60",
 		},
 		[2746] = {
 			Quest = [[Items of Some Consequence|1|31|16|0|0]],
@@ -6137,7 +6137,7 @@ function Nx.ModQuests:Data4()
 		[2842] = {
 			Quest = [[Chief Engineer Scooty|2|35|20|2843|0]],
 			Start = "632|1454|32|75.60|25.20",
-			End = "632|1434|32|27.60|77.40",
+			End = "618|1434|32|27.60|77.40",
 		},
 		[2843] = {
 			Quest = [[Gnomer-gooooone!|2|35|20|0|0]],
@@ -6598,12 +6598,12 @@ function Nx.ModQuests:Data4()
 		[4962] = {
 			Quest = [[Shard of a Felhound|0|40|35|0|0]],
 			Start = "378|1413|32|62.60|35.20",
-			End = "378|1413|32|62.40|35.40",
+			End = "372|1413|32|62.40|35.40",
 		},
 		[4963] = {
 			Quest = [[Shard of an Infernal|0|40|35|0|0]],
 			Start = "377|1413|32|62.60|35.20",
-			End = "377|1413|32|62.40|35.40",
+			End = "372|1413|32|62.40|35.40",
 		},
 		[4964] = {
 			Quest = [[The Completed Orb of Dar'Orahil|0|40|35|0|0]],
@@ -6618,17 +6618,17 @@ function Nx.ModQuests:Data4()
 		[4967] = {
 			Quest = [[Knowledge of the Orb of Orahil|2|35|35|0|0]],
 			Start = "375|1454|32|48.40|45.60",
-			End = "375|1413|32|62.40|35.40",
+			End = "372|1413|32|62.40|35.40",
 		},
 		[4968] = {
 			Quest = [[Knowledge of the Orb of Orahil|1|35|35|0|0]],
 			Start = "374|1453|32|25.40|78.20",
-			End = "374|1413|32|62.40|35.40",
+			End = "372|1413|32|62.40|35.40",
 		},
 		[4969] = {
 			Quest = [[Knowledge of the Orb of Orahil|2|35|35|0|0]],
 			Start = "373|1458|32|86.00|15.60",
-			End = "373|1413|32|62.40|35.40",
+			End = "372|1413|32|62.40|35.40",
 		},
 		[4975] = {
 			Quest = [[The Completed Orb of Noh'Orahil|0|40|35|0|0]],
@@ -6655,7 +6655,7 @@ function Nx.ModQuests:Data4()
 		[5361] = {
 			Quest = [[Family Tree|2|35|32|0|0]],
 			Start = "313|1441|32|45.60|50.60",
-			End = "313|1443|32|55.40|55.80",
+			End = "309|1443|32|55.40|55.80",
 		},
 		[5381] = {
 			Quest = [[Hand of Iruxos|2|38|32|5581|0]],
@@ -6731,7 +6731,7 @@ function Nx.ModQuests:Data4()
 		[5762] = {
 			Quest = [[Hemet Nesingwary|0|31|28|0|0]],
 			Start = "274|1441|32|77.80|77.20",
-			End = "274|1434|32|35.60|10.80",
+			End = "273|1434|32|35.60|10.80",
 		},
 		[5763] = {
 			Quest = [[Hunting in Stranglethorn|2|31|28|0|0]],
@@ -6741,7 +6741,7 @@ function Nx.ModQuests:Data4()
 		[5821] = {
 			Quest = [[Bodyguard for Hire |0|35|30|0|0]],
 			Start = "268|1443|32|40.40|79.20",
-			End = "268|1443|32|60.80|61.80",
+			End = "256|1443|32|60.80|61.80",
 		},
 		[5943] = {
 			Quest = [[Gizelton Caravan|0|38|32|0|0]],
@@ -6764,7 +6764,7 @@ function Nx.ModQuests:Data4()
 		[6132] = {
 			Quest = [[Get Me Out of Here!|0|39|34|0|0]],
 			Start = "227|1443|32|33.80|53.60",
-			End = "227|1443|32|47.80|61.80",
+			End = "226|1443|32|47.80|61.80",
 		},
 		[6134] = {
 			Quest = [[Ghost-o-plasm Round Up|0|39|34|0|0]],

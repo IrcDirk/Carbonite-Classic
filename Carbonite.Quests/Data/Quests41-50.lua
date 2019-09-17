@@ -247,7 +247,7 @@ function Nx.ModQuests:Data5()
 		[238] = {
 			Quest = [[Errand for Apothecary Zinge|2|45|38|243|0]],
 			Start = "1253|1458|32|58.20|55.20",
-			End = "1253|1458|32|49.80|68.20",
+			End = "464|1458|32|49.80|68.20",
 		},
 		[243] = {
 			Quest = [[Into the Field|2|46|38|379|0]],
@@ -670,7 +670,7 @@ function Nx.ModQuests:Data5()
 		[599] = {
 			Quest = [[The Bloodsail Buccaneers|0|41|37|604|0]],
 			Start = "1082|1434|32|28.00|76.20",
-			End = "1082|1434|32|27.20|76.80",
+			End = "1051|1434|32|27.20|76.80",
 		},
 		[600] = {
 			Quest = [[Venture Company Mining|0|41|30|0|0]],
@@ -733,7 +733,7 @@ function Nx.ModQuests:Data5()
 		[607] = {
 			Quest = [[Return to MacKinley|0|41|30|609|0]],
 			Start = "1080|1434|32|26.80|73.60",
-			End = "1080|1434|32|27.80|77.00",
+			End = "624|1434|32|27.80|77.00",
 		},
 		[608] = {
 			Quest = [[The Bloodsail Buccaneers|0|45|37|0|0]],
@@ -856,7 +856,7 @@ function Nx.ModQuests:Data5()
 		[625] = {
 			Quest = [[Cortello's Riddle|0|43|35|626|0]],
 			Start = "1075|1435|32|22.80|48.10",
-			End = "1075|1445|32|31.10|66.10",
+			End = "1073|1445|32|31.10|66.10",
 		},
 		[643] = {
 			Quest = [[Sigil of Arathor|2|41|32|644|0]],
@@ -916,7 +916,7 @@ function Nx.ModQuests:Data5()
 		[648] = {
 			Quest = [[Rescue OOX-17/TN!|0|48|43|0|0]],
 			Start = "1065|1446|32|60.20|64.60",
-			End = "1065|1434|32|28.20|76.20",
+			End = "506|1434|32|28.20|76.20",
 		},
 		[649] = {
 			Quest = [[Ripple Recovery|2|48|42|650|0]],
@@ -931,7 +931,7 @@ function Nx.ModQuests:Data5()
 		[652] = {
 			Quest = [[Breaking the Keystone|0|42|30|0|0]],
 			Start = "1061|1417|32|36.10|57.40",
-			End = "1061|1417|32|36.20|58.00",
+			End = "1043|1417|32|36.20|58.00",
 			Objectives = {
 				[1] = {
 					"nil|1417|35|24.96|21.60|9.62|9.62",
@@ -1432,7 +1432,7 @@ function Nx.ModQuests:Data5()
 		[777] = {
 			Quest = [[This Is Going to Be Hard|0|42|35|778|0]],
 			Start = "1015|1418|32|25.80|44.40",
-			End = "1015|1418|32|26.00|45.00",
+			End = "473|1418|32|26.00|45.00",
 		},
 		[778] = {
 			Quest = [[This Is Going to Be Hard|0|45|35|0|0]],
@@ -1572,7 +1572,7 @@ function Nx.ModQuests:Data5()
 		[836] = {
 			Quest = [[Rescue OOX-09/HL!|0|48|43|0|0]],
 			Start = "996|1425|32|49.40|37.80",
-			End = "996|1434|32|28.20|76.20",
+			End = "506|1434|32|28.20|76.20",
 		},
 		[841] = {
 			Quest = [[Another Power Source?|2|46|38|0|0]],
@@ -1825,7 +1825,7 @@ function Nx.ModQuests:Data5()
 		[1363] = {
 			Quest = [[Mazen's Behest|1|41|37|1364|0]],
 			Start = "834|1453|32|41.40|64.20",
-			End = "834|1453|32|40.80|64.00",
+			End = "832|1453|32|40.80|64.00",
 		},
 		[1364] = {
 			Quest = [[Mazen's Behest|1|41|37|0|0]],
@@ -2052,7 +2052,7 @@ function Nx.ModQuests:Data5()
 		[1388] = {
 			Quest = [[Nothing But The Truth|2|42|37|1391|0]],
 			Start = "825|1431|32|87.40|35.40",
-			End = "825|1431|32|87.60|35.60",
+			End = "823|1431|32|87.60|35.60",
 		},
 		[1391] = {
 			Quest = [[Nothing But The Truth|2|42|37|0|0]],
@@ -2579,7 +2579,7 @@ function Nx.ModQuests:Data5()
 		[1450] = {
 			Quest = [[Gryphon Master Talonaxe|1|43|38|1451|0]],
 			Start = "805|1425|32|11.80|46.80",
-			End = "805|1425|32|9.80|44.40",
+			End = "587|1425|32|9.80|44.40",
 		},
 		[1451] = {
 			Quest = [[Rhapsody Shindigger|1|43|38|1452|0]],
@@ -2643,7 +2643,7 @@ function Nx.ModQuests:Data5()
 		[1469] = {
 			Quest = [[Rhapsody's Tale|1|43|38|1475|0]],
 			Start = "799|1425|32|26.80|48.40",
-			End = "799|1453|32|64.20|20.80",
+			End = "797|1453|32|64.20|20.80",
 		},
 		[1475] = {
 			Quest = [[Into The Temple of Atal'Hakkar|1|50|38|0|0]],
@@ -2883,7 +2883,7 @@ function Nx.ModQuests:Data5()
 		[2204] = {
 			Quest = [[Restoring the Necklace|1|44|37|0|0]],
 			Start = "691|1455|32|33.80|71.20",
-			End = "691|1455|32|36.00|4.00",
+			End = "32|1455|32|36.00|4.00",
 		},
 		[2278] = {
 			Quest = [[The Platinum Discs|0|47|40|0|0]],
@@ -2907,7 +2907,7 @@ function Nx.ModQuests:Data5()
 		},
 		[2318] = {
 			Quest = [[Translating the Journal|2|42|37|2338|0]],
-			End = "681|1418|32|2.60|46.00",
+			End = "680|1418|32|2.60|46.00",
 		},
 		[2338] = {
 			Quest = [[Translating the Journal|2|42|37|0|0]],
@@ -3028,7 +3028,7 @@ function Nx.ModQuests:Data5()
 		[2622] = {
 			Quest = [[The Missing Orders|2|50|45|2623|0]],
 			Start = "653|1435|32|47.80|55.00",
-			End = "653|1435|32|45.00|57.20",
+			End = "652|1435|32|45.00|57.20",
 		},
 		[2641] = {
 			Quest = [[Sprinkle's Secret Ingredient|0|49|44|0|0]],
@@ -3038,7 +3038,7 @@ function Nx.ModQuests:Data5()
 		[2661] = {
 			Quest = [[Delivery for Marin|0|49|44|2662|0]],
 			Start = "651|1446|32|51.00|26.80",
-			End = "651|1446|32|51.80|28.60",
+			End = "650|1446|32|51.80|28.60",
 		},
 		[2662] = {
 			Quest = [[Noggenfogger Elixir|0|49|44|0|0]],
@@ -3062,7 +3062,7 @@ function Nx.ModQuests:Data5()
 		[2742] = {
 			Quest = [[Rin'ji is Trapped!|2|47|42|2782|0]],
 			Start = "646|1425|32|30.60|47.00",
-			End = "646|1425|32|86.30|59.10",
+			End = "635|1425|32|86.30|59.10",
 		},
 		[2761] = {
 			Quest = [[Smelt On, Smelt Off|1|45|40|0|0]],
@@ -3221,7 +3221,7 @@ function Nx.ModQuests:Data5()
 		[2767] = {
 			Quest = [[Rescue OOX-22/FE!|0|45|40|0|0]],
 			Start = "638|1444|32|53.40|55.60",
-			End = "638|1434|32|28.20|76.20",
+			End = "506|1434|32|28.20|76.20",
 		},
 		[2768] = {
 			Quest = [[Divino-matic Rod|0|47|40|0|0]],
@@ -3274,7 +3274,7 @@ function Nx.ModQuests:Data5()
 		[2782] = {
 			Quest = [[Rin'ji's Secret|2|47|42|0|0]],
 			Start = "635|1425|32|86.30|59.10",
-			End = "635|1458|32|73.40|32.40",
+			End = "40|1458|32|73.40|32.40",
 		},
 		[2784] = {
 			Quest = [[Fall From Grace|2|50|45|2621|0]],
@@ -3596,7 +3596,7 @@ function Nx.ModQuests:Data5()
 		[2861] = {
 			Quest = [[Tabetha's Task|0|46|40|2846|0]],
 			Start = "628|1454|32|38.40|85.80",
-			End = "628|1445|32|46.00|57.00",
+			End = "371|1445|32|46.00|57.00",
 		},
 		[2862] = {
 			Quest = [[War on the Woodpaw|2|42|39|2863|0]],
@@ -3633,7 +3633,7 @@ function Nx.ModQuests:Data5()
 		[2864] = {
 			Quest = [[Tran'rek|0|45|40|2865|0]],
 			Start = "627|1434|32|27.00|77.20",
-			End = "627|1446|32|51.60|26.80",
+			End = "422|1446|32|51.60|26.80",
 		},
 		[2865] = {
 			Quest = [[Scarab Shells|0|45|40|0|0]],
@@ -3648,7 +3648,7 @@ function Nx.ModQuests:Data5()
 		[2867] = {
 			Quest = [[Return to Feathermoon Stronghold|1|43|40|0|0]],
 			Start = "626|1444|32|26.30|52.30",
-			End = "626|1444|32|30.20|46.00",
+			End = "448|1444|32|30.20|46.00",
 		},
 		[2869] = {
 			Quest = [[Against the Hatecrest|1|43|40|2870|0]],
@@ -3718,7 +3718,7 @@ function Nx.ModQuests:Data5()
 		[2875] = {
 			Quest = [[WANTED: Andre Firebeard|0|45|40|0|0]],
 			Start = "622|1446|32|51.90|27.00",
-			End = "622|1446|32|67.00|23.80",
+			End = "26|1446|32|67.00|23.80",
 			Objectives = {
 				[1] = {
 					"nil|1446|35|73.92|41.76|9.62|9.62",
@@ -3917,7 +3917,7 @@ function Nx.ModQuests:Data5()
 		[2903] = {
 			Quest = [[The Battle Plans|2|43|39|0|0]],
 			Start = "619|1444|32|71.60|55.90",
-			End = "619|1444|32|74.80|42.60",
+			End = "80|1444|32|74.80|42.60",
 		},
 		[2932] = {
 			Quest = [[Grim Message|2|42|35|0|0]],
@@ -3927,7 +3927,7 @@ function Nx.ModQuests:Data5()
 		[2933] = {
 			Quest = [[Venom Bottles|2|43|40|2934|0]],
 			Start = "607|1425|32|23.10|57.70",
-			End = "607|1424|32|61.40|19.20",
+			End = "604|1424|32|61.40|19.20",
 		},
 		[2934] = {
 			Quest = [[Undamaged Venom Sac|2|45|40|2935|0]],
@@ -3969,7 +3969,7 @@ function Nx.ModQuests:Data5()
 		[2940] = {
 			Quest = [[Feralas: A History|1|47|42|2941|0]],
 			Start = "603|1438|32|55.30|91.40",
-			End = "603|1438|32|55.40|92.20",
+			End = "324|1438|32|55.40|92.20",
 		},
 		[2941] = {
 			Quest = [[The Borrower|1|48|42|2944|0]],
@@ -3979,7 +3979,7 @@ function Nx.ModQuests:Data5()
 		[2942] = {
 			Quest = [[The Morrow Stone|1|50|42|0|0]],
 			Start = "602|1444|32|38.90|13.20",
-			End = "602|1444|32|31.80|45.40",
+			End = "601|1444|32|31.80|45.40",
 		},
 		[2943] = {
 			Quest = [[Return to Troyas|1|48|42|0|0]],
@@ -4174,12 +4174,12 @@ function Nx.ModQuests:Data5()
 		[2976] = {
 			Quest = [[A Grim Discovery|2|45|37|0|0]],
 			Start = "594|1444|32|76.00|42.80",
-			End = "594|1454|32|75.00|34.00",
+			End = "520|1454|32|75.00|34.00",
 		},
 		[2977] = {
 			Quest = [[Return to Ironforge|1|50|45|2964|0]],
 			Start = "593|1446|32|37.70|81.40",
-			End = "593|1455|32|77.20|11.80",
+			End = "115|1455|32|77.20|11.80",
 		},
 		[2978] = {
 			Quest = [[The Gordunni Scroll|2|43|38|2979|0]],
@@ -4344,7 +4344,7 @@ function Nx.ModQuests:Data5()
 		[2993] = {
 			Quest = [[Return to the Hinterlands|1|47|40|2994|0]],
 			Start = "588|1419|32|67.00|19.40",
-			End = "588|1425|32|9.80|44.40",
+			End = "587|1425|32|9.80|44.40",
 		},
 		[2995] = {
 			Quest = [[Lines of Communication|2|47|42|0|0]],
@@ -4354,12 +4354,12 @@ function Nx.ModQuests:Data5()
 		[3002] = {
 			Quest = [[The Gordunni Orb|2|47|38|0|0]],
 			Start = "582|1444|32|75.00|43.80",
-			End = "582|1454|32|39.00|86.00",
+			End = "110|1454|32|39.00|86.00",
 		},
 		[3022] = {
 			Quest = [[Handle With Care|1|47|42|0|0]],
 			Start = "581|1446|32|52.20|26.80",
-			End = "581|1438|32|55.40|92.00",
+			End = "384|1438|32|55.40|92.00",
 		},
 		[3042] = {
 			Quest = [[Troll Temper|0|45|40|0|0]],
@@ -4636,12 +4636,12 @@ function Nx.ModQuests:Data5()
 		[3367] = {
 			Quest = [[Suntara Stones|1|48|40|3368|0]],
 			Start = "542|1427|32|63.80|60.80",
-			End = "542|1427|32|74.50|19.40",
+			End = "541|1427|32|74.50|19.40",
 		},
 		[3368] = {
 			Quest = [[Suntara Stones|1|48|40|3371|0]],
 			Start = "541|1427|32|74.50|19.40",
-			End = "541|1455|32|71.60|16.40",
+			End = "515|1455|32|71.60|16.40",
 		},
 		[3375] = {
 			Quest = [[Replacement Phial|1|42|37|0|0]],
@@ -4843,7 +4843,7 @@ function Nx.ModQuests:Data5()
 		[3462] = {
 			Quest = [[Squire Maltrake|0|50|40|3463|0]],
 			Start = "527|1427|32|39.00|38.80",
-			End = "527|1427|32|39.00|39.00",
+			End = "526|1427|32|39.00|39.00",
 		},
 		[3481] = {
 			Quest = [[Trinkets...|0|50|40|0|0]],
@@ -4901,7 +4901,7 @@ function Nx.ModQuests:Data5()
 		[3632] = {
 			Quest = [[Gnome Engineering|1|47|30|0|0]],
 			Start = "510|1455|32|68.20|43.60",
-			End = "510|1455|32|69.80|50.20",
+			End = "508|1455|32|69.80|50.20",
 		},
 		[3633] = {
 			Quest = [[Goblin Engineering|0|47|30|0|0]],
@@ -5847,7 +5847,7 @@ function Nx.ModQuests:Data5()
 		[3841] = {
 			Quest = [[An Orphan Looking For a Home|1|47|38|3842|0]],
 			Start = "496|1444|32|65.80|45.60",
-			End = "496|1441|32|78.40|74.80",
+			End = "495|1441|32|78.40|74.80",
 		},
 		[3842] = {
 			Quest = [[A Short Incubation|1|47|38|0|0]],
@@ -5857,7 +5857,7 @@ function Nx.ModQuests:Data5()
 		[3843] = {
 			Quest = [[The Newest Member of the Family|1|47|38|4297|0]],
 			Start = "495|1441|32|78.40|74.80",
-			End = "495|1425|32|14.00|43.60",
+			End = "444|1425|32|14.00|43.60",
 		},
 		[3884] = {
 			Quest = [[Williden's Journal|0|50|48|0|0]],
@@ -5866,7 +5866,7 @@ function Nx.ModQuests:Data5()
 		[4124] = {
 			Quest = [[The Missing Courier|1|43|40|4125|0]],
 			Start = "469|1444|32|30.40|46.00",
-			End = "469|1444|32|31.80|45.20",
+			End = "449|1444|32|31.80|45.20",
 		},
 		[4125] = {
 			Quest = [[The Missing Courier|1|43|40|4127|0]],
@@ -5876,7 +5876,7 @@ function Nx.ModQuests:Data5()
 		[4127] = {
 			Quest = [[Boat Wreckage|1|44|40|4129|0]],
 			Start = "468|1444|32|45.50|64.90",
-			End = "468|1444|32|31.80|45.20",
+			End = "449|1444|32|31.80|45.20",
 		},
 		[4129] = {
 			Quest = [[The Knife Revealed|1|44|40|0|0]],
@@ -5886,7 +5886,7 @@ function Nx.ModQuests:Data5()
 		[4130] = {
 			Quest = [[Psychometric Reading|1|44|40|4131|0]],
 			Start = "465|1444|32|32.40|43.80",
-			End = "465|1444|32|31.80|45.20",
+			End = "449|1444|32|31.80|45.20",
 		},
 		[4131] = {
 			Quest = [[The Woodpaw Gnolls|1|44|40|4135|0]],
@@ -5896,7 +5896,7 @@ function Nx.ModQuests:Data5()
 		[4135] = {
 			Quest = [[The Writhing Deep|1|46|40|4265|0]],
 			Start = "463|1444|32|73.30|56.30",
-			End = "463|1444|32|72.10|63.80",
+			End = "450|1444|32|72.10|63.80",
 		},
 		[4181] = {
 			Quest = [[Goblin Engineering|0|47|30|0|0]],
@@ -5904,17 +5904,17 @@ function Nx.ModQuests:Data5()
 		[4265] = {
 			Quest = [[Freed from the Hive|1|46|40|4266|0]],
 			Start = "450|1444|32|72.10|63.80",
-			End = "450|1444|32|31.80|45.20",
+			End = "449|1444|32|31.80|45.20",
 		},
 		[4266] = {
 			Quest = [[A Hero's Welcome|1|46|40|4267|0]],
 			Start = "449|1444|32|31.80|45.20",
-			End = "449|1444|32|30.20|46.00",
+			End = "448|1444|32|30.20|46.00",
 		},
 		[4267] = {
 			Quest = [[Rise of the Silithid|1|46|40|0|0]],
 			Start = "448|1444|32|30.20|46.00",
-			End = "448|1457|32|42.00|85.80",
+			End = "419|1457|32|42.00|85.80",
 		},
 		[4281] = {
 			Quest = [[Thalanaar Delivery|1|44|40|0|0]],
@@ -6121,12 +6121,12 @@ function Nx.ModQuests:Data5()
 		[5066] = {
 			Quest = [[A Call to Arms: The Plaguelands!|1|50|50|5092|0]],
 			Start = "355|1453|32|58.80|53.00",
-			End = "355|1422|32|42.80|84.00",
+			End = "302|1422|32|42.80|84.00",
 		},
 		[5090] = {
 			Quest = [[A Call to Arms: The Plaguelands!|1|50|50|5092|0]],
 			Start = "350|1455|32|69.80|55.20",
-			End = "350|1422|32|42.80|84.00",
+			End = "302|1422|32|42.80|84.00",
 		},
 		[5091] = {
 			Quest = [[A Call to Arms: The Plaguelands!|1|50|50|5092|0]],
@@ -6136,12 +6136,12 @@ function Nx.ModQuests:Data5()
 		[5093] = {
 			Quest = [[A Call to Arms: The Plaguelands!|2|50|50|5096|0]],
 			Start = "349|1454|32|57.80|38.20",
-			End = "349|1420|32|83.00|69.00",
+			End = "330|1420|32|83.00|69.00",
 		},
 		[5094] = {
 			Quest = [[A Call to Arms: The Plaguelands!|2|50|50|5096|0]],
 			Start = "348|1458|32|68.20|34.00",
-			End = "348|1420|32|83.00|69.00",
+			End = "330|1420|32|83.00|69.00",
 		},
 		[5095] = {
 			Quest = [[A Call to Arms: The Plaguelands!|2|50|50|5096|0]],
@@ -6451,12 +6451,12 @@ function Nx.ModQuests:Data5()
 		[6611] = {
 			Quest = [[To Gadgetzan You Go!|2|45|35|0|0]],
 			Start = "147|1454|32|57.40|53.60",
-			End = "147|1446|32|52.60|28.00",
+			End = "12|1446|32|52.60|28.00",
 		},
 		[6612] = {
 			Quest = [[I Know A Guy...|1|45|35|0|0]],
 			Start = "146|1455|32|60.00|36.80",
-			End = "146|1446|32|52.60|28.00",
+			End = "12|1446|32|52.60|28.00",
 		},
 		[6622] = {
 			Quest = [[Triage|2|45|35|0|0]],

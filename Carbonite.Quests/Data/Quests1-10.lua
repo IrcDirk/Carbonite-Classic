@@ -444,7 +444,7 @@ function Nx.ModQuests:Data1()
 		[45] = {
 			Quest = [[Discover Rolf's Fate|1|10|7|71|0]],
 			Start = "1316|1429|32|72.70|60.30",
-			End = "1316|1429|32|79.80|55.60",
+			End = "1312|1429|32|79.80|55.60",
 		},
 		[46] = {
 			Quest = [[Bounty on Murlocs|1|10|7|0|0]],
@@ -779,7 +779,7 @@ function Nx.ModQuests:Data1()
 		[71] = {
 			Quest = [[Report to Thomas|1|10|7|39|0]],
 			Start = "1312|1429|32|79.80|55.60",
-			End = "1312|1429|32|74.00|72.20",
+			End = "390|1429|32|74.00|72.20",
 		},
 		[76] = {
 			Quest = [[The Jasperlode Mine|1|10|4|0|0]],
@@ -1377,7 +1377,7 @@ function Nx.ModQuests:Data1()
 		[234] = {
 			Quest = [[Coldridge Valley Mail Delivery|1|4|1|0|0]],
 			Start = "1255|1426|32|22.60|71.40",
-			End = "1255|1426|32|25.00|75.80",
+			End = "1231|1426|32|25.00|75.80",
 		},
 		[239] = {
 			Quest = [[Westbrook Garrison Needs Help!|1|10|6|11|0]],
@@ -1387,7 +1387,7 @@ function Nx.ModQuests:Data1()
 		[282] = {
 			Quest = [[Senir's Observations|1|5|1|420|0]],
 			Start = "1231|1426|32|25.00|75.80",
-			End = "1231|1426|32|33.40|71.80",
+			End = "1166|1426|32|33.40|71.80",
 		},
 		[287] = {
 			Quest = [[Frostmane Hold|1|9|7|291|0]],
@@ -1822,7 +1822,7 @@ function Nx.ModQuests:Data1()
 		[333] = {
 			Quest = [[Harlan Needs a Resupply|1|2|1|0|0]],
 			Start = "1207|1453|32|55.00|56.00",
-			End = "1207|1453|32|49.60|55.40",
+			End = "1205|1453|32|49.60|55.40",
 		},
 		[334] = {
 			Quest = [[Package for Thurman|1|2|1|0|0]],
@@ -1956,7 +1956,7 @@ function Nx.ModQuests:Data1()
 		[360] = {
 			Quest = [[Return to the Magistrate|2|9|6|0|0]],
 			Start = "1198|1420|32|65.40|60.20",
-			End = "1198|1420|32|61.20|50.80",
+			End = "1156|1420|32|61.20|50.80",
 		},
 		[361] = {
 			Quest = [[A Letter Undelivered|2|7|4|0|0]],
@@ -2026,7 +2026,7 @@ function Nx.ModQuests:Data1()
 		[363] = {
 			Quest = [[Rude Awakening|2|1|1|364|0]],
 			Start = "1196|1420|32|30.20|71.60",
-			End = "1196|1420|32|30.80|66.20",
+			End = "488|1420|32|30.80|66.20",
 		},
 		[364] = {
 			Quest = [[The Mindless Ones|2|2|1|0|0]],
@@ -2054,7 +2054,7 @@ function Nx.ModQuests:Data1()
 		[365] = {
 			Quest = [[Fields of Grief|2|7|4|407|0]],
 			Start = "1195|1420|32|40.80|54.20",
-			End = "1195|1420|32|59.40|52.20",
+			End = "1126|1420|32|59.40|52.20",
 			Objectives = {
 				[1] = {
 					"nil|1420|35|33.60|44.64|9.62|9.62",
@@ -2660,7 +2660,7 @@ function Nx.ModQuests:Data1()
 		[383] = {
 			Quest = [[Vital Intelligence|2|5|2|0|0]],
 			Start = "1190|1420|32|32.00|66.00",
-			End = "1190|1420|32|60.60|51.80",
+			End = "1165|1420|32|60.60|51.80",
 		},
 		[384] = {
 			Quest = [[Beer Basted Boar Ribs|1|7|5|0|0]],
@@ -2720,7 +2720,7 @@ function Nx.ModQuests:Data1()
 		[398] = {
 			Quest = [[Wanted: Maggot Eye|2|10|6|0|0]],
 			Start = "1182|1420|32|60.70|51.60",
-			End = "1182|1420|32|60.60|51.80",
+			End = "1165|1420|32|60.60|51.80",
 			Objectives = {
 				[1] = {
 					"nil|1420|35|79.68|23.04|9.62|9.62",
@@ -3047,7 +3047,7 @@ function Nx.ModQuests:Data1()
 		[414] = {
 			Quest = [[Stout to Kadrell|1|10|8|0|0]],
 			Start = "1173|1426|32|86.20|48.80",
-			End = "1173|1432|32|34.80|47.00",
+			End = "835|1432|32|34.80|47.00",
 		},
 		[415] = {
 			Quest = [[Rejold's New Brew|1|10|8|413|0]],
@@ -3320,7 +3320,7 @@ function Nx.ModQuests:Data1()
 		[458] = {
 			Quest = [[The Woodland Protector|1|1|1|459|0]],
 			Start = "1149|1438|32|59.80|42.40",
-			End = "1149|1438|32|57.80|45.00",
+			End = "1148|1438|32|57.80|45.00",
 		},
 		[459] = {
 			Quest = [[The Woodland Protector|1|3|1|0|0]],
@@ -3392,7 +3392,7 @@ function Nx.ModQuests:Data1()
 		[476] = {
 			Quest = [[Gnarlpine Corruption|1|6|4|483|0]],
 			Start = "1135|1438|32|66.20|58.60",
-			End = "1135|1438|32|56.00|57.40",
+			End = "1132|1438|32|56.00|57.40",
 		},
 		[483] = {
 			Quest = [[The Relics of Wakening|1|9|4|486|0]],
@@ -4046,7 +4046,7 @@ function Nx.ModQuests:Data1()
 		[751] = {
 			Quest = [[The Ravaged Caravan|2|8|5|0|0]],
 			Start = "1027|1412|32|53.80|48.30",
-			End = "1027|1412|32|54.40|60.40",
+			End = "1022|1412|32|54.40|60.40",
 		},
 		[752] = {
 			Quest = [[A Humble Task|2|2|1|753|0]],
@@ -4056,7 +4056,7 @@ function Nx.ModQuests:Data1()
 		[753] = {
 			Quest = [[A Humble Task|2|3|1|755|0]],
 			Start = "1026|1412|32|50.00|81.20",
-			End = "1026|1412|32|44.20|76.00",
+			End = "1014|1412|32|44.20|76.00",
 			Objectives = {
 				[1] = {
 					"nil|1412|35|49.92|79.20|9.62|9.62",
@@ -4199,7 +4199,7 @@ function Nx.ModQuests:Data1()
 		[757] = {
 			Quest = [[Rite of Strength|2|4|1|763|0]],
 			Start = "1025|1412|32|42.60|92.00",
-			End = "1025|1412|32|44.20|76.00",
+			End = "1014|1412|32|44.20|76.00",
 			Objectives = {
 				[1] = {
 					"nil|1412|35|40.32|2.88|115.43|9.62",
@@ -4606,7 +4606,7 @@ function Nx.ModQuests:Data1()
 		[767] = {
 			Quest = [[Rite of Vision|2|6|3|771|0]],
 			Start = "1020|1412|32|47.40|60.20",
-			End = "1020|1412|32|47.80|57.60",
+			End = "1018|1412|32|47.80|57.60",
 		},
 		[768] = {
 			Quest = [[Gathering Leather|2|8|4|0|0]],
@@ -4659,17 +4659,17 @@ function Nx.ModQuests:Data1()
 		[772] = {
 			Quest = [[Rite of Vision|2|7|3|773|0]],
 			Start = "1018|1412|32|47.80|57.60",
-			End = "1018|1412|32|32.80|36.00",
+			End = "1017|1412|32|32.80|36.00",
 		},
 		[773] = {
 			Quest = [[Rite of Wisdom|2|10|3|775|0]],
 			Start = "1017|1412|32|32.80|36.00",
-			End = "1017|1412|32|61.40|21.00",
+			End = "1016|1412|32|61.40|21.00",
 		},
 		[775] = {
 			Quest = [[Journey into Thunder Bluff|2|10|3|776|0]],
 			Start = "1016|1412|32|61.40|21.00",
-			End = "1016|1456|32|60.00|51.60",
+			End = "117|1456|32|60.00|51.60",
 		},
 		[780] = {
 			Quest = [[The Battleboars|2|4|1|0|0]],
@@ -5236,7 +5236,7 @@ function Nx.ModQuests:Data1()
 		[804] = {
 			Quest = [[Sarkoth|2|5|1|0|0]],
 			Start = "1009|1411|32|40.60|62.60",
-			End = "1009|1411|32|42.00|68.40",
+			End = "413|1411|32|42.00|68.40",
 		},
 		[805] = {
 			Quest = [[Report to Sen'jin Village|2|5|1|0|0]],
@@ -5727,7 +5727,7 @@ function Nx.ModQuests:Data1()
 		[861] = {
 			Quest = [[The Hunter's Way|2|10|10|0|0]],
 			Start = "987|1412|32|46.80|60.20",
-			End = "987|1456|32|61.40|80.60",
+			End = "870|1456|32|61.40|80.60",
 			Objectives = {
 				[1] = {
 					"nil|1412|35|23.04|1.44|144.29|9.62",
@@ -6011,7 +6011,7 @@ function Nx.ModQuests:Data1()
 		[920] = {
 			Quest = [[Tenaron's Summons|1|5|1|0|0]],
 			Start = "980|1438|32|57.80|41.60",
-			End = "980|1438|32|59.00|39.40",
+			End = "977|1438|32|59.00|39.40",
 		},
 		[921] = {
 			Quest = [[Crown of the Earth|1|5|1|0|0]],
@@ -6031,7 +6031,7 @@ function Nx.ModQuests:Data1()
 		[928] = {
 			Quest = [[Crown of the Earth|1|5|1|0|0]],
 			Start = "977|1438|32|59.00|39.40",
-			End = "977|1438|32|56.20|61.60",
+			End = "96|1438|32|56.20|61.60",
 		},
 		[929] = {
 			Quest = [[Crown of the Earth|1|5|1|0|0]],
@@ -6041,12 +6041,12 @@ function Nx.ModQuests:Data1()
 		[930] = {
 			Quest = [[The Glowing Fruit|1|10|4|0|0]],
 			Start = "976|1438|32|42.60|76.10",
-			End = "976|1438|32|60.80|68.40",
+			End = "661|1438|32|60.80|68.40",
 		},
 		[931] = {
 			Quest = [[The Shimmering Frond|1|10|4|0|0]],
 			Start = "975|1438|32|34.70|28.80",
-			End = "975|1438|32|60.80|68.40",
+			End = "661|1438|32|60.80|68.40",
 		},
 		[932] = {
 			Quest = [[Twisted Hatred|1|7|4|0|0]],
@@ -6239,7 +6239,7 @@ function Nx.ModQuests:Data1()
 		[1478] = {
 			Quest = [[Halgar's Summons|2|10|10|1473|0]],
 			Start = "794|1420|32|61.60|52.60",
-			End = "794|1458|32|85.00|25.60",
+			End = "583|1458|32|85.00|25.60",
 		},
 		[1479] = {
 			Quest = [[The Bough of the Eternals|1|1|10|0|0]],
@@ -6352,7 +6352,7 @@ function Nx.ModQuests:Data1()
 		[1506] = {
 			Quest = [[Gan'rul's Summons|2|10|10|1501|0]],
 			Start = "784|1411|32|54.20|41.20",
-			End = "784|1454|32|48.20|45.60",
+			End = "586|1454|32|48.20|45.60",
 		},
 		[1516] = {
 			Quest = [[Call of Earth|2|4|4|1517|0]],
@@ -6474,7 +6474,7 @@ function Nx.ModQuests:Data1()
 		[1638] = {
 			Quest = [[A Warrior's Training|1|10|10|1639|0]],
 			Start = "762|1453|32|78.60|45.60",
-			End = "762|1453|32|73.60|37.60",
+			End = "756|1453|32|73.60|37.60",
 		},
 		[1639] = {
 			Quest = [[Bartleby the Drunk|1|10|10|1640|0]],
@@ -6494,12 +6494,12 @@ function Nx.ModQuests:Data1()
 		[1665] = {
 			Quest = [[Bartleby's Mug|1|10|10|0|0]],
 			Start = "757|1453|32|73.80|36.60",
-			End = "757|1453|32|73.60|37.60",
+			End = "756|1453|32|73.60|37.60",
 		},
 		[1666] = {
 			Quest = [[Marshal Haggard|1|10|10|1667|0]],
 			Start = "756|1453|32|73.60|37.60",
-			End = "756|1429|32|84.60|69.40",
+			End = "755|1429|32|84.60|69.40",
 		},
 		[1667] = {
 			Quest = [[Dead-tooth Jack|1|10|10|0|0]],
@@ -6514,7 +6514,7 @@ function Nx.ModQuests:Data1()
 		[1679] = {
 			Quest = [[Muren Stormpike|1|10|10|1678|0]],
 			Start = "754|1426|32|47.20|52.60",
-			End = "754|1455|32|70.40|90.60",
+			End = "753|1455|32|70.40|90.60",
 		},
 		[1682] = {
 			Quest = [[Grey Iron Weapons|1|10|10|0|0]],
@@ -6541,7 +6541,7 @@ function Nx.ModQuests:Data1()
 		[1685] = {
 			Quest = [[Gakin's Summons|1|10|10|1688|0]],
 			Start = "751|1429|32|44.40|66.20",
-			End = "751|1453|32|25.40|78.40",
+			End = "733|1453|32|25.40|78.40",
 		},
 		[1686] = {
 			Quest = [[The Shade of Elura|1|10|10|1692|0]],
@@ -6669,7 +6669,7 @@ function Nx.ModQuests:Data1()
 		[1692] = {
 			Quest = [[Smith Mathiel|1|10|10|0|0]],
 			Start = "750|1457|32|57.40|34.80",
-			End = "750|1457|32|59.20|45.20",
+			End = "614|1457|32|59.20|45.20",
 		},
 		[1693] = {
 			Quest = [[Weapons of Elunite|1|10|10|0|0]],
@@ -6687,7 +6687,7 @@ function Nx.ModQuests:Data1()
 		[1818] = {
 			Quest = [[Speak with Dillinger|2|10|10|1819|0]],
 			Start = "729|1420|32|61.80|52.40",
-			End = "729|1420|32|58.20|51.40",
+			End = "728|1420|32|58.20|51.40",
 		},
 		[1819] = {
 			Quest = [[Ulag the Cleaver|2|10|10|1820|0]],
@@ -6704,17 +6704,17 @@ function Nx.ModQuests:Data1()
 		[1820] = {
 			Quest = [[Speak with Coleman|2|10|10|1821|0]],
 			Start = "728|1420|32|58.20|51.40",
-			End = "728|1420|32|61.80|52.40",
+			End = "727|1420|32|61.80|52.40",
 		},
 		[1859] = {
 			Quest = [[Therzok|2|10|10|1963|0]],
 			Start = "720|1411|32|52.00|43.60",
-			End = "720|1454|32|42.80|53.40",
+			End = "703|1454|32|42.80|53.40",
 		},
 		[1860] = {
 			Quest = [[Speak with Jennea|1|10|10|1861|0]],
 			Start = "719|1429|32|43.20|66.20",
-			End = "719|1453|32|38.60|79.40",
+			End = "711|1453|32|38.60|79.40",
 		},
 		[1861] = {
 			Quest = [[Mirror Lake|1|10|10|0|0]],
@@ -6724,7 +6724,7 @@ function Nx.ModQuests:Data1()
 		[1879] = {
 			Quest = [[Speak with Bink|1|10|10|1880|0]],
 			Start = "717|1426|32|47.40|52.00",
-			End = "717|1455|32|27.00|8.20",
+			End = "716|1455|32|27.00|8.20",
 		},
 		[1880] = {
 			Quest = [[Mage-tastic Gizmonitor|1|10|10|0|0]],
@@ -6741,7 +6741,7 @@ function Nx.ModQuests:Data1()
 		[1881] = {
 			Quest = [[Speak with Anastasia|2|10|10|1882|0]],
 			Start = "715|1420|32|61.80|52.40",
-			End = "715|1458|32|85.00|10.20",
+			End = "705|1458|32|85.00|10.20",
 		},
 		[1882] = {
 			Quest = [[The Balnir Farmstead|2|10|10|0|0]],
@@ -6768,7 +6768,7 @@ function Nx.ModQuests:Data1()
 		[1885] = {
 			Quest = [[Mennet Carkad|2|10|10|1886|0]],
 			Start = "713|1420|32|61.60|52.00",
-			End = "713|1458|32|83.40|68.80",
+			End = "675|1458|32|83.40|68.80",
 		},
 		[2158] = {
 			Quest = [[Rest and Relaxation|1|5|1|0|0]],
@@ -6812,7 +6812,7 @@ function Nx.ModQuests:Data1()
 		[2218] = {
 			Quest = [[Road to Salvation|1|10|10|2238|0]],
 			Start = "690|1426|32|47.60|52.60",
-			End = "690|1455|32|51.60|14.80",
+			End = "689|1455|32|51.60|14.80",
 		},
 		[2238] = {
 			Quest = [[Simple Subterfugin'|1|10|10|2239|0]],
@@ -6827,7 +6827,7 @@ function Nx.ModQuests:Data1()
 		[2241] = {
 			Quest = [[The Apple Falls|1|10|10|0|0]],
 			Start = "687|1438|32|56.20|60.00",
-			End = "687|1457|32|36.80|21.80",
+			End = "686|1457|32|36.80|21.80",
 		},
 		[2242] = {
 			Quest = [[Destiny Calls|1|10|10|0|0]],
@@ -6871,7 +6871,7 @@ function Nx.ModQuests:Data1()
 		[2498] = {
 			Quest = [[Return to Denalan|1|9|4|2499|0]],
 			Start = "662|1457|32|38.40|21.60",
-			End = "662|1438|32|60.80|68.40",
+			End = "661|1438|32|60.80|68.40",
 		},
 		[2499] = {
 			Quest = [[Oakenscowl|1|9|4|0|0]],
@@ -6910,7 +6910,7 @@ function Nx.ModQuests:Data1()
 		[2519] = {
 			Quest = [[The Temple of the Moon|1|10|5|2518|0]],
 			Start = "659|1457|32|29.00|45.40",
-			End = "659|1457|32|36.40|86.00",
+			End = "658|1457|32|36.40|86.00",
 		},
 		[2541] = {
 			Quest = [[The Sleeping Druid|1|8|3|2561|0]],
@@ -6968,7 +6968,7 @@ function Nx.ModQuests:Data1()
 		[2983] = {
 			Quest = [[Call of Fire|2|10|10|1524|0]],
 			Start = "592|1411|32|54.40|42.60",
-			End = "592|1413|32|55.80|20.00",
+			End = "591|1413|32|55.80|20.00",
 		},
 		[2984] = {
 			Quest = [[Call of Fire|2|10|10|1524|0]],
@@ -7490,7 +7490,7 @@ function Nx.ModQuests:Data1()
 		[5481] = {
 			Quest = [[Gordo's Task|2|5|5|5482|0]],
 			Start = "306|1420|32|55.80|52.40",
-			End = "306|1420|32|57.60|49.00",
+			End = "305|1420|32|57.60|49.00",
 			Objectives = {
 				[1] = {
 					"nil|1420|35|51.84|7.20|28.86|9.62",
@@ -7685,7 +7685,7 @@ function Nx.ModQuests:Data1()
 		[5626] = {
 			Quest = [[In Favor of the Light|1|4|5|5625|0]],
 			Start = "291|1426|32|28.60|66.40",
-			End = "291|1426|32|47.20|52.20",
+			End = "289|1426|32|47.20|52.20",
 		},
 		[5627] = {
 			Quest = [[Stars of Elune|1|10|10|0|0]],
@@ -7717,7 +7717,7 @@ function Nx.ModQuests:Data1()
 		[5635] = {
 			Quest = [[Desperate Prayer|1|10|10|0|0]],
 			Start = "290|1429|32|43.20|65.60",
-			End = "290|1453|32|38.80|26.40",
+			End = "282|1453|32|38.80|26.40",
 		},
 		[5636] = {
 			Quest = [[Desperate Prayer|1|10|10|0|0]],
@@ -7725,7 +7725,7 @@ function Nx.ModQuests:Data1()
 		[5637] = {
 			Quest = [[Desperate Prayer|1|10|10|0|0]],
 			Start = "289|1426|32|47.20|52.20",
-			End = "289|1453|32|38.80|26.40",
+			End = "282|1453|32|38.80|26.40",
 		},
 		[5638] = {
 			Quest = [[Desperate Prayer|1|10|10|0|0]],
@@ -7773,7 +7773,7 @@ function Nx.ModQuests:Data1()
 		[5654] = {
 			Quest = [[Hex of Weakness|2|10|10|0|0]],
 			Start = "284|1411|32|54.20|42.80",
-			End = "284|1454|32|35.60|87.60",
+			End = "280|1454|32|35.60|87.60",
 		},
 		[5655] = {
 			Quest = [[Hex of Weakness|2|10|10|0|0]],
@@ -7831,7 +7831,7 @@ function Nx.ModQuests:Data1()
 		[5923] = {
 			Quest = [[Heeding the Call|1|10|10|5921|0]],
 			Start = "261|1457|32|34.80|7.80",
-			End = "261|1457|32|35.20|8.00",
+			End = "130|1457|32|35.20|8.00",
 		},
 		[5924] = {
 			Quest = [[Heeding the Call|1|10|10|5921|0]],
@@ -7840,7 +7840,7 @@ function Nx.ModQuests:Data1()
 		[5925] = {
 			Quest = [[Heeding the Call|1|10|10|5921|0]],
 			Start = "260|1438|32|56.00|61.60",
-			End = "260|1457|32|35.20|8.00",
+			End = "130|1457|32|35.20|8.00",
 		},
 		[5926] = {
 			Quest = [[Heeding the Call|2|10|10|5922|0]],
@@ -7851,7 +7851,7 @@ function Nx.ModQuests:Data1()
 		[5928] = {
 			Quest = [[Heeding the Call|2|10|10|5922|0]],
 			Start = "259|1412|32|48.40|59.60",
-			End = "259|1456|32|76.40|27.60",
+			End = "229|1456|32|76.40|27.60",
 		},
 		[5929] = {
 			Quest = [[Great Bear Spirit|1|10|10|5931|0]],
@@ -7915,7 +7915,7 @@ function Nx.ModQuests:Data1()
 		[6068] = {
 			Quest = [[The Hunter's Path|2|10|10|6062|0]],
 			Start = "240|1454|32|67.80|17.80",
-			End = "240|1411|32|51.80|43.40",
+			End = "238|1411|32|51.80|43.40",
 		},
 		[6069] = {
 			Quest = [[The Hunter's Path|2|10|10|6062|0]],
@@ -8050,12 +8050,12 @@ function Nx.ModQuests:Data1()
 		[6342] = {
 			Quest = [[Flight to Auberdine|1|10|10|6343|0]],
 			Start = "204|1438|32|58.40|94.00",
-			End = "204|1439|32|36.80|44.20",
+			End = "203|1439|32|36.80|44.20",
 		},
 		[6343] = {
 			Quest = [[Return to Nessa|1|10|10|0|0]],
 			Start = "203|1439|32|36.80|44.20",
-			End = "203|1438|32|56.20|92.40",
+			End = "202|1438|32|56.20|92.40",
 		},
 		[6344] = {
 			Quest = [[Nessa Shadowsong|1|10|10|6341|0]],
@@ -8075,7 +8075,7 @@ function Nx.ModQuests:Data1()
 		[6363] = {
 			Quest = [[Tal the Wind Rider Master|2|10|10|6364|0]],
 			Start = "200|1456|32|45.40|55.80",
-			End = "200|1456|32|46.80|50.00",
+			End = "198|1456|32|46.80|50.00",
 		},
 		[6364] = {
 			Quest = [[Return to Jahan|2|10|10|0|0]],
@@ -8090,7 +8090,7 @@ function Nx.ModQuests:Data1()
 		[6384] = {
 			Quest = [[Ride to Orgrimmar|2|10|10|6385|0]],
 			Start = "195|1413|32|51.40|30.20",
-			End = "195|1454|32|54.00|68.60",
+			End = "28|1454|32|54.00|68.60",
 		},
 		[6385] = {
 			Quest = [[Doras the Wind Rider Master|2|10|10|6386|0]],

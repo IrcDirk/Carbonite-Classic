@@ -22,7 +22,7 @@ function Nx.ModQuests:Data0()
 		[1036] = {
 			Quest = [[Avast Ye, Scallywag|0|0|55|4621|0]],
 			Start = "938|1434|32|27.40|69.40",
-			End = "938|1434|32|30.60|90.20",
+			End = "1|1434|32|30.60|90.20",
 		},
 		[4621] = {
 			Quest = [[Avast Ye, Admiral!|0|0|30|0|0]],
@@ -891,7 +891,6 @@ function Nx.ModQuests:Data0()
 			Quest = [[A Light in Dark Places|0|0|50|0|0]],
 		},
 	}
-
 	return ModQuests
 end
 	

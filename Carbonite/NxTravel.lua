@@ -672,7 +672,7 @@ function Nx.Travel:FindFlight (srcMapId, srcX, srcY, dstMapId, dstX, dstY)
 		node1.Y = t1y
 		node1.Name = name
 
-		node1.Tex = "Interface\\Icons\\Ability_Mount_Wyvern_01"
+		node1.Tex = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01"
 		tinsert (path, node1)
 
 		local node2 = {}
@@ -681,7 +681,7 @@ function Nx.Travel:FindFlight (srcMapId, srcX, srcY, dstMapId, dstX, dstY)
 		node2.X = bt2Node.WX
 		node2.Y = bt2Node.WY
 		node2.Name = name
-		node2.Tex = "Interface\\Icons\\Ability_Mount_Wyvern_01"
+		node2.Tex = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01"
 		tinsert (path, node2)
 
 		return bestDist, path
@@ -737,7 +737,7 @@ function Nx.Travel:FindClosest (mapId, posX, posY)
 	end
 
 	if closeNode then
-		local tex = "Interface\\Icons\\Ability_Mount_Wyvern_01"
+		local tex = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01"
 		return closeDist ^ .5, closeNode, tex
 	end
 end

@@ -6,6 +6,7 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: CarbData
+## SavedVariablesPerCharacter: CarbMigr
 
 ## X-WoWI-ID: 12965
 

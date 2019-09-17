@@ -51,7 +51,7 @@ Nx.GuideInfo = {
 	},
 	{
 		T = L["Flight Master"],
-		Tx = "Ability_Mount_Wyvern_01",
+		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
 	},
 	{
 		T = L["Lightforged Beacon"],
@@ -1236,7 +1236,9 @@ function Nx.Map.Guide:UpdateList (list, pathI, listSide)
 								end
 							end
 						end
-						tx = "Interface\\Icons\\" .. tx
+						if string.find(tx, "Gfx") == nil then
+							tx = "Interface\\Icons\\" .. tx
+						end
 						local tip = folder.Link and format ("!%s^%s", folder.Link, folder.Tip or "") or folder.Tip
 						list:ItemSetButton ("Guide", pressed, tx, tip)
 					end
@@ -1277,7 +1279,11 @@ function Nx.Map.Guide:UpdateMapIcons()
 	end
 	for showType, folder in pairs (self.ShowFolders) do
 		local mode = strbyte (showType)
-		local tx = "Interface\\Icons\\" .. (folder.Tx or "")
+		local tx = folder.Tx
+		if string.find(tx, "Gfx") == nil then
+			local tx = "Interface\\Icons\\" .. (folder.Tx or "")
+		end
+		
 		if mode == 36 then
 			local typ = strsub (showType, 2, 2)
 			local longType
@@ -1541,7 +1547,7 @@ end
 Nx.GuidePOI = {
 	L["Auctioneer"] .. "~Racial_Dwarf_FindTreasure",
 	L["Banker"] .. "~INV_Misc_Coin_02",
-	L["Flight Master"] .. "~Ability_Mount_Wyvern_01",
+	L["Flight Master"] .. "~Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
 	L["Lightforged Beacon"] .. "~INV_Alchemy_AstralAlchemistStone",
 	L["Innkeeper"] .. "~Spell_Shadow_Twilight",
 	L["Mailbox"] .. "~INV_Letter_15",
@@ -1590,7 +1596,9 @@ function Nx.Map.Guide:UpdateZonePOIIcons()
 		for k, name in ipairs (Nx.GuidePOI) do
 			local showType, tx = Nx.Split ("~", name)
 			if showType and Nx.db.char.Map.ShowMailboxes then
-				tx = "Interface\\Icons\\" .. tx
+				if string.find(tx, "Gfx") == nil then
+					tx = "Interface\\Icons\\" .. tx
+				end
 				self:UpdateMapGeneralIcons (cont, showType, hideFac, tx, showType, "!POI", mapId)
 			end
 		end

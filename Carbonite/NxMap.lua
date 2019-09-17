@@ -5050,7 +5050,7 @@ function Nx.Map:Update (elapsed)
 			local f = self:GetIcon (1)
 
 			f.NxTip = Map.TaxiName
-			f.texture:SetTexture ("Interface\\Icons\\Ability_Mount_Wyvern_01")
+			f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01")
 			self:ClipFrameByMapType (f, x, y, 16, 16, 0)
 
 			self.Level = self.Level + 2

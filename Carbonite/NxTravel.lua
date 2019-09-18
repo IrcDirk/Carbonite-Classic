@@ -76,7 +76,7 @@ function Nx.Travel:Add (typ)
 						node.MapId = mapId
 						node.WX = wx
 						node.WY = wy
-						--tinsert (tdata, node)
+						tinsert (tdata, node)
 					end
 				end
 			end
@@ -700,6 +700,7 @@ function Nx.Travel:FindClosest (mapId, posX, posY)
 	local cont = Map:IdToContZone (mapId)
 
 	local tr = self.Travel[cont]
+
 	if not tr then		-- BGs?
 		return
 	end

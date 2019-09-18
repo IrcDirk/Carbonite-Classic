@@ -4737,7 +4737,7 @@ function Nx.Quest:PlaySound (sndI)
 	end
 
 	if sndI then
-		local snd = Nx.OptsDataSoundsIDs[sndI]
+		local snd = Nx.OptsDataSounds[sndI]
 		Nx:PlaySoundFile (snd)
 	end
 end

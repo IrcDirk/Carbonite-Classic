@@ -2228,6 +2228,21 @@ function CarboniteQuest:OnInitialize()
 	Nx.Whatsnew.Quests = {
 		[1504562405] = {"Sept 4th 2017","","New feature for world quests.","Carbonite Quests now has it's own WorldQuest Tracker","","You can find it as World Quest List under the menu in the top left of quest watch.","(Play button icon)"}
 	}
+	
+	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileChanged", "OnProfileChanged")
+	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileCopied", "OnProfileChanged")
+	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileReset", "OnProfileChanged")
+end
+
+function Nx.Quest:OnProfileChanged(event, database, newProfileKey)
+	if event == "OnProfileReset" then
+		qopts = {}
+		Nx.qdb.profile.QuestOpts = qopts
+		qopts.Version = Nx.VERSIONQOPTS
+		Nx.Quest:OptsReset()
+	end
+		
+	Nx.Opts.NXCmdReload()
 end
 
 function Nx.Quest:InitQuestCharacter()

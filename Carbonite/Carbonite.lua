@@ -30217,7 +30217,7 @@ function Nx:ADDON_LOADED (event, arg1, ...)
 	
 	for mid, n in pairs(nodes) do
 		for coords, npc in pairs(n) do
-			if npc.category == "innkeepers" then 
+			if npc.category == "flightmasters" then 
 				local x = floor(coords / 10000) / 100
 				local y = (coords % 10000) / 100
 				
@@ -30225,7 +30225,7 @@ function Nx:ADDON_LOADED (event, arg1, ...)
 				if npc.faction == "Alliance" then side = 1 end
 				if npc.faction == "Horde" then side = 2 end
 			
-				CarbMigr.FLIGHT_DATA[""..side..","..mid..","..x..","..y..""] = "|"..npc.name..", "..Nx.Map.MapWorldInfo[mid].Name.."|"
+				CarbMigr.FLIGHT_DATA[""..side..","..mid..","..x..","..y..""] = "|"..npc.fpName.."|"
 			end
 			
 			if npc.category == "innkeepers" or npc.category == "bankers" or npc.category == "auctioneers" or npc.category == "mailboxes" then 

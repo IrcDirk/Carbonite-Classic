@@ -53,13 +53,13 @@ Nx.GuideInfo = {
 		T = L["Flight Master"],
 		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
 	},
-	{
+	--[[{
 		T = L["Lightforged Beacon"],
 		Tx = "INV_Alchemy_AstralAlchemistStone",
-	},
+	},]]--
 	{
 		Name = L["Common Place"],
-		Tx = "INV_Misc_Map02",
+		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\INV_Misc_Map02",
 		{
 			T = L["Auctioneer"],
 			Tx = "Racial_Dwarf_FindTreasure",
@@ -72,7 +72,7 @@ Nx.GuideInfo = {
 			T = L["Innkeeper"],
 			Tx = "Spell_Shadow_Twilight",
 		},
-		{
+		--[[{
 			T = L["Void Storage"],
 			Tx = "spell_nature_astralrecalgroup",
 		},
@@ -83,7 +83,7 @@ Nx.GuideInfo = {
 		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},
+		},]]--
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
@@ -106,10 +106,10 @@ Nx.GuideInfo = {
 		Name = L["Class Trainer"],
 		T = "^C",
 		Tx = "INV_Misc_Book_10",
-		{
+		--[[{
 			T = L["Death Knight Trainer"],
 			Tx = "Spell_Deathknight_ClassIcon",
-		},
+		},]]--
 		{
 			T = L["Druid Trainer"],
 			Tx = "Ability_Druid_Maul",
@@ -146,14 +146,14 @@ Nx.GuideInfo = {
 			T = L["Warrior Trainer"],
 			Tx = "INV_Sword_27",
 		},
-		{
+		--[[{
 			T = L["Monk Trainer"],
 			Tx = "Class_Monk",
 		},
 		{
 			T = L["Demon Hunter Trainer"],
 			Tx = "ClassIcon_DemonHunter",
-		},
+		},]]--
 	},
 	{
 		Name = L["Trainer"],
@@ -166,12 +166,12 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Alchemy",
 		},
-		{
+		--[[{
 			Pre = L["Archaeology"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "trade_archaeology",
-		},
+		},]]--
 		{
 			Pre = L["Blacksmithing"],
 			Name = L["Trainer"],
@@ -196,12 +196,12 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Herbalism",
 		},
-		{
+		--[[{
 			Pre = L["Inscription"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Inscription_Tradeskill01",
-		},
+		},]]--
 		{
 			Pre = L["Jewelcrafting"],
 			Name = L["Trainer"],
@@ -254,7 +254,7 @@ Nx.GuideInfo = {
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
-			Tx = "inv_scroll_11",
+			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
 		},
 		{
 			Pre = L["Riding"],
@@ -292,7 +292,7 @@ Nx.GuideInfo = {
 			Tx = "INV_Ore_Copper_01",
 			Persist = "ShowGatherM",
 		},
-		{
+		--[[{
 			Name = L["Timber"],
 			Tx = "INV_Tradeskillitem_03",
 			Persist = "ShowGatherL",
@@ -315,7 +315,7 @@ Nx.GuideInfo = {
 			T = "$ G",
 			Id = "Gas",
 			Tx = "inv_gizmo_zapthrottlegascollector",
-		},
+		},]]--
 	},
 	{
 		Name = L["Instances"],
@@ -328,7 +328,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Inst = 2
 		},
-		{
+		--[[{
 			Name = "@O",
 			Inst = 3
 		},
@@ -363,7 +363,7 @@ Nx.GuideInfo = {
 		{
 			Name = "@KU",
 			Inst = 11
-		},
+		},]]--
 	},
 	{
 		Name = L["Zone"],
@@ -380,7 +380,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Map = 2
 		},
-		{
+		--[[{
 			Name = "@O",
 			Map = 3
 		},
@@ -407,9 +407,9 @@ Nx.GuideInfo = {
 		{
 			Name = "@A",
 			Map = 9
-		},		
+		},]]--
 	},
-	{
+	--[[{
 		Name = L["Trade Skill"],
 		Tx = "INV_Misc_Note_04",
 		{
@@ -432,7 +432,7 @@ Nx.GuideInfo = {
 			T = L["Moonwell"],
 			Tx = "INV_Fabric_MoonRag_Primal",
 		},
-	},
+	},]]--
 
 }
 

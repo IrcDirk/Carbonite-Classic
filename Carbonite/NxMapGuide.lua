@@ -250,12 +250,12 @@ Nx.GuideInfo = {
 			T = "^S",
 			Tx = "Trade_Fishing",
 		},
-		{
+		--[[{
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
 			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-		},
+		},]]--
 		{
 			Pre = L["Riding"],
 			Name = L["Trainer"],

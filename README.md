@@ -1,5 +1,6 @@
 # Carbonite-Classic
 Carbonite + Modules for WoW Classic
+https://www.curseforge.com/wow/addons/carbonite-classic
 
 ### U can donate to help Carbonite Classic development here:
 

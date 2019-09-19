@@ -1,8 +1,9 @@
 # Carbonite-Classic
 Carbonite + Modules for WoW Classic
 
-https://www.curseforge.com/wow/addons/carbonite-classic
-https://www.wowinterface.com/downloads/fileinfo.php?id=25328
+Twitch/Curse: https://www.curseforge.com/wow/addons/carbonite-classic
+
+WoWInterface: https://www.wowinterface.com/downloads/fileinfo.php?id=25328
 
 ### U can donate to help Carbonite Classic development here:
 

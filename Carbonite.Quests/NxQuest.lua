@@ -1734,7 +1734,7 @@ local function QuestOptions ()
 							type = "toggle",
 							width = "full",
 							name = L["Load quest data by threshold"],
-							desc = L["Loads all the carbonite quest data between player level - level threshold to 110"],
+							desc = L["Loads all the carbonite quest data between player level - level threshold to 60"],
 							get = function()
 								return Nx.qdb.profile.Quest.maxLoadLevel
 							end,
@@ -1747,9 +1747,9 @@ local function QuestOptions ()
 							order = 4,
 							type = "range",
 							name = L["Level Threshold"],
-							desc = L["Levels under player level to load quest data on reload"],
+							desc = L["Levels above player level to load quest data on reload"],
 							min = 1,
-							max = 110,
+							max = 60,
 							step = 1,
 							bigStep = 1,
 							get = function()
@@ -1854,84 +1854,6 @@ local function QuestOptions ()
 							end,
 							set = function()
 								Nx.qdb.profile.Quest.Load6 = not Nx.qdb.profile.Quest.Load6
-							end,
-						},
-						q7 = {
-							order = 13,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 61-70"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load7
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load7 = not Nx.qdb.profile.Quest.Load7
-							end,
-						},
-						q8 = {
-							order = 14,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 71-80"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load8
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load8 = not Nx.qdb.profile.Quest.Load8
-							end,
-						},
-						q9 = {
-							order = 15,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 81-85"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load9
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load9 = not Nx.qdb.profile.Quest.Load9
-							end,
-						},
-						q10 = {
-							order = 16,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 86-90"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load10
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load10 = not Nx.qdb.profile.Quest.Load10
-							end,
-						},
-						q11 = {
-							order = 17,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 91-100"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load11
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load11 = not Nx.qdb.profile.Quest.Load11
-							end,
-						},
-						q12 = {
-							order = 18,
-							type = "toggle",
-							width = "full",
-							name = L["Load Quests for Levels 101-110"],
-							desc = L["Loads all the carbonite quest data in this range on reload"],
-							get = function()
-								return Nx.qdb.profile.Quest.Load12
-							end,
-							set = function()
-								Nx.qdb.profile.Quest.Load12 = not Nx.qdb.profile.Quest.Load12
 							end,
 						},
 						spacer3 = {
@@ -3047,9 +2969,9 @@ function Nx.Quest:ProcessQuestDB(questTotal)
 	end
 	local maxLoadLevel = Nx.qdb.profile.Quest.maxLoadLevel
 	local enFact = Nx.PlFactionNum == 1 and 1 or 2
-	local qLoadLevel = max(1, UnitLevel ("player") - Nx.qdb.profile.Quest.LevelsToLoad)
+	local qLoadLevel = max(1, UnitLevel ("player") + Nx.qdb.profile.Quest.LevelsToLoad)
 	local qMaxLevel = 999
-
+print(qLoadLevel)
 	for mungeId, q in pairs (Nx.Quests) do
 		if mungeId < 0 then
 			if Nx.Quests[abs(mungeId)] then
@@ -3058,7 +2980,7 @@ function Nx.Quest:ProcessQuestDB(questTotal)
 			end
 		else
 			local name, side, level, minlevel, qnext = self:Unpack (q["Quest"])
-			if side == enFact or level > 0 and (maxLoadLevel and level < qLoadLevel) or level > qMaxLevel then
+			if side == enFact or level > 0 and (maxLoadLevel and level > qLoadLevel) or level > qMaxLevel then
 				Nx.Quests[mungeId] = nil
 			else
 				--[[if q["End"] and q["End"] == q["Start"] then
@@ -8719,7 +8641,7 @@ function Nx.Quest.Watch:Open()
 		Nx.Quest.AltView = not Nx.Quest.AltView
 		Nx.Quest.Watch:UpdateList()
 	end
-	self.ButSwap = Nx.Button:Create (win.Frm, "QuestWatchSwap", nil, nil, 34, -5 + yo, "TOPLEFT", 1, 1, func, self)
+	--self.ButSwap = Nx.Button:Create (win.Frm, "QuestWatchSwap", nil, nil, 34, -5 + yo, "TOPLEFT", 1, 1, func, self)
 
 	local function func (self, but)
 		local qopts = Nx.Quest:GetQuestOpts()
@@ -8789,7 +8711,7 @@ function Nx.Quest.Watch:Open()
 --	local item = menu:AddItem (0, L["Max Auto Track"], update, self)
 --	item:SetSlider (qopts, 1, 25, 1, "NXWAutoMax")
 
-	local i = 25
+	local i = 20
 
 	local item = menu:AddItem (0, L["Max Visible In List"], update, self)
 	item:SetSlider (qopts, 1, i, 1, "NXWVisMax")
@@ -8798,7 +8720,7 @@ function Nx.Quest.Watch:Open()
 	local function func()
 		Nx.Quest.WQList.Win:Show()
 	end
-	menu:AddItem (0, L["Open World Quest List"], func)
+	--menu:AddItem (0, L["Open World Quest List"], func)
 	
 	local function func()
 		Nx.Opts:Open ("Quest Watch")
@@ -8806,11 +8728,11 @@ function Nx.Quest.Watch:Open()
 
 	menu:AddItem (0, L["Options..."], func)
 	
-	local item = menu:AddItem (0, L["Hide BfA Emmissaries"], update, self)
-	item:SetChecked (qopts, "NXWHideBfAEmmissaries")
+	--local item = menu:AddItem (0, L["Hide BfA Emmissaries"], update, self)
+	--item:SetChecked (qopts, "NXWHideBfAEmmissaries")
 	
-	local item = menu:AddItem (0, L["Hide Legion Emmissaries"], update, self)
-	item:SetChecked (qopts, "NXWHideLegionEmmissaries")
+	--local item = menu:AddItem (0, L["Hide Legion Emmissaries"], update, self)
+	--item:SetChecked (qopts, "NXWHideLegionEmmissaries")
 	
 	-- Create priority button menu
 
@@ -8846,10 +8768,10 @@ function Nx.Quest.Watch:Open()
 	end
 
 	local item = menu:AddItem (0, L["Quest Giver Lower Levels To Show"], func, self)
-	item:SetSlider (Nx.qdb.profile.Quest, 0, 110, 1, "MapQuestGiversLowLevel")
+	item:SetSlider (Nx.qdb.profile.Quest, 0, 60, 1, "MapQuestGiversLowLevel")
 
 	local item = menu:AddItem (0, L["Quest Giver Higher Levels To Show"], func, self)
-	item:SetSlider (Nx.qdb.profile.Quest, 0, 110, 1, "MapQuestGiversHighLevel")
+	item:SetSlider (Nx.qdb.profile.Quest, 0, 60, 1, "MapQuestGiversHighLevel")
 
 --	local item = menu:AddItem (0, L["Group"], update, self)
 --	item:SetSlider (qopts, -200, 200, 1, "NXWPriGroup")

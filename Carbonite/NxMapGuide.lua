@@ -1060,14 +1060,14 @@ function Nx.Map.Guide:ClearShowFolders()
 		local folder = self:FindFolder (L["Ore"], gFolder)
 		self:AddShowFolders (folder)
 	end
-	if Nx.db.char.Map.ShowGatherL then
+	--[[if Nx.db.char.Map.ShowGatherL then
 		local folder = self:FindFolder (L["Timber"], gFolder)
 		self:AddShowFolders (folder)
 	end
 	if Nx.db.char.Map.ShowGatherA then
 		local folder = self:FindFolder (L["Artifacts"], gFolder)
 		self:AddShowFolders (folder)
-	end
+	end]]--
 	if Nx.db.char.Map.ShowQuestGivers > 1 then
 		local folder = self:FindFolder (L["Quest Givers"])
 		self:AddShowFolders (folder)

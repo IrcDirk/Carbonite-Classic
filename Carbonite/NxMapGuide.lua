@@ -1344,6 +1344,7 @@ function Nx.Map.Guide:UpdateMapIcons()
 				local stzone = Quest.QGivers[mapId]
 				if stzone then
 					if not Nx.CurCharacter["Level"] then return end
+					-- ADD Threshold
 					local minLvl = Nx.CurCharacter["Level"] - Nx.qdb.profile.Quest.MapQuestGiversLowLevel
 					local maxLvl = Nx.CurCharacter["Level"] + Nx.qdb.profile.Quest.MapQuestGiversHighLevel
 					local state = Nx.db.char.Map[folder.Persist]
@@ -1416,8 +1417,9 @@ function Nx.Map.Guide:UpdateMapIcons()
 							local quest = Nx.Quests[qId]
 							local startName, zone, x, y, level = Quest:GetSEPos (quest["Start"])
 							local wx, wy = Map:GetWorldPos (mapId, x, y)
-							local tx = anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
-							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx)
+							local tx = "Interface\\Minimap\\ObjectIconsAtlas"--anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
+							local tx1, txy1, tx2, ty2 = GetObjectIconTextureCoords(anyDaily and 4713 or 4726)
+							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx, tx1, txy1, tx2, ty2)
 							map:SetIconTip (icon, s)
 							icon.UDataQuestGiverD = qdata
 						end

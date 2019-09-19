@@ -10515,8 +10515,8 @@ end
 
 function Nx.Quest:Unpack (info)
 	if not info then return end
-	local name, side, lvl, minlvl, nextId, category = Nx.Split("|",info)
-	return name, tonumber(side), tonumber(lvl), tonumber(minlvl), tonumber(nextId), tonumber(category)
+	local name, side, lvl, minlvl, nextId, category, xp = Nx.Split("|",info)
+	return name, tonumber(side), tonumber(lvl), tonumber(minlvl), tonumber(nextId), tonumber(category), tonumber(xp)
 end
 
 -------------------------------------------------------------------------------

@@ -4313,8 +4313,8 @@ end
 
 local firstTimeEmpty = true
 function Nx.Quest:CalcDesc (qId, objI, cnt, total)
-	local odesc = GetQuestObjectiveInfo(qId, objI, false);
-	local _, _, desc = strmatch (odesc or "", "(%d+)/(%d+) (.+)")
+	--local odesc = GetQuestObjectiveInfo(qId, objI, false);
+	--local _, _, desc = strmatch (odesc or "", "(%d+)/(%d+) (.+)")
 	
 	if not desc then
 		desc = odesc or "?"

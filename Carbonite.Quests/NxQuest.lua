@@ -2788,9 +2788,20 @@ function Nx.Quest:Init()
 --			Nx.prt ("auto")
 			Nx.Quest:RecordQuestAcceptOrFinish()
 		end]]--
-
+		
 		QuestFrameDetailPanel_OnShow()
-
+		
+		local qId = GetQuestID()
+		local quest = Nx.Quests[qId]
+		local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
+		xp = xp or 0
+		
+		QuestInfoRewardsFrame.XPFrame:Hide()
+		if xp > 0 then
+			QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
+			QuestInfoRewardsFrame.XPFrame:Show()
+		end
+		
 		local auto = Nx.qdb.profile.Quest.AutoAccept
 		if IsShiftKeyDown() and IsControlKeyDown() then
 			auto = not auto
@@ -8285,10 +8296,22 @@ function Nx.Quest:UpdateQuestDetails()
 end
 
 function Nx.Quest:UpdateQuestDetailsTimer()
-
+	
+	-- HACK
+	function GetNumQuestLogRewardCurrencies()
+      return 1
+	end
+	
+	QuestInfoRewardsFrameQuestInfoItem1:Hide();
+	
 	--	Nx.prt ("UpdateQuestDetails")
 	QuestInfo_Display (CBQUEST_TEMPLATE, NXQuestLogDetailScrollChildFrame, nil, nil)
-
+	
+	-- HACK
+	function GetNumQuestLogRewardCurrencies()
+      return 0
+    end
+	
 	local r, g, b, a = Nx.Util_str2rgba (Nx.qdb.profile.Quest.DetailBC)
 
 	-- 0.18, 0.12, 0.06 parchment
@@ -8324,7 +8347,19 @@ function Nx.Quest:UpdateQuestDetailsTimer()
 	QuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
 --	MapQuestInfoRewardsFrame["SpellLearnText"]:SetTextColor(r, g, b)
 	QuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
+	
+	local qId = select(8, GetQuestLogTitle(GetQuestLogSelection()))
+	local quest = Nx.Quests[qId]
+	local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
+	xp = xp or 0
 
+	QuestInfoRewardsFrame.XPFrame:Hide()
+	if xp > 0 then
+		QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
+		QuestInfoRewardsFrame.XPFrame.ReceiveText:SetTextColor(r, g, b)
+		QuestInfoRewardsFrame.XPFrame:Show()
+	end
+	
 	for n = 1, 10 do
 		if _G["QuestInfoObjective" .. n] then
 			_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)

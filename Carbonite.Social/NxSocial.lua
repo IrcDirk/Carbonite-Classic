@@ -2693,7 +2693,8 @@ function Nx:ClearSocial (typ)
 end
 
 function CarboniteSocial:OnCombat_log_event_unfiltered (event, ...)
-	local sName, sFlags, sFlags2, dId, dName, dFlags = select (5, ...)
+	local timestamp, event, hideCaster, sId, sName, sFlags, sFlags2, dId, dName, dFlags, dFlags = CombatLogGetCurrentEventInfo()
+
 	if sName and bit.band (sFlags, 0x440) == 0x440 then
 --		Nx.prt ("punk-s %s", sName)
 		local near

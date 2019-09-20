@@ -8827,7 +8827,7 @@ function Nx.Quest.Watch:Open()
 	
 	-- Create right clik menu
 
-	local menu = Nx.Menu:Create (list.Frm)
+	--[[local menu = Nx.Menu:Create (list.Frm)
 	self.RMenu = menu
 
 	menu:AddItem (0, L["FindGroup"], function(self) 
@@ -8853,7 +8853,7 @@ function Nx.Quest.Watch:Open()
 				LFGListFrame_SetActivePanel(panel:GetParent(), searchPanel);
 			end
 		end
-	end, self)
+	end, self)]]--
 	
 	--
 
@@ -9869,7 +9869,7 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
 
 --	Nx.prt ("QuestListUpdate "..eventName)
 	
-	if eventName == "menu" then	
+	if eventName == "menu" and self.RMenu then	
 		local data = self.List:ItemGetData (val1)
 		if data then
 			local qId = bit.rshift (data, 16)

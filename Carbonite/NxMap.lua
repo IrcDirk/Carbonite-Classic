@@ -1894,7 +1894,7 @@ function Nx.Map:MinimapOwnInit()
 
 	mm:SetParent (self.Frm)
 	--self.MMFrm:SetQuestBlobRingAlpha(1)
-	self.MMFrm:SetPOIArrowTexture("")
+	--self.MMFrm:SetPOIArrowTexture("") -- WoW crash at this line !!!
 	mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)
 	mm:SetScript ("OnMouseUp", self.MinimapOnMouseUp)
 	mm:SetScript ("OnEnter", self.MinimapOnEnter)

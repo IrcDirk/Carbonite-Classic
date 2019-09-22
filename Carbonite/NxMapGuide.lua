@@ -28,13 +28,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 Nx.GuideAbr = {
 	["K"] = L["Kalimdor"],
 	["E"] = L["Eastern Kingdoms"],
-	["O"] = L["Outland"],
-	["N"] = L["Northrend"],
-	["M"] = L["The Maelstrom"],
-	["P"] = L["Pandaria"],
-	["D"] = L["Draenor"],
-	["B"] = L["Broken Isles"],
-	["A"] = L["Argus"],
 }
 Nx.GuideInfo = {
 	Name = L["All"],
@@ -49,10 +42,10 @@ Nx.GuideInfo = {
 		T = L["Stable Master"],
 		Tx = "Ability_Hunter_BeastTaming",
 	},
-	{
+	--[[{
 		T = L["Flight Master"],
 		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
-	},
+	},]]--
 	--[[{
 		T = L["Lightforged Beacon"],
 		Tx = "INV_Alchemy_AstralAlchemistStone",
@@ -83,11 +76,11 @@ Nx.GuideInfo = {
 		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},]]--
+		},
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
-		},
+		},]]--
 		{
 			T = L["Mailbox"],
 			Tx = "INV_Letter_15",
@@ -201,13 +194,13 @@ Nx.GuideInfo = {
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Inscription_Tradeskill01",
-		},]]--
+		},
 		{
 			Pre = L["Jewelcrafting"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Misc_Gem_02",
-		},
+		},]]--
 		{
 			Pre = L["Leatherworking"],
 			Name = L["Trainer"],
@@ -818,20 +811,20 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			["Blasted Lands"] = "Spell_Arcane_TeleportStonard",
 			["Darnassus"] = "Spell_Arcane_TeleportDarnassus",
 			["Teldrassil"] = "Spell_Arcane_TeleportDarnassus",
-			["The Exodar"] = "Spell_Arcane_TeleportExodar",
-			["Hellfire Peninsula"] = "Spell_Arcane_TeleportStonard",
+			--["The Exodar"] = "Spell_Arcane_TeleportExodar",
+			--["Hellfire Peninsula"] = "Spell_Arcane_TeleportStonard",
 			["Ironforge"] = "Spell_Arcane_TeleportIronForge",
-			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
+			--["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
 			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
-			["Shattrath"] = "Spell_Arcane_TeleportShattrath",
-			["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
+			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
+			--["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
 			["Stormwind City"] = "Spell_Arcane_TeleportStormWind",
 			["Thunder Bluff"] = "Spell_Arcane_TeleportThunderBluff",
 			["Undercity"] = "Spell_Arcane_TeleportUnderCity",
-			["Dalaran"] = "Spell_Arcane_TeleportDalaran",
-			["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
-			["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
+			--["Dalaran"] = "Spell_Arcane_TeleportDalaran",
+			--["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
+			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)
@@ -878,7 +871,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			f.Id = a
 			folder[a] = f
 		end
-	elseif folder.Name == L["Timber"] then
+	--[[elseif folder.Name == L["Timber"] then
 		for a,b in pairs(Nx.GatherInfo["L"]) do
 			local name, tx, skill = Nx:GetGather ("L", a)
 			if not name then
@@ -892,7 +885,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			f.Tx = tx
 			f.Id = a
 			folder[a] = f
-		end
+		end]]--
 	elseif folder.Name == L["Ore"] then
 		for a,b in pairs(Nx.GatherInfo["M"]) do
 			local name, tx, skill = Nx:GetGather ("M", a)
@@ -953,7 +946,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 						end
 						local f = {}
 						local numPlyrStr = numPlyr
-						if tonumber (numPlyr) == 1025 then
+						if tonumber (numPlyr) == 40 then
 							numPlyrStr = "Raid"
 						end
 						if tonumber (numPlyr) == 50 then
@@ -1291,8 +1284,8 @@ function Nx.Map.Guide:UpdateMapIcons()
 				longType = "Herb"
 			elseif typ == "M" then
 				longType = "Mine"
-			elseif typ == "L" then
-				longType = "Timber"
+			--elseif typ == "L" then
+			--	longType = "Timber"
 			end
 			local fid = folder.Id
 			local data = longType and Nx:GetData (longType) or Nx.db.profile.GatherData["Misc"]
@@ -1526,11 +1519,11 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
 									local wx, wy = map:GetWorldPos(mapId, x, y)
 									if mapId == 625 or mapId == 627 then level = nil end -- Fixing Dalaran icons
 									local icon
-									if showType == "Lightforged Beacon" then
-										icon = map:AddIconPt (iconType, wx, wy, level, nil, "atlas:FlightMaster_Argus-TaxiNode_Neutral")
-									else
+									--if showType == "Lightforged Beacon" then
+									--	icon = map:AddIconPt (iconType, wx, wy, level, nil, "atlas:FlightMaster_Argus-TaxiNode_Neutral")
+									--else
 										icon = map:AddIconPt (iconType, wx, wy, level, nil, tx)
-									end
+									--end
 									if not map:GetMapNameByID(mapId) then
 										Nx.prt("Guide Icon Err: " .. mapId)
 									end
@@ -1550,7 +1543,7 @@ Nx.GuidePOI = {
 	L["Auctioneer"] .. "~Racial_Dwarf_FindTreasure",
 	L["Banker"] .. "~INV_Misc_Coin_02",
 	L["Flight Master"] .. "~Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
-	L["Lightforged Beacon"] .. "~INV_Alchemy_AstralAlchemistStone",
+	--L["Lightforged Beacon"] .. "~INV_Alchemy_AstralAlchemistStone",
 	L["Innkeeper"] .. "~Spell_Shadow_Twilight",
 	L["Mailbox"] .. "~INV_Letter_15",
 	}
@@ -2676,12 +2669,12 @@ Nx.Map.Guide.ItemCats = {
 			Tx = "Trade_Engineering",
 			Item = -9,
 		},
-		{
+		--[[{
 			Name = "Jewelcrafting",
 			T = "Jewelcrafting",
 			Tx = "INV_Misc_Gem_02",
 			Item = -9,
-		},
+		},]]--
 		{
 			Name = "Leatherworking",
 			T = "Leatherworking",
@@ -2888,10 +2881,10 @@ Nx.Map.Guide.ItemStatRequiredSkill = {
 	"First Aid",
 	"Fishing",
 	"Herbalism",
-	"Jewelcrafting",
+	--"Jewelcrafting",
 	"Leatherworking",
 	"Mining",
-	"Inscription",
+	--"Inscription",
 	"Riding",
 	"Tailoring"
 }
@@ -2940,7 +2933,7 @@ Nx.Map.Guide.ItemTypeNames = {
 	"Miscellaneous^12",
 	"Miscellaneous^23",
 	"Alchemy","Blacksmithing","Cooking","Enchanting","Engineering",
-	"Jewelcrafting","Leatherworking","Tailoring",
+	"Leatherworking","Tailoring",
 	"Food",
 	"Elixir",
 	"Flask",

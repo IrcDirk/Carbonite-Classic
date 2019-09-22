@@ -1522,6 +1522,9 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
 									--if showType == "Lightforged Beacon" then
 									--	icon = map:AddIconPt (iconType, wx, wy, level, nil, "atlas:FlightMaster_Argus-TaxiNode_Neutral")
 									--else
+										if string.find(tx, "Gfx") == nil and string.find(tx, "Icons") == nil then
+											tx = "Interface\\Icons\\" .. tx
+										end							
 										icon = map:AddIconPt (iconType, wx, wy, level, nil, tx)
 									--end
 									if not map:GetMapNameByID(mapId) then
@@ -1697,7 +1700,7 @@ function Nx.Map.Guide:OnMapUpdate()
 			if npcI then
 				self.Map:SetTarget ("Guide", x, y, x, y, false, folder, folder.Name, false, mapId)
 				if false and npcI2 then
-					self.Map:SetTarget("Guide2",x2,y2,x2,y2,false,folder,folder.Name,true,mapId2)
+					self.Map:SetTarget("Guide2", x2, y2, x2, y2, false, folder, folder.Name, true, mapId2)
 				end
 			end
 		end

@@ -53,8 +53,6 @@ function Nx.Travel:Init()
 end
 
 function Nx.Travel:Add (typ)
-
-
 	local Map = Nx.Map
 	local hideFac = UnitFactionGroup ("player") == "Horde" and 1 or 2
 	for a,b in pairs(Nx.GuideData[typ]) do

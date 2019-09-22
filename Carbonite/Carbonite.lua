@@ -3391,6 +3391,9 @@ function Nx:GatherImportCarb (nodeType)
 			for coords, nodetype in pairs(zoneT) do
 				local nx, ny = Nx:GatherConvert(coords)
 				local nodeId = Nx:GatherNodeToCarb (nodetype)
+				if nodeType == "NXMine" or nodeType == "NXHerb" then
+					nodeId = nodetype
+				end
 				if nx and ny and nodeId then
 					Nx:Gather (nodeType, nodeId, mapId, nx * 100, ny * 100)
 					cnt = cnt + 1

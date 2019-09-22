@@ -1871,7 +1871,7 @@ local function guidegatherConfig ()
 								Nx.Opts:NXCmdDeleteMine()
 							end,
 						},
-						CmdDelTimber = {
+						--[[CmdDelTimber = {
 							order = 5,
 							type = "execute",
 							width = "full",
@@ -1879,7 +1879,7 @@ local function guidegatherConfig ()
 							func = function ()
 								Nx.Opts:NXCmdDeleteTimber()
 							end,
-						},
+						},]]--
 						CmdDelMisc = {
 							order = 6,
 							type = "execute",
@@ -3853,7 +3853,7 @@ local function guidegatherConfig ()
 						},
 					},
 				},
-				TimberDisp = {
+				--[[TimberDisp = {
 					order = 5,
 					type = "group",
 					name = L["Timber"],
@@ -3920,7 +3920,7 @@ local function guidegatherConfig ()
 							end,
 						},
 					},
-				},
+				},]]--
 			},
 		}
 	end

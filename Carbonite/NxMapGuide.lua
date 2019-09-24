@@ -1338,8 +1338,8 @@ function Nx.Map.Guide:UpdateMapIcons()
 				if stzone then
 					if not Nx.CurCharacter["Level"] then return end
 					-- ADD Threshold
-					local minLvl = Nx.CurCharacter["Level"] - Nx.qdb.profile.Quest.MapQuestGiversLowLevel
-					local maxLvl = Nx.CurCharacter["Level"] + Nx.qdb.profile.Quest.MapQuestGiversHighLevel
+					local minLvl = Nx.qdb.profile.Quest.MapQuestGiversLowLevel
+					local maxLvl = Nx.qdb.profile.Quest.MapQuestGiversHighLevel
 					local state = Nx.db.char.Map[folder.Persist]
 					local debugMap = Nx.db.profile.Debug.DebugMap
 					local showComplete = self.ShowQuestGiverCompleted

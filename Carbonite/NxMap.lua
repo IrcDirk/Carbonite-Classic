@@ -4704,8 +4704,6 @@ function Nx.Map:Update (elapsed)
 	if Nx.db.profile.Map.ShowTrail then		
 		self:UpdatePlyrHistory()
 	end
-
-	
 	
 --[[
 	if self["DebugHotspots"] then

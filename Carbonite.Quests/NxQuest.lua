@@ -130,7 +130,7 @@ local defaults = {
 			HCheckCompleted = false,
 			maxLoadLevel = false,
 			LevelsToLoad = 10,
-			MapQuestGiversHighLevel = 110,
+			MapQuestGiversHighLevel = 60,
 			MapQuestGiversLowLevel = 1,
 			MapShowWatchAreas = true,
 			MapWatchAreaAlpha = "1|1|1|.4",
@@ -2982,7 +2982,7 @@ function Nx.Quest:ProcessQuestDB(questTotal)
 	local enFact = Nx.PlFactionNum == 1 and 1 or 2
 	local qLoadLevel = max(1, UnitLevel ("player") + Nx.qdb.profile.Quest.LevelsToLoad)
 	local qMaxLevel = 999
-print(qLoadLevel)
+
 	for mungeId, q in pairs (Nx.Quests) do
 		if mungeId < 0 then
 			if Nx.Quests[abs(mungeId)] then
@@ -7317,7 +7317,7 @@ function Nx.Quest.List:Update()
 		local mapId = Map:GetCurrentMapId()
 
 		local minLevel = UnitLevel ("player") - GetQuestGreenRange()
-		local maxLevel = showHighLevel and 110 or UnitLevel ("player") + 6
+		local maxLevel = showHighLevel and 60 or UnitLevel ("player") + 6
 
 		-- Divider
 

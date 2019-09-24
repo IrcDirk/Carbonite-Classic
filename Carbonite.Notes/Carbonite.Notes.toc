@@ -1,0 +1,15 @@
+## Interface: 11302
+## Title: Carbonite Notes @project-version@
+## Version: @project-version@
+## Author: No one
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXNotes
+## RequiredDeps: Carbonite
+
+## X-WoWI-ID: 23406
+
+Locales\locales.xml
+NxFav.lua
+

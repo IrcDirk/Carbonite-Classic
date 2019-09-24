@@ -6725,13 +6725,13 @@ function Nx.Quest.List:Refresh(event)
 			if not hideLegionEmmissaries and pLvl > 109 then emmLegion = GetQuestBountyInfoForMapID(619) end
 		end
 		
-		Nx.Quest:RecordQuests(isInst and 0 or nil)
 		Nx.Quest.List:LogUpdate()
+		Nx.Quest:RecordQuests(isInst and 0 or nil)
 	end
 	
-	--[[Nx.Quest.List:LogUpdate()
+	--Nx.Quest.List:LogUpdate()
 	
-	local func = function(timer)	
+	--[[local func = function(timer)	
 		C_Timer.After(.5, function()
 			--Nx.Quest:ScanBlizzQuestDataZone()
 			Nx.Quest:RecordQuests()

@@ -1023,7 +1023,7 @@ local function mapConfig ()
 							type = "description",
 							name = "\n",
 						},
-						MMSquare = {
+						--[[MMSquare = {
 							order = 3,
 							type = "toggle",
 							width = "full",
@@ -1035,7 +1035,7 @@ local function mapConfig ()
 							set = function()
 								Nx.db.profile.MiniMap.Square = not Nx.db.profile.MiniMap.Square
 							end,
-						},
+						},]]--
 						MMAboveIcons = {
 							order = 4,
 							type = "toggle",

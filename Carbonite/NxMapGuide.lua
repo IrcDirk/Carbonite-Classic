@@ -2193,8 +2193,8 @@ function Nx.Map.Guide:CaptureItems()
 					end
 				end
 			end
-			local _, id = Nx.Split (":", link)
-			links[n] = id .. "^" .. strtrim (priceStr)
+			local xf, id = Nx.Split (":", link)
+			links[n] = (id or "") .. "^" .. strtrim (priceStr)
 		end
 		local vv = Nx.db.profile.VendorV.Vendors
 		local nobefore = not vv[npc]

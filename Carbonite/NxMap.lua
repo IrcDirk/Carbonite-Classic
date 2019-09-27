@@ -4270,7 +4270,7 @@ function Nx.Map:Update (elapsed)
 
 	if self.MapId ~= mapId then
 
-		Nx.prtD ("%d Map change %d to %d", self.Tick, self.MapId, mapId)
+--		Nx.prtD ("%d Map change %d to %d", self.Tick, self.MapId, mapId)
 
 		self.CurMapBG = self:IsBattleGroundMap (mapId)
 
@@ -4379,7 +4379,7 @@ function Nx.Map:Update (elapsed)
 
 	if Nx.Map.RMapId ~= rid then
 		if rid ~= 9000 then
-			Nx.prtD ("Map zone changed %d, %d", rid, mapId)
+--			Nx.prtD ("Map zone changed %d, %d", rid, mapId)
 
 			if Nx.Map.RMapId == 9000 then	-- Loading?
 				self.CurOpts = nil
@@ -6885,7 +6885,7 @@ function Nx.Map:UpdateMiniFrames()
 --					txname = "Textures\\Minimap\\"..txname
 					f.texture:SetTexture (txname)
 					
-					Nx.prtD("%s %s, %s", x, y, txname)
+--					Nx.prtD("%s %s, %s", x, y, txname)
 --[[
 --					Nx.prtCtrl ("%s %s, %s", x, y, txname)
 

@@ -4244,16 +4244,16 @@ function Nx.Quest:QuestQueryTimer()
 	end
 end
 
-local firstTimeEmpty = true
 function Nx.Quest:CalcDesc (qId, objI, cnt, total)
-	--local odesc = GetQuestObjectiveInfo(qId, objI, false);
-	--local _, _, desc = strmatch (odesc or "", "(%d+)/(%d+) (.+)")
+
+	local odesc = Nx.Quest:GetQuestObjectiveInfo(qId, objI, false);
+	local desc, _, _ = strmatch (odesc or "", "(.+): (%d+)/(%d+)")
 	
 	if not desc then
 		desc = odesc or "?"
 	end
 	
-	--Nx.prt("%s, %s, %s", qId, objI, odesc)
+--	Nx.prt("%s, %s, %s, %s, %s", qId, objI, desc, cnt, total)
 	
 	if total == 0 then
 		return desc, cnt == 1
@@ -4262,6 +4262,16 @@ function Nx.Quest:CalcDesc (qId, objI, cnt, total)
 	end
 end
 
+function Nx.Quest:GetQuestObjectiveInfo(qId, objI, qText)
+	local obj = C_QuestLog.GetQuestObjectives(qId)
+	obj = obj[objI] or nil
+	
+	if obj then
+		return obj.text, obj.type, obj.finished
+	end
+	
+	return 
+end
 
 function Nx.Quest:GetLogIdLevel (questID)
 	if questID > 0 then

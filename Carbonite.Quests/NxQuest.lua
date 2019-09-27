@@ -11483,7 +11483,7 @@ function Nx.Quest:PartyStartSend()
 	end
 
 	if Nx.qdb.profile.Quest.PartyShare then
-		QSendParty = Nx:ScheduleTimer(self.PartyBuildSendData,.5,self)
+		QSendParty = Nx:ScheduleTimer(self.PartyBuildSendData,2,self)
 	end
 end
 

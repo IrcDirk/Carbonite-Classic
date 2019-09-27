@@ -4264,7 +4264,8 @@ end
 
 function Nx.Quest:GetQuestObjectiveInfo(qId, objI, qText)
 	local obj = C_QuestLog.GetQuestObjectives(qId)
-	obj = obj[objI] or nil
+
+	obj = (obj and obj[objI]) or nil
 	
 	if obj then
 		return obj.text, obj.type, obj.finished
@@ -11515,6 +11516,9 @@ function Nx.Quest:PartyBuildSendData()
 				local _, _, cnt, total = strfind (cur[n], "(%d+)/(%d+)")
 				cnt = tonumber (cnt)
 				total = tonumber (total)
+
+				local desc, done = self:CalcDesc (qId, n, cnt, total)
+				cur[n] = desc
 
 				if cnt and total then
 					if cnt > 200 then

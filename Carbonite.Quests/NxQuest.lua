@@ -3804,10 +3804,12 @@ function Nx.Quest:RecordQuestsLog()
 
 						local total = qT[n + 100]
 
-						local desc, done = self:CalcDesc (qId, n, cnt, total)
-
-						cur[n] = desc
-
+						--local desc, done = self:CalcDesc (qId, n, cnt, total)
+						--cur[n] = desc
+						
+						cur[n] = qT[n + 200]
+						local done = qT[n + 300]
+						
 						done = cur[n + 200] and done
 						cur[n + 200] = done
 
@@ -3858,8 +3860,11 @@ function Nx.Quest:RecordQuestsLog()
 
 						local total = qT[n + 100]
 
-						cur[n], cur[n + 100] = self:CalcDesc (qId, n, cnt, total)
-
+						--cur[n], cur[n + 100] = self:CalcDesc (qId, n, cnt, total)
+						
+						cur[n] = qT[n + 200]
+						cur[n + 100] = qT[n + 300]
+						
 						cur[n + 400] = cur.PartyNames
 
 						if not cur[n + 100] then
@@ -11394,7 +11399,11 @@ function Nx.Quest:OnPartyMsg (plName, msg)
 	if Nx.qdb and Nx.qdb.profile and not Nx.qdb.profile.Quest.PartyShare then
 		return
 	end
-
+	
+	local msgA = {Nx.Split("|", msg)}
+	
+	msg = msgA[1]
+	
 	-- msg = "Qp1iiiifo111122223333"
 
 --	Nx.prt ("OnPartyMsg %s: %s", plName, msg)
@@ -11438,13 +11447,17 @@ function Nx.Quest:OnPartyMsg (plName, msg)
 	--			Nx.prt ("%s: %s %x %s", plName, qId, flgs, oCnt)
 
 				for i = 1, oCnt do
-
+					
+					local desc, done = Nx.Split("^", msgA[i + 1])
+					
 					local o = off + 6 + (i - 1) * 4
 					local cnt = tonumber (strsub (msg, o, o + 1), 16) or 0
 					local total = tonumber (strsub (msg, o + 2, o + 3), 16) or 0
 
 					q[i] = cnt
 					q[i + 100] = total
+					q[i + 200] = desc
+					q[i + 300] = done == 1 and true or false
 				end
 			end
 
@@ -11484,10 +11497,11 @@ function Nx.Quest:PartyStartSend()
 	end
 
 	if Nx.qdb.profile.Quest.PartyShare then
-		QSendParty = Nx:ScheduleTimer(self.PartyBuildSendData,2,self)
+		QSendParty = Nx:ScheduleTimer(self.PartyBuildSendData,.5,self)
 	end
 end
 
+local PartySendTimer
 function Nx.Quest:PartyBuildSendData()
 
 	local data = {}
@@ -11510,7 +11524,8 @@ function Nx.Quest:PartyBuildSendData()
 			end
 
 			local str = format ("%04x%c%c", qId, flgs + 35, cur.LBCnt + 35)
-
+			local strO = ""
+			
 			for n = 1, cur.LBCnt do
 
 				local _, _, cnt, total = strfind (cur[n], "(%d+)/(%d+)")
@@ -11533,22 +11548,21 @@ function Nx.Quest:PartyBuildSendData()
 				end
 
 				str = str .. format ("%02x%02x", cnt, total)
+				
+				if desc then
+					strO = strO .. "|" .. desc .. "^" .. (done and 1 or 0)
+				end
 			end
 
-			sendStr = sendStr .. str
+			sendStr = sendStr .. str .. strO
 
-			if #sendStr > 80 then
-				tinsert (data, sendStr)
-				sendStr = ""
-			end
+			
+			tinsert (data, sendStr)
+			sendStr = ""
 		end
 	end
 
-	if #sendStr > 0 or #data == 0 then
-		tinsert (data, sendStr)
-	end
-
-	QSendParty = Nx:ScheduleTimer(self.PartySendTimer,0,self)
+	PartySendTimer = Nx:ScheduleRepeatingTimer(self.PartySendTimer,0,self)
 
 	return 0
 end
@@ -11566,8 +11580,8 @@ function Nx.Quest:PartySendTimer()
 
 	self.PartySendDataI = qi + 1
 
-	if self.PartySendData[self.PartySendDataI] then
-		return .15
+	if not self.PartySendData[self.PartySendDataI] then
+		Nx:CancelTimer(PartySendTimer)
 	end
 end
 

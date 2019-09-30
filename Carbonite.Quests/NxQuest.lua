@@ -4298,7 +4298,7 @@ function Nx.Quest:CreateLink (qId, realLevel, title)
 	if realLevel <= 0 then	-- Could be a 0
 		realLevel = -1
 	end
-	return format ("|cffffff00|Hquest:%s:%s|h[%s]|h|r", qId, realLevel, title)
+	return format ("\124cffffff00\124Hquest:%s:%s\124h[%s]\124h\124r", qId, realLevel, title)
 end
 
 function Nx.Quest:ExtractTitle (title)
@@ -6693,7 +6693,7 @@ function Nx.Quest.List:MakeDescLink (cur, id, debug)
 		level = UnitLevel ("player") or 0
 	end
 	
-	local s = GetQuestLink(qId) or '' --Quest:CreateLink (qId, realLevel, title)
+	local s = Quest:CreateLink (qId, realLevel, title) or '' --
 
 	-- Needs a leading space according to Blizzard. White color breaks link
 	if quest and Nx.qdb.profile.Quest.ShowLinkExtra then

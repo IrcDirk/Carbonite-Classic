@@ -5098,6 +5098,8 @@ function Nx.Map:Update (elapsed)
 		self:SetToCurrentZone()
 	end
 	
+	self.Frm:SetAlpha(self.BackgndAlpha)
+	
 	-- Debug
 --[[
 	Nx.prt ("Map WPos %s ZPos %s WScale %s", self.GetWorldPosCnt or 0, self.GetZonePosCnt or 0, self.GetWorldZoneScaleCnt or 0)

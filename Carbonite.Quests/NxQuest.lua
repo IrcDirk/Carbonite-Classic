@@ -6693,11 +6693,14 @@ function Nx.Quest.List:MakeDescLink (cur, id, debug)
 		level = UnitLevel ("player") or 0
 	end
 	
-	local s = Quest:CreateLink (qId, realLevel, title) or '' --
+	local s = title --Quest:CreateLink (qId, realLevel, title) or '' --
 
 	-- Needs a leading space according to Blizzard. White color breaks link
 	if quest and Nx.qdb.profile.Quest.ShowLinkExtra then
 		local part = Quest:GetPartTitle (quest, cur) or ''
+		if part ~= "" then
+			part = " " .. part
+		end
 		if level > 0 then
 			s = format (" [%s] %s%s", level, s, part)
 		else 

@@ -10092,7 +10092,7 @@ function Nx.Quest.Watch:Add (curi,addnew)
 		Quest:PartyStartSend()
 	end
 	local qStatus = Nx.Quest:GetQuest (qId)
-	if not qStatus then
+	if not qStatus ~= "W" then
 		Nx.Quest:SetQuest (qId, "W")
 		Quest:PartyStartSend()
 	end

@@ -71,7 +71,7 @@ local function mainConfig()
 	if not config then
 		config = {
 			type = "group",
-			name = "Carbonite",
+			name = "Carbonite Classic",
 			args = {
 				main = {
 					order = 1,
@@ -82,12 +82,13 @@ local function mainConfig()
 							type = "description",
 							name = L["\nCarbonite is a full featured, powerful map addon providing a versitile easy to use google style map which either can replace or work with the current blizzard maps.\n\nThrough modules it can also be expanded to do even more to help make your game easier."] ..
 								"\n\n\n|cff9999ff" .. L["Release Version"] .. ": |cffd700ff" .. Nx.VERMAJOR .. "." .. (Nx.VERMINOR*10) .. " Build " .. Nx.BUILD .. "\n" ..
-								"|cff9999ff" .. L["Maintained by"] .. ": |cffd700ffThe Community.\n" ..
-								"|cff9999ff" .. L["Website"] .. ": |cffd700ffhttp://www.wowinterface.com/downloads/info12965-Carbonite.html\n"..
+								"|cff9999ff" .. L["Maintained by"] .. ": |cffd700ffIrcDirk\n" ..
+								"|cff9999ff" .. L["Website"] .. ": |cffd700ffhttps://github.com/IrcDirk/Carbonite-Classic\n"..
 								"\n"..
-								"|cd700ffff" .. L["For support, please visit the forums for Carbonite on WoW Interface."] .. "\n"..
+								"|cd700ffff" .. L["For support, please visit the forums for Carbonite on WoW Interface or Curse/Twitch."] .. "\n"..
 								"|cd700ffff" .. L["Special thanks to"] .. ": \n\n"..
 								"|cff9999ff" .. L["Cirax for Carbonite2 Logo"] .. "\n" ..
+								"|cff9999ff" .. L["Rythal for hard work in all those years"] .. "\n" ..
 								"|cff9999ff" .. L["ircdirk & atl77 for Quest Database updates"] .. "\n" ..
 								"|cff9999ff" .. L["nelegalno for many cleanups, api fixes"] .. "\n" ..
 								"|cff9999ff" .. L["Naharis for quest watchlist fixes"] .. "\n" ..

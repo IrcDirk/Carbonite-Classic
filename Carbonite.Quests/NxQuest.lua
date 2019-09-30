@@ -3805,9 +3805,10 @@ function Nx.Quest:RecordQuestsLog()
 						local total = qT[n + 100]
 
 						--local desc, done = self:CalcDesc (qId, n, cnt, total)
-						--cur[n] = desc
 						
-						cur[n] = qT[n + 200]
+						desc = qT[n + 200]
+						cur[n] = desc
+						
 						local done = qT[n + 300]
 						
 						done = cur[n + 200] and done
@@ -6672,7 +6673,7 @@ end
 -------------------------------------------------------------------------------
 
 function Nx.Quest.List:MakeDescLink (cur, id, debug)
-
+--    print(GetQuestLogTitle(GetQuestLogIndexByID(id)));
 	local qId = cur and cur.QId or id	-- Database list will have nil cur
 
 	local Quest = Nx.Quest

@@ -18,6 +18,7 @@ L["ItemTypes"] = {
 	"Faretre",
 	"Reagenti",
 	"Ricette",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"Oggetti Artigianato",
 	"Armi",
 }

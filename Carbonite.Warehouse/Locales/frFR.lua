@@ -17,6 +17,7 @@ L["ItemTypes"] = {
 	"Carquois",
 	"Composant",
 	"Recette",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"Artisanat",
 	"Arme",
 }

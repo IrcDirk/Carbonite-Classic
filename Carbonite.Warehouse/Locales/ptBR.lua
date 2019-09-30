@@ -18,6 +18,7 @@ L["ItemTypes"] = {
 	"Quiver",
 	"Reagent",
 	"Recipe",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"Trade Goods",
 	"Weapon",
 }

@@ -14,6 +14,7 @@ L["ItemTypes"] = {
 	"箭袋",
 	"施法材料",
 	"配方",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"商品",
 	"武器",
 }

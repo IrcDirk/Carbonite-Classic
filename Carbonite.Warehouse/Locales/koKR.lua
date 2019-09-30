@@ -18,6 +18,7 @@ L["ItemTypes"] = {
 	"화살통",
 	"재료",
 	"제조법",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"직업 용품",
 	"무기",
 }

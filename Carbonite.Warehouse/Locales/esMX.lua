@@ -18,6 +18,7 @@ L["ItemTypes"] = {
 	"Carcaj",
 	"Componente",
 	"Receta",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"Objeto comerciable",
 	"Arma",
 }

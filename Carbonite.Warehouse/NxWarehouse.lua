@@ -2034,10 +2034,10 @@ function Nx.Warehouse:UpdateItems()
 		end
 
 		local rbank = ch["WareRBank"]
-		if not rbank then
+		--[[if not rbank then
 			list:ItemAdd (0)
 			list:ItemSet (3, L["|cffff1010No reagent bank data - visit your bank"])
-		end
+		end]]--
 
 		local inv = ch["WareInv"]
 

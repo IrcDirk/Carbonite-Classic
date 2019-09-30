@@ -18,6 +18,7 @@ L["ItemTypes"] = {
 	"Колчан",
 	"Реагент",
 	"Рецепт",
+	AUCTION_CATEGORY_TRADE_GOODS,
 	"Материалы",
 	"Оружие",
 }

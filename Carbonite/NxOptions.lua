@@ -87,8 +87,8 @@ local function mainConfig()
 								"\n"..
 								"|cd700ffff" .. L["For support, please visit the forums for Carbonite on WoW Interface or Curse/Twitch."] .. "\n"..
 								"|cd700ffff" .. L["Special thanks to"] .. ": \n\n"..
-								"|cff9999ff" .. L["Cirax for Carbonite2 Logo"] .. "\n" ..
 								"|cff9999ff" .. L["Rythal for hard work in all those years"] .. "\n" ..
+								"|cff9999ff" .. L["Cirax for Carbonite2 Logo"] .. "\n" ..
 								"|cff9999ff" .. L["ircdirk & atl77 for Quest Database updates"] .. "\n" ..
 								"|cff9999ff" .. L["nelegalno for many cleanups, api fixes"] .. "\n" ..
 								"|cff9999ff" .. L["Naharis for quest watchlist fixes"] .. "\n" ..

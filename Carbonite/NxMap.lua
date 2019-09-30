@@ -4234,8 +4234,8 @@ end
 -- Update window fade
 
 function Nx.Map:WinUpdateFade (fade)
-	--self.ToolBar:SetFade (fade)
-	--self.ButAutoScaleOn.Frm:SetAlpha (fade)
+	--self.ToolBar:SetFade (fade * .9 + .1)
+	self.ButAutoScaleOn.Frm:SetAlpha (fade * .9 + .1)
 end
 
 --------

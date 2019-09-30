@@ -1893,8 +1893,10 @@ function Nx.Map:MinimapOwnInit()
 	self.MMAlphaDelay = 100
 
 	mm:SetParent (self.Frm)
+
 	--self.MMFrm:SetQuestBlobRingAlpha(1)
-	--self.MMFrm:SetPOIArrowTexture("") -- WoW crash at this line !!!
+	self.MMFrm:SetPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
+	self.MMFrm:SetStaticPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
 	mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)
 	mm:SetScript ("OnMouseUp", self.MinimapOnMouseUp)
 	mm:SetScript ("OnEnter", self.MinimapOnEnter)
@@ -2510,7 +2512,7 @@ function Nx.Map:MinimapUpdateMask (optName)
 --		Nx.prt ("MMmask %s", name)
 	end
 
-	local name = self.MMZoomType == 0 and "Interface\\Minimap\\MinimapArrow" or ""
+	local name = (self.MMZoomType == 0 and Nx.Map.MouseOver) and "Interface\\Minimap\\MinimapArrow" or "Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent"
 	if self.MMArrowName ~= name then
 		self.MMArrowName = name
 		if (name ~= "") then

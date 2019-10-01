@@ -1695,7 +1695,7 @@ function Nx.Warehouse:Update()
 	list:ItemSetButton ("Warehouse", false, "Interface\\Addons\\\Carbonite\\Gfx\\Icons\\INV_Misc_GroupNeedMore")
 	local allIndex = list:ItemGetNum()
 
-	local ware = Nx.wdb.profile.WarehouseData
+	--[[local ware = Nx.wdb.profile.WarehouseData
 	local rn = GetRealmName()
 	local guildlabel = false
 	for name, guilds in pairs (ware) do
@@ -1733,7 +1733,7 @@ function Nx.Warehouse:Update()
 				end
 			end
 		end
-	end
+	end]]--
 
 	list:ItemAdd (0)
 	list:ItemSet (2, "|cff999999--------- " .. L["Characters"] .. " ---------")

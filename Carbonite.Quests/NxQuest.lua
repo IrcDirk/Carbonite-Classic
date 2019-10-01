@@ -6673,7 +6673,7 @@ end
 -------------------------------------------------------------------------------
 
 function Nx.Quest.List:MakeDescLink (cur, id, debug)
---    print(GetQuestLogTitle(GetQuestLogIndexByID(id)));
+
 	local qId = cur and cur.QId or id	-- Database list will have nil cur
 
 	local Quest = Nx.Quest
@@ -6683,9 +6683,11 @@ function Nx.Quest.List:MakeDescLink (cur, id, debug)
 	local realLevel = cur and cur.RealLevel or 0
 
 	if quest then
+		local t = GetQuestLogTitle(GetQuestLogIndexByID(id))
 		local s
 		s, _, realLevel = Quest:Unpack (quest["Quest"])
 		title = s or title
+		title = t or title
 	end
 
 	local level = realLevel or 0

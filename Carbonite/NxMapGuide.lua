@@ -1604,6 +1604,22 @@ function Nx.Map.Guide:UpdateZonePOIIcons()
 		self:UpdateTravelIcons (hideFac)
 		self:UpdateCustomIcons()
 	end
+	
+	-- DEBUG WorldHotspots
+	if Nx.DebugOn then
+		for n, spot in ipairs (self.Map.WorldHotspots) do
+			--if spot.MapId == 1445 then
+			--	local ico = map:AddIconPt ("!POI", spot.WX1, spot.WY1, 0, nil, "Interface\\Icons\\INV_Misc_Note_02")
+			--	local x, y = map:GetZonePos(spot.MapId, spot.WX1, spot.WY1)
+			--	map:SetIconTip(ico,format("%s %.1f %.1f", spot.MapId, y, x))
+			--end
+			if spot.MapId == map.MapId then
+				local ico = map:AddIconPt ("!POI", spot.WX1, spot.WY1, 0, nil, "Interface\\Icons\\inv_enchant_shardradientsmall")
+				local x, y = map:GetZonePos(spot.MapId, spot.WX1, spot.WY1)
+				map:SetIconTip(ico,format("%s, %.1f %.1f, %.1f %.1f, %.1f %.1f", spot.MapId, spot.x, spot.y, spot.zx, spot.zy, x, y))
+			end
+		end
+	end
 end
 
 function Nx.Map.Guide:UpdateInstanceIcons (cont)

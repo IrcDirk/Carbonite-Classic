@@ -1806,7 +1806,12 @@ function Nx.Map:InitHotspots()
 				end
 
 				spot.MapId = mapId
-
+				
+				spot.x = tonumber (strsub (loc1, 1, 3), 16)
+				spot.y = tonumber (strsub (loc1, 4, 6), 16)
+				spot.zx = zx
+				spot.zy = zy
+				
 				local wx, wy = self:GetWorldPos (mapId, zx, zy)
 				spot.WX1 = wx
 				spot.WY1 = wy

@@ -2520,7 +2520,7 @@ function Nx.Map:MinimapUpdateMask (optName)
 --		Nx.prt ("MMmask %s", name)
 	end
 
-	local name = (self.MMZoomType == 0 and Nx.Map.MouseOver) and "Interface\\Minimap\\MinimapArrow" or "Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent"
+	local name = self.MMZoomType == 0 and "Interface\\Minimap\\MinimapArrow" or "Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent"
 	if self.MMArrowName ~= name then
 		self.MMArrowName = name
 		if (name ~= "") then

@@ -8983,7 +8983,6 @@ function Nx.Map:InitTables()
 			end
 		end
 	end]]--
-	self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
 
 	-- Support maps with multiple level
 	self.ContCnt = 2

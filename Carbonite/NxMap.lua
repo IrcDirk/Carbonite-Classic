@@ -6633,7 +6633,6 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	if (mapId == nil or mapId == -1) then
 		return
 	end
-	
 	local wzone = self:GetWorldZone (mapId)
 	if wzone and (wzone.City or self:IsMicroDungeon(mapId)) then
 		return
@@ -6676,7 +6675,6 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	
 	local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
 	local layers = C_Map.GetMapArtLayers(mapId);
-	
 	local layerInfo = layers[layerIndex];
 	local TILE_SIZE_WIDTH = layerInfo.tileWidth;
 	local TILE_SIZE_HEIGHT = layerInfo.tileHeight;
@@ -6691,7 +6689,9 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 		local arTx
 		if string.find(oName, ",") then
 			arTx = {Nx.Split (",", oName)}
-			zscale = self:GetWorldZoneScale (mapId) / 38
+		end
+		if tonumber(oName) then
+		    arTx = {oName}	   
 		end
 		
 		local oX, oY, txW, txH, mode = Nx.Split (",", whxyStr)

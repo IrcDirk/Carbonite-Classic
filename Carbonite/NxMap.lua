@@ -2397,7 +2397,8 @@ function Nx.Map:MinimapUpdateEnd()
 	if not self.MMOwn then
 		return
 	end
-	if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
+	--if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
+	if InCombatLockdown() then
 		return
 	end
 	local mm = self.MMFrm
@@ -2493,7 +2494,8 @@ function Nx.Map:MinimapUpdateEnd()
 end
 
 function Nx.Map:MinimapSetScale (scale, iconScale)
-	if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
+	--if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
+	if InCombatLockdown() then
 		return
 	end
 	local mm = self.MMFrm

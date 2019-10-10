@@ -11535,8 +11535,8 @@ function Nx.Quest:PartyBuildSendData()
 			for n = 1, cur.LBCnt do
 
 				local _, _, cnt, total = strfind (cur[n], "(%d+)/(%d+)")
-				cnt = tonumber (cnt)
-				total = tonumber (total)
+				cnt = tonumber (cnt or 0)
+				total = tonumber (total or 0)
 
 				local desc, done = self:CalcDesc (qId, n, cnt, total)
 				cur[n] = desc

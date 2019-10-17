@@ -1871,6 +1871,10 @@ end
 
 function Nx.Social:OnUpdateTimer()
 
+	if Nx.scdb.profile.Social.PunkEnable then
+		return 3
+	end
+
 	self:CalcPunks()
 
 	-- Check tab selection first, since they could be nil

@@ -1871,7 +1871,7 @@ end
 
 function Nx.Social:OnUpdateTimer()
 
-	if Nx.scdb.profile.Social.PunkEnable then
+	if not Nx.scdb.profile.Social.PunkEnable then
 		return 3
 	end
 

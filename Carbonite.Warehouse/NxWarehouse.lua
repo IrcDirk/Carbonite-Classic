@@ -2823,7 +2823,7 @@ function Nx.Warehouse.OnMail_inbox_update()
 
 			for i = 1, ATTACHMENTS_MAX_RECEIVE do
 
-				local name, _, count = GetInboxItem (n, i)
+				local name, _, _, count = GetInboxItem (n, i)
 				if name then
 
 					local link = GetInboxItemLink (n, i)

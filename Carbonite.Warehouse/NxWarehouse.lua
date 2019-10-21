@@ -734,7 +734,7 @@ local function WarehouseOptions()
 								Nx.wdb.profile.Warehouse.RepairAuto = not Nx.wdb.profile.Warehouse.RepairAuto
 							end,
 						},
-						guildrepair = {
+						--[[guildrepair = {
 							order = 2,
 							type = "toggle",
 							width = "full",
@@ -750,7 +750,7 @@ local function WarehouseOptions()
 							set = function()
 								Nx.wdb.profile.Warehouse.RepairGuild = not Nx.wdb.profile.Warehouse.RepairGuild
 							end,						
-						},
+						},]]--
 					},
 				},				
 			},
@@ -3029,7 +3029,7 @@ function Nx.Warehouse.OnMerchant_show()
 		local cost, canrepair = GetRepairAllCost()		
 		local guildrepaired = false
 		if canrepair then
-			if Nx.wdb.profile.Warehouse.RepairGuild then
+			--[[if Nx.wdb.profile.Warehouse.RepairGuild then
 				if (IsInGuild() and CanGuildBankRepair()) then
 					if cost <= GetGuildBankWithdrawMoney() or GetGuildBankWithdrawMoney == -1 then
 						RepairAllItems(1)
@@ -3038,7 +3038,7 @@ function Nx.Warehouse.OnMerchant_show()
 						guildrepaired = true
 					end
 				end
-			end
+			end]]--
 		end		
 		if not guildrepaired then
 			if cost <= GetMoney() then

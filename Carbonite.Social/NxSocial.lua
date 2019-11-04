@@ -37,6 +37,46 @@ CarboniteSocial = LibStub("AceAddon-3.0"):NewAddon("CarboniteSocial", "AceTimer-
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Social", true)
 
+-- Use C_FriendList.GetFriendInfo or C_FriendList.GetFriendInfoByIndex instead
+function GetFriendInfo(friend)
+	local info;
+	if type(friend) == "number" then
+		info = C_FriendList.GetFriendInfoByIndex(friend);
+	elseif type(friend) == "string" then
+		info = C_FriendList.GetFriendInfo(friend);
+	end
+
+	if info then
+		local chatFlag = "";
+		if info.dnd then
+			chatFlag = CHAT_FLAG_DND;
+		elseif info.afk then
+			chatFlag = CHAT_FLAG_AFK;
+		end
+		return info.name,
+			info.level,
+			info.className,
+			info.area,
+			info.connected,
+			chatFlag,
+			info.notes;
+			--info.rafLinkType ~= Enum.RafLinkType.None,
+			--info.guid;
+	end
+end
+
+-- Use C_FriendList.SetSelectedFriend instead
+SetSelectedFriend = C_FriendList.SetSelectedFriend;
+
+-- Use C_FriendList.RemoveFriend or C_FriendList.RemoveFriendByIndex instead
+function RemoveFriend(friend)
+	if type(friend) == "number" then
+		C_FriendList.RemoveFriendByIndex(friend);
+	elseif type(friend) == "string" then
+		C_FriendList.RemoveFriend(friend);
+	end
+end
+
 local defaults = {
 	profile = {
 		Social = {
@@ -1124,7 +1164,9 @@ function Nx.Social.List:Create()
 			local i = self:FindFriendI (self.MenuSelName)
 			if i then
 				self.FriendsFrame["NotesID"] = i
-				StaticPopup_Show ("SET_FRIENDNOTE", C_FriendList.GetFriendInfo (i))
+				local name = GetFriendInfo (i)
+				FriendsFrame.NotesID = name
+				StaticPopup_Show ("SET_FRIENDNOTE", name)
 			end
 		end
 	end
@@ -1339,7 +1381,7 @@ function Nx.Social.List:FindFriendI (friend)
 	local cnt = C_FriendList.GetNumFriends()
 	for n = 1, cnt do
 
-		local name, level, class, area, connected, status, note = C_FriendList.GetFriendInfo (n)
+		local name, level, class, area, connected, status, note = GetFriendInfo (n)
 
 		if name == friend then
 			return n
@@ -1445,7 +1487,7 @@ function Nx.Social.List:Update()
 		local cnt = C_FriendList.GetNumFriends()
 
 		for n = 1, cnt do
-			local name, level, class, area, connected, status, note = C_FriendList.GetFriendInfo (n)
+			local name, level, class, area, connected, status, note = GetFriendInfo (n)
 			if name then
 
 				fI[name] = n
@@ -1516,7 +1558,7 @@ function Nx.Social.List:Update()
 			local name, level, class, area, connected, status, note
 
 			if i then
-				name, level, class, area, connected, status, note = C_FriendList.GetFriendInfo (i)
+				name, level, class, area, connected, status, note = GetFriendInfo (i)
 			end
 
 			if connected then

@@ -8055,14 +8055,16 @@ function Nx.Quest:UpdateIcons (map)
 							if not cur or drawArea or hover
 									or (bit.band (trackMode, bit.lshift (1, n)) > 0 and tonumber(trkA) > .05) then
 
-								local scale = map:GetWorldZoneScale (mapId) / 10.02
 								local ssub = strsub
 
 								for _,loc1 in pairs(obj) do
 									if loc1 == "" then
 										break
 									end
-
+									
+									local _, mapId = Nx.Quest:UnpackObjectiveNew (loc1)
+									local scale = map:GetWorldZoneScale (mapId) / 10.02
+									
 									local x, y, w, h = Nx.Quest:UnpackLocRect (loc1)
 									local wx, wy = map:GetWorldPos (mapId, x, y)
 

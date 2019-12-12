@@ -549,6 +549,15 @@ function Nx.Com:OnChat_msg_addon (args, distribution, target)
 						end
 						self:ParsePlyrStatus (name, pal, msg)
 					end
+				else
+					if #msg >= 16 then
+						local pl = self.ZPInfo[name]
+						if not pl then
+							pl = {}
+							self.ZPInfo[name] = pl
+						end
+						self:ParsePlyrStatus (name, pl, msg)
+					end
 				end
 			elseif id == 76 then	-- L (Level)
 				if Nx.db.profile.Comm.LvlUpShow then
@@ -1266,7 +1275,12 @@ function Nx.Com:SendChatMessageFixed (msg, typ, num)
 -- 70 20 33 66 62 38 65 35 36 66 39 44 43 26  32  2c  d9 30 4f 61 73 69 73 20 53 6e 61 70 6a 61 77
 --                                     20
 
-	local ok = pcall (SendChatMessage, msg, typ, nil, num)
+	if typ == "CHANNEL" then
+		Nx:SendCommMessage(self.Name, msg, typ, num)	
+	else
+		local ok = pcall (SendChatMessage, msg, typ, nil, num)
+	end
+	
 	if not ok then
 --		Nx.prtStrHex (typ .. " SendChat failed", msg)
 	end

@@ -3143,7 +3143,7 @@ Nx.Map.WMFOnShow = true
 WorldMapFrame:HookScript("OnShow", function()
 	--_G["Minimap"]:Show()
 	
-	-- ElvUI fix for constant WorldMapFrame Show and Hide
+	-- Fix for ElvUI constant WorldMapFrame Show and Hide
 	if ElvUI then
 		ElvUI[1].global.general.fadeMapWhenMoving = false
 	end

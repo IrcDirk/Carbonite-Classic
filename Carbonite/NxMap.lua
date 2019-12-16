@@ -4324,9 +4324,17 @@ function Nx.Map:Update (elapsed)
 				Nx.UEvents:AddInfo (format ("Left %s %d %d %d %d", sname, cb.KBs, cb.Deaths, cb.HKs, cb.Honor))
 
 				local tm = GetTime() - cb.BGEnterTime
-				local _, honor = GetCurrencyInfo (392)		--V4
-				local hGain = honor - cb.BGEnterHonor
-				Nx.UEvents:AddInfo (format (" %s +%d honor, +%d hour", Nx.Util_GetTimeElapsedMinSecStr (tm), hGain, hGain / tm * 3600))
+				--local _, honor = GetCurrencyInfo (392)		--V4
+				--local hGain = honor - cb.BGEnterHonor
+				
+				RequestBattlefieldScoreData();
+			
+				for i=1, GetNumBattlefieldScores() do
+					local name, killingBlows, honorableKills, deaths, hGain, faction, rank, race, class = GetBattlefieldScore(i);
+					if (name == UnitName("player")) then
+						Nx.UEvents:AddInfo (format (" %s +%d honor, +%d hour", Nx.Util_GetTimeElapsedMinSecStr (tm), hGain, hGain / tm * 3600))
+					end
+				end
 
 				local xpGain = UnitXP ("player") - cb.BGEnterXP
 				if xpGain > 0 then
@@ -4352,8 +4360,8 @@ function Nx.Map:Update (elapsed)
 
 		local cb = Nx.Combat
 		cb.BGEnterTime = GetTime()
-		local _, honor = GetCurrencyInfo (392)		--V4
-		cb.BGEnterHonor = honor
+		--local _, honor = GetCurrencyInfo (392)		--V4
+		cb.BGEnterHonor = 0
 		cb.BGEnterXP = UnitXP ("player")
 
 		if self.MapWorldInfo[rid].Arena then

@@ -840,6 +840,26 @@ function Nx:SetupEverything()
 	
 	Nx.Initialized = true
 	Nx:OnPlayer_login("PLAYER_LOGIN")
+	
+	-- Adding support for Zygor Waypoint system
+	if ZGV and ZGV.Pointer then
+		hooksecurefunc(ZGV.Pointer, "SetWaypoint", function (e, m, x, y, data, arrow)
+			local map = Nx.Map:GetMap (1)
+			if not m then
+				if WorldMapFrame:IsShown() then m=WorldMapFrame:GetMapID() else m=C_Map.GetBestMapForUnit("player") end
+			end
+			
+			x = x or 0;	
+			y = y or 0;
+			
+			local wx, wy = map:GetWorldPos (m, x*100, y*100)
+			local title = (ZGV.CurrentStep.current_waypoint_goal_num and ZGV.CurrentStep.goals) and ZGV.CurrentStep.goals[ZGV.CurrentStep.current_waypoint_goal_num]:GetText() or ""
+			
+			map:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, title or "Zygor Waypoint (check step in Zygor Guide Viewer)", nil, m)
+			
+			return waypoint
+		end)
+	end
 end
 
 function Nx:ADDON_LOADED (event, arg1, ...)

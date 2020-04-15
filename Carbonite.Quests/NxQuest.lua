@@ -11416,7 +11416,7 @@ function Nx.Quest:OnPartyMsg (plName, msg)
 
 --	Nx.prt ("OnPartyMsg %s: %s", plName, msg)
 
-	local pq = self.PartyQ
+	local pq = self.PartyQ or {} 
 	local pl = pq[plName]
 
 	if pl then

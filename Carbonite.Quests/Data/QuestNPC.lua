@@ -1319,4 +1319,7 @@ Nx.QuestStartEnd={
  "Gerard Tiller",
  "Farmer Saldean",
  "Innkeeper Renee",
+ "Roberto Pupellyverbos",
+ "Barkeep Hann",
+ "Barkeep Dobbins",
 }

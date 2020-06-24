@@ -51,6 +51,296 @@ BINDING_NAME_NxWATCHUSEITEM	= L["NxWATCHUSEITEM"]
 
 local IsClassic = select(4, GetBuildInfo()) < 20000
 
+
+function Nx.List:Update (showLast)
+
+	if self.SortColumnId and not self.Sorted then
+		self:Sort()
+	end
+
+	local lineH = self:GetLineH()
+	local hdrH = self.HdrH
+
+--	Nx.prt ("List lineH %s", lineH)
+
+	if showLast then
+		self:ShowLast()
+	end
+
+	if self.ShowAll then
+		self:Resize (0, 0)
+	end
+
+	self.Top = min (self.Top, self.Num - self.Vis + 1)
+	self.Top = max (self.Top, 1)
+
+	self.Selected = min (self.Selected, self.Num)
+
+	local last = self.Top + self.Vis - 1
+	last = min (last, self.Num)
+
+	if self.Offsets or #self.Strs < self.Vis then
+		self:CreateStrings()
+	end
+
+	local strNum = 1
+	local cNum = 1
+
+	for k, column in ipairs (self.Columns) do
+
+		for line = self.Top, last do
+
+			local txt = column.Data[line]
+			self.Strs[strNum]:SetText (txt)
+
+			strNum = strNum + 1
+		end
+
+		-- Hide extras
+
+		for n = strNum, self.Vis * cNum do
+			self.Strs[n]:SetText ("")
+			strNum = strNum + 1
+		end
+
+		cNum = cNum + 1
+	end
+
+	-- Do final resize and size parent win
+
+	if self.ShowAll then
+
+		self:Resize (0, 0)
+
+		local f = self.Frm
+		local win = f:GetParent().NxWin
+
+		if win then
+			win:SetSize (f:GetWidth(), -7, true)
+		end
+	end
+
+	-- Slider
+
+	if not self.ShowAll then
+		self.Slider:Set (self.Top, 1, self.Num, self.Vis)
+		self.Slider:Update()
+	end
+
+	-- Buttons
+
+	if self.ButData then
+
+		if not self.Buts or #self.Buts < self.Vis then
+			self:CreateButtons()
+		end
+
+--		Nx.prt ("List Update Vis %s", self.Vis)
+
+		local padW = 1
+		local padH = 0
+
+		local butNum = 1
+		local f = self.Frm
+		local offX = 0
+		local offY = 0
+		local adjY = hdrH + padH + lineH/2 + .5
+
+		for n = 1, self.Vis do
+
+			local line = self.Top + n - 1
+
+			local but = self.Buts[butNum]
+			local butType = self.ButData[line]
+
+			if butType then
+
+				if not but then
+					Nx.prt (L["!BUT %s"], #self.Buts)
+				end
+				assert (but)
+
+--				prt ("ListResize but #%d %s", n, butType)
+
+				but:SetType (butType)
+				but:SetId (line)
+
+				local butTx = self.ButData[line + 1000000]
+
+				if butType == "Color" then
+					local t = self.ButData[line + 8000000]
+					butTx = t[self.ButData[line + 9000000]]
+				end
+
+--				prtVar ("But Tex", butTx)
+				but:SetTexture (butTx)
+
+				local butTip = self.ButData[line + 2000000]
+				but.Frm.NxTip = butTip
+				but.Frm.NXTipFrm = self.ButData[line + 3000000]
+
+				-- Causes update
+				but:SetPressed (self.ButData[-line])
+
+				if self.Offsets then
+					offX = self.Offsets[line] or 0
+					offY = self.Offsets[-line] or 0
+				end
+
+				local scale = self:GetLineH() / self.BaseLineH
+				local y = (-(n - 1) * lineH - adjY - offY) / scale
+
+				but.Frm:SetPoint ("CENTER", f, "TOPLEFT", (padW + lineH/2 + offX) / scale, y)
+				but.Frm:Show()
+
+			elseif but then
+
+				but.Frm:Hide()
+			end
+
+			butNum = butNum + 1
+		end
+
+	elseif self.Buts then
+
+		self:CreateButtons()		-- Hides all since we have no data
+	end
+
+	-- Frames
+
+--[[ Example: (OLD)
+	  text 1 frm 1 (color)
+	--------- Visible
+	1 text 2
+	2 text 3 frm 2 (color). Get frm to keep until scrolls off visible area of list
+	3 text 4
+	4 text 5 frm 3 (color). Get frm
+	---------
+	  text 6
+--]]
+
+	if self.FrmData then			-- Only used for Info and Watch Items
+
+		Nx.List:FreeFrames (self)
+
+		local lfrm = self.Frm
+		local offX = 3
+		local offY = 3
+		local adjY = hdrH + .5
+		local doBind = true
+
+		for n = 1, self.Vis do
+
+			local line = self.Top + n - 1
+			local data = self.FrmData[line]
+
+			if data then
+
+				local typ, v1, v2, v3 = Nx.Split ("~", data)
+
+--				Nx.prt ("%s", -(n - 1) * lineH - adjY - offY)
+
+				if typ == "Info" then
+
+					if self.UserFunc then
+						self.UserFunc (self.User, "update", v1, -(n - 1) * lineH - adjY)
+					end
+
+				elseif typ == "WatchItem" then
+					if InCombatLockdown() then
+						return
+					end
+					local f = Nx.List:GetFrame (self, typ)
+					f:ClearAllPoints()
+
+					local scale = self.ItemFrameScale * .07 * lineH / 13
+
+					f:SetPoint ("TOPRIGHT", lfrm, "TOPLEFT", offX, -(n - 1) * lineH / scale - adjY - offY)
+
+					f["rangeTimer"] = -1
+
+					f:SetScale (scale)
+					f:SetWidth (29)
+					f:SetHeight (30)
+					f:SetAlpha (self.ItemFrameAlpha)
+
+					local id = tonumber (v1)					
+					f:SetID(id)
+					
+					
+
+					SetItemButtonTexture (f, v2);
+					SetItemButtonCount (f, tonumber (v3));
+					f["charges"] = tonumber (v3);
+
+					f["questLogIndex"] = id
+	
+					if Nx.QItems[qId] then
+						local start, duration, enable = GetItemCooldown(Nx.QItems[qId][2])
+					end
+					
+					if start then
+						CooldownFrame_Set (f.Cooldown, start, duration, enable)
+						if ( duration > 0 and enable == 0 ) then
+							SetItemButtonTextureVertexColor (itemButton, 0.4, 0.4, 0.4)
+						else
+							SetItemButtonTextureVertexColor (itemButton, 1, 1, 1)
+						end
+ 					end
+					
+					_, _, _, _, _, _, _, qId, _, _, _, _, _, _ = GetQuestLogTitle(id)
+					
+					if Nx.QItems[qId] then
+						local link = Nx.QItems[qId][2]
+					end
+					f:SetAttribute ("item", link)
+					f:SetAttribute("item", "item:" .. Nx.QItems[qId][2])
+
+					if doBind then
+						doBind = false
+						local key = GetBindingKey ("NxWATCHUSEITEM")
+						if key then
+							Nx.qdb.profile.QuestWatch.KeyUseItem = key
+							Nx.prt (L["Key %s transfered to Watch List Item"], key)
+						end
+
+						if #Nx.qdb.profile.QuestWatch.KeyUseItem > 0 and not InCombatLockdown() then
+
+							local s = GetBindingAction (Nx.qdb.profile.QuestWatch.KeyUseItem)
+							s = strmatch (s, L["CLICK (.+):"])
+--							Nx.prt ("Key's frm %s", s or "nil")
+							if s ~= f:GetName() then
+								local ok = SetBindingClick (Nx.qdb.profile.QuestWatch.KeyUseItem, f:GetName())
+								Nx.prt (L["Key %s %s #%s %s"], Nx.qdb.profile.QuestWatch.KeyUseItem, f:GetName(), line, ok or "nil")
+								Nx.qdb.profile.QuestWatch.KeyUseItem = ""
+							end
+						end
+					end
+
+					f:Show()
+
+				end
+			end
+		end
+
+	end
+
+	-- Position selected line
+
+	local sfrm = self.SelFrm
+	local selY = self.Selected - self.Top
+
+	if selY < 0 or selY >= self.Vis then
+		sfrm:Hide()
+
+	else
+		sfrm:SetHeight (lineH + 1)
+		sfrm:SetPoint ("TOPLEFT", 0, -selY * lineH - self.HdrH)
+		sfrm:Show()
+	end
+end
+
+
 if IsClassic then
    function GetQuestLogCriteriaSpell()
       return
@@ -2317,6 +2607,8 @@ function Nx.Quest:Init()
 		["Heroic"] = "H",
 		["Account"] = "A",
 		["Raid"] = "R",
+		["Dungeon"] = "D",
+		["Elite"] = "*",
 	}
 
 	self.PerColors = {
@@ -3698,7 +3990,10 @@ function Nx.Quest:RecordQuestsLog()
 					cur.HighPri = true
 				end
 
-				--cur.ItemLink, cur.ItemImg, cur.ItemCharges = GetQuestLogSpecialItemInfo (qn)
+				--print(qId)
+				if Nx.QItems[qId] then
+					cur.ItemLink = Nx.QItems[qId][1] --, cur.ItemImg, cur.ItemCharges
+				end
 
 				--Nx.prt("Q num: %d itmLink: %s item: %s charges: %d", qn, cur.ItemLink or " ", cur.ItemImg or " ", cur.ItemCharges)
 				if cur.ItemLink then
@@ -9662,7 +9957,9 @@ function Nx.Quest.Watch:UpdateList()
 								list:ItemSetButton ("QuestWatchTip", false)		-- QuestWatchTip  >  QuestWatch?
 							end
 							if cur.ItemLink and Nx.qdb.profile.QuestWatch.ItemScale >= 1 then
-								list:ItemSetFrame ("WatchItem~" .. cur.QI .. "~" .. cur.ItemImg .. "~" .. cur.ItemCharges)
+								_, _, _, _, _, _,_, _, _, cur.ItemImg, _ = GetItemInfo(Nx.QItems[qId][2])
+								--print(cur.ItemLink, cur.ItemImg)
+								list:ItemSetFrame ("WatchItem~" .. cur.QI .. "~" .. cur.ItemImg) -- .. "~" .. cur.ItemCharges
 							end
 							list:ItemSetButtonTip ((cur.ObjText or "?") .. (cur.PartyDesc or ""))
 							local color = isComplete and compColor or incompColor
@@ -11416,7 +11713,7 @@ function Nx.Quest:OnPartyMsg (plName, msg)
 
 --	Nx.prt ("OnPartyMsg %s: %s", plName, msg)
 
-	local pq = self.PartyQ or {} 
+	local pq = self.PartyQ
 	local pl = pq[plName]
 
 	if pl then
@@ -12059,5 +12356,34 @@ function Nx.Quest.WQList:Update()
 	list:Update()			
 end
 
+function NxWatchListItem_OnUpdate(self, elapsed)
+	-- Handle range indicator
+	local rangeTimer = self.rangeTimer;
+	if ( rangeTimer ) then
+		rangeTimer = rangeTimer - elapsed;
+		if ( rangeTimer <= 0 ) then
+			--print(self.questLogIndex)
+			_, _, _, _, _, _, _, mquestID, _, _, _, _, _, _ = GetQuestLogTitle(self.questLogIndex);
+			local charges = GetItemCount(Nx.QItems[mquestID][2],true,true)
+			if ( not charges or charges ~= self.charges ) then
+				--ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST);
+				return;
+			end
+			local count = self.HotKey;
+			local valid = IsQuestLogSpecialItemInRange(self.questLogIndex);
+			if ( valid == 0 ) then
+				count:Show();
+				count:SetVertexColor(1.0, 0.1, 0.1);
+			elseif ( valid == 1 ) then
+				count:Show();
+				count:SetVertexColor(0.6, 0.6, 0.6);
+			else
+				count:Hide();
+			end
+			rangeTimer = TOOLTIP_UPDATE_TIME;
+		end
+		self.rangeTimer = rangeTimer;
+	end
+end
 -------------------------------------------------------------------------------
 -- EOF

@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11303
 ## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One
@@ -10,8 +10,10 @@
 
 ## X-WoWI-ID: 23404
 
+Carbonite.Quests.xml
 Locales\locales.xml
 Data\QuestCats.lua
 Data\QuestNPC.lua
 Data\QuestData.xml
+Data\QuestItems.lua
 NxQuest.lua

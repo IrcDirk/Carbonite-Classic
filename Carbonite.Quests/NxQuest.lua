@@ -276,7 +276,7 @@ function Nx.List:Update (showLast)
 					f["questLogIndex"] = id
 	
 					if Nx.QItems[qId] then
-						local start, duration, enable = GetItemCooldown(Nx.QItems[qId][2])
+						local start, duration, enable = GetItemCooldown(Nx.QItems[qId])
 					end
 					
 					if start then
@@ -288,13 +288,13 @@ function Nx.List:Update (showLast)
 						end
  					end
 					
-					_, _, _, _, _, _, _, qId, _, _, _, _, _, _ = GetQuestLogTitle(id)
+					_, _, _, _, _, _, _, qId = GetQuestLogTitle(id)
 					
 					if Nx.QItems[qId] then
-						local link = Nx.QItems[qId][2]
+						local link = Nx.QItems[qId]
 					end
 					f:SetAttribute ("item", link)
-					f:SetAttribute("item", "item:" .. Nx.QItems[qId][2])
+					f:SetAttribute("item", "item:" .. Nx.QItems[qId])
 
 					if doBind then
 						doBind = false
@@ -3992,7 +3992,8 @@ function Nx.Quest:RecordQuestsLog()
 
 				--print(qId)
 				if Nx.QItems[qId] then
-					cur.ItemLink = Nx.QItems[qId][1] --, cur.ItemImg, cur.ItemCharges
+				_,cur.ItemLink = GetItemInfo(Nx.QItems[qId])
+				
 				end
 
 				--Nx.prt("Q num: %d itmLink: %s item: %s charges: %d", qn, cur.ItemLink or " ", cur.ItemImg or " ", cur.ItemCharges)
@@ -9957,7 +9958,7 @@ function Nx.Quest.Watch:UpdateList()
 								list:ItemSetButton ("QuestWatchTip", false)		-- QuestWatchTip  >  QuestWatch?
 							end
 							if cur.ItemLink and Nx.qdb.profile.QuestWatch.ItemScale >= 1 then
-								_, _, _, _, _, _,_, _, _, cur.ItemImg, _ = GetItemInfo(Nx.QItems[qId][2])
+								_, _, _, _, _, _,_, _, _, cur.ItemImg, _ = GetItemInfo(Nx.QItems[qId])
 								--print(cur.ItemLink, cur.ItemImg)
 								list:ItemSetFrame ("WatchItem~" .. cur.QI .. "~" .. cur.ItemImg) -- .. "~" .. cur.ItemCharges
 							end
@@ -12364,7 +12365,7 @@ function NxWatchListItem_OnUpdate(self, elapsed)
 		if ( rangeTimer <= 0 ) then
 			--print(self.questLogIndex)
 			_, _, _, _, _, _, _, mquestID, _, _, _, _, _, _ = GetQuestLogTitle(self.questLogIndex);
-			local charges = GetItemCount(Nx.QItems[mquestID][2],true,true)
+			local charges = GetItemCount(Nx.QItems[mquestID],true,true)
 			if ( not charges or charges ~= self.charges ) then
 				--ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST);
 				return;

@@ -65,5 +65,6 @@ Nx.ZoneConnections = {
 	"5|2|"..L["Zeppelin to Undercity"].."|1411|50.88|13.87|"..L["Zeppelin to Orgrimmar"].."|1420|60.7|58.78", -- [62]
 	"5|2|"..L["Zeppelin to Stranglethorn Vale"].."|1411|50.57|12.64|"..L["Zeppelin to Orgrimmar"].."|1434|31.37|30.15", -- [63]
 	"7|2|"..L["Boat to Stranglethorn Vale"].."|1413|63.68|38.63|"..L["Boat to The Barrens"].."|1434|26.04|73.24", -- [64]
+	"7|1|"..L["The Stockade"].."|1453|39.8|54.4||225|35.69|63.08", -- [65] The Stockade
 }
 

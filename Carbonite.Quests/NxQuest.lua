@@ -6835,6 +6835,8 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 		Nx.Quest:RecordQuests()
 		--Nx.Quest.List:Refresh(event)
 		Nx.Quest.List:Refresh()
+		
+		--for bag = 0, NUM_BAG_SLOTS do for slot = 1, GetContainerNumSlots(bag) do local itemLink = GetContainerItemLink(bag,slot); itemString = strfind(itemLink, "|H(.+)|h"); print(itemLink:gsub('\124','\124\124')); end end
 		--Nx.Quest:RecordQuests()
 	elseif event == "QUEST_REMOVED" then
 		local questId = arg1

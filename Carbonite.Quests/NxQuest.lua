@@ -2268,8 +2268,11 @@ function Nx.Quest:Init()
 --			SetCVar ("advancedWatchFrame", 1)
 --			SetCVar ("watchFrameIgnoreCursor", 0)
 --		end
+	else		
+		SetCVar ("autoQuestProgress", 1)
+		SetCVar ("autoQuestWatch", 1)
 	end
-
+	
 	-- DEBUG
 --	self.OldSelectQuestLogEntry = SelectQuestLogEntry
 --	SelectQuestLogEntry = Nx.Quest.SelectQuestLogEntry

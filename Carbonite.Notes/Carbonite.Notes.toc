@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 20501
 ## Title: Carbonite Notes @project-version@
 ## Version: @project-version@
 ## Author: No one

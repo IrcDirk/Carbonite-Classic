@@ -2227,7 +2227,7 @@ end
 
 function Nx.Title:Init()
 
-	local f = CreateFrame ("Frame", nil, UIParent)
+	local f = CreateFrame ("Frame", nil, UIParent, "BackdropTemplate")
 	f.NxInst = self
 	self.Frm = f
 
@@ -2248,7 +2248,7 @@ function Nx.Title:Init()
 	f:SetBackdrop (bk)
 	f:SetBackdropColor (0, 0, .1, 1)
 
-	local lf = CreateFrame ("Frame", nil, f)
+	local lf = CreateFrame ("Frame", nil, f, "BackdropTemplate")
 
 	lf:SetWidth (256)
 	lf:SetHeight (128)

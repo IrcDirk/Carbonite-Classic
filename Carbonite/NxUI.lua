@@ -1606,7 +1606,7 @@ function Nx.Window:Create (name, minResizeW, minResizeH, secure, titleLines, bor
 	-- Create window frame
 
 --	local f = CreateFrame ("Frame", name, UIParent, "SecureStateHeaderTemplate")
-	local f = CreateFrame ("Frame", name, UIParent)
+	local f = CreateFrame ("Frame", name, UIParent, "BackdropTemplate")
 	win.Frm = f
 	f.NxWin = win
 
@@ -3449,7 +3449,7 @@ Nx.Button.TypeData = {
 
 function Nx.Button:Init()
 
-	local f = CreateFrame ("Frame", nil, UIParent)
+	local f = CreateFrame ("Frame", nil, UIParent, "BackdropTemplate")
 	self.OverFrm = f
 
 	f:SetFrameStrata ("MEDIUM")
@@ -4359,7 +4359,7 @@ function Nx.Menu:Create (parentFrm, width)
 	self.NameNum = self.NameNum + 1
 	local name = format ("NxMenu%d", self.NameNum)
 
-	local f = CreateFrame ("Frame", name, UIParent)
+	local f = CreateFrame ("Frame", name, UIParent, "BackdropTemplate")
 	menu.MainFrm = f
 
 	tinsert (HideFramesOnEsc, name)
@@ -4690,7 +4690,7 @@ function Nx.Menu:Update()
 				item.AlphaTarget = self.Item_ALPHAFADE
 
 				if not itemF then
-					item.Frm = CreateFrame ("Frame", nil, mf)
+					item.Frm = CreateFrame ("Frame", nil, mf, "BackdropTemplate")
 					itemF = item.Frm
 					itemF.NxMenuItem = item
 
@@ -4742,7 +4742,7 @@ function Nx.Menu:Update()
 					local frm = item.CheckFrm
 
 					if not frm then
-						frm = CreateFrame ("Frame", nil, itemF)
+						frm = CreateFrame ("Frame", nil, itemF, "BackdropTemplate")
 						item.CheckFrm = frm
 
 						frm:SetWidth (12)
@@ -4768,7 +4768,7 @@ function Nx.Menu:Update()
 					local frm = item.SliderFrm
 
 					if not frm then
-						frm = CreateFrame ("Frame", nil, itemF)
+						frm = CreateFrame ("Frame", nil, itemF, "BackdropTemplate")
 						item.SliderFrm = frm
 
 						frm:SetWidth (102)
@@ -4782,7 +4782,7 @@ function Nx.Menu:Update()
 					local tfrm = item.SliderThumbFrm
 
 					if not tfrm then
-						tfrm = CreateFrame ("Frame", nil, frm)
+						tfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
 						item.SliderThumbFrm = tfrm
 
 --						tfrm:SetFrameStrata ("DIALOG")
@@ -5243,7 +5243,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 	-- Create list frame
 
-	local frm = CreateFrame ("Frame", nil, parentFrm)
+	local frm = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
 	inst.Frm = frm
 	frm.NxInst = inst
 
@@ -5267,7 +5267,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 		inst.HdrH = 12
 
-		local hfrm = CreateFrame ("Frame", nil, frm)
+		local hfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
 		inst.HdrFrm = hfrm
 		hfrm.NxInst = inst
 
@@ -5283,7 +5283,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 	-- Create selected line frame
 
-	local sfrm = CreateFrame ("Frame", nil, frm)
+	local sfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
 	inst.SelFrm = sfrm
 	sfrm.NxInst = inst
 
@@ -6740,7 +6740,7 @@ function Nx.TabBar:Create (name, parentFrm, width, height)
 
 	-- Create window frame
 
-	local f = CreateFrame ("Frame", name, parentFrm)
+	local f = CreateFrame ("Frame", name, parentFrm, "BackdropTemplate")
 	bar.Frm = f
 	f.NxInst = bar
 
@@ -6779,7 +6779,7 @@ function Nx.TabBar:CreateBorders()
 
 	local c2rgba = Nx.Util_str2rgba
 
-	local f = CreateFrame ("Frame", nil, self.Frm)
+	local f = CreateFrame ("Frame", nil, self.Frm, "BackdropTemplate")
 
 	self.TopFrm = f
 
@@ -7105,7 +7105,7 @@ function Nx.ToolBar:Create (name, parentFrm, size, alignR, alignB)
 		end
 	end
 	if f == nil then
-		f = CreateFrame ("Frame", name, parentFrm)
+		f = CreateFrame ("Frame", name, parentFrm, "BackdropTemplate")
 	end
 	bar.Frm = f
 	f.NxInst = bar
@@ -7323,7 +7323,7 @@ function Nx.Slider:Create (parentFrm, typ, size, tlOff)
 		h = 10
 	end
 
-	local frm = CreateFrame ("Frame", nil, parentFrm)
+	local frm = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
 	inst.Frm = frm
 	frm.NxInst = inst
 
@@ -7347,7 +7347,7 @@ function Nx.Slider:Create (parentFrm, typ, size, tlOff)
 
 	-- Thumb
 
-	local tfrm = CreateFrame ("Frame", nil, frm)
+	local tfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
 	inst.ThumbFrm = tfrm
 
 	tfrm:SetWidth (w)
@@ -7635,7 +7635,7 @@ function Nx.Graph:Create (width, height, parentFrm)
 	g.ResetFrames = self.ResetFrames
 	g.GetFrame = self.GetFrame
 
-	local f = CreateFrame ("Frame", nil, parentFrm)
+	local f = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
 	g.MainFrm = f
 
 	f.NxGraph = g
@@ -7860,7 +7860,7 @@ function Nx.Graph:GetFrame()
 	local f = self.Frms[pos]
 	if not f then
 
-		f = CreateFrame ("Frame", nil, self.MainFrm)
+		f = CreateFrame ("Frame", nil, self.MainFrm, "BackdropTemplate")
 		self.Frms[pos] = f
 		f.NxGraph = self
 

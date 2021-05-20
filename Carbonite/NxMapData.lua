@@ -43,6 +43,12 @@ Map.MapInfo = {
 		X = 2000,
 		Y = -200,
 	},
+	[3] = {
+		Name = L["Outland"],
+		FileName = "Expansion01",
+		X = 7400,
+		Y = -4000,
+	},
 	[90] = {
 		Name = "BG",
 		X = 2000,
@@ -103,9 +109,9 @@ Map.MapWorldInfo = {
 		-- [1414] Kalimdor 
 	},
 	[13] = {
-		Scale = 70.3998,
-		X = -3200,
-		Y = -1493.32,
+		Scale = 81.48236,
+		X = -3634.394,
+		Y = -2235.2688,
 		-- [1415] Eastern Kingdoms
 	},
 	[14] = {
@@ -487,6 +493,46 @@ Map.MapWorldInfo = {
 		Y = 0,
 		Short = "AB",
 	},
+	[1941] = {
+		Scale = 9.85,
+		X = 897.5,
+		Y = -2208.333203125,
+		Overlay = "eversongwoods",
+		Name = L["Eversong Woods"],
+		XOff = Map.BloodelfXO,
+		YOff = Map.BloodelfYO,
+		MId = 1941,
+	},
+	[1942] = {
+		Scale = 6.6,
+		X = 1056.6666015625,
+		Y = -1653.333203125,
+		Overlay = "ghostlands",
+		Name = L["Ghostlands"],
+		XOff = Map.BloodelfXO,
+		YOff = Map.BloodelfYO,
+		MId = 1942,
+	},
+	[1943] = {
+		Scale = 8.141666015625,
+		X = 2100,
+		Y = 558.75,
+		Overlay = "azuremystisle",
+		Name = L["Azuremyst Isle"],
+		XOff = Map.DraeneiXO,
+		YOff = Map.DraeneiYO,
+		MId = 1943,
+	},
+	[1950] = {
+		Scale = 6.524998046875,
+		X = 2015,
+		Y = 151.66666259766,
+		Overlay = "bloodmystisle",
+		Name = L["Bloodmyst Isle"],
+		XOff = Map.DraeneiXO,
+		YOff = Map.DraeneiYO,
+		MId = 1950,
+	}
 }
 
 --------

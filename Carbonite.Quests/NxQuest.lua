@@ -49,62 +49,62 @@ BINDING_HEADER_CarboniteQuests	= "|cffc0c0ff" .. L["Carbonite Quests"] .. "|r"
 BINDING_NAME_NxTOGGLEWATCHMINI	= L["NxTOGGLEWATCHMINI"]
 BINDING_NAME_NxWATCHUSEITEM	= L["NxWATCHUSEITEM"]
 
-local IsClassic = select(4, GetBuildInfo()) < 20000
+local IsClassic = select(4, GetBuildInfo()) < 30000
 
 if IsClassic then
-   function GetQuestLogCriteriaSpell()
-      return
-   end
+	function GetQuestLogCriteriaSpell()
+	  return
+	end
 
-   function GetNumQuestLogRewardCurrencies()
-      return 0
-   end
+	function GetNumQuestLogRewardCurrencies()
+	  return 0
+	end
 
-   function GetQuestLogRewardSkillPoints()
-      return 0
-   end
+	function GetQuestLogRewardHonor()
+	  return 0
+	end
 
-   function GetQuestLogRewardArtifactXP()
-      return 0
-   end
+	function GetQuestLogRewardTitle()
+	  return
+	end
 
-   function GetQuestLogRewardHonor()
-      return 0
-   end
+	function ProcessQuestLogRewardFactions()
+	  return
+	end
 
-   function GetQuestLogRewardTitle()
-      return
-   end
+	function GetQuestLogPortraitGiver()
+	  return
+	end
 
-   function ProcessQuestLogRewardFactions()
-      return
-   end
+	function GetQuestLink()
+	  return
+	end
 
-   function GetQuestLogPortraitGiver()
-      return
-   end
+	function GetQuestLogRewardSkillPoints() 
+		return 0, 0, 0 
+	end
 
-   function GetQuestLink()
-      return
-   end
+	function GetQuestLogRewardArtifactXP() 
+		return 0, nil 
+	end
+
+	GetNumQuestLogRewardSpells = GetNumRewardSpells
+	GetQuestLogRewardSpell = GetRewardSpell
+	GetQuestLogCriteriaSpell = GetCriteriaSpell
 end
 
 CQUEST_TEMPLATE_LOG = { questLog = true, chooseItems = nil, contentWidth = 285,
 	canHaveSealMaterial = false, sealXOffset = 160, sealYOffset = -6,
 	elements = {
-		QuestInfo_ShowTitle, 5, -5,
-		QuestInfo_ShowType, 0, -5,
-		QuestInfo_ShowObjectivesText, 0, -5,
-		QuestInfo_ShowTimer, 0, -10,
-		QuestInfo_ShowObjectives, 0, -10,
-		QuestInfo_ShowSpecialObjectives, 0, -10,
-		QuestInfo_ShowRequiredMoney, 0, 0,
-		QuestInfo_ShowGroupSize, 0, -10,
-		QuestInfo_ShowDescriptionHeader, 0, -10,
+		QuestInfo_ShowTitle, 5, -10,
 		QuestInfo_ShowDescriptionText, 0, -5,
 		QuestInfo_ShowSeal, 0, 0,
-		QuestInfo_ShowRewards, 0, -10,
-		QuestInfo_ShowSpacer, 0, -10
+		QuestInfo_ShowObjectivesHeader, 0, -15,
+		QuestInfo_ShowObjectivesText, 0, -5,
+		QuestInfo_ShowSpecialObjectives, 0, -10,
+		QuestInfo_ShowGroupSize, 0, -10,
+		QuestInfo_ShowRewards, 0, -15,
+		QuestInfo_ShowSpacer, 0, -15,
 	}
 }
 
@@ -2796,7 +2796,7 @@ function Nx.Quest:Init()
 		
 		local qId = GetQuestID()
 		local quest = Nx.Quests[qId]
-		local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
+		if(quest) then local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"]) end
 		xp = xp or 0
 		
 		QuestInfoRewardsFrame.XPFrame:Hide()

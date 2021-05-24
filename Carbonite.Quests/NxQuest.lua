@@ -5345,7 +5345,7 @@ function	Nx.Quest:TooltipProcess (stripColor)
 	if not tipStr then		-- Happens in WotLK on empty slots
 		return
 	end
-
+	
 --	Nx.prt ("TooltipProcess %s", tipStr)
 
 	Nx.TooltipLastDiffText = tipStr
@@ -5372,6 +5372,11 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 	end
 
 	local tip = GameTooltip
+
+	local name, unit = tip:GetUnit()
+	if unit then
+		local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
+	end
 
 	-- Check if already added
 

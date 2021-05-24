@@ -1856,6 +1856,19 @@ local function QuestOptions ()
 								Nx.qdb.profile.Quest.Load6 = not Nx.qdb.profile.Quest.Load6
 							end,
 						},
+						q7 = {
+							order = 12,
+							type = "toggle",
+							width = "full",
+							name = L["Load Quests for Levels 61-70"],
+							desc = L["Loads all the carbonite quest data in this range on reload"],
+							get = function()
+								return Nx.qdb.profile.Quest.Load7
+							end,
+							set = function()
+								Nx.qdb.profile.Quest.Load7 = not Nx.qdb.profile.Quest.Load6
+							end,
+						},
 						spacer3 = {
 							order = 19,
 							type = "description",
@@ -3155,6 +3168,14 @@ function Nx.Quest:LoadQuestDB()
 		maxQLoad = maxQLoad + 1
 	else
 		Nx.ModQuests:Clear6()
+	end
+	if Nx.qdb.profile.Quest.Load7 then
+		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load7(); numQLoad = numQLoad - 1; end)
+		timeDelay = timeDelay + 1
+		numQLoad = numQLoad + 1
+		maxQLoad = maxQLoad + 1
+	else
+		Nx.ModQuests:Clear7()
 	end
 
 	local qStep = 100 / maxQLoad

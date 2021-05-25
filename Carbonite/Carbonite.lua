@@ -853,7 +853,7 @@ function Nx:SetupEverything()
 			y = y or 0;
 			
 			local wx, wy = map:GetWorldPos (m, x*100, y*100)
-			local title = (ZGV.CurrentStep.current_waypoint_goal_num and ZGV.CurrentStep.goals) and ZGV.CurrentStep.goals[ZGV.CurrentStep.current_waypoint_goal_num]:GetText() or ""
+			local title = (ZGV.CurrentStep and ZGV.CurrentStep.current_waypoint_goal_num and ZGV.CurrentStep.goals) and ZGV.CurrentStep.goals[ZGV.CurrentStep.current_waypoint_goal_num]:GetText() or ""
 			
 			if ZygorGuidesViewerFrame:IsVisible() then 
 				map:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, title or "Zygor Waypoint (check step in Zygor Guide Viewer)", nil, m)

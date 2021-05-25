@@ -17,6 +17,7 @@
 	<Include file="HerbalismTrainer.lua" />
 	<Include file="HunterTrainer.lua" />
 	<Include file="Innkeeper.lua" />
+	<Include file="JewelcraftingTrainer.lua" />
 	<Include file="LeatherworkingTrainer.lua" />	
 	<Include file="MageTrainer.lua" />
 	<Include file="Mailbox.lua" />	

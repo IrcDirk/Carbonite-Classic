@@ -194,13 +194,13 @@ Nx.GuideInfo = {
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Inscription_Tradeskill01",
-		},
+		},]]--
 		{
 			Pre = L["Jewelcrafting"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Misc_Gem_02",
-		},]]--
+		},
 		{
 			Pre = L["Leatherworking"],
 			Name = L["Trainer"],
@@ -2688,12 +2688,12 @@ Nx.Map.Guide.ItemCats = {
 			Tx = "Trade_Engineering",
 			Item = -9,
 		},
-		--[[{
+		{
 			Name = "Jewelcrafting",
 			T = "Jewelcrafting",
 			Tx = "INV_Misc_Gem_02",
 			Item = -9,
-		},]]--
+		},
 		{
 			Name = "Leatherworking",
 			T = "Leatherworking",
@@ -2900,7 +2900,7 @@ Nx.Map.Guide.ItemStatRequiredSkill = {
 	"First Aid",
 	"Fishing",
 	"Herbalism",
-	--"Jewelcrafting",
+	"Jewelcrafting",
 	"Leatherworking",
 	"Mining",
 	--"Inscription",

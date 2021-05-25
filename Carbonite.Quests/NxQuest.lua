@@ -30,7 +30,7 @@ local _G = getfenv(0)
 CarboniteQuest = LibStub("AceAddon-3.0"):NewAddon("Carbonite.Quest", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Quest", true)
 
-Nx.VERSIONQOPTS		= .12				-- Quest options
+Nx.VERSIONQOPTS		= .20				-- Quest options
 Nx.VERSIONCAP		= .80
 Nx.Quest = {}
 Nx.Quest.List = {}
@@ -2221,6 +2221,8 @@ function Nx.Quest:OptsReset()
 
 	local qopts = Nx.Quest:GetQuestOpts()
 
+	Nx.qdb.profile.Quest.MapQuestGiversHighLevel = 70
+	
 	qopts.NXShowHeaders = true
 	qopts.NXSortWatchMode = 1
 

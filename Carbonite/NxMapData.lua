@@ -638,6 +638,16 @@ Map.MapWorldInfo = {
 		Y = 3000,
 		Short = "EOS",
 	},
+	[1957] = {
+		Scale = 6.654166015625,
+		X = 1060.4166015625,
+		Y = -2713.7498046875,
+		Overlay = "sunwell",
+		Name = L["Isle of Quel'Danas"],
+		XOff = Map.BloodelfXO,
+		YOff = Map.BloodelfYO,
+		MId = 94,
+	}
 }
 
 --------

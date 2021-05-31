@@ -2854,6 +2854,7 @@ function Nx.Quest:Init()
 	for k, name in ipairs (ttHooks) do
 			hooksecurefunc (GameTooltip, name, Nx.Quest.TooltipHook)
 	end
+	GameTooltip:HookScript("OnTooltipSetUnit", Nx.Quest.TooltipHook)
 
 	local unitNames = {	-- 5 letter and shorter words are already blocked
 		"Hunter", "Paladin", "Priest",
@@ -3179,7 +3180,9 @@ function Nx.Quest:LoadQuestDB()
 	else
 		Nx.ModQuests:Clear7()
 	end
-
+	
+	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
+	
 	local qStep = 100 / maxQLoad
 	C_Timer.NewTicker(1, function(self)
 		if (Nx.Initialized == true and numQLoad == 0) or self._remainingIterations == 0 then
@@ -5357,7 +5360,7 @@ end
 
 function	Nx.Quest.TooltipHook()
 
---	Nx.prt ("TooltipHook")
+	--Nx.prt ("TooltipHook")
 
 	Nx.Quest:TooltipProcess()
 end
@@ -5366,7 +5369,7 @@ function	Nx.Quest:TooltipProcess (stripColor)
 
 	local tipStr = GameTooltipTextLeft1:GetText()
 	if not tipStr then		-- Happens in WotLK on empty slots
-		return
+		--return
 	end
 	
 --	Nx.prt ("TooltipProcess %s", tipStr)
@@ -5381,25 +5384,21 @@ function	Nx.Quest:TooltipProcess (stripColor)
 		GameTooltip:Show()	-- Adjusts size
 	end
 
---	Nx.prt ("TTProcess %f secs", GetTime() - sTime)
+	--Nx.prt ("TTProcess %f secs", GetTime() - sTime)
 
 	Nx.TooltipLastDiffNumLines = GameTooltip:NumLines()	-- Stop multiple checks
 end
 
 function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
+
 	if not Nx.QInit then
 		return
 	end
-	if not Nx.qdb.profile.Quest.AddToolTip then
+	if not Nx.qdb.profile.Quest.AddTooltip then
 		return
 	end
 
 	local tip = GameTooltip
-
-	local name, unit = tip:GetUnit()
-	if unit then
-		local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
-	end
 
 	-- Check if already added
 
@@ -5409,95 +5408,40 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 	for n = 2, tip:NumLines() do
 		local s = _G[textName .. n]:GetText()
 		if s then
-
 			local s1 = strfind (s, questStr)
 			if s1 then
---				Nx.prt ("TTM #%s", GameTooltip:NumLines())
 				return
 			end
-			if strsub (s, 1, 3) == " - " then	-- Blizz added quest info?
+		end
+	end
 
-				local fstr = _G[textName .. (n - 1)]
-				local qTitle = fstr:GetText()
-
-				local i, cur = self:FindCur (qTitle)
+	local name, unit = tip:GetUnit()
+	if unit then
+		local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
+		if npcID and Nx.Units2Quests[tonumber(npcID)] then	
+			local npcQuests = {Nx.Split('|', Nx.Units2Quests[tonumber(npcID)])};
+			for k, str in ipairs (npcQuests) do
+				local id, objn = Nx.Split(',', str)
+				id = tonumber(id)
+				objn = tonumber(objn)
+				local i, cur = self:FindCur (id)
 				if cur then
 					local color = self:GetDifficultyColor (cur.Level)
 					color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
-					fstr:SetText (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
-				end
-
-				tip:AddLine (" ")		-- Add blank or same tip will not add info again
-
-				return true;
-			end
-		end
-	end
-
-	-- Scan tooltip
-
-	if stripColor then
-		tipStr = gsub (tipStr, "|c%x%x%x%x%x%x%x%x", "")
-	end
-
-	if tipStr and #tipStr > 5 and #tipStr < 50 and not self.TTIgnore[tipStr] then
-
-		tipStr = self.TTChange[tipStr] or tipStr
-		local tipStrLower = strlower (tipStr)
-
-		local curq = self.CurQ
-
-		for curi, cur in ipairs (curq) do
-
-			if not cur.Goto then		-- Skip Goto and Party quests
-
-				local s1 = strfind (cur.ObjText, tipStr, 1, true)
-				if not s1 then
-					s1 = strfind (cur.DescText, tipStr, 1, true)
-				end
-				if not s1 then
-					s1 = strfind (cur.ObjText, tipStrLower, 1, true)
-				end
-				if not s1 then
-					s1 = strfind (cur.DescText, tipStrLower, 1, true)
-				end
-				if not s1 then
-					for n = 1, cur.LBCnt do
-						if cur[n] then	-- V4
-							s1 = strfind (cur[n], tipStr)
-							if s1 then
-								break
-							end
-						end
-					end
-				end
-
-				if s1 then
-
-					local color = self:GetDifficultyColor (cur.Level)
-					color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
-
 					tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
-
-					for n = 1, cur.LBCnt do
-						if strfind (cur[n], tipStr) then
-							local color, s1 = self:CalcPercentColor (cur[n], cur[n + 100])
-							if s1 then
-								local oName = strsub (cur[n], 1, s1 - 1)
-								tip:AddLine (format ("    |cffb0b0b0%s%s%s", oName, color, strsub (cur[n], s1)))
-							else
-								tip:AddLine (format ("    %s%s", color, cur[n]))
-							end
+					if cur[objn] then
+						local oName, oCount = Nx.Split(':', cur[objn]);
+						if oName and oCount then
+							tip:AddLine (format ("    |cffb0b0b0%s:%s%s", oName, color, oCount))
+						else
+							tip:AddLine (format ("    %s%s", color, cur[objn]))
 						end
 					end
-
---					Nx.prt ("TTProcess %s #%s", tipStr, tip:NumLines())
-
-					return true;
 				end
 			end
 		end
 	end
+	
 end
 
 -------------------------------------------------------------------------------
@@ -8803,7 +8747,7 @@ function Nx.Quest.Watch:Open()
 --	local item = menu:AddItem (0, L["Max Auto Track"], update, self)
 --	item:SetSlider (qopts, 1, 25, 1, "NXWAutoMax")
 
-	local i = 20
+	local i = 25
 
 	local item = menu:AddItem (0, L["Max Visible In List"], update, self)
 	item:SetSlider (qopts, 1, i, 1, "NXWVisMax")
@@ -9876,7 +9820,7 @@ function Nx.Quest.Watch:UpdateList()
 			self.Win:SetTitle ("")
 		else
 			local _, i = GetNumQuestLogEntries()
-			self.Win:SetTitle (format ("          |cff40af40%d/20", i))
+			self.Win:SetTitle (format ("          |cff40af40%d/%d", i, MAX_QUESTS))
 		end
 
 		self.FirstUpdate = nil

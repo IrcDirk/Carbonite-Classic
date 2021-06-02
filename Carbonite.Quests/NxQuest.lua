@@ -2230,6 +2230,7 @@ function Nx.Quest:OptsReset()
 	qopts.NXWVisMax = 8
 	qopts.NXWShowOnMap = true
 	qopts.NXWWatchParty = true
+	qopts.NXWATrack = false
 	
 	qopts.NXWHideBfAEmmissaries = false
 	qopts.NXWHideLegionEmmissaries = false
@@ -8687,13 +8688,16 @@ function Nx.Quest.Watch:Open()
 	self.ButShowOnMap:SetPressed (qopts.NXWShowOnMap)
 
 	local function func (self, but)
+		local qopts = Nx.Quest:GetQuestOpts()
+		qopts.NXWATrack = but:GetPressed()
 		if not but:GetPressed() and not IsShiftKeyDown() then
 			Nx.Quest.Tracking = {}	-- Kill all
 		end
 		self:Update()
 	end
 	self.ButATarget = Nx.Button:Create (self.ButMenu.Frm, "QuestWatchATrack", nil, nil, 56, 0, "CENTER", 1, 1, func, self)
-
+	self.ButATarget:SetPressed (qopts.NXWATrack)
+	
 	local function func (self, but)
 		Nx.db.char.Map.ShowQuestGivers = but:GetState()
 		local map = Nx.Map:GetMap (1)

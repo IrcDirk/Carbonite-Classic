@@ -3152,7 +3152,6 @@ WorldMapFrame:HookScript("OnShow", function()
 	if ElvUI then
 		ElvUI[1].global.general.fadeMapWhenMoving = false
 	end
-	
 	if Nx.Map.WMFOnShow then
 		local orgin = IsAltKeyDown()
 		if not Nx.db.profile.Map.MaxOverride then
@@ -3183,13 +3182,13 @@ WorldMapFrame:HookScript("OnShow", function()
 	end
 end)
 
---[[function ToggleWorldMap()
+function ToggleWorldMap()
 	if Nx.Map.BlizzToggling or WorldMapFrame:IsShown() or IsAltKeyDown() or not Nx.db.profile.Map.MaxOverride then
 		Nx.Map:BlizzToggleWorldMap()
 	else
 		Nx.Map:ToggleSize()
 	end
-end]]--
+end
 
 --------
 -- Override blizz WotLK frame toggle

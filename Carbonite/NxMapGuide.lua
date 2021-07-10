@@ -807,18 +807,24 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			["Tram"] = "INV_Misc_MissileSmall_White",
 			["Zeppelin"] = "INV_Misc_MissileSmall_Red",
 		}
+                local txN = {
+                        [2] = "Boat",
+			[0] = "Portal",
+			[3] = "Tram",
+			[5] = "Zeppelin",
+                }
 		local portalT = {
 			["Blasted Lands"] = "Spell_Arcane_TeleportStonard",
 			["Darnassus"] = "Spell_Arcane_TeleportDarnassus",
 			["Teldrassil"] = "Spell_Arcane_TeleportDarnassus",
-			--["The Exodar"] = "Spell_Arcane_TeleportExodar",
+			["The Exodar"] = "Spell_Arcane_TeleportExodar",
 			--["Hellfire Peninsula"] = "Spell_Arcane_TeleportStonard",
 			["Ironforge"] = "Spell_Arcane_TeleportIronForge",
-			--["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
-			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
+			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
+			--"Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
 			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
-			--["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
+			["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
 			["Stormwind City"] = "Spell_Arcane_TeleportStormWind",
 			["Thunder Bluff"] = "Spell_Arcane_TeleportThunderBluff",
 			["Undercity"] = "Spell_Arcane_TeleportUnderCity",
@@ -826,6 +832,18 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			--["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
+                local portalN = {
+                        [1438] = "Spell_Arcane_TeleportDarnassus",
+			[1457] = "Spell_Arcane_TeleportDarnassus",
+			[1947] = "Spell_Arcane_TeleportExodar",
+			[1455] = "Spell_Arcane_TeleportIronForge",
+			[1957] = "Achievement_Zone_IsleOfQuelDanas",
+			[1454] = "Spell_Arcane_TeleportOrgrimmar",
+			[1954] = "Spell_Arcane_TeleportSilvermoon",
+			[1453] = "Spell_Arcane_TeleportStormWind",
+			[1456] = "Spell_Arcane_TeleportThunderBluff",
+			[1458] = "Spell_Arcane_TeleportUnderCity",
+                }
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)
 			if conTime ~= 1 then
@@ -839,8 +857,10 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 					f.MapId = mapId1
 					f.ConIndex = i
 					f.T = "*" .. i .. facStr
-					local typ, locName = strmatch (name1, "(%S+) to (.+)")
-					f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+					local typ = txN[conTime]
+                                        f.Tx = typ == "Portal" and portalN[mapId2] or txT[typ]
+					--local typ, locName = strmatch (name1, "(%S+) to (.+)")
+					--f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
 				end
 				if #name2 > 0 and bit.band (flags, 1) ~= 0 then
 					local f = {}
@@ -851,8 +871,11 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 					f.ConIndex = i
 					f.Con2 = true
 					f.T = "*b" .. i .. facStr
-					local typ, locName = strmatch (name2, "(%S+) to (.+)")
-					f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+					local typ = txN[conTime]
+					local locName = Nx.Map:IdToName(mapId1)
+                                        f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+					--local typ, locName = strmatch (name2, "(%S+) to (.+)")
+					--f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
 				end
 			end
 		end

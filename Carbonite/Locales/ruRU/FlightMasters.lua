@@ -447,9 +447,13 @@ L["Portal to Stormwind"] = "Портал в Штормград"
 L["Portal to Teldrassil"] = "Портал в Тельдрассил"
 
 L["Portal to Thunder Bluff"] = "Портал в Громовой Утес"
-L["Portal to Orgrimmar"] = "Портал в Оггримар"
+L["Portal to Orgrimmar"] = "Портал в Оргриммар"
 L["Portal to Undercity"] = "Портал в Подгород"
 L["Portal to Silvermoon"] = "Портал в Луносвет"
+
+L["Zeppelin to Stranglethorn Vale"] = "Дирижабль в Тернистую Долину"
+L["Zeppelin to Undercity"] = "Дирижабль в Подгород"
+L["Zeppelin to Orgrimmar"] = "Дирижабль в Оргриммар"
 
 -- WOD Flightmasters
 -- Ashran

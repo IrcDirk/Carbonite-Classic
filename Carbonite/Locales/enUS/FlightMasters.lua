@@ -428,6 +428,30 @@ L"[Thyssiana, Thalanaar, Feralas"] = true
 L"[Michael Garrett, Undercity, Undercity"] = true
 L"[Suralais Farwind, Forest Song, Ashenvale"] = true
 
+L["Boat to Dustwallow Marsh"] = true
+L["Boat to Stormwind City"] = true
+L["Boat to Darkshore"] = true
+L["Boat to Teldrassil"] = true
+L["Boat to Azuremyst Isle"] = true
+L["Boat to Wetlands"] = true
+L["Boat to The Barrens"] = true
+
+L["Portal to Darnassus"] = true
+L["Portal to Exodar"] = true
+L["Portal to Ironforge"] = true
+L["Portal to Isle of Quel'Danas"] = true
+L["Portal to Stormwind"] = true
+L["Portal to Teldrassil"] = true
+
+L["Portal to Thunder Bluff"] = true
+L["Portal to Orgrimmar"] = true
+L["Portal to Undercity"] = true
+L["Portal to Silvermoon"] = true
+
+L["Zeppelin to Stranglethorn Vale"] = true
+L["Zeppelin to Undercity"] = true
+L["Zeppelin to Orgrimmar"] = true
+
 -- WOD Flightmasters
 -- Ashran
 L["Stormshield, Ashran"] = true

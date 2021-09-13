@@ -4043,7 +4043,9 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 			end
 		end
 	end
-
+	
+	if IsIndoors() or Nx.Map.Indoors then map.BackgndAlphaTarget = map.BackgndAlphaFull end
+	
 	-- Check quest window
 	if Nx.Quest then
 		if map.Guide.Win.Frm:IsVisible() or Nx.Quest.List.Win and Nx.Quest.List.Win.Frm:IsVisible() then

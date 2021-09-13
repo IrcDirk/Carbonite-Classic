@@ -687,7 +687,8 @@ function Nx.Social:ShowUIPanel (frame)
 			win:Show()
 			self:ShowBlizzTabs (false)
 
-			self.Bar:Select (self.TabSelected, true)
+			C_Timer.After(0, function() self.Bar:Select (self.TabSelected, true) end)
+			--self.Bar:Select (self.TabSelected, true)
 		end
 
 --[[	--V4

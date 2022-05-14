@@ -2644,6 +2644,9 @@ function Nx.Map:MinimapDetachFrms()
 	end
 
 	--
+	if HandyNotes then
+		HandyNotes:UpdateMinimap()
+	end
 
 	dock:MinimapDetachFrms()
 end

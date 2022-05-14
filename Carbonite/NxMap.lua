@@ -2324,7 +2324,7 @@ function Nx.Map:MinimapUpdate()
 			al = 1
 		end
 
-		if IsControlKeyDown() then
+		if IsControlKeyDown() or IsIndoors() or Nx.Map.Indoors then
 			al = IsAltKeyDown() and 1 or .8
 			self.MMZoomChanged = true
 		end
@@ -4043,7 +4043,11 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 			end
 		end
 	end
-
+	
+	if IsIndoors() or Nx.Map.Indoors then 
+		map.BackgndAlphaTarget = map.BackgndAlphaFull 
+	end
+	
 	-- Check quest window
 	if Nx.Quest then
 		if map.Guide.Win.Frm:IsVisible() or Nx.Quest.List.Win and Nx.Quest.List.Win.Frm:IsVisible() then

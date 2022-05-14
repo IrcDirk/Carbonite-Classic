@@ -189,7 +189,7 @@ function Nx.Com:OnEvent (event)
 
 	if event == "PLAYER_LOGIN" then
 		local playername, realmname = UnitFullName("player")
-		self.PlyrName = playername .. "-" .. realmname
+		self.PlyrName = playername .. (realmname and "-" .. realmname or "")
 		self.PlyrMapId = Nx.Map:GetRealMapId()
 		self.PlyrX = 0
 		self.PlyrY = 0
@@ -333,7 +333,7 @@ function Nx.Com:OnFriendguild_update()
 		local con = finfo.connected
 		if not Nx.strpos(name, "-") then
 			local realmname = GetRealmName()
-			name = name .. "-" .. (realmname and "-" .. realmname or "")
+			name = name .. (realmname and "-" .. realmname or "")
 		end
 		if con then
 			if not gNames[name] then

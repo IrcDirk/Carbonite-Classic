@@ -687,7 +687,8 @@ function Nx.Social:ShowUIPanel (frame)
 			win:Show()
 			self:ShowBlizzTabs (false)
 
-			self.Bar:Select (self.TabSelected, true)
+			C_Timer.After(0, function() self.Bar:Select (self.TabSelected, true) end)
+			--self.Bar:Select (self.TabSelected, true)
 		end
 
 --[[	--V4
@@ -870,7 +871,7 @@ function Nx.Social:Create()
 	bar:AddTab (L["Friends"], orig, 60, false, "FriendsFrameTabTemplate", 1)
 	bar:AddTab (L["Who"], orig + 1, 45, false, "FriendsFrameTabTemplate", 2)
 --	bar:AddTab (L["Guild"], orig + 2, 45, false, "FriendsFrameTabTemplate", 3)		--V4 moved
-	bar:AddTab (L["Chat"], orig + 2, 45, false, "FriendsFrameTabTemplate", 3)
+	bar:AddTab (L["Guild"], orig + 2, 45, false, "FriendsFrameTabTemplate", 3)
 	bar:AddTab (L["Raid"], orig + 3, 45, false, "FriendsFrameTabTemplate", 4)
 
 	--

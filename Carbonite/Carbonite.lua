@@ -862,6 +862,8 @@ function Nx:SetupEverything()
 			return waypoint
 		end)
 	end
+	
+	GuildControlPopupFrame.initialized = 1
 end
 
 function Nx:ADDON_LOADED (event, arg1, ...)

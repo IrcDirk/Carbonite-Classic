@@ -38,8 +38,8 @@ L["Show Cities"] = "Показать города"
 L["Show Towns"] = "Показать деревни"
 L["Show Extras"] = "Показать дополнения"
 L["Show Kill Icons"] = "Показать иконки смертей"
-L["Show Instance Raid Bosses"] = true
-L["Show Continent POIs"] = true
+L["Show Instance Raid Bosses"] = "Показывать боссов рейдового подземелья"
+L["Show Continent POIs"] = "Показывать POI на континенте"
 L["Minimap..."] = "Миникарта..."
 L["Full Size"] = "Полноразмерность"
 L["Transparency"] = "Прозрачность"
@@ -101,11 +101,11 @@ L["Incoming"] = "Входящие"
 L["Speed"] = "Скорость"
 L["players"] = "игроки"
 L["Unknown map name"] = "Неизвестное имя карты"
-L["Show Instance Map"] = true
-L["Instance Scale..."] = true
-L["Player Arrow"] = true
-L["Group Player Size"] = true
-L["Raid Boss Size"] = true
+L["Show Instance Map"] = "Показывать карту подземелья"
+L["Instance Scale..."] = "Масштаб карты подземелья"
+L["Player Arrow"] = "Стрелочка игрока"
+L["Group Player Size"] = "Размер иконки игрока в группе"
+L["Raid Boss Size"] = "Размер иконки рейд босса"
 
 -- Battle ground messages
 L["Incoming"] = "Наступайте"		-- why was it commented? --mb because of next string?
@@ -117,3 +117,11 @@ L["Guard"] = "Защищайте"
 L["Well Defended"] = "Хорошо укрепленная"
 L["Losing"] = "Вы проигрываете"
 L["Report Status"] = "Текущее состояние"
+
+
+-- Zone status
+L["arena"] = "Арена"
+L["friendly"] = "Дружественная территория"
+L["hostile"] = "Вражеская территория"
+L["sanctuary"] = "Святилище"
+L["contested"] = "Оспариваемая территория"

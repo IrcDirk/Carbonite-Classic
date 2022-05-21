@@ -361,6 +361,8 @@ L["Tracking HUD"] = "추적창"
 
 -- General Text
 L["Reload UI"] = "UI 재시작"
+L["Reload"] = true
+L["Cancel"] = true
 L["Reset options"] = "옵션 초기화"
 L["Reset global options"] = "전역 옵션 초기화"
 L["Reset window layouts"] = "창 위치 초기화"

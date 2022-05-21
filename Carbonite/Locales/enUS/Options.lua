@@ -358,6 +358,8 @@ L["Tracking HUD"] = true
 
 -- General Text
 L["Reload UI"] = true
+L["Reload"] = true
+L["Cancel"] = true
 L["Reset options"] = true
 L["Reset global options"] = true
 L["Reset window layouts"] = true

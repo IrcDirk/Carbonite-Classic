@@ -4893,7 +4893,7 @@ function Nx.Opts:NXCmdReload()
 		ReloadUI()
 	end
 
-	Nx:ShowMessage (L["Reload UI"] .. "?", "Reload", func, "Cancel")
+	Nx:ShowMessage (L["Reload UI"] .. "?", L["Reload"], func, L["Cancel"])
 end
 
 function Nx.Opts:NXCmdHUDChange()

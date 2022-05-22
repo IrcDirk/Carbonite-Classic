@@ -1,0 +1,129 @@
+diff --git a/Carbonite/Data/Zones.lua b/Carbonite/Data/Zones.lua
+index 5df2ebe..35dcbee 100644
+--- a/Carbonite/Data/Zones.lua
++++ b/Carbonite/Data/Zones.lua
+@@ -83,7 +83,7 @@ Nx.Zones = {
+     [1460] = L["Warsong Gulch"] .. "|0|0|3|4||",
+     [1461] = L["Arathi Basin"] .. "|0|0|3|4||",
+ 
+-	[101] = L["Outland"] .. "|0|0|2|3||",
++    [1945] = L["Outland"] .. "|0|0|2|3||",
+     [1941] = L["Eversong Woods"] .. "|1|20|1|2||",
+     [1942] = L["Ghostlands"] .. "|20|60|1|2||",
+     [1943] = L["Azuremyst Isle"] .. "|1|20|0|1||",
+@@ -99,7 +99,7 @@ Nx.Zones = {
+     [1954] = L["Silvermoon City"] .. "|0|0|1|2||",
+     [1955] = L["Shattrath City"] .. "|0|0|2|3||",
+     [1956] = L["Eye of the Storm"] .. "|0|0|3|4||",
+-	[1957] = L["Isle of Quel'Danas"] .. "|60|70|1|2||",
++    [1957] = L["Isle of Quel'Danas"] .. "|60|70|1|2||",
+ 	
+     [113] = L["Northrend"] .. "|0|0|2|4||",
+     [114] = L["Borean Tundra"] .. "|60|80|2|4||",
+diff --git a/Carbonite/NxMap.lua b/Carbonite/NxMap.lua
+index 6ac87d1..e0c1208 100644
+--- a/Carbonite/NxMap.lua
++++ b/Carbonite/NxMap.lua
+@@ -5918,6 +5918,16 @@ end
+ 
+ function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, tex, mode, name)
+ 
++	function shortendistance(n)
++		if n >= 10^6 then
++			return string.format("%.2fm", n / 10^6)
++		elseif n >= 10^3 then
++			return string.format("%.2fk", n / 10^3)
++		else
++			return tostring(n)
++		end
++	end
++
+ 	local x = dstX - srcX
+ 	local y = dstY - srcY
+ 
+@@ -5932,8 +5942,7 @@ function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, tex, mode, name)
+ 		self:ClipFrameByMapType (f, dstX, dstY, size, size, 0)
+ 
+ 		local s = name or self.TrackName
+-
+-		f.NxTip = format ("%s\n%d " .. L["yds"], s, dist * 4.575)
++		f.NxTip = format ("%s\n%s " .. L["yds"], s, shortendistance(ceil(dist * 4.575)))
+ 
+ 		f.texture:SetTexture (tex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
+ 	end
+@@ -8992,11 +9001,11 @@ function Nx.Map:InitTables()
+ 	--V403
+ 
+ 	Nx.Map.MapZones = {
+-		 [0] = {12,13,101,0,-1},
++		 [0] = {12,13,1945,0,-1},
+ 		 
+ 		 [1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950},
+ 		 [2] = {1416,1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957},
+-	     [3] = {1944,1946,1948,1949,1951,1952,1953,1955},
++	         [3] = {1944,1946,1948,1949,1951,1952,1953,1955},
+ 		 
+ 		 [90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
+ 		 [100] = {},
+diff --git a/Carbonite/NxMapData.lua b/Carbonite/NxMapData.lua
+index afe7262..a295851 100644
+--- a/Carbonite/NxMapData.lua
++++ b/Carbonite/NxMapData.lua
+@@ -494,8 +494,7 @@ Map.MapWorldInfo = {
+ 		Y = 0,
+ 		Short = "AB",
+ 	},
+-	
+-	[101] = {
++	[1945] = {
+ 		Scale = 34.92815625,
+ 		X = -2599.2078125,
+ 		Y = -1164.271875,
+@@ -3623,7 +3622,7 @@ Map.MiniMapBlks = {
+ 		Map.OLMapBlks,
+ 		1221,
+ 		12, 21,
+-		Map.MapWorldInfo[101].X + Map.MapInfo[3].X + 465.4, Map.MapWorldInfo[101].Y + Map.MapInfo[3].Y + -9.7,
++		Map.MapWorldInfo[1945].X + Map.MapInfo[3].X + 465.4, Map.MapWorldInfo[1945].Y + Map.MapInfo[3].Y + -9.7,
+ 		"World\\Minimaps\\Expansion01"
+ 	},
+ 	[94] = {
+@@ -3989,7 +3988,7 @@ MapMigrationData = {
+     [930] = { mapFile = "ThunderKingRaid", [1] = 508, [2] = 509, [3] = 510, [4] = 511, [5] = 512, [6] = 513, [7] = 514, [8] = 515},
+     [1092] = { mapFile = "AzuremystIsleScenario", [0] = 776},
+     [803] = { mapFile = "TheNexusLegendary", [1] = 370},
+-    [466] = { mapFile = "Expansion01", [0] = 101},
++    [466] = { mapFile = "Expansion01", [0] = 1945},
+     [1094] = { mapFile = "NightmareRaid", [1] = 777, [2] = 778, [3] = 779, [4] = 780, [5] = 781, [6] = 782, [7] = 783, [8] = 784, [9] = 785, [10] = 786, [11] = 787, [12] = 788, [13] = 789},
+     [1096] = { mapFile = "AszunaDungeonExterior", [0] = 790},
+     [101] = { mapFile = "Desolace", [0] = 66, [22] = 68, [21] = 67},
+diff --git a/Carbonite/NxTravel.lua b/Carbonite/NxTravel.lua
+index ff85340..dbf1a63 100644
+--- a/Carbonite/NxTravel.lua
++++ b/Carbonite/NxTravel.lua
+@@ -899,19 +899,13 @@ function Nx.Travel:DebugCaptureTaxi()
+ end
+ 
+ function Nx.Travel:GetRidingSkill()
+-	local RidingSpells = {
+-		[75] = GetSpellInfo (33389) or "",
+-		[150] = GetSpellInfo (33392) or "",
+-		[225] = GetSpellInfo (34092) or "",		-- Expert
+-		[300] = GetSpellInfo (34093) or "",		-- Artisan
+-		[375] = GetSpellInfo (90265) or "",		-- Master
+-	}
+ 	local SkillRiding = 0
+-
+-	for skill, name in pairs (RidingSpells) do
+-		if GetSpellInfo (name) then
+-			SkillRiding = skill
+-			break
++	local RidingSpell = GetSpellInfo(33388)
++        for skillIndex = 1, GetNumSkillLines() do
++		PlayerSkill = {GetSkillLineInfo(skillIndex)}
++		if PlayerSkill[1] == RidingSpell then
++			SkillRiding = PlayerSkill[4]
++                        break
+ 		end
+ 	end
+ 	return SkillRiding

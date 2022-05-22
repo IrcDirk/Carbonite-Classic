@@ -5918,6 +5918,16 @@ end
 
 function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, tex, mode, name)
 
+	function shortendistance(n)
+		if n >= 10^6 then
+			return string.format("%.2fm", n / 10^6)
+		elseif n >= 10^3 then
+			return string.format("%.2fk", n / 10^3)
+		else
+			return tostring(n)
+		end
+	end
+
 	local x = dstX - srcX
 	local y = dstY - srcY
 
@@ -5932,8 +5942,7 @@ function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, tex, mode, name)
 		self:ClipFrameByMapType (f, dstX, dstY, size, size, 0)
 
 		local s = name or self.TrackName
-
-		f.NxTip = format ("%s\n%d " .. L["yds"], s, dist * 4.575)
+		f.NxTip = format ("%s\n%s " .. L["yds"], s, shortendistance(ceil(dist * 4.575)))
 
 		f.texture:SetTexture (tex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
 	end
@@ -8992,11 +9001,11 @@ function Nx.Map:InitTables()
 	--V403
 
 	Nx.Map.MapZones = {
-		 [0] = {12,13,101,0,-1},
+		 [0] = {12,13,1945,0,-1},
 		 
 		 [1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950},
 		 [2] = {1416,1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957},
-	     [3] = {1944,1946,1948,1949,1951,1952,1953,1955},
+	         [3] = {1944,1946,1948,1949,1951,1952,1953,1955},
 		 
 		 [90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
 		 [100] = {},

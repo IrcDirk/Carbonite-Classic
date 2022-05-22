@@ -83,7 +83,7 @@ Nx.Zones = {
     [1460] = L["Warsong Gulch"] .. "|0|0|3|4||",
     [1461] = L["Arathi Basin"] .. "|0|0|3|4||",
 
-	[101] = L["Outland"] .. "|0|0|2|3||",
+    [1945] = L["Outland"] .. "|0|0|2|3||",
     [1941] = L["Eversong Woods"] .. "|1|20|1|2||",
     [1942] = L["Ghostlands"] .. "|20|60|1|2||",
     [1943] = L["Azuremyst Isle"] .. "|1|20|0|1||",
@@ -99,7 +99,7 @@ Nx.Zones = {
     [1954] = L["Silvermoon City"] .. "|0|0|1|2||",
     [1955] = L["Shattrath City"] .. "|0|0|2|3||",
     [1956] = L["Eye of the Storm"] .. "|0|0|3|4||",
-	[1957] = L["Isle of Quel'Danas"] .. "|60|70|1|2||",
+    [1957] = L["Isle of Quel'Danas"] .. "|60|70|1|2||",
 	
     [113] = L["Northrend"] .. "|0|0|2|4||",
     [114] = L["Borean Tundra"] .. "|60|80|2|4||",

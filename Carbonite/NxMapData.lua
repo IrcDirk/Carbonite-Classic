@@ -494,8 +494,7 @@ Map.MapWorldInfo = {
 		Y = 0,
 		Short = "AB",
 	},
-	
-	[101] = {
+	[1945] = {
 		Scale = 34.92815625,
 		X = -2599.2078125,
 		Y = -1164.271875,
@@ -3623,7 +3622,7 @@ Map.MiniMapBlks = {
 		Map.OLMapBlks,
 		1221,
 		12, 21,
-		Map.MapWorldInfo[101].X + Map.MapInfo[3].X + 465.4, Map.MapWorldInfo[101].Y + Map.MapInfo[3].Y + -9.7,
+		Map.MapWorldInfo[1945].X + Map.MapInfo[3].X + 465.4, Map.MapWorldInfo[1945].Y + Map.MapInfo[3].Y + -9.7,
 		"World\\Minimaps\\Expansion01"
 	},
 	[94] = {
@@ -3989,7 +3988,7 @@ MapMigrationData = {
     [930] = { mapFile = "ThunderKingRaid", [1] = 508, [2] = 509, [3] = 510, [4] = 511, [5] = 512, [6] = 513, [7] = 514, [8] = 515},
     [1092] = { mapFile = "AzuremystIsleScenario", [0] = 776},
     [803] = { mapFile = "TheNexusLegendary", [1] = 370},
-    [466] = { mapFile = "Expansion01", [0] = 101},
+    [466] = { mapFile = "Expansion01", [0] = 1945},
     [1094] = { mapFile = "NightmareRaid", [1] = 777, [2] = 778, [3] = 779, [4] = 780, [5] = 781, [6] = 782, [7] = 783, [8] = 784, [9] = 785, [10] = 786, [11] = 787, [12] = 788, [13] = 789},
     [1096] = { mapFile = "AszunaDungeonExterior", [0] = 790},
     [101] = { mapFile = "Desolace", [0] = 66, [22] = 68, [21] = 67},

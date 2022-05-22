@@ -899,6 +899,7 @@ function Nx.Travel:DebugCaptureTaxi()
 end
 
 function Nx.Travel:GetRidingSkill()
+--[[
 	local RidingSpells = {
 		[75] = GetSpellInfo (33389) or "",
 		[150] = GetSpellInfo (33392) or "",
@@ -912,6 +913,16 @@ function Nx.Travel:GetRidingSkill()
 		if GetSpellInfo (name) then
 			SkillRiding = skill
 			break
+		end
+	end
+]]--
+	local SkillRiding = 0
+	local RidingSpell = GetSpellInfo(33388)
+        for skillIndex = 1, GetNumSkillLines() do
+		PlayerSkill = {GetSkillLineInfo(skillIndex)}
+		if PlayerSkill[1] == RidingSpell then
+			SkillRiding = PlayerSkill[4]
+                        break
 		end
 	end
 	return SkillRiding

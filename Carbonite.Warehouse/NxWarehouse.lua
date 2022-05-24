@@ -734,7 +734,7 @@ local function WarehouseOptions()
 								Nx.wdb.profile.Warehouse.RepairAuto = not Nx.wdb.profile.Warehouse.RepairAuto
 							end,
 						},
-						--[[guildrepair = {
+						guildrepair = {
 							order = 2,
 							type = "toggle",
 							width = "full",
@@ -750,7 +750,7 @@ local function WarehouseOptions()
 							set = function()
 								Nx.wdb.profile.Warehouse.RepairGuild = not Nx.wdb.profile.Warehouse.RepairGuild
 							end,						
-						},]]--
+						},
 					},
 				},				
 			},
@@ -856,6 +856,24 @@ function CarboniteWarehouse:OnInitialize()
 			hooksecurefunc (GameTooltip, name, Nx.Warehouse.TooltipProcess)
 			hooksecurefunc (ItemRefTooltip, name, Nx.Warehouse.ReftipProcess)
 	end
+
+	hooksecurefunc("PlaceAuctionBid", function(ltype, index, bid)
+			local link = GetAuctionItemLink(ltype, index)
+			local _, _, count, _, _, _, _, _, _, buyout = GetAuctionItemInfo(ltype, index)
+			if not link or bid ~= buyout then
+				return
+			end
+	                Nx.Warehouse.onAuctionHouseUpdate(link, count)
+	end)
+
+	hooksecurefunc("CancelAuction", function(index)
+			local link = GetAuctionItemLink("owner", index)
+			local _, _, count = GetAuctionItemInfo("owner", index)
+			if not link or not count or count == 0 then
+				return
+			end
+        	        Nx.Warehouse.onAuctionHouseUpdate(link, count)
+	end)
 
 	Nx:AddToConfig("Warehouse Module",WarehouseOptions(),L["Warehouse Module"])
 	tinsert(Nx.BrokerMenuTemplate,{ text = L["Toggle Warehouse"], func = function() Nx.Warehouse:ToggleShow() end })
@@ -2841,6 +2859,24 @@ function Nx.Warehouse.OnMail_inbox_update()
 	self:Update()
 end
 
+
+function Nx.Warehouse.onAuctionHouseUpdate(link, count)
+	local self = Nx.Warehouse
+
+	if not self.Enabled then
+		return
+	end
+
+	if not link then
+		return
+	end
+
+	local ch = Nx.Warehouse.CurCharacter
+
+	self:AddLink (link, count, ch["WareMail"])
+        self:Update()
+end
+
 function Nx.Warehouse.OnItem_lock_changed()
 
 	if type (arg2) ~= "number" then	-- Inventory item?
@@ -3029,7 +3065,7 @@ function Nx.Warehouse.OnMerchant_show()
 		local cost, canrepair = GetRepairAllCost()		
 		local guildrepaired = false
 		if canrepair then
-			--[[if Nx.wdb.profile.Warehouse.RepairGuild then
+			if Nx.wdb.profile.Warehouse.RepairGuild then
 				if (IsInGuild() and CanGuildBankRepair()) then
 					if cost <= GetGuildBankWithdrawMoney() or GetGuildBankWithdrawMoney == -1 then
 						RepairAllItems(1)
@@ -3038,7 +3074,7 @@ function Nx.Warehouse.OnMerchant_show()
 						guildrepaired = true
 					end
 				end
-			end]]--
+			end
 		end		
 		if not guildrepaired then
 			if cost <= GetMoney() then

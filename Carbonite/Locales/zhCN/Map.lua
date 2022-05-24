@@ -6,6 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "zhCN")
 if not L then return end
 L["None"] = "无"
 L["Goto"] = "前往"
+L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = "取消前往"
 L["Show Selected Zone"] = "显示选择区域"
 L["Menu"] = "菜单"
@@ -117,3 +118,10 @@ L["Guard"] = "防守"
 L["Well Defended"] = "守得漂亮"
 L["Losing"] = "将要丢失"
 L["Report Status"] = "报告状态"
+
+-- Zone status
+L["arena"] = true
+L["friendly"] = true
+L["hostile"] = true
+L["sanctuary"] = true
+L["contested"] = true

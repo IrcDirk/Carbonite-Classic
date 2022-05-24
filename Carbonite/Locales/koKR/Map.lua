@@ -7,6 +7,7 @@ if not L then return end
 
 L["None"] = true
 L["Goto"] = "목적지"
+L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = "목적지 삭제"
 L["Show Selected Zone"] = "현재 지역 보기"
 L["Menu"] = "메뉴"
@@ -118,3 +119,10 @@ L["Guard"] = "수비"
 L["Well Defended"] = "수비 성공"
 L["Losing"] = true
 L["Report Status"] = "상태 알림"
+
+-- Zone status
+L["arena"] = true
+L["friendly"] = true
+L["hostile"] = true
+L["sanctuary"] = true
+L["contested"] = true

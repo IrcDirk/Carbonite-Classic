@@ -173,3 +173,9 @@ L["Reset old tool bar data"] = "Ripristino vecchi dati barra strumenti"
 -- NxTravel.lua
 L["Connection: %s to %s"] = "Connessione: %s a %s"
 L["Fly: %s to %s"] = "Volo: %s a %s"
+
+-- NxHud.lua
+L[" %.1f deg"] = true
+L[" %d deg"] = true
+L["Remove Current Point"] = true
+L["Remove All Points"] = true

@@ -65,7 +65,7 @@ L["Attempts to hide the two gryphons on your action bar."] = "Пытается �
 
 -- Map Options
 L["Map Options"] = "Настройки карты"
-L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] = "Использовать карту Carbonite вместо карты Blizzard (Alt-ь(M) откроет карту мира)"
+L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] = "Использовать карту Carbonite вместо карты Blizzard (Alt-(M) откроет карту мира)"
 L["When enabled, pressing 'M' will maximize the carbonite map instead of opening the world map."] = "Когда Вкл., ь(M) откроет карту Carbonite вместо обычной карты."
 L["Enable Combat Compatibility Mode"] = "Включить режим совместимости во время битвы"
 L["Take Map Function Control"] = "Взять контроль над картой"
@@ -255,7 +255,7 @@ L["Menu Font Spacing"] = "Межстрочный интервал шрифта �
 L["Sets the spacing of the menu font"] = "Задает межстрочный интервал шрифта меню"
 
 -- Guide Options
-L["Guide Options"] = "Настройки путеводитель"
+L["Guide Options"] = "Настройки путеводителя"
 L["Max Vendors To Record"] = "Максимум записей продавцов"
 L["Sets the number of vendors you visit that will be held in memory for recall in the guide."] = "Задает количество продавцов которых вы посетили,которые будут хранится в памяти для использования в путеводителе."
 L["Gather Options"] = "Настройки добычи"

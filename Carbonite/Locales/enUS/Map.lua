@@ -2,6 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "enUS", true, true)
 if not L then return end
 L["None"] = true
 L["Goto"] = true
+L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = true
 L["Show Selected Zone"] = true
 L["Menu"] = true

@@ -10081,7 +10081,7 @@ end
 		wx,wy = self:FramePosToWorldPos (self.ClickFrmX, self.ClickFrmY)
 	end
 	local zx, zy = self:GetZonePos (self.MapId, wx, wy)
-	local str = format ("Goto %.0f, %.0f", zx, zy)
+	local str = format (L["Goto %.0f, %.0f"], zx, zy)
 
 	self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, str, IsShiftKeyDown())
 end

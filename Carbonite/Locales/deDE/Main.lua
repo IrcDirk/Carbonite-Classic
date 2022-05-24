@@ -171,3 +171,9 @@ L["Reset old tool bar data"] = "Alte Funktionsleistendaten zur\195\188cksetzen"
 -- NxTravel.lua
 L["Connection: %s to %s"] = "Verbindung: %s nach %s"
 L["Fly: %s to %s"] = "Fliege: %s nach %s"
+
+-- NxHud.lua
+L[" %.1f deg"] = true
+L[" %d deg"] = true
+L["Remove Current Point"] = true
+L["Remove All Points"] = true

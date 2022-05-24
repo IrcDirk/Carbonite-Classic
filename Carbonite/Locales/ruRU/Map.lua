@@ -6,6 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "ruRU")
 if not L then return end
 L["None"] = "Нет"
 L["Goto"] = "Идти к"
+L["Goto %.0f, %.0f"] = "Идти к %.0f, %.0f"
 L["Clear Goto"] = "Очистить маршрут"
 L["Show Selected Zone"] = "Показать выбранную локацию"
 L["Menu"] = "Меню"
@@ -117,7 +118,6 @@ L["Guard"] = "Защищайте"
 L["Well Defended"] = "Хорошо укрепленная"
 L["Losing"] = "Вы проигрываете"
 L["Report Status"] = "Текущее состояние"
-
 
 -- Zone status
 L["arena"] = "Арена"

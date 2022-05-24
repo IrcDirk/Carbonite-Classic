@@ -6,6 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "zhCN")
 if not L then return end
 L["None"] = "无"
 L["Goto"] = "前往"
+L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = "取消前往"
 L["Show Selected Zone"] = "显示选择区域"
 L["Menu"] = "菜单"

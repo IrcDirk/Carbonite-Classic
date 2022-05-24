@@ -7,6 +7,7 @@ if not L then return end
 
 L["None"] = true
 L["Goto"] = "목적지"
+L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = "목적지 삭제"
 L["Show Selected Zone"] = "현재 지역 보기"
 L["Menu"] = "메뉴"

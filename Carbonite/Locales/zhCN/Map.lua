@@ -117,3 +117,10 @@ L["Guard"] = "防守"
 L["Well Defended"] = "守得漂亮"
 L["Losing"] = "将要丢失"
 L["Report Status"] = "报告状态"
+
+-- Zone status
+L["arena"] = true
+L["friendly"] = true
+L["hostile"] = true
+L["sanctuary"] = true
+L["contested"] = true

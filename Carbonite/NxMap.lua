@@ -4115,7 +4115,7 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 		local s = GetSubZoneText()
 		local pvpType = GetZonePVPInfo()
 		if pvpType then
-			s = s .. " (" .. pvpType .. ")"
+			s = s .. " (" .. L[pvpType] .. ")"
 		end
 		map.Win:SetTitle (format ("%s %s", s, cursorLocXY), 2)
 	end

@@ -3187,7 +3187,11 @@ end)
 
 function ToggleWorldMap()
 	if Nx.Map.BlizzToggling or WorldMapFrame:IsShown() or IsAltKeyDown() or not Nx.db.profile.Map.MaxOverride then
-		Nx.Map:BlizzToggleWorldMap()
+		if not Nx.db.profile.Map.MaxOverride and IsAltKeyDown() then
+			Nx.Map:ToggleSize()
+		else
+			Nx.Map:BlizzToggleWorldMap()
+		end
 	else
 		Nx.Map:ToggleSize()
 	end
@@ -3267,13 +3271,21 @@ end]]--
 function Nx.Map:BlizzToggleWorldMap()
 	
 	if WorldMapFrame:IsShown() then
-		HideUIPanel (WorldMapFrame)
+		if not InCombatLockdown() then
+			HideUIPanel (WorldMapFrame)
+		else
+			WorldMapFrame:Hide()
+		end
 	else
 		Nx.Map:RestoreBlizzBountyMap()
-	
+
 		local map = self:GetMap (1)
 		map:DetachWorldMap()
-		ShowUIPanel (WorldMapFrame)
+		if not InCombatLockdown() then
+			ShowUIPanel (WorldMapFrame)
+		else
+			WorldMapFrame:Show()
+		end
 	end
 end
 

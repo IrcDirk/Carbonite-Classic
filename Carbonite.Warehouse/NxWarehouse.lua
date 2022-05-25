@@ -1204,7 +1204,7 @@ function Nx.Warehouse:Init()
 		"ChestSlot", "ShirtSlot", "TabardSlot", "WristSlot",
 		"HandsSlot", "WaistSlot", "LegsSlot", "FeetSlot",
 		"Finger0Slot", "Finger1Slot", "Trinket0Slot", "Trinket1Slot",
-		"MainHandSlot", "SecondaryHandSlot", "AmmoSlot",	-- "RangedSlot" removed 5.0
+		"MainHandSlot", "SecondaryHandSlot", "AmmoSlot", "RangedSlot",
 		"Bag0Slot", "Bag1Slot", "Bag2Slot", "Bag3Slot"
 	}
 
@@ -1218,7 +1218,7 @@ function Nx.Warehouse:Init()
 	self.DurInvNames = {
 		"HeadSlot", "ShoulderSlot", "ChestSlot", "WristSlot",
 		"HandsSlot", "WaistSlot", "LegsSlot", "FeetSlot",
-		"MainHandSlot", "SecondaryHandSlot"		-- "RangedSlot" removed 5.0
+		"MainHandSlot", "SecondaryHandSlot", "RangedSlot"
 	}
 
 	self.DurTooltipFrm = CreateFrame ("GameTooltip", "NxTooltipD", UIParent, "GameTooltipTemplate")

@@ -105,7 +105,6 @@ local FLIGHT_DATA = {
 	["0,1948,63.33,30.4"] = L["Maddix, Altar of Sha'tar, Shadowmoon Valley"],
 	["0,1957,48.36,25.07"] = L["Ohura, Shattered Sun Staging Area, Isle of Quel'Danas"],
 	["0,1948,56.32,57.8"] = L["Alieshor, Sanctum of the Stars, Shadowmoon Valley"],
-	["0,1423,83.89,50.43"] = L["Grimwing, Acherus: The Ebon Hold, Eastern Plaguelands"],
 }
 local NX_FLIGHT_LOC = { ["1"] = L["Alliance Flight"], ["2"] = L["Horde Flight"], ["0"] = L["Neutral Flight"], }
 Nx.NPCData={}

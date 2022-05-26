@@ -102,13 +102,13 @@ Map.MapWorldInfo = {
 		Name = L["The Barrens"],
 		QAchievementIdH = 4933,
 	},
-	[12] = {
+	[1414] = {
 		Scale = 73.59962,
 		X = -3413.32,
 		Y = -2559.98,	
 		-- [1414] Kalimdor 
 	},
-	[13] = {
+	[1415] = {
 		Scale = 81.48236,
 		X = -3634.394,
 		Y = -2235.2688,
@@ -3608,14 +3608,14 @@ Map.MiniMapBlks = {
 		Map.KalMapBlks,
 		1908,
 		19, 8,
-		 Map.MapWorldInfo[13].X + Map.MapInfo[1].X + 2025.753921875 + 222, Map.MapWorldInfo[13].Y + Map.MapInfo[1].Y + -0.476021875 - 324,
+		 Map.MapWorldInfo[1414].X + Map.MapInfo[1].X + 2025.753921875 + 222, Map.MapWorldInfo[1414].Y + Map.MapInfo[1].Y + -0.476021875 - 324,
 		"World\\Minimaps\\Kalimdor"
 	},
 	[2] = {
 		Map.EkMapBlks,
 		2420,
 		24, 20,
-		Map.MapWorldInfo[14].X + Map.MapInfo[2].X -1080, Map.MapWorldInfo[14].Y + Map.MapInfo[2].Y - 1308,
+		Map.MapWorldInfo[1415].X + Map.MapInfo[2].X -1080, Map.MapWorldInfo[1415].Y + Map.MapInfo[2].Y - 1308,
 		"World\\Minimaps\\Azeroth"
 	},
 	[3] = {
@@ -3629,14 +3629,14 @@ Map.MiniMapBlks = {
 		Map.BloodelfMapBlks,
 		4111,
 		41, 11,
-		Map.MapWorldInfo[14].X + Map.MapInfo[2].X + 231.60, Map.MapWorldInfo[14].Y + Map.MapInfo[2].Y - 1751.40,
+		Map.MapWorldInfo[1415].X + Map.MapInfo[2].X + 231.60, Map.MapWorldInfo[1415].Y + Map.MapInfo[2].Y - 1751.40,
 		"World\\Minimaps\\Expansion01"
 	},	
 	[97] = {
 		Map.DraeneiMapBlks,
 		5033,
 		50, 33,
-		Map.MapWorldInfo[13].X + Map.MapInfo[1].X + 1833.076104875 + 221.20 , Map.MapWorldInfo[13].Y + Map.MapInfo[1].Y + 656.598490125 - 325.10,
+		Map.MapWorldInfo[1414].X + Map.MapInfo[1].X + 1833.076104875 + 221.20 , Map.MapWorldInfo[1414].Y + Map.MapInfo[1].Y + 656.598490125 - 325.10,
 		"World\\Minimaps\\Expansion01"
 	},
 }
@@ -3853,8 +3853,8 @@ MapMigrationData = {
     [4] = { mapFile = "Durotar", [0] = 1, [8] = 2, [12] = 5, [19] = 6, [11] = 4, [10] = 3},
     [9] = { mapFile = "Mulgore", [0] = 7, [6] = 8, [7] = 9},
     [11] = { mapFile = "Barrens", [0] = 10, [20] = 11},
-    [13] = { mapFile = "Kalimdor", [0] = 12},
-    [14] = { mapFile = "Azeroth", [0] = 13},
+    [1414] = { mapFile = "Kalimdor", [0] = 12},
+    [1415] = { mapFile = "Azeroth", [0] = 13},
     [16] = { mapFile = "Arathi", [0] = 14},
     [17] = { mapFile = "Badlands", [0] = 15, [18] = 16},
     [19] = { mapFile = "BlastedLands", [0] = 17},

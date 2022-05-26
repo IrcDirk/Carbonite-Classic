@@ -709,10 +709,10 @@ function Nx.Travel:FindClosest (mapId, posX, posY)
 	local closeDist = 9000111222333444
 
 	for n, node in ipairs (tr) do
-	
+
 		local LocName1, LocName2, LocName3 = strsplit(",", node.LocName)
 		local LocName = strtrim(LocName2) .. (LocName3 and ", "..strtrim(LocName3) or "")
-		
+
 		if taxiT[LocName] then
 			local dist
 

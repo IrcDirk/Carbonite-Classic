@@ -10,7 +10,7 @@ local FLIGHT_DATA = {
 	["2,1413,51.5,30.34"] = L["Devrak, Crossroads, The Barrens"],
 	["1,1417,45.6,46"] = L["Cedrik Prose, Refuge Pointe, Arathi"],
 	["2,1417,73,32.6"] = L["Urda, Hammerfall, Arathi"],
-	["2,1418,40.04,48"] = L["Gorrik, Kargath, Badlands"],
+	["2,1418,4,44.8"] = L["Gorrik, Kargath, Badlands"],
 	["1,1419,65.4,24.4"] = L["Alexandra Constantine, Nethergarde Keep, Blasted Lands"],
 	["2,1421,45.6,42.4"] = L["Karos Razok, The Sepulcher, Silverpine Forest"],
 	["1,1422,42.8,85"] = L["Bibilfaz Featherwhistle, Chillwind Camp, Western Plaguelands"],
@@ -33,7 +33,7 @@ local FLIGHT_DATA = {
 	["1,1434,38.2,4"] = L["Nizzle, Rebel Camp, Stranglethorn Vale"],
 	["2,1435,46,54.6"] = L["Breyk, Stonard, Swamp of Sorrows"],
 	["1,1436,56.4,52.6"] = L["Thor, Sentinel Hill, Westfall"],
-	["1,1437,9.49,59.68"] = L["Shellei Brondir, Menethil Harbor, Wetlands"],
+	["1,1437,9.4,59.6"] = L["Shellei Brondir, Menethil Harbor, Wetlands"],
 	["1,1438,58.4,94"] = L["Vesprystus, Rut'theran Village, Teldrassil"],
 	["1,1439,36.4,45.6"] = L["Caylais Moonfeather, Auberdine, Darkshore"],
 	["1,1440,34.4,48"] = L["Daelyshia, Astranaar, Ashenvale"],
@@ -104,7 +104,7 @@ local FLIGHT_DATA = {
 	["0,1955,63.8,41"] = L["Nutral, Shattrath, Terokkar Forest"],
 	["0,1948,63.33,30.4"] = L["Maddix, Altar of Sha'tar, Shadowmoon Valley"],
 	["0,1957,48.36,25.07"] = L["Ohura, Shattered Sun Staging Area, Isle of Quel'Danas"],
-	["0,1948,56.32,57.8"] = L["Alieshor, Sanctum of the Stars, Shadowmoon Valley"],
+	["0,1948,56.32,57.8"] = L["Alieshor, Sanctum of the Stars, Shadowmoon Valley"]
 }
 local NX_FLIGHT_LOC = { ["1"] = L["Alliance Flight"], ["2"] = L["Horde Flight"], ["0"] = L["Neutral Flight"], }
 Nx.NPCData={}

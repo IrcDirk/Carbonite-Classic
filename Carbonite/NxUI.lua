@@ -701,17 +701,17 @@ function Nx.Util_GetMoneyStr (money)
 
 	local g = floor (money / 10000)
 	if g > 0 then
-		str = format ("|cffffff00%dg", g)
+		str = format (L["|cffffff00%dg"], g)
 	end
 
 	local s = mod (floor (money / 100), 100)
 	if s > 0 then
-		str = format ("%s |cffbfbfbf%ds", str, s)
+		str = format (L["%s |cffbfbfbf%ds"], str, s)
 	end
 
 	local c = mod (money, 100)
 	if c > 0 then
-		str = format ("%s |cff7f7f00%dc", str, c)
+		str = format (L["%s |cff7f7f00%dc"], str, c)
 	end
 
 	return pre .. strtrim (str)

@@ -165,6 +165,9 @@ L["CLICK (.+):"] = "клик (.+):"
 L["Key %s %s #%s %s"] = "Ключ %s %s #%s %s"
 L["shift left/right click to change size"] = "shift левый/правый клик для изменения размера"
 L["Reset old tool bar data"] = "Сбросить данные старой панели инструментов"
+L["|cffffff00%dg"] = "|cffffff00%d зол."
+L["%s |cffbfbfbf%ds"] = "%s |cffbfbfbf%d сер."
+L["%s |cff7f7f00%dc"] = "%s |cff7f7f00%d мед."
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = "Соединение: %s с %s"

@@ -74,7 +74,7 @@ local defaults = {
 			RepairGuild = false,
 			AddTooltip = true,
 			TooltipIgnore = true,
-			IgnoreList = {["Hearthstone"]="Hearthstone",["Garrison Hearthstone"]="Garrison Hearthstone",["Admiral's Compass"]="Adminral's Compass"},			
+			IgnoreList = {},			
 			ShowGold = false,
 		},
 	},

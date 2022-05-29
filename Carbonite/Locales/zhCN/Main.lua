@@ -159,6 +159,9 @@ L["CLICK (.+):"] = true
 L["Key %s %s #%s %s"] = "键 %s %s #%s %s"
 L["shift left/right click to change size"] = "Shift-左键或右键点击改变大小"
 L["Reset old tool bar data"] = "重置旧工具栏数据"
+L["|cffffff00%dg"] = true
+L["%s |cffbfbfbf%ds"] = true
+L["%s |cff7f7f00%dc"] = true
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = "连接：%s 到 %s"

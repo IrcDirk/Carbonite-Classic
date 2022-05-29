@@ -155,6 +155,9 @@ L["CLICK (.+):"] = true
 L["Key %s %s #%s %s"] = true
 L["shift left/right click to change size"] = true
 L["Reset old tool bar data"] = true
+L["|cffffff00%dg"] = true
+L["%s |cffbfbfbf%ds"] = true
+L["%s |cff7f7f00%dc"] = true
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = true

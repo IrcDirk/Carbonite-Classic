@@ -28,6 +28,7 @@ NXClassLocToCap = {		-- Convert localized class name to generic caps
 -- Main Carbonite
 L["Carbonite"] = true
 L["CARBONITE"] = true
+L["Whats New!"] = "Новости аддона"
 L["Loading"] = "Загрузка"
 L["Loading Done"] = "Загрузка Завершена"
 L["None"] = "Нет"

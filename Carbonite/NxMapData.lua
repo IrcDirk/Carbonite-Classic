@@ -102,13 +102,13 @@ Map.MapWorldInfo = {
 		Name = L["The Barrens"],
 		QAchievementIdH = 4933,
 	},
-	[1414] = {
+	[12] = {
 		Scale = 73.59962,
 		X = -3413.32,
 		Y = -2559.98,	
 		-- [1414] Kalimdor 
 	},
-	[1415] = {
+	[13] = {
 		Scale = 81.48236,
 		X = -3634.394,
 		Y = -2235.2688,

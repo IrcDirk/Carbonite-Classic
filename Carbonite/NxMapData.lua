@@ -3608,14 +3608,14 @@ Map.MiniMapBlks = {
 		Map.KalMapBlks,
 		1908,
 		19, 8,
-		 Map.MapWorldInfo[1414].X + Map.MapInfo[1].X + 2025.753921875 + 222, Map.MapWorldInfo[1414].Y + Map.MapInfo[1].Y + -0.476021875 - 324,
+		 Map.MapWorldInfo[12].X + Map.MapInfo[1].X + 2025.753921875 + 222, Map.MapWorldInfo[12].Y + Map.MapInfo[1].Y + -0.476021875 - 324,
 		"World\\Minimaps\\Kalimdor"
 	},
 	[2] = {
 		Map.EkMapBlks,
 		2420,
 		24, 20,
-		Map.MapWorldInfo[1415].X + Map.MapInfo[2].X -1080, Map.MapWorldInfo[1415].Y + Map.MapInfo[2].Y - 1308,
+		Map.MapWorldInfo[13].X + Map.MapInfo[2].X -1080, Map.MapWorldInfo[13].Y + Map.MapInfo[2].Y - 1308,
 		"World\\Minimaps\\Azeroth"
 	},
 	[3] = {
@@ -3629,14 +3629,14 @@ Map.MiniMapBlks = {
 		Map.BloodelfMapBlks,
 		4111,
 		41, 11,
-		Map.MapWorldInfo[1415].X + Map.MapInfo[2].X + 231.60, Map.MapWorldInfo[1415].Y + Map.MapInfo[2].Y - 1751.40,
+		Map.MapWorldInfo[13].X + Map.MapInfo[2].X + 231.60, Map.MapWorldInfo[13].Y + Map.MapInfo[2].Y - 1751.40,
 		"World\\Minimaps\\Expansion01"
 	},	
 	[97] = {
 		Map.DraeneiMapBlks,
 		5033,
 		50, 33,
-		Map.MapWorldInfo[1414].X + Map.MapInfo[1].X + 1833.076104875 + 221.20 , Map.MapWorldInfo[1414].Y + Map.MapInfo[1].Y + 656.598490125 - 325.10,
+		Map.MapWorldInfo[12].X + Map.MapInfo[1].X + 1833.076104875 + 221.20 , Map.MapWorldInfo[12].Y + Map.MapInfo[1].Y + 656.598490125 - 325.10,
 		"World\\Minimaps\\Expansion01"
 	},
 }

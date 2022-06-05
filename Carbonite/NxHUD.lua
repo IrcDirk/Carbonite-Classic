@@ -237,7 +237,7 @@ function Nx.HUD:Update (map)
 		local str = format ("%s%d " .. L["yds"], col, dist)
 
 		if Nx.db.profile.Track.ShowDir then
-			local fmt = dirDist < 1 and " %.1f deg" or " %d deg"
+			local fmt = dirDist < 1 and L[" %.1f deg"] or L[" %d deg"]
 			str = str .. format (fmt, dirDist)
 		end
 

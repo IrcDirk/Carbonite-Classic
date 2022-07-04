@@ -9552,7 +9552,7 @@ function Nx.Map:GotoCurrentZone()
 		self:Move (self.PlyrX, self.PlyrY, 20, 15)
 	else
 		self:SetToCurrentZone()
-		local mapId = self:GetCurrentMapId()
+		local mapId = MapUtil.GetDisplayableMapForPlayer()
 		self:CenterMap (mapId)
 	end
 end

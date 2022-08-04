@@ -2263,7 +2263,7 @@ end
 
 function Nx.Quest:Init()
 	
-	QuestWatchFrame:Hide()
+	WatchFrame:Hide()
 	
 	self.Enabled = Nx.qdb.profile.Quest.Enable
 	if not self.Enabled then
@@ -6854,10 +6854,12 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 	end
 --	Nx.prtD ("OnQuestUpdate %s Done", event)
 
-	QuestWatchFrame:Hide()
+	WatchFrame:Hide()
 end
 
-hooksecurefunc("QuestWatch_Update", function (...) QuestWatchFrame:Hide(); end);
+--hooksecurefunc("QuestWatch_Update", function (...) WatchFrame:Hide(); end);
+hooksecurefunc("WatchFrame_Update", function (...) WatchFrame:Hide(); end);
+
 
 Nx.Quest.TrackedAchievements = {}
 function CarboniteQuest:OnTrackedAchievementsUpdate (event, ...)
@@ -8348,23 +8350,25 @@ function Nx.Quest:UpdateQuestDetailsTimer()
 	QuestInfoRewardsFrame["ItemChooseText"]:SetTextColor(r, g, b)
 	QuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
 --	MapQuestInfoRewardsFrame["SpellLearnText"]:SetTextColor(r, g, b)
-	QuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
+--	QuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
 	
 	local qId = select(8, GetQuestLogTitle(GetQuestLogSelection()))
 	local quest = Nx.Quests[qId]
-	local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
-	xp = xp or 0
+	if quest then
+		local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
+		xp = xp or 0
 
-	QuestInfoRewardsFrame.XPFrame:Hide()
-	if xp > 0 then
-		QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
-		QuestInfoRewardsFrame.XPFrame.ReceiveText:SetTextColor(r, g, b)
-		QuestInfoRewardsFrame.XPFrame:Show()
-	end
+		QuestInfoRewardsFrame.XPFrame:Hide()
+		if xp > 0 then
+			QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
+			QuestInfoRewardsFrame.XPFrame.ReceiveText:SetTextColor(r, g, b)
+			QuestInfoRewardsFrame.XPFrame:Show()
+		end
 	
-	for n = 1, 10 do
-		if _G["QuestInfoObjective" .. n] then
-			_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
+		for n = 1, 10 do
+			if _G["QuestInfoObjective" .. n] then
+				_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
+			end
 		end
 	end
 end

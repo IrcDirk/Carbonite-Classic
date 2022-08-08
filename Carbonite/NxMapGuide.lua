@@ -28,6 +28,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 Nx.GuideAbr = {
 	["K"] = L["Kalimdor"],
 	["E"] = L["Eastern Kingdoms"],
+	["O"] = L["Outland"],
+	["N"] = L["Northrend"],
 }
 Nx.GuideInfo = {
 	Name = L["All"],
@@ -76,11 +78,11 @@ Nx.GuideInfo = {
 		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},
+		},]]--
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
-		},]]--
+		},
 		{
 			T = L["Mailbox"],
 			Tx = "INV_Letter_15",
@@ -189,12 +191,12 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Herbalism",
 		},
-		--[[{
+		{
 			Pre = L["Inscription"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Inscription_Tradeskill01",
-		},]]--
+		},
 		{
 			Pre = L["Jewelcrafting"],
 			Name = L["Trainer"],
@@ -243,12 +245,12 @@ Nx.GuideInfo = {
 			T = "^S",
 			Tx = "Trade_Fishing",
 		},
-		--[[{
+		{
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
 			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-		},]]--
+		},
 		{
 			Pre = L["Riding"],
 			Name = L["Trainer"],
@@ -321,7 +323,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Inst = 2
 		},
-		--[[{
+		{
 			Name = "@O",
 			Inst = 3
 		},
@@ -329,7 +331,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Inst = 4
 		},
-		{
+		--[[{
 			Name = "@M",
 			Inst = 5
 		},
@@ -373,7 +375,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Map = 2
 		},
-		--[[{
+		{
 			Name = "@O",
 			Map = 3
 		},
@@ -381,7 +383,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Map = 4
 		},
-		{
+		--[[{
 			Name = "@M",
 			Map = 5
 		},
@@ -822,14 +824,14 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			["Ironforge"] = "Spell_Arcane_TeleportIronForge",
 			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
 			--["Isle of Quel'Danas"] = "Spell_Arcane_TeleportShattrath",
-			--"Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
+			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
 			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
 			["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
 			["Stormwind City"] = "Spell_Arcane_TeleportStormWind",
 			["Thunder Bluff"] = "Spell_Arcane_TeleportThunderBluff",
 			["Undercity"] = "Spell_Arcane_TeleportUnderCity",
-			--["Dalaran"] = "Spell_Arcane_TeleportDalaran",
+			["Dalaran"] = "Spell_Arcane_TeleportDalaran",
 			--["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
@@ -2928,7 +2930,7 @@ Nx.Map.Guide.ItemStatRequiredSkill = {
 	"Jewelcrafting",
 	"Leatherworking",
 	"Mining",
-	--"Inscription",
+	"Inscription",
 	"Riding",
 	"Tailoring"
 }

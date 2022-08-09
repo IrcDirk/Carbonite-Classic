@@ -128,7 +128,6 @@ Map.MapWorldInfo = {
 		Name = L["Arathi Highlands"],
 		QAchievementId = 4896,
 	},
-
 	[1416] = {
 		Scale = 5.6000006,
 		X = -156.66666,
@@ -418,9 +417,9 @@ Map.MapWorldInfo = {
 		QAchievementId = 4940,
 	},
 	[1453] = {
-		Scale = 2.68854074,
-		X = -344.1942,
-		Y = 1599.7702,
+		Scale = 3.474999917984,
+		X = -344.58332519531,
+		Y = 1599.1666015625,
 		Overlay = "stormwindcity",
 		Name = L["Stormwind City"],
 		City = true,

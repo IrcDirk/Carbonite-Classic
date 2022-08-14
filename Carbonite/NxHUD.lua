@@ -110,12 +110,12 @@ function Nx.HUD:Create()
 		local map = Nx.Map:GetMap(1)
 		tremove (map.Targets, 1)
 	end
-	local item = menu:AddItem(0,"Remove Current Point", func, self)
+	local item = menu:AddItem(0,L["Remove Current Point"], func, self)
 	local function func ()
 		local map = Nx.Map:GetMap(1)
 		map:Menu_OnClearGoto()
 	end
-	local item = menu:AddItem(0,"Remove All Points", func, self)
+	local item = menu:AddItem(0,L["Remove All Points"], func, self)
 end
 
 --------

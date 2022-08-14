@@ -6314,6 +6314,7 @@ function Nx.Map:MoveCurZoneTiles (clear)
 		self.Level = self.Level + 1
 
 	else
+--		Nx.prt ("ClearCurZoneTiles %d", mapId)
 		local frms, frm
 
 		frms = self.TileFrms

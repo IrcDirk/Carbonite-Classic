@@ -101,10 +101,10 @@ Nx.GuideInfo = {
 		Name = L["Class Trainer"],
 		T = "^C",
 		Tx = "INV_Misc_Book_10",
-		--[[{
+		{
 			T = L["Death Knight Trainer"],
 			Tx = "Spell_Deathknight_ClassIcon",
-		},]]--
+		},
 		{
 			T = L["Druid Trainer"],
 			Tx = "Ability_Druid_Maul",
@@ -823,7 +823,6 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			--["Hellfire Peninsula"] = "Spell_Arcane_TeleportStonard",
 			["Ironforge"] = "Spell_Arcane_TeleportIronForge",
 			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
-			--["Isle of Quel'Danas"] = "Spell_Arcane_TeleportShattrath",
 			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
 			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
@@ -836,11 +835,12 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
                 local portalN = {
+			[1419] = "Spell_Arcane_TeleportStonard",
+			[1944] = "Spell_Arcane_TeleportStonard",
                         [1438] = "Spell_Arcane_TeleportDarnassus",
 			[1457] = "Spell_Arcane_TeleportDarnassus",
 			[1947] = "Spell_Arcane_TeleportExodar",
 			[1455] = "Spell_Arcane_TeleportIronForge",
---			[1957] = "Spell_Arcane_TeleportShattrath",
 			[1957] = "Achievement_Zone_IsleOfQuelDanas",
 			[1454] = "Spell_Arcane_TeleportOrgrimmar",
 			[1954] = "Spell_Arcane_TeleportSilvermoon",
@@ -876,8 +876,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 					f.Con2 = true
 					f.T = "*b" .. i .. facStr
 					local typ = txN[conTime]
-					local locName = Nx.Map:IdToName(mapId1)
-                                        f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+                                        f.Tx = typ == "Portal" and portalN[mapId1] or txT[typ]
 					--local typ, locName = strmatch (name2, "(%S+) to (.+)")
 					--f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
 				end
@@ -1811,8 +1810,8 @@ function Nx.Map.Guide:FindClosest (findType)
 					longType = "Herb"
 				elseif type == "M" then
 					longType = "Mine"
-				elseif type == "L" then
-					longType = "Timber"
+--				elseif type == "L" then
+--					longType = "Timber"
 				end
 				if longType then
 					local fid = folder.Id

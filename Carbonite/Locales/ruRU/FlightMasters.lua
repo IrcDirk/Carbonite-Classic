@@ -191,6 +191,8 @@ L["Portal to Silvermoon"] = "Портал в Луносвет"
 L["Portal to Blasted Lands"] = "Портал в Выжженные земли"
 L["Portal to Hellfire Peninsula"] = "Портал на Полуостров Адского Пламени"
 
+L["Portal to Dalaran"] = "Портал в Даларан"
+
 L["Zeppelin to Stranglethorn Vale"] = "Дирижабль в Тернистую Долину"
 L["Zeppelin to Undercity"] = "Дирижабль в Подгород"
 L["Zeppelin to Orgrimmar"] = "Дирижабль в Оргриммар"

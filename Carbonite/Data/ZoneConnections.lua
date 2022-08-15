@@ -121,5 +121,20 @@ Nx.ZoneConnections = {
 	"7|1||127|58.5|34.51||118|89.4|83.62",
 	"2|0|"..L["Portal to Stormwind"].."|125|39.74|62.54||1453|0|0",
 	"4|0|"..L["Portal to Orgrimmar"].."|125|55.41|25.48||1454|0|0",
+
+-- Blasted lands portals from cities
+
+       -- Alliance
+       "2|0|"..L["Portal to Blasted Lands"].."|1453|49.0|87.3||1419|57.5|51.1", -- from Stormwind
+       "2|0|"..L["Portal to Blasted Lands"].."|1455|27.3|7.0||1419|57.5|51.1", -- from IronForge
+       "2|0|"..L["Portal to Blasted Lands"].."|1457|40.6|81.7||1419|50.4|81.7", -- from Darnassus
+       "2|0|"..L["Portal to Blasted Lands"].."|1947|46.2|60.9||1419|50.4|81.7", -- from Exodar
+
+       -- Horde
+       "4|0|"..L["Portal to Blasted Lands"].."|1454|38.1|85.7||1419|50.4|81.7", -- from Orgrimmar
+       "4|0|"..L["Portal to Blasted Lands"].."|1456|23.2|13.6||1419|50.4|81.7", -- from Thunder Bluff
+       "4|0|"..L["Portal to Blasted Lands"].."|1458|85.2|17||1419|50.4|81.7", -- from Undercity
+       "4|0|"..L["Portal to Blasted Lands"].."|1954|58.4|21.0||1419|50.4|81.7", -- from Silvermoon
+
 }
 

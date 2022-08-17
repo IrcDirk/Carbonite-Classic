@@ -98,12 +98,12 @@ Nx.ZoneConnections = {
 	"4|0|"..L["Portal to Silvermoon"].."|1458|54.86|11.25|"..L["Portal to Undercity"].."|1954|50.62|16.45", -- [95]
 
 -- Northrend
-	"5|2|" ..L["Zeppelin to"] .. " " .. L["Borean Tundra"] .. "|1454|44.7|62.4|" .. L["Zeppelin to"] .. " " .. L["Orgrimmar"] .. "|114|41.4|53.6",
-	"5|2|" ..L["Zeppelin to"] .. " " .. L["Undercity"] .. "|117|77.71|28.26|" .. L["Zeppelin to"] .. " " .. L["Howling Fjord"] .. "|1420|59.05|58.94",
-	"7|2|" ..L["Boat to"] .. " " .. L["Dragonblight"] .. "|117|23.46|57.75|" .. L["Boat to"] .. " " .. L["Howling Fjord"] .. "|115|49.63|78.42",
-	"7|2|" ..L["Boat to"] .. " " .. L["Dragonblight"] .. "|114|78.9|53.64|" .. L["Boat to"] .. " " .. L["Borean Tundra"] .. "|115|47.95|78.74",
-	"3|2|" ..L["Boat to"] .. " " .. L["Stormwind City"] .. "|114|59.68|69.39|" .. L["Boat to"] .. " " .. L["Borean Tundra"] .. "|1953|18.5|25.5",
-	"3|2|" ..L["Boat to"] .. " " .. L["Wetlands"] .. "|117|61.34|62.6|" .. L["Boat to"] .. " " .. L["Howling Fjord"] .. "|1437|4.66|57.11",
+	"5|2|"..L["Zeppelin to Borean Tundra"].."|1454|44.7|62.4|"..L["Zeppelin to Orgrimmar"].."|114|41.4|53.6",
+	"5|2|"..L["Zeppelin to Undercity"].."|117|77.71|28.26|"..L["Zeppelin to Howling Fjord"].."|1420|59.05|58.94",
+	"7|2|"..L["Boat to Dragonblight"].."|117|23.46|57.75|"..L["Boat to Howling Fjord"].."|115|49.63|78.42",
+	"7|2|"..L["Boat to Dragonblight"].."|114|78.9|53.64|"..L["Boat to Borean Tundra"].."|115|47.95|78.74",
+	"3|2|"..L["Boat to Stormwind City"].."|114|59.68|69.39|"..L["Boat to Borean Tundra"].."|1453|18.5|25.5",
+	"3|2|"..L["Boat to Wetlands"].."|117|61.34|62.6|"..L["Boat to Howling Fjord"].."|1437|4.66|57.11",
 	"7|1||114|93.38|35.83||115|12.22|55.28",
 	"7|1||114|52.49|7.56||119|32.05|84.7",
 	"7|1||115|91.87|30.76||116|9.65|31.52",
@@ -119,7 +119,32 @@ Nx.ZoneConnections = {
 	"7|1||127|93.02|58.46||121|12.52|66.95",
 	"7|1||127|85.77|45.09||120|38.19|93.25",
 	"7|1||127|58.5|34.51||118|89.4|83.62",
-	"2|0|" .. L["Portal to"] .. " " .. L["Stormwind City"] .. "|125|39.74|62.54||125|39.74|62.54",
-	"4|0|" .. L["Portal to"] .. " " .. L["Orgrimmar"] .. "|125|55.41|25.48||125|55.41|25.48",
+
+	"2|0|"..L["Portal to Stormwind"].."|125|40.13|62.86||1453|49.59|86.53",
+        "2|0|"..L["Portal to Ironforge"].."|125|39.49|63.99||1455|25.51|8.43",
+        "2|0|"..L["Portal to Darnassus"].."|125|38.86|65.18||1457|39.69|82.44",
+        "2|0|"..L["Portal to Exodar"].."|125|38.16|66.38||1947|47.62|59.82",
+
+	"4|0|"..L["Portal to Orgrimmar"].."|125|55.41|25.48||1454|0|0",
+	"4|0|"..L["Portal to Thunder Bluff"].."|125|57.2|21.8||1456|22.21|16.87",
+	"4|0|"..L["Portal to Undercity"].."|125|55.6|23.9||1458|84.58|16.33",
+	"4|0|"..L["Portal to Silvermoon"].."|125|58.3|21.6||1954|58.26|19.24",
+
+        "7|0|"..L["Portal to Dalaran"].."|127|15.3|41.5||125|55.95|46.75",
+
+-- Blasted lands portals from cities
+
+       -- Alliance
+       "2|0|"..L["Portal to Blasted Lands"].."|1453|49.0|87.3||1419|57.5|51.1", -- from Stormwind
+       "2|0|"..L["Portal to Blasted Lands"].."|1455|27.3|7.0||1419|57.5|51.1", -- from IronForge
+       "2|0|"..L["Portal to Blasted Lands"].."|1457|40.6|81.7||1419|50.4|81.7", -- from Darnassus
+       "2|0|"..L["Portal to Blasted Lands"].."|1947|46.2|60.9||1419|50.4|81.7", -- from Exodar
+
+       -- Horde
+       "4|0|"..L["Portal to Blasted Lands"].."|1454|38.1|85.7||1419|50.4|81.7", -- from Orgrimmar
+       "4|0|"..L["Portal to Blasted Lands"].."|1456|23.2|13.6||1419|50.4|81.7", -- from Thunder Bluff
+       "4|0|"..L["Portal to Blasted Lands"].."|1458|85.2|17||1419|50.4|81.7", -- from Undercity
+       "4|0|"..L["Portal to Blasted Lands"].."|1954|58.4|21.0||1419|50.4|81.7", -- from Silvermoon
+
 }
 

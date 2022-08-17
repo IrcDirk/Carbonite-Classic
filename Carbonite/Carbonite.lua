@@ -141,7 +141,8 @@ Nx.Whatsnew = {}
 Nx.Whatsnew.Categories = {"Maps"}
 Nx.Whatsnew.Maps = {
   [1568657164] = {"Sept 16th 2019","","This is Alpha version of Carbonite Classic, all bugs/issues please report to", "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."},
-  [1653631200] = {"May 27th 2022","","Fixed map path generation using FlightMasters", "Fixed HandyNotes icons disappearing while standing still", "Fixed Carbonite Map causing errors while trying to open map in combat", "Fixed Carbonite maps going out while traveling between islands/subcontinents in Kalimdor/Eastern Kingdoms/Outlands", "Fixed Warehouse module not showing equipped wands", "Add tracking of goods bought in Auction House in Warehouse module", "Add localizations for various strings (need translators for some languages)", "Updated translations for some of the Carbonite modules"}
+  [1653631200] = {"May 27th 2022","","Fixed map path generation using FlightMasters", "Fixed HandyNotes icons disappearing while standing still", "Fixed Carbonite Map causing errors while trying to open map in combat", "Fixed Carbonite maps going out while traveling between islands/subcontinents in Kalimdor/Eastern Kingdoms/Outlands", "Fixed Warehouse module not showing equipped wands", "Add tracking of goods bought in Auction House in Warehouse module", "Add localizations for various strings (need translators for some languages)", "Updated translations for some of the Carbonite modules"},
+  [1660510987] = {"Aug 14th 2022","","Implemented WotLK Classic support for Pre-patch","Updated Flight Masters data", "Updated Flight Masters locales for DE,ES,FR,KO,PT,RU,TW Languages", "Fixed various small errors caused by division by zero."}
 }
 Nx.Whatsnew.WhichCat = 1
 Nx.Whatsnew.HasWhatsNew = nil

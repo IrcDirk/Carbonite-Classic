@@ -410,24 +410,12 @@ function Nx.Travel:MakePath (tracking, srcMapId, srcX, srcY, dstMapId, dstX, dst
 	self.FlyingMount = false
 
 	if riding >= 225 then
-		if cont1 == 1 or cont1 == 2 or cont1 == 5 then
-			self.FlyingMount = GetSpellInfo (self.AzerothFlyName)
+		if cont1 == 1 or cont1 == 2 then
+			self.FlyingMount = false
 		elseif cont1 == 3 then
 			self.FlyingMount = true
 		elseif cont1 == 4 then
 			self.FlyingMount = GetSpellInfo(self.WrathFlyName)
-		elseif cont1 == 6 then
-			self.FlyingMount = GetSpellInfo(self.PandariaFlyName)
-        elseif cont1 == 7 then
-			local _,_,_,complete = GetAchievementInfo(10018)
-			if complete then
-				self.FlyingMount = GetSpellInfo(self.DraenorFlyName)
-			end
-		elseif cont1 == 8 then
-			local _,_,_,complete = GetAchievementInfo(11446)
-			if complete then
-				self.FlyingMount = GetSpellInfo(self.LegionFlyName)
-			end
 		end
 	end
 
@@ -899,33 +887,20 @@ function Nx.Travel:DebugCaptureTaxi()
 end
 
 function Nx.Travel:GetRidingSkill()
---[[
-	local RidingSpells = {
-		[75] = GetSpellInfo (33389) or "",
-		[150] = GetSpellInfo (33392) or "",
-		[225] = GetSpellInfo (34092) or "",		-- Expert
-		[300] = GetSpellInfo (34093) or "",		-- Artisan
-		[375] = GetSpellInfo (90265) or "",		-- Master
-	}
-	local SkillRiding = 0
-
-	for skill, name in pairs (RidingSpells) do
-		if GetSpellInfo (name) then
-			SkillRiding = skill
-			break
-		end
+	if not IsFlyableArea() then
+		return 0
 	end
-]]--
-	local SkillRiding = 0
-	local RidingSpell = GetSpellInfo(33388)
+
+	local RidingSkillName = L["Riding"]
+	local RidingSkill = 0
         for skillIndex = 1, GetNumSkillLines() do
 		PlayerSkill = {GetSkillLineInfo(skillIndex)}
-		if PlayerSkill[1] == RidingSpell then
-			SkillRiding = PlayerSkill[4]
-                        break
+		if PlayerSkill[1] == RidingSkillName then
+			RidingSkill = PlayerSkill[4]
+                       	break
 		end
 	end
-	return SkillRiding
+	return RidingSkill
 end
 
 ---------------------------------------------------------------------------------------

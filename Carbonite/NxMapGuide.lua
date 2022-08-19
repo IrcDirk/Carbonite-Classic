@@ -847,6 +847,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			[1453] = "Spell_Arcane_TeleportStormWind",
 			[1456] = "Spell_Arcane_TeleportThunderBluff",
 			[1458] = "Spell_Arcane_TeleportUnderCity",
+			[125]  = "Spell_Arcane_TeleportDalaran",
                 }
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)

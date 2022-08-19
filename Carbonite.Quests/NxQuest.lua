@@ -130,7 +130,7 @@ local defaults = {
 			HCheckCompleted = false,
 			maxLoadLevel = false,
 			LevelsToLoad = 10,
-			MapQuestGiversHighLevel = 70,
+			MapQuestGiversHighLevel = 80,
 			MapQuestGiversLowLevel = 1,
 			MapShowWatchAreas = true,
 			MapWatchAreaAlpha = "1|1|1|.4",
@@ -1734,7 +1734,7 @@ local function QuestOptions ()
 							type = "toggle",
 							width = "full",
 							name = L["Load quest data by threshold"],
-							desc = L["Loads all the carbonite quest data between player level - level threshold to 70"],
+							desc = L["Loads all the carbonite quest data between player level - level threshold to 80"],
 							get = function()
 								return Nx.qdb.profile.Quest.maxLoadLevel
 							end,
@@ -1749,7 +1749,7 @@ local function QuestOptions ()
 							name = L["Level Threshold"],
 							desc = L["Levels above player level to load quest data on reload"],
 							min = 1,
-							max = 70,
+							max = 80,
 							step = 1,
 							bigStep = 1,
 							get = function()
@@ -1857,7 +1857,7 @@ local function QuestOptions ()
 							end,
 						},
 						q7 = {
-							order = 12,
+							order = 13,
 							type = "toggle",
 							width = "full",
 							name = L["Load Quests for Levels 61-70"],
@@ -1867,6 +1867,19 @@ local function QuestOptions ()
 							end,
 							set = function()
 								Nx.qdb.profile.Quest.Load7 = not Nx.qdb.profile.Quest.Load6
+							end,
+						},
+						q8 = {
+							order = 14,
+							type = "toggle",
+							width = "full",
+							name = L["Load Quests for Levels 71-80"],
+							desc = L["Loads all the carbonite quest data in this range on reload"],
+							get = function()
+								return Nx.qdb.profile.Quest.Load8
+							end,
+							set = function()
+								Nx.qdb.profile.Quest.Load8 = not Nx.qdb.profile.Quest.Load8
 							end,
 						},
 						spacer3 = {
@@ -2221,7 +2234,7 @@ function Nx.Quest:OptsReset()
 
 	local qopts = Nx.Quest:GetQuestOpts()
 
-	Nx.qdb.profile.Quest.MapQuestGiversHighLevel = 70
+	Nx.qdb.profile.Quest.MapQuestGiversHighLevel = 80
 	
 	qopts.NXShowHeaders = true
 	qopts.NXSortWatchMode = 1
@@ -3181,7 +3194,14 @@ function Nx.Quest:LoadQuestDB()
 	else
 		Nx.ModQuests:Clear7()
 	end
-	
+	if Nx.qdb.profile.Quest.Load8 then
+		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load8(); numQLoad = numQLoad - 1; end)
+		timeDelay = timeDelay + 1
+		numQLoad = numQLoad + 1
+		maxQLoad = maxQLoad + 1
+	else
+		Nx.ModQuests:Clear8()
+	end
 	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 	
 	local qStep = 100 / maxQLoad
@@ -7319,7 +7339,7 @@ function Nx.Quest.List:Update()
 		local mapId = Map:GetCurrentMapId()
 
 		local minLevel = UnitLevel ("player") - GetQuestGreenRange()
-		local maxLevel = showHighLevel and 70 or UnitLevel ("player") + 6
+		local maxLevel = showHighLevel and 80 or UnitLevel ("player") + 6
 
 		-- Divider
 
@@ -8812,10 +8832,10 @@ function Nx.Quest.Watch:Open()
 	end
 
 	local item = menu:AddItem (0, L["Quest Giver Lower Levels To Show"], func, self)
-	item:SetSlider (Nx.qdb.profile.Quest, 0, 70, 1, "MapQuestGiversLowLevel")
+	item:SetSlider (Nx.qdb.profile.Quest, 0, 80, 1, "MapQuestGiversLowLevel")
 
 	local item = menu:AddItem (0, L["Quest Giver Higher Levels To Show"], func, self)
-	item:SetSlider (Nx.qdb.profile.Quest, 0, 70, 1, "MapQuestGiversHighLevel")
+	item:SetSlider (Nx.qdb.profile.Quest, 0, 80, 1, "MapQuestGiversHighLevel")
 
 --	local item = menu:AddItem (0, L["Group"], update, self)
 --	item:SetSlider (qopts, -200, 200, 1, "NXWPriGroup")
@@ -9906,7 +9926,7 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
 			end
 			if click == "LeftButton" then
 
---				Nx.prt ("Data #%d, Id%d", qIndex, qId)
+				Nx.prt ("Data #%d, Id%d", qIndex, qId)
 --				Nx.prt ("List but %s", but:GetType().WatchError or "nil")
 
 				if typ.WatchError then

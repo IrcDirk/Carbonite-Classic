@@ -900,7 +900,6 @@ function Nx.Travel:GetRidingSkill()
                        	break
 		end
 	end
-
 	return RidingSkill
 end
 

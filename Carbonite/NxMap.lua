@@ -214,6 +214,7 @@ function Nx.Map:Init()
 		["RecipeRadarMinimapIcon"] = true,
 		["NauticusMiniIcon"] = true,
 		["ZGVMarkerMini"] = true,		-- Zygor ZGVMarker1Mini
+		["HandyNotesPin"] = true,		-- HandyNotes
 	}
 	-- Emulate TomTom
 	if Nx.db.profile.Track.EmuTomTom and not Nx.RealTom then

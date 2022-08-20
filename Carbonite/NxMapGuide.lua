@@ -1380,7 +1380,10 @@ function Nx.Map.Guide:UpdateMapIcons()
 							local qId = tonumber (strsub (qdata, n, n + 3), 16)
 							local quest = Nx.Quests[qId]
 							local qname = C_QuestLog.GetQuestInfo(qId)
-							local _, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
+							local qnameorig, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
+							if not qname then
+								qname = qnameorig
+							end
 							if lvl < 1 then
 								lvl = Nx.CurCharacter["Level"]
 							end

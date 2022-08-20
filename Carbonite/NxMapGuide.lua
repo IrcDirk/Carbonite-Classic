@@ -779,7 +779,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 		trainer = true
 	end
 	if folder.Pre and folder.Name then
-		folder.Name = folder.Pre .. folder.Name
+		folder.Name = folder.Pre --.. folder.Name
 		folder.Name = strtrim (gsub (folder.Name, "%u", " %1"), " ")
 	end
 	if parent and parent.Pre and folder.T then
@@ -929,7 +929,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 		end
 	elseif folder.Map then
 		local Map = Nx.Map
-		local cont1 = 0--folder.Map
+		local cont1 = folder.Map
 		local cont2 = cont1
 		if cont1 == 0 then
 			cont1 = 1
@@ -1379,7 +1379,8 @@ function Nx.Map.Guide:UpdateMapIcons()
 						for n = 1, #qdata, 4 do
 							local qId = tonumber (strsub (qdata, n, n + 3), 16)
 							local quest = Nx.Quests[qId]
-							local qname, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
+							local qname = C_QuestLog.GetQuestInfo(qId)
+							local _, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
 							if lvl < 1 then
 								lvl = Nx.CurCharacter["Level"]
 							end
@@ -1555,7 +1556,7 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
 										icon = map:AddIconPt (iconType, wx, wy, level, nil, tx)
 									--end
 									if not map:GetMapNameByID(mapId) then
-										Nx.prt("Guide Icon Err: " .. mapId)
+										Nx.prt("Guide Icon Err mapID: " .. mapId)
 									end
 									local str = format ("%s\n%s %.1f %.1f", name, map:GetMapNameByID(mapId), x, y)
 									map:SetIconTip (icon, str)

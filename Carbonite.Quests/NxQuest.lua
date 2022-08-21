@@ -5422,20 +5422,35 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 	local tip = GameTooltip
 
 	-- Check if already added
-
 	local textName = "GameTooltipTextLeft"
 	local questStr = format (L["|cffffffffQ%suest:"], Nx.TXTBLUE)
-	--Nx.prt("Checking if tooltip already added")
+
 	for n = 2, tip:NumLines() do
 		local s = _G[textName .. n]:GetText()
 		if s then
 			local s1 = strfind (s, questStr)
 			if s1 then
+--				Nx.prt ("TTM #%s", GameTooltip:NumLines())
 				return
+			end
+			if strsub (s, 1, 3) == " - " then	-- Blizz added quest info?
+
+				local fstr = _G[textName .. (n - 1)]
+				local qTitle = fstr:GetText()
+
+				local i, cur = self:FindCur (qTitle)
+				if cur then
+					local color = self:GetDifficultyColor (cur.Level)
+					color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+					fstr:SetText (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
+				end
+
+				tip:AddLine (" ")		-- Add blank or same tip will not add info again
+
+				return true;
 			end
 		end
 	end
-
 
 	if tipStr and #tipStr > 5 and #tipStr < 50 and not self.TTIgnore[tipStr] then
 
@@ -5512,6 +5527,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 										else
 											tip:AddLine (format ("    %s%s", color, cur[objn]))
 										end
+										return
 									end
 								end
 							end

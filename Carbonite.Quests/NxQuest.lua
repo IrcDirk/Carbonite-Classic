@@ -2872,7 +2872,7 @@ function Nx.Quest:Init()
 
 	local unitNames = {	-- 5 letter and shorter words are already blocked
 		"Hunter", "Paladin", "Priest",
-		"Shaman", "Warlock", "Warrior", "Deathknight", "Demonhunter"
+		"Shaman", "Warlock", "Warrior", "Deathknight"
 	}
 
 	self.TTIgnore = {
@@ -5425,7 +5425,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 
 	local textName = "GameTooltipTextLeft"
 	local questStr = format (L["|cffffffffQ%suest:"], Nx.TXTBLUE)
-
+	--Nx.prt("Checking if tooltip already added")
 	for n = 2, tip:NumLines() do
 		local s = _G[textName .. n]:GetText()
 		if s then
@@ -5436,33 +5436,91 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 		end
 	end
 
-	local name, unit = tip:GetUnit()
-	if unit then
-		local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
-		if npcID and Nx.Units2Quests[tonumber(npcID)] then	
-			local npcQuests = {Nx.Split('|', Nx.Units2Quests[tonumber(npcID)])};
-			for k, str in ipairs (npcQuests) do
-				local id, objn = Nx.Split(',', str)
-				id = tonumber(id)
-				objn = tonumber(objn)
-				local i, cur = self:FindCur (id)
-				if cur then
+
+	if tipStr and #tipStr > 5 and #tipStr < 50 and not self.TTIgnore[tipStr] then
+
+		tipStr = self.TTChange[tipStr] or tipStr
+		local tipStrLower = strlower (tipStr)
+
+		local curq = self.CurQ
+
+		for curi, cur in ipairs (curq) do
+
+			if not cur.Goto then		-- Skip Goto and Party quests
+
+				local s1 = strfind (cur.ObjText, tipStr, 1, true)
+				if not s1 then
+					s1 = strfind (cur.DescText, tipStr, 1, true)
+				end
+				if not s1 then
+					s1 = strfind (cur.ObjText, tipStrLower, 1, true)
+				end
+				if not s1 then
+					s1 = strfind (cur.DescText, tipStrLower, 1, true)
+				end
+				if not s1 then
+					for n = 1, cur.LBCnt do
+						if cur[n] then	-- V4
+							s1 = strfind (cur[n], tipStr)
+							if s1 then
+								break
+							end
+						end
+					end
+				end
+
+				if s1 then
 					local color = self:GetDifficultyColor (cur.Level)
 					color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+
 					tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
-					if cur[objn] then
-						local oName, oCount = Nx.Split(':', cur[objn]);
-						if oName and oCount then
-							tip:AddLine (format ("    |cffb0b0b0%s:%s%s", oName, color, oCount))
-						else
-							tip:AddLine (format ("    %s%s", color, cur[objn]))
+
+					for n = 1, cur.LBCnt do
+						if strfind (cur[n], tipStr) then
+							local color, s1 = self:CalcPercentColor (cur[n], cur[n + 100])
+							if s1 then
+								local oName = strsub (cur[n], 1, s1 - 1)
+								tip:AddLine (format ("    |cffb0b0b0%s%s%s", oName, color, strsub (cur[n], s1)))
+							else
+								tip:AddLine (format ("    %s%s", color, cur[n]))
+							end
+						end
+					end
+
+--					Nx.prt ("TTProcess %s #%s", tipStr, tip:NumLines())
+
+					return true;
+				else
+					local name, unit = tip:GetUnit()
+					if unit then
+						local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
+						if npcID and Nx.Units2Quests[tonumber(npcID)] then	
+							local npcQuests = {Nx.Split('|', Nx.Units2Quests[tonumber(npcID)])};
+							for k, str in ipairs (npcQuests) do
+								local id, objn = Nx.Split(',', str)
+								id = tonumber(id)
+								objn = tonumber(objn)
+								local i, cur = self:FindCur (id)
+								if cur then
+									local color = self:GetDifficultyColor (cur.Level)
+									color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+									tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
+									if cur[objn] then
+										local oName, oCount = Nx.Split(':', cur[objn]);
+										if oName and oCount then
+											tip:AddLine (format ("    |cffb0b0b0%s:%s%s", oName, color, oCount))
+										else
+											tip:AddLine (format ("    %s%s", color, cur[objn]))
+										end
+									end
+								end
+							end
 						end
 					end
 				end
 			end
 		end
 	end
-	
 end
 
 -------------------------------------------------------------------------------
@@ -6989,7 +7047,7 @@ function Nx.Quest.List:Update()
 	local _, i = GetNumQuestLogEntries()
 
 	local dailyStr = ""
-	--[[local dailysDone = GetDailyQuestsCompleted()
+	local dailysDone = GetDailyQuestsCompleted()
 	if Nx.qdb.profile.Quest.ShowDailyCount then
 		if dailysDone > 0 then
 			dailyStr = L["Daily Quests Completed:"] .. " |cffffffff" .. dailysDone
@@ -6997,7 +7055,7 @@ function Nx.Quest.List:Update()
 	end
 	if Nx.qdb.profile.Quest.ShowDailyReset then
 		dailyStr = dailyStr .. "|r  " .. L["Daily reset:"] .. " |cffffffff" .. Nx.Util_GetTimeElapsedStr (GetQuestResetTime())
-	end]]--
+	end
 
 	self.Win:SetTitle (format (L["Quests:"] .. " |cffffffff%d/%d|r  %s", i, MAX_QUESTS, dailyStr))
 
@@ -10626,7 +10684,6 @@ function Nx.Quest:UnpackSE (obj)
 	local name = Nx.QuestStartEnd[tonumber(i)]
 
 	if not name then
---		Nx.prt ("UnpackSE err %s (%s)", i, obj)
 		name = "?"
 	end
 

@@ -124,13 +124,16 @@ Nx.ZoneConnections = {
         "2|0|"..L["Portal to Ironforge"].."|125|39.49|63.99||1455|25.51|8.43",
         "2|0|"..L["Portal to Darnassus"].."|125|38.86|65.18||1457|39.69|82.44",
         "2|0|"..L["Portal to Exodar"].."|125|38.16|66.38||1947|47.62|59.82",
+        "2|0|"..L["Portal to Shattrath"].."|125|37.1|66.81||1955|55.09|40.22",
 
 	"4|0|"..L["Portal to Orgrimmar"].."|125|55.41|25.48||1454|0|0",
 	"4|0|"..L["Portal to Thunder Bluff"].."|125|57.2|21.8||1456|22.21|16.87",
 	"4|0|"..L["Portal to Undercity"].."|125|55.6|23.9||1458|84.58|16.33",
 	"4|0|"..L["Portal to Silvermoon"].."|125|58.3|21.6||1954|58.26|19.24",
+	"4|0|"..L["Portal to Shattrath"].."|125|56.3|22.6||1955|55.09|40.22",
 
         "7|0|"..L["Portal to Dalaran"].."|127|15.3|41.5||125|55.95|46.75",
+	"7|0|"..L["Portal to Caverns of Time"].."|125|25.6|51.5||1446|65.9|49.8",
 
 -- Blasted lands portals from cities
 

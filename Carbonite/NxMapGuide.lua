@@ -825,7 +825,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
 			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
-			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
+			["Shattrath"] = "Spell_Arcane_TeleportShattrath",
 			["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
 			["Stormwind City"] = "Spell_Arcane_TeleportStormWind",
 			["Thunder Bluff"] = "Spell_Arcane_TeleportThunderBluff",
@@ -847,7 +847,10 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			[1453] = "Spell_Arcane_TeleportStormWind",
 			[1456] = "Spell_Arcane_TeleportThunderBluff",
 			[1458] = "Spell_Arcane_TeleportUnderCity",
+			[1955] = "Spell_Arcane_TeleportShattrath",
 			[125]  = "Spell_Arcane_TeleportDalaran",
+			[1446] = "Achievement_Zone_Tanaris_01",
+			
                 }
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)
@@ -1441,9 +1444,11 @@ function Nx.Map.Guide:UpdateMapIcons()
 							local quest = Nx.Quests[qId]
 							local startName, zone, x, y, level = Quest:GetSEPos (quest["Start"])
 							local wx, wy = Map:GetWorldPos (mapId, x, y)
-							local tx = "Interface\\Minimap\\ObjectIconsAtlas"--anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
-							local tx1, txy1, tx2, ty2 = GetObjectIconTextureCoords(anyDaily and 4713 or 4726)
-							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx, tx1, txy1, tx2, ty2)
+							local tx = anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
+							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx)
+--							local tx = "Interface\\Minimap\\ObjectIconsAtlas"--anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
+--							local tx1, txy1, tx2, ty2 = GetObjectIconTextureCoords(anyDaily and 4713 or 4726)
+--							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx, tx1, txy1, tx2, ty2)
 							map:SetIconTip (icon, s)
 							icon.UDataQuestGiverD = qdata
 						end

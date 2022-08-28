@@ -192,6 +192,9 @@ L["Portal to Hellfire Peninsula"] = true
 
 L["Portal to Dalaran"] = true
 
+L["Portal to Shattrath"] = true
+L["Portal to Caverns of Time"] = true
+
 L["Zeppelin to Stranglethorn Vale"] = true
 L["Zeppelin to Undercity"] = true
 L["Zeppelin to Orgrimmar"] = true

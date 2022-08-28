@@ -193,6 +193,9 @@ L["Portal to Hellfire Peninsula"] = "Портал на Полуостров Ад
 
 L["Portal to Dalaran"] = "Портал в Даларан"
 
+L["Portal to Shattrath"] = "Портал в Шаттрат"
+L["Portal to Caverns of Time"] = "Портал в Пещеры Времени"
+
 L["Zeppelin to Stranglethorn Vale"] = "Дирижабль в Тернистую Долину"
 L["Zeppelin to Undercity"] = "Дирижабль в Подгород"
 L["Zeppelin to Orgrimmar"] = "Дирижабль в Оргриммар"

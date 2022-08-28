@@ -2937,7 +2937,7 @@ Nx.GatherInfo = {
 		{ 375,	"inv_misc_gem_01",L["Ancient Gem Vein"]},
 		{ 1,	"inv_ore_copper_01",L["Copper Vein"]},
 		{ 230,	"inv_ore_mithril_01",L["Dark Iron Deposit"]},
-		{ 275,	"inv_ore_feliron",L["Fel Iron Deposit"]},
+		{ 300,	"inv_ore_feliron",L["Fel Iron Deposit"]},
 		{ 155,	"inv_ore_copper_01",L["Gold Vein"]},
 		{ 65,	"inv_ore_thorium_01",L["Incendicite Mineral Vein"]},
 		{ 150,	"inv_ore_mithril_01",L["Indurium Mineral Vein"]},

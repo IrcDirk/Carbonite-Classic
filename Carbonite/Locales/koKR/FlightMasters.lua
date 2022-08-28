@@ -163,6 +163,9 @@ L["Windrunner's Overlook, Crystalsong Forest"] = "윈드러너 전망대 (수정
 L["Sunreaver's Command, Crystalsong Forest"] = "선리버 지휘초소 (수정노래 숲)"
 
 -- Portals, Boats, Zeppelins
+L["Tram to Stormwind City"] = true
+L["Tram to Ironforge"] = true
+L["Boat to Stranglethorn Vale"] = true
 
 L["Boat to Dustwallow Marsh"] = true
 L["Boat to Stormwind City"] = true

@@ -68,6 +68,10 @@ L["Altar Of Shadows"] = "어둠의 제단"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "마나 베틀"
 L["Moonwell"] = "달샘"
+L["Name"] = true
+L["Info"] = true
+L["Info2"] = true
+L["Info3"] = true
 
 -- Menus
 L["Delete"] = "삭제"

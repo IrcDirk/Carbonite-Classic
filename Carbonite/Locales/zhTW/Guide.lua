@@ -68,6 +68,10 @@ L["Altar Of Shadows"] = "暗影祭壇"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "魔法織布機"
 L["Moonwell"] = "月亮井"
+L["Name"] = true
+L["Info"] = true
+L["Info2"] = true
+L["Info3"] = true
 
 -- Menus
 L["Delete"] = "刪除"

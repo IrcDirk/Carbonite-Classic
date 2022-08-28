@@ -68,6 +68,10 @@ L["Altar Of Shadows"] = "Алтарь Теней"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "Прядильный станок маны"
 L["Moonwell"] = "Лунный колодец"
+L["Name"] = "Название"
+L["Info"] = "Инфо"
+L["Info2"] = "Инфо2"
+L["Info3"] = "Инфо3"
 
 -- Menus
 L["Delete"] = "Удалить"

@@ -163,6 +163,9 @@ L["Windrunner's Overlook, Crystalsong Forest"] = "Windläufers Warte, Kristallsa
 L["Sunreaver's Command, Crystalsong Forest"] = "Sonnenhäschers Schar, Kristallsangwald"
 
 -- Portals, Boats, Zeppelins
+L["Tram to Stormwind City"] = true
+L["Tram to Ironforge"] = true
+L["Boat to Stranglethorn Vale"] = true
 
 L["Boat to Dustwallow Marsh"] = true
 L["Boat to Stormwind City"] = true

@@ -164,6 +164,10 @@ L["Sunreaver's Command, Crystalsong Forest"] = "Лагерь Похитител�
 
 
 --Boats, Trams, Portals
+L["Tram to Stormwind City"] = "Поезд в Штормград"
+L["Tram to Ironforge"] = "Поезд в Стальгорн"
+L["Boat to Stranglethorn Vale"] = "Корабль в Тернистую долину"
+
 L["Boat to Dustwallow Marsh"] = "Корабль в Терамор, Пылевые Топи"
 L["Boat to Stormwind City"] = "Корабль в Штормград" 
 L["Boat to Darkshore"] = "Корабль в Аубердин, Темные Берега"

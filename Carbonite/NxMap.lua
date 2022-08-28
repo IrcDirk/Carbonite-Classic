@@ -785,12 +785,12 @@ function Nx.Map:Create (index)
 	local item = showMenu:AddItem (0, L["Show Mining Locations"], func, m)
 	m.MenuIShowMine = item
 	item:SetChecked (Nx.db.char.Map, "ShowGatherM")
-	local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
-	m.MenuIShowTimber = item
-	item:SetChecked (Nx.db.char.Map, "ShowGatherL")
-	local item = showMenu:AddItem (0, L["Show Artifact Locations"], func, m)
+--	local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
+--	m.MenuIShowTimber = item
+--	item:SetChecked (Nx.db.char.Map, "ShowGatherL")
+--	local item = showMenu:AddItem (0, L["Show Artifact Locations"], func, m)
 --	m.MenuIShowArt = item
-	item:SetChecked (Nx.db.char.Map, "ShowGatherA")
+--	item:SetChecked (Nx.db.char.Map, "ShowGatherA")
 
 
 	local function func (self)
@@ -807,10 +807,10 @@ function Nx.Map:Create (index)
 	item:SetChecked (Nx.db.char.Map, "ShowCustom")
 	local item = showMenu:AddItem(0, L["Show Instance Raid Bosses"], func, m)
 	item:SetChecked (Nx.db.char.Map, "ShowRaidBoss")
-	local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
-	item:SetChecked (Nx.db.char.Map, "ShowWorldQuest")
-	local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)	
-	item:SetChecked (Nx.db.char.Map, "ShowArchBlobs")	
+--	local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
+--	item:SetChecked (Nx.db.char.Map, "ShowWorldQuest")
+--	local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)	
+--	item:SetChecked (Nx.db.char.Map, "ShowArchBlobs")	
 	local item = showMenu:AddItem(0, L["Show Quest Blobs"], func, m)
 	item:SetChecked (Nx.db.char.Map, "ShowQuestBlobs")
 

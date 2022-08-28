@@ -5446,14 +5446,12 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 				end
 
 				tip:AddLine (" ")		-- Add blank or same tip will not add info again
-
 				return true;
 			end
 		end
 	end
 
-	if tipStr and #tipStr > 5 and #tipStr < 50 and not self.TTIgnore[tipStr] then
-
+	if tipStr and #tipStr > 5 and #tipStr < 70 and not self.TTIgnore[tipStr] then
 		tipStr = self.TTChange[tipStr] or tipStr
 		local tipStrLower = strlower (tipStr)
 

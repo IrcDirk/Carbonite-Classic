@@ -159,6 +159,9 @@ L["Windrunner's Overlook, Crystalsong Forest"] = true
 L["Sunreaver's Command, Crystalsong Forest"] = true
 
 -- Portals, Boats, Zeppelins
+L["Tram to Stormwind City"] = true
+L["Tram to Ironforge"] = true
+L["Boat to Stranglethorn Vale"] = true
 
 L["Boat to Dustwallow Marsh"] = true
 L["Boat to Stormwind City"] = true
@@ -187,6 +190,9 @@ L["Portal to Blasted Lands"] = true
 L["Portal to Hellfire Peninsula"] = true
 
 L["Portal to Dalaran"] = true
+
+L["Portal to Shattrath"] = true
+L["Portal to Caverns of Time"] = true
 
 L["Zeppelin to Stranglethorn Vale"] = true
 L["Zeppelin to Undercity"] = true

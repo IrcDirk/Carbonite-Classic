@@ -163,6 +163,9 @@ L["Windrunner's Overlook, Crystalsong Forest"] = "風行者瞰臺，水晶之歌
 L["Sunreaver's Command, Crystalsong Forest"] = "奪日者指揮所，水晶之歌森林"
 
 -- Portals, Boats, Zeppelins
+L["Tram to Stormwind City"] = true
+L["Tram to Ironforge"] = true
+L["Boat to Stranglethorn Vale"] = true
 
 L["Boat to Dustwallow Marsh"] = true
 L["Boat to Stormwind City"] = true
@@ -191,6 +194,9 @@ L["Portal to Blasted Lands"] = true
 L["Portal to Hellfire Peninsula"] = true
 
 L["Portal to Dalaran"] = true
+
+L["Portal to Shattrath"] = true
+L["Portal to Caverns of Time"] = true
 
 L["Zeppelin to Stranglethorn Vale"] = true
 L["Zeppelin to Undercity"] = true

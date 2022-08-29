@@ -2588,6 +2588,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[49] = not Nx.db.profile.Guide.ShowHerbs[49]
 							end,
 						},
+--[[
 						azsharaveil = {
 							order = 52,
 							type = "toggle",
@@ -3043,6 +3044,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[84] = not Nx.db.profile.Guide.ShowHerbs[84]
 							end,
 						},
+]]--
 					},
 				},
 				MinesDisp = {
@@ -3410,6 +3412,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[26] = not Nx.db.profile.Guide.ShowMines[26]
 							end,
 						},
+--[[
 						obsid = {
 							order = 29,
 							type = "toggle",
@@ -3852,6 +3855,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[60] = not Nx.db.profile.Guide.ShowMines[60]
 							end,
 						},
+]]--
 					},
 				},
 				--[[TimberDisp = {

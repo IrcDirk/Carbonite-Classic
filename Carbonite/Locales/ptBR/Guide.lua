@@ -69,6 +69,10 @@ L["Lightforged Beacon"] = true
 L["Mana Loom"] = true
 L["Moonwell"] = true
 L["Quest Givers"] = true
+L["Name"] = true
+L["Info"] = true
+L["Info2"] = true
+L["Info3"] = true
 
 -- Menus
 L["Delete"] = true

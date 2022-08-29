@@ -40,10 +40,10 @@ L["Notes"] = "Заметки"
 L["Note Addons"] = "Дополнения заметок"
 L["My Notes"] = "Мои заметки"
 
-L["Reset old notes data"] = true
-L["Display Handynotes On Map"] = true
-L["If you have HandyNotes installed, allows them on the Carbonite map"] = true
-L["Handnotes Icon Size"] = true
+L["Reset old notes data"] = "Сбросить старые заметки"
+L["Display Handynotes On Map"] = "Показывать на карте отметки плагина HandyNotes"
+L["If you have HandyNotes installed, allows them on the Carbonite map"] = "Если у вас установлен плагин HandyNotes, то включение этого параметра отобразит иконки HandyNotes на карте"
+L["Handnotes Icon Size"] = "Размер иконки HandyNotes"
 
 -- Keybinds
 L["Carbonite Notes"] = "Carbonite Notes"

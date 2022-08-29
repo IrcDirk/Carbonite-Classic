@@ -1526,7 +1526,10 @@ end
 
 function Nx.Notes:HandyNotes(mapId)
 	local map = Nx.Map:GetMap (1)
-	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then			
+	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
+		if C_Map.GetMapInfo(mapId).mapType ~= 3 then
+			return
+		end
 		map:InitIconType ("!HANDY", "WP", "", Nx.fdb.profile.Notes.HandyNotesSize or 15, Nx.fdb.profile.Notes.HandyNotesSize or 15)
 		map:SetIconTypeChop ("!HANDY", true)
 		map:SetIconTypeLevel ("!HANDY", 20)

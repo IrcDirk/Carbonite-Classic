@@ -3074,11 +3074,12 @@ function Nx.Quest:ProcessQuestDB(questTotal)
 				local sName, zone, x, y = self:GetSEPos (quest["Start"])
 				if zone and x ~= 0 and y ~= 0 then
 					usedIds[qId] = true
+					local sNameO = sName
 					sName = format ("%s=%d%d", sName, x, y)
 					local stmap = starters[zone] or {}
 					starters[zone] = stmap
 					local s = stmap[sName] or ""
-					stmap[sName] = s .. format ("%4x", qId)
+					stmap[sName] = s .. format ("%6x", qId)
 				end
 			end
 		end

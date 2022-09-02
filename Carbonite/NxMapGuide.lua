@@ -1379,8 +1379,8 @@ function Nx.Map.Guide:UpdateMapIcons()
 						local anyDaily
 						local show
 						local s = name
-						for n = 1, #qdata, 4 do
-							local qId = tonumber (strsub (qdata, n, n + 3), 16)
+						for n = 1, #qdata, 6 do
+							local qId = tonumber (strsub (qdata, n, n + 5), 16)
 							local quest = Nx.Quests[qId]
 							local qname = C_QuestLog.GetQuestInfo(qId)
 							local qnameorig, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
@@ -1440,7 +1440,7 @@ function Nx.Map.Guide:UpdateMapIcons()
 							showComplete = false
 						end
 						if show or showComplete then
-							local qId = tonumber (strsub (qdata, 1, 4), 16)
+							local qId = tonumber (strsub (qdata, 1, 6), 16)
 							local quest = Nx.Quests[qId]
 							local startName, zone, x, y, level = Quest:GetSEPos (quest["Start"])
 							local wx, wy = Map:GetWorldPos (mapId, x, y)

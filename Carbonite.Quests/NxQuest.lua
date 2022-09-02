@@ -49,22 +49,10 @@ BINDING_HEADER_CarboniteQuests	= "|cffc0c0ff" .. L["Carbonite Quests"] .. "|r"
 BINDING_NAME_NxTOGGLEWATCHMINI	= L["NxTOGGLEWATCHMINI"]
 BINDING_NAME_NxWATCHUSEITEM	= L["NxWATCHUSEITEM"]
 
-local IsClassic = select(4, GetBuildInfo()) < 30000
+local IsClassic = select(4, GetBuildInfo()) < 40000
 
 if IsClassic then
 	function GetQuestLogCriteriaSpell()
-	  return
-	end
-
-	function GetNumQuestLogRewardCurrencies()
-	  return 0
-	end
-
-	function GetQuestLogRewardHonor()
-	  return 0
-	end
-
-	function GetQuestLogRewardTitle()
 	  return
 	end
 
@@ -75,22 +63,6 @@ if IsClassic then
 	function GetQuestLogPortraitGiver()
 	  return
 	end
-
-	function GetQuestLink()
-	  return
-	end
-
-	function GetQuestLogRewardSkillPoints() 
-		return 0, 0, 0 
-	end
-
-	function GetQuestLogRewardArtifactXP() 
-		return 0, nil 
-	end
-
-	GetNumQuestLogRewardSpells = GetNumRewardSpells
-	GetQuestLogRewardSpell = GetRewardSpell
-	GetQuestLogCriteriaSpell = GetCriteriaSpell
 end
 
 CQUEST_TEMPLATE_LOG = { questLog = true, chooseItems = nil, contentWidth = 285,
@@ -2820,20 +2792,17 @@ function Nx.Quest:Init()
 --			Nx.prt ("auto")
 			Nx.Quest:RecordQuestAcceptOrFinish()
 		end]]--
-		
+
 		QuestFrameDetailPanel_OnShow()
-		
-		local qId = GetQuestID()
-		local quest = Nx.Quests[qId]
-		if(quest) then local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"]) end
-		xp = xp or 0
+
+		local xp = GetQuestLogRewardXP()
 		
 		QuestInfoRewardsFrame.XPFrame:Hide()
 		if xp > 0 then
 			QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
 			QuestInfoRewardsFrame.XPFrame:Show()
 		end
-		
+
 		local auto = Nx.qdb.profile.Quest.AutoAccept
 		if IsShiftKeyDown() and IsControlKeyDown() then
 			auto = not auto
@@ -2851,7 +2820,7 @@ function Nx.Quest:Init()
 		"SetAction", 
 		"SetAuctionItem", 
 		"SetBagItem", 
-		--"SetGuildBankItem", 
+		"SetGuildBankItem", 
 		"SetHyperlink", 
 		"SetInboxItem", 
 		"SetInventoryItem", 
@@ -3748,7 +3717,7 @@ function Nx.Quest:RecordQuestsLog()
 					cur.HighPri = true
 				end
 
-				--cur.ItemLink, cur.ItemImg, cur.ItemCharges = GetQuestLogSpecialItemInfo (qn)
+				cur.ItemLink, cur.ItemImg, cur.ItemCharges = GetQuestLogSpecialItemInfo (qn)
 
 				--Nx.prt("Q num: %d itmLink: %s item: %s charges: %d", qn, cur.ItemLink or " ", cur.ItemImg or " ", cur.ItemCharges)
 				if cur.ItemLink then
@@ -5608,8 +5577,8 @@ function Nx.Quest.List:Open()
 	CarboniteQuest:RegisterEvent ("WORLD_STATE_TIMER_START", "OnQuestUpdate")
 	CarboniteQuest:RegisterEvent ("WORLD_STATE_TIMER_STOP", "OnQuestUpdate")
 	--CarboniteQuest:RegisterEvent ("QUEST_POI_UPDATE", "OnQuestUpdate")
-	--CarboniteQuest:RegisterEvent ("TRACKED_ACHIEVEMENT_UPDATE", "OnTrackedAchievementUpdate")
-	--CarboniteQuest:RegisterEvent ("TRACKED_ACHIEVEMENT_LIST_CHANGED", "OnTrackedAchievementsUpdate")
+	CarboniteQuest:RegisterEvent ("TRACKED_ACHIEVEMENT_UPDATE", "OnTrackedAchievementUpdate")
+	CarboniteQuest:RegisterEvent ("TRACKED_ACHIEVEMENT_LIST_CHANGED", "OnTrackedAchievementsUpdate")
 	CarboniteQuest:RegisterEvent ("CHAT_MSG_COMBAT_FACTION_CHANGE", "OnChat_msg_combat_faction_change")
 	CarboniteQuest:RegisterEvent ("CHAT_MSG_RAID_BOSS_WHISPER", "OnChat_msg_raid_boss_whisper")
 	-- Filter Edit Box
@@ -8393,23 +8362,9 @@ end
 
 function Nx.Quest:UpdateQuestDetailsTimer()
 	
-	-- HACK
-	function GetNumQuestLogRewardCurrencies()
-      return 1
-	end
-	
-	QuestInfoRewardsFrameQuestInfoItem1:Hide();
-	
-	--	Nx.prt ("UpdateQuestDetails")
-	QuestInfo_Display (CBQUEST_TEMPLATE, NXQuestLogDetailScrollChildFrame, nil, nil)
-	
-	-- HACK
-	function GetNumQuestLogRewardCurrencies()
-      return 0
-    end
+	QuestInfo_Display (CBQUEST_TEMPLATE, NXQuestLogDetailScrollChildFrame, nil, nil, "Carb")
 	
 	local r, g, b, a = Nx.Util_str2rgba (Nx.qdb.profile.Quest.DetailBC)
-
 	-- 0.18, 0.12, 0.06 parchment
 	local r, g, b = Nx.Util_str2rgba (Nx.qdb.profile.Quest.DetailTC)
 
@@ -8437,32 +8392,17 @@ function Nx.Quest:UpdateQuestDetailsTimer()
 			_G[name]:SetTextColor (r, g, b)
 		end
 	end
-	
-	QuestInfoRewardsFrame.Header:SetTextColor(r, g, b)
-	QuestInfoRewardsFrame["ItemChooseText"]:SetTextColor(r, g, b)
-	QuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
---	MapQuestInfoRewardsFrame["SpellLearnText"]:SetTextColor(r, g, b)
---	QuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
-	
-	local qId = select(8, GetQuestLogTitle(GetQuestLogSelection()))
-	local quest = Nx.Quests[qId]
-	if quest then
-		local name, side, lvl, minlvl, nextId, category, xp = self:Unpack (quest["Quest"])
-		xp = xp or 0
 
-		QuestInfoRewardsFrame.XPFrame:Hide()
-		if xp > 0 then
-			QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
-			QuestInfoRewardsFrame.XPFrame.ReceiveText:SetTextColor(r, g, b)
-			QuestInfoRewardsFrame.XPFrame:Show()
-		end
+	MapQuestInfoRewardsFrame["ItemChooseText"]:SetTextColor(r, g, b)
+	MapQuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
+	MapQuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
 	
-		for n = 1, 10 do
-			if _G["QuestInfoObjective" .. n] then
-				_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
-			end
+	for n = 1, 10 do
+		if _G["QuestInfoObjective" .. n] then
+			_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
 		end
 	end
+	MapQuestInfoRewardsFrame.QuestInfoPlayerTitleFrame:Hide()
 end
 
 -------------------------------------------------------------------------------
@@ -8521,7 +8461,6 @@ function Nx.Quest:FrameItems_Update (questState)
 	-- Setup choosable rewards
 
 	if numQuestChoices > 0 then
-
 		local itemChooseText = _G[questState.."ItemChooseText"]
 		itemChooseText:Show()
 		QuestFrame_SetTextColor (itemChooseText, material)
@@ -8624,7 +8563,6 @@ function Nx.Quest:FrameItems_Update (questState)
 
 	-- Setup mandatory rewards
 	if numQuestRewards > 0 or money > 0 then
-
 		QuestFrame_SetTextColor (questItemReceiveText, material)
 
 		-- Anchor the reward text differently if there are choosable rewards

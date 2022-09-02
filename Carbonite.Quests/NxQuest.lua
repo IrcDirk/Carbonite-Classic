@@ -2793,8 +2793,6 @@ function Nx.Quest:Init()
 			Nx.Quest:RecordQuestAcceptOrFinish()
 		end]]--
 
---		table.insert(Nx.Quest.AcceptPool, GetQuestID())		
-
 		QuestFrameDetailPanel_OnShow()
 
 		local xp = GetQuestLogRewardXP()
@@ -2829,8 +2827,8 @@ function Nx.Quest:Init()
 		"SetLootItem",
 		"SetLootRollItem", 
 		"SetMerchantItem", 
---		"SetRecipeReagentItem",
---		"SetRecipeResultItem",
+		--"SetRecipeReagentItem",
+		--"SetRecipeResultItem",
 		"SetQuestItem", 
 		"SetQuestLogItem", 
 		"SetTradeTargetItem",
@@ -8565,7 +8563,6 @@ function Nx.Quest:FrameItems_Update (questState)
 
 	-- Setup mandatory rewards
 	if numQuestRewards > 0 or money > 0 then
-		Nx.prt("Num of quest mandatory rewards = %s",  numQuestRewards)
 		QuestFrame_SetTextColor (questItemReceiveText, material)
 
 		-- Anchor the reward text differently if there are choosable rewards

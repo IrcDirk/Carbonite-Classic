@@ -5,3 +5,5 @@ move-folders:
   CarboniteClassic/Carbonite.Notes: Carbonite.Notes
   CarboniteClassic/Carbonite.Warehouse: Carbonite.Warehouse
   CarboniteClassic/Carbonite.Gathermate2_Data: Carbonite.Gathermate2_Data
+  CarboniteClassic: Carbonite/.unused
+  

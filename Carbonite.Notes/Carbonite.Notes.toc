@@ -8,8 +8,6 @@
 ## SavedVariables: NXNotes
 ## RequiredDeps: Carbonite
 
-## X-WoWI-ID: 23406
-
 Locales\locales.xml
 NxFav.lua
 

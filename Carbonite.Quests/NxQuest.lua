@@ -9938,7 +9938,7 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
 			end
 			if click == "LeftButton" then
 
-				Nx.prt ("Data #%d, Id%d", qIndex, qId)
+--				Nx.prt ("Data #%d, Id%d", qIndex, qId)
 --				Nx.prt ("List but %s", but:GetType().WatchError or "nil")
 
 				if typ.WatchError then

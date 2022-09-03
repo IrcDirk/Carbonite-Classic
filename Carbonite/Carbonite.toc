@@ -7,8 +7,7 @@
 ## LoadOnDemand: 0
 ## SavedVariables: CarbData
 ## SavedVariablesPerCharacter: CarbMigr
-
-## X-WoWI-ID: 12965
+## X-Curse-Project-ID: 342147
 
 Libs\libs.xml
 Locales\Locales.xml

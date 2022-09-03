@@ -8,8 +8,6 @@
 ## Dependencies: Carbonite
 ## LoadOnDemand: 1
 
-## X-WoWI-ID: 22789
-
 MiningData.lua
 HerbalismData.lua
 FishData.lua

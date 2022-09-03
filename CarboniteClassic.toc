@@ -1,0 +1,6 @@
+## Interface: 30400
+## Title: Carbonite Maps - Classic @project-version@
+## Version: @project-version@
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## X-Curse-Project-ID: 342147

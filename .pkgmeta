@@ -7,3 +7,6 @@ move-folders:
   CarboniteClassic/Carbonite.Gathermate2_Data: Carbonite.Gathermate2_Data
   CarboniteClassic: Carbonite/.unused
   
+manual-changelog:
+  filename: Carbonite/.unused/CHANGELOG.md
+  markup-type: markdown

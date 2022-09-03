@@ -8,8 +8,6 @@
 ## SavedVariables: NXSocial
 ## RequiredDeps: Carbonite
 
-## X-WoWI-ID: 23407
-
 Locales\locales.xml
 NxSocial.lua
 

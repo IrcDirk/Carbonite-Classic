@@ -1,0 +1,7 @@
+move-folders:
+  CarboniteClassic/Carbonite: Carbonite
+  CarboniteClassic/Carbonite.Quests: Carbonite.Quests
+  CarboniteClassic/Carbonite.Social: Carbonite.Social
+  CarboniteClassic/Carbonite.Notes: Carbonite.Notes
+  CarboniteClassic/Carbonite.Warehouse: Carbonite.Warehouse
+  CarboniteClassic/Carbonite.Gathermate2_Data: Carbonite.Gathermate2_Data

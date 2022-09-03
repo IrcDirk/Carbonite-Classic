@@ -8,8 +8,6 @@
 ## SavedVariables: NXWhouse
 ## RequiredDeps: Carbonite
 
-## X-WoWI-ID: 23408
-
 Locales\locales.xml
 NxWarehouse.lua
 

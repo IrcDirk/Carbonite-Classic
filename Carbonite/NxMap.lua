@@ -2615,27 +2615,36 @@ function Nx.Map:MinimapDetachFrms()
 
 						elseif dock.MMFrms then
 
-							self.MMOwnedFrms[c] = 0
-							tinsert (dock.MMFrms, c)
+							local excludeFrame = false
+							local excludeFrames = {'HandyNotesPin', 'QuestieFrame'}
+							
+							for k, exF in ipairs (excludeFrames) do
+								if Nx.strpos(c:GetName(), exF) then excludeFrame = true end
+							end
+							
+							if not excludeFrame then 						
+								self.MMOwnedFrms[c] = 0
+								tinsert (dock.MMFrms, c)
+								
+	--							Nx.prt ("MM Frm %s #%s %s", c:GetName() or "nil", c:GetNumChildren(), Nx.strpos(c:GetName(), 'QuestieFrame'))
+	--							Nx.prtFrameChildren (c:GetName() or "nil", c)
 
---							Nx.prt ("MM Frm %s #%s", c:GetName() or "nil", c:GetNumChildren())
---							Nx.prtFrameChildren (c:GetName() or "nil", c)
+								if c:GetNumChildren() > 0 then
 
-							if c:GetNumChildren() > 0 then
+									local ch = { c:GetChildren() }
+									for k, c in ipairs (ch) do
 
-								local ch = { c:GetChildren() }
-								for k, c in ipairs (ch) do
+	--									if not c:IsShown() then
+	--										Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
+	--									end
 
---									if not c:IsShown() then
---										Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
---									end
-
-									if c:IsShown() then
-										if c:IsObjectType ("Frame") then
-											local pt, relTo = c:GetPoint()
-											if relTo == mm then
-												tinsert (dock.MMFrms, c)
---												Nx.prt ("MMCC %s", c:GetName())
+										if c:IsShown() then
+											if c:IsObjectType ("Frame") then
+												local pt, relTo = c:GetPoint()
+												if relTo == mm then
+													tinsert (dock.MMFrms, c)
+	--												Nx.prt ("MMCC %s", c:GetName())
+												end
 											end
 										end
 									end
@@ -3837,7 +3846,7 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 	ttl = 0
 	
 	-- Temp HACK - Hide unused HANDYNOTES icons
-	if not WorldMapFrame:IsShown() then
+	--[[if not WorldMapFrame:IsShown() then
 		for n = 1, 2000 do 
 			if _G["HandyNotesPin"..n] then
 				_G["HandyNotesPin"..n]:Hide()
@@ -3845,7 +3854,7 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 				break
 			end 
 		end
-	end
+	end]]--
 	
 	if _G['ReputationFrame'] then
 		if not _G['ReputationFrame'].CarbFix then

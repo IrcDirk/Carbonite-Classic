@@ -9570,7 +9570,7 @@ function Nx.Quest.Watch:UpdateList()
 							end
 						end
 					end
-				end
+				end]]--
 				if Nx.qdb.profile.QuestWatch.AchTrack then
 					local achs = Nx.Quest.TrackedAchievements
 					for id, ach in pairs (achs) do
@@ -9628,7 +9628,7 @@ function Nx.Quest.Watch:UpdateList()
 				if s then
 					list:ItemAdd (0)
 					list:ItemSet (2, s)
-				end]]--
+				end
 
 	--			Nx.prtVar ("Watched", watched)
 

@@ -1,5 +1,5 @@
 ## Interface: 30400
-## Title: Carbonite Maps - Classic @project-version@
+## Title: Carbonite Maps - Classic
 ## Version: @project-version@
 ## Notes: Released Under GPL
 ## DefaultState: Enabled

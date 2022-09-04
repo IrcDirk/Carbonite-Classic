@@ -2619,7 +2619,7 @@ function Nx.Map:MinimapDetachFrms()
 							local excludeFrames = {'HandyNotesPin', 'QuestieFrame'}
 							
 							for k, exF in ipairs (excludeFrames) do
-								if Nx.strpos(c:GetName(), exF) then excludeFrame = true end
+								if c:GetName() and Nx.strpos(c:GetName(), exF) then excludeFrame = true end
 							end
 							
 							if not excludeFrame then 						

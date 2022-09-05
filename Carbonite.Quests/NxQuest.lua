@@ -71,6 +71,7 @@ CQUEST_TEMPLATE_LOG = { questLog = true, chooseItems = nil, contentWidth = 285,
 		QuestInfo_ShowTitle, 5, -10,
 		QuestInfo_ShowDescriptionText, 0, -5,
 		QuestInfo_ShowSeal, 0, 0,
+		QuestInfo_ShowObjectives, 0, -10,
 		QuestInfo_ShowObjectivesHeader, 0, -15,
 		QuestInfo_ShowObjectivesText, 0, -5,
 		QuestInfo_ShowSpecialObjectives, 0, -10,
@@ -2781,39 +2782,17 @@ function Nx.Quest:Init()
 	self.BlizzAcceptQuest = AcceptQuest
 	AcceptQuest = self.AcceptQuest
 
---[[	self.BlizzCompleteQuest = CompleteQuest
-	CompleteQuest = self.CompleteQuest ]]--
-
-	self.BlizzGetQuestReward = GetQuestReward
-	GetQuestReward = self.GetQuestReward
-
-	local function func()
---		Nx.prt ("QAccept")
-		--[[if QuestGetAutoAccept() then
---			Nx.prt ("auto")
-			Nx.Quest:RecordQuestAcceptOrFinish()
-		end]]--
-
-		QuestFrameDetailPanel_OnShow()
-
-		local xp = GetQuestLogRewardXP()
-		
-		QuestInfoRewardsFrame.XPFrame:Hide()
-		if xp > 0 then
-			QuestInfo_ToggleRewardElement(QuestInfoRewardsFrame.XPFrame, BreakUpLargeNumbers(xp), QuestInfoRewardsFrame)
-			QuestInfoRewardsFrame.XPFrame:Show()
-		end
-
+	QuestFrameDetailPanel:HookScript ("OnShow", function ()
 		local auto = Nx.qdb.profile.Quest.AutoAccept
 		if IsShiftKeyDown() and IsControlKeyDown() then
 			auto = not auto
 		end
 		if auto then
 			AcceptQuest()
+			QuestFrame:Hide();
+			QuestFrameDetailPanel:Hide()
 		end
-	end
-
-	QuestFrameDetailPanel:SetScript ("OnShow", func);
+	end);
 
 	-- Hook tooltip
 

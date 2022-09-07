@@ -6,7 +6,7 @@
         packages:
         - pandoc
      
-    script: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | sed 's/### Deploy the zipfile./zip -d \$archive CarboniteClassic\/\* CarboniteClassic/g' | bash -s -- -n "{package-name}-{project-version}"
+    script: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | sed 's/### Deploy the zipfile./zip -d \$archive CarboniteClassic\/\* CarboniteClassic/g' | bash
      
     branches:
       only:

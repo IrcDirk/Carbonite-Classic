@@ -456,6 +456,7 @@ local defaults = {
 			InstancePlayerSize = 24,
 			InstanceGroupSize = 24,
 			InstanceScale = 16,
+			mapUpdate = .05,
 		},
 		MiniMap = {
 			AboveIcons = false,

@@ -3840,7 +3840,7 @@ local ttl = 0
 function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 
 	ttl = ttl + elapsed
-	if ttl < .05 then
+	if ttl < (Nx.db.profile.Map.mapUpdate or .05) then
 		return
 	end
 	ttl = 0

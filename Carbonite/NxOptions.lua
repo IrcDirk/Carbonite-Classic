@@ -2361,8 +2361,8 @@ local function guidegatherConfig ()
 							order = 33,
 							type = "toggle",
 							width = "full",
-							name = L["Sorrowmoss"],
-							desc = L["Display"] .. " " .. L["Sorrowmoss"] .. " " .. L["Nodes On Map"],
+							name = L["Plaguebloom"],
+							desc = L["Display"] .. " " .. L["Plaguebloom"] .. " " .. L["Nodes On Map"],
 							get = function()
 								return Nx.db.profile.Guide.ShowHerbs[31]
 							end,

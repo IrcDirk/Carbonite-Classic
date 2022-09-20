@@ -2877,7 +2877,7 @@ Nx.GatherInfo = {
 		{ 350,	"inv_enchant_dustsoul",L["Netherdust Bush"]},
 		{ 365,	"inv_misc_herb_nightmarevine",L["Nightmare Vine"]},
 		{ 1,	"inv_misc_flower_02",L["Peacebloom"]},
-		{ 285,	"inv_misc_herb_plaguebloom",L["Sorrowmoss"]},
+		{ 285,	"inv_misc_herb_plaguebloom",L["Plaguebloom"]},
 		{ 210,	"inv_misc_herb_17",L["Purple Lotus"]},
 		{ 325,	"inv_misc_herb_ragveil",L["Ragveil"]},
 		{ 1,	"inv_misc_herb_10",L["Silverleaf"]},

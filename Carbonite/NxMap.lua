@@ -5300,14 +5300,18 @@ function Nx.Map:ScanContinents()
 
 		--SetMapZoom (cont)
 		local mapId = Nx.Map.MapZones[0][cont]
-
+		
+		local mapId2 = mapId
+		if mapId2 == 12 then mapId2 = 1414 end
+		if mapId2 == 13 then mapId2 = 1415 end
+		
 		local name, description, txIndex, pX, pY
 		local txX1, txX2, txY1, txY2
 		
-		local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId);
+		local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId2);
 		for i, areaPoiID in ipairs(areaPOIs) do
 			-- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (n)
-			local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId, areaPoiID)
+			local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId2, areaPoiID)
 			name = cPOI.name
 			txIndex = cPOI.textureIndex
 			pX = cPOI.position.x

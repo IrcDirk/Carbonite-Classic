@@ -3063,11 +3063,11 @@ end
 function Nx.Warehouse.OnMerchant_show()
 	if CanMerchantRepair() and Nx.wdb.profile.Warehouse.RepairAuto then		
 		local cost, canrepair = GetRepairAllCost()		
-		local guildrepaired = false
 		if canrepair then
+			local guildrepaired = false
 			if Nx.wdb.profile.Warehouse.RepairGuild then
 				if (IsInGuild() and CanGuildBankRepair()) then
-					if cost <= GetGuildBankWithdrawMoney() or GetGuildBankWithdrawMoney == -1 then
+					if cost <= GetGuildBankWithdrawMoney() and cost <= GetGuildBankMoney() then
 						RepairAllItems(1)
 						local moneyStr = Nx.Util_GetMoneyStr(cost)
 						Nx.prt(L["AUTO-REPAIR"] .. ": " .. moneyStr .. " [" .. L["GUILD WITHDRAW"] .. "]")
@@ -3075,9 +3075,7 @@ function Nx.Warehouse.OnMerchant_show()
 					end
 				end
 			end
-		end		
-		if not guildrepaired then
-			if cost <= GetMoney() then
+			if cost <= GetMoney() and not guildrepaired then
 				RepairAllItems()
 				local moneyStr = Nx.Util_GetMoneyStr(cost)
 				Nx.prt(L["AUTO-REPAIR"] .. ": " .. moneyStr)

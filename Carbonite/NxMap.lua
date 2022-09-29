@@ -5092,7 +5092,7 @@ function Nx.Map:Update (elapsed)
 			f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
 			self:ClipFrameZ (f, cX * 100, cY * 100, 16, 16, 0)
 			-- Override clipping (FIX maybe?)
-			f.texture:SetTexCoord (0.875, 1.0, 0.0, 0.125)	-- 16x16 grid (.0625 uv size)
+			f.texture:SetTexCoord (0.56640625, 0.6328125, 0.00390625, 0.0703125)	-- 16x16 grid (.0625 uv size)
 
 			self.Level = self.Level + 2
 		end

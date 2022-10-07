@@ -2370,7 +2370,7 @@ local ModQuests={
 		End = "1515|1420|32|60.59|51.76",
 		Objectives = {
 			[1] = {
-				"Captain Melrache|1420|32|79.52|25.15|9.62|9.62"
+				"Captain Melrache|1420|32|79.52|25.15|5.01|3.34"
 			},
 			[2] = {
 				"Scarlet Bodyguard|1420|35|79|25|5.01|3.34"
@@ -2482,7 +2482,7 @@ local ModQuests={
 				"Rotting Ancestor|1420|35|51.5|32.5|10.02|3.34"
 			},
 			[3] = {
-				"Dargol's Skull|1420|32|52.81|26.35|9.62|9.62"
+				"Dargol's Skull|1420|32|52.81|26.35|5.01|3.34"
 			},
 		},
 	},
@@ -2492,7 +2492,7 @@ local ModQuests={
 		End = "1497|1420|32|68.20|41.92",
 		Objectives = {
 			[1] = {
-				"Lillith Nefara|1420|32|66.64|44.88|9.62|9.62"
+				"Lillith Nefara|1420|32|66.64|44.88|5.01|3.34"
 			},
 		},
 	},
@@ -2831,7 +2831,7 @@ local ModQuests={
 		End = "1938|1421|32|44.19|39.78",
 		Objectives = {
 			[1] = {
-				"Remedy of Arugal|1421|32|52.84|28.55|9.62|9.62"
+				"Remedy of Arugal|1421|32|52.84|28.55|5.01|3.34"
 			},
 		},
 	},
@@ -2912,7 +2912,7 @@ local ModQuests={
 		End = "1938|1421|32|44.19|39.78",
 		Objectives = {
 			[1] = {
-				"Head of Grimson|1421|32|58.58|44.86|9.62|9.62"
+				"Head of Grimson|1421|32|58.58|44.86|5.01|3.34"
 			},
 		},
 	},
@@ -2922,7 +2922,7 @@ local ModQuests={
 		End = "1950|1421|32|53.46|13.43",
 		Objectives = {
 			[1] = {
-				"Ivar's Head|1421|32|51.92|13.82|9.62|9.62"
+				"Ivar's Head|1421|32|51.92|13.82|5.01|3.34"
 			},
 		},
 	},
@@ -3060,7 +3060,7 @@ local ModQuests={
 				"Enter the Dead Fields|1421|35|43.5|24|30.06|3.34"
 			},
 			[2] = {
-				"Essence of Nightlash|1421|32|45.4|21.4|9.62|9.62"
+				"Essence of Nightlash|1421|32|45.4|21.4|5.01|3.34"
 			},
 		},
 	},
@@ -3090,7 +3090,7 @@ local ModQuests={
 		End = "1952|1421|32|43.42|40.86",
 		Objectives = {
 			[1] = {
-				"Thule's Head|1421|32|65.71|23.67|9.62|9.62"
+				"Thule's Head|1421|32|65.71|23.67|5.01|3.34"
 			},
 		},
 	},
@@ -3236,7 +3236,7 @@ local ModQuests={
 		End = "1937|1421|32|42.80|40.86",
 		Objectives = {
 			[1] = {
-				"Berard's Journal|1421|32|43|73|9.62|9.62"
+				"Berard's Journal|1421|32|43|73|5.01|3.34"
 			},
 		},
 	},
@@ -3603,7 +3603,7 @@ local ModQuests={
 		End = "3521|1413|32|62.34|20.07",
 		Objectives = {
 			[1] = {
-				"Destroy the Demon Seed|1413|32|62.34|20.08|9.62|9.62"
+				"Destroy the Demon Seed|1413|32|62.34|20.08|5.01|3.34"
 			},
 		},
 	},
@@ -4162,7 +4162,7 @@ local ModQuests={
 		End = "3389|1413|32|45.34|28.41",
 		Objectives = {
 			[1] = {
-				"Barak's Head|1413|32|42.81|23.53|9.62|9.62"
+				"Barak's Head|1413|32|42.81|23.53|5.01|3.34"
 			},
 		},
 	},
@@ -4172,7 +4172,7 @@ local ModQuests={
 		End = "3389|1413|32|45.34|28.41",
 		Objectives = {
 			[1] = {
-				"Verog's Head|1413|32|52.86|41.78|9.62|9.62"
+				"Verog's Head|1413|32|52.86|41.78|5.01|3.34"
 			},
 		},
 	},
@@ -4260,7 +4260,7 @@ local ModQuests={
 		End = "3442|1413|32|62.98|37.22",
 		Objectives = {
 			[1] = {
-				"Escort Wizzlecrank out of the Venture Co. drill site|1413|32|55.36|7.69|9.62|9.62"
+				"Escort Wizzlecrank out of the Venture Co. drill site|1413|32|55.36|7.69|5.01|3.34"
 			},
 		},
 	},
@@ -4538,7 +4538,7 @@ local ModQuests={
 		End = "3448|1413|32|52.26|31.93",
 		Objectives = {
 			[1] = {
-				"Explore the waters of the Forgotten Pools|1413|32|45.06|22.53|9.62|9.62"
+				"Explore the waters of the Forgotten Pools|1413|32|45.06|22.53|5.01|3.34"
 			},
 		},
 	},
@@ -4610,7 +4610,7 @@ local ModQuests={
 		End = "3449|1413|32|51.62|30.90",
 		Objectives = {
 			[1] = {
-				"Serena's Head|1413|32|39.16|12.17|9.62|9.62"
+				"Serena's Head|1413|32|39.16|12.17|5.01|3.34"
 			},
 		},
 	},
@@ -4620,7 +4620,7 @@ local ModQuests={
 		End = "3448|1413|32|52.26|31.93",
 		Objectives = {
 			[1] = {
-				"Test the Dried Seeds|1413|32|55.61|42.74|9.62|9.62"
+				"Test the Dried Seeds|1413|32|55.61|42.74|5.01|3.34"
 			},
 		},
 	},
@@ -4644,7 +4644,7 @@ local ModQuests={
 		End = "3338|1413|32|52.23|31.01",
 		Objectives = {
 			[1] = {
-				"Echeyakee's Hide|1413|32|55.84|17.1|9.62|9.62"
+				"Echeyakee's Hide|1413|32|55.84|17.1|5.01|3.34"
 			},
 		},
 	},
@@ -4654,7 +4654,7 @@ local ModQuests={
 		End = "3387|1413|32|44.86|59.14",
 		Objectives = {
 			[1] = {
-				"Ishamuhale's Fang|1413|32|59.93|30.33|9.62|9.62"
+				"Ishamuhale's Fang|1413|32|59.93|30.33|5.01|3.34"
 			},
 		},
 	},
@@ -4686,10 +4686,10 @@ local ModQuests={
 		End = "3391|1413|32|62.68|36.23",
 		Objectives = {
 			[1] = {
-				"Shipment of Boots|1413|32|62.63|49.63|9.62|9.62"
+				"Shipment of Boots|1413|32|62.63|49.63|5.01|3.34"
 			},
 			[2] = {
-				"Telescopic Lens|1413|32|63.58|49.25|9.62|9.62"
+				"Telescopic Lens|1413|32|63.58|49.25|5.01|3.34"
 			},
 		},
 	},
@@ -4733,13 +4733,13 @@ local ModQuests={
 		End = "3339|1413|32|62.29|39.03",
 		Objectives = {
 			[1] = {
-				"Captain Fairmount|1413|32|61.85|54.66|9.62|9.62"
+				"Captain Fairmount|1413|32|61.85|54.66|5.01|3.34"
 			},
 			[2] = {
-				"Cannoneer Whessan|1413|32|60.42|54.77|9.62|9.62"
+				"Cannoneer Whessan|1413|32|60.42|54.77|5.01|3.34"
 			},
 			[3] = {
-				"Cannoneer Smythe|1413|32|63.19|56.64|9.62|9.62"
+				"Cannoneer Smythe|1413|32|63.19|56.64|5.01|3.34"
 			},
 			[4] = {
 				"Theramore Medal|1413|35|60.5|51.5|25.05|3.34",
@@ -4793,7 +4793,7 @@ local ModQuests={
 		End = "3339|1413|32|62.29|39.03",
 		Objectives = {
 			[1] = {
-				"Escort Gilthares Firebough back to Ratchet|1413|32|62.29|39.04|9.62|9.62"
+				"Escort Gilthares Firebough back to Ratchet|1413|32|62.29|39.04|5.01|3.34"
 			},
 		},
 	},
@@ -4832,13 +4832,13 @@ local ModQuests={
 		End = "4141|1413|32|52.40|11.65",
 		Objectives = {
 			[1] = {
-				"Shut off Main Control Valve|1413|32|52.33|11.57|9.62|9.62"
+				"Shut off Main Control Valve|1413|32|52.33|11.57|5.01|3.34"
 			},
 			[2] = {
-				"Shut off Fuel Control Valve|1413|32|52.4|11.41|9.62|9.62"
+				"Shut off Fuel Control Valve|1413|32|52.4|11.41|5.01|3.34"
 			},
 			[3] = {
-				"Shut off Regulator Valve|1413|32|52.29|11.4|9.62|9.62"
+				"Shut off Regulator Valve|1413|32|52.29|11.4|5.01|3.34"
 			},
 		},
 	},
@@ -4848,7 +4848,7 @@ local ModQuests={
 		End = "4141|1413|32|52.40|11.65",
 		Objectives = {
 			[1] = {
-				"Console Key|1413|32|52.84|10.39|9.62|9.62"
+				"Console Key|1413|32|52.84|10.39|5.01|3.34"
 			},
 		},
 	},
@@ -4908,13 +4908,13 @@ local ModQuests={
 		End = "3338|1413|32|52.23|31.01",
 		Objectives = {
 			[1] = {
-				"Visit Blue Raptor Nest|1413|32|52.6|46.1|9.62|9.62"
+				"Visit Blue Raptor Nest|1413|32|52.6|46.1|5.01|3.34"
 			},
 			[2] = {
-				"Visit Yellow Raptor Nest|1413|32|52.03|46.48|9.62|9.62"
+				"Visit Yellow Raptor Nest|1413|32|52.03|46.48|5.01|3.34"
 			},
 			[3] = {
-				"Visit Red Raptor Nest|1413|32|52.46|46.56|9.62|9.62"
+				"Visit Red Raptor Nest|1413|32|52.46|46.56|5.01|3.34"
 			},
 		},
 	},
@@ -5280,7 +5280,7 @@ local ModQuests={
 		End = "3419|1456|32|22.81|20.89",
 		Objectives = {
 			[1] = {
-				"Serpentbloom|1413|32|0|0|9.62|9.62"
+				"Serpentbloom|1413|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -5755,7 +5755,7 @@ local ModQuests={
 		End = "5767|1413|32|45.99|35.66",
 		Objectives = {
 			[1] = {
-				"Deviate Hide|1413|32|0|0|9.62|9.62"
+				"Deviate Hide|1413|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -5775,7 +5775,7 @@ local ModQuests={
 		End = "3446|1413|32|62.37|37.62",
 		Objectives = {
 			[1] = {
-				"Wailing Essence|1413|32|0|0|9.62|9.62"
+				"Wailing Essence|1413|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -5835,16 +5835,16 @@ local ModQuests={
 		End = "1500|1420|32|61.72|52.29",
 		Objectives = {
 			[1] = {
-				"Agamand Family Axe|1420|32|51.7|25.69|9.62|9.62"
+				"Agamand Family Axe|1420|32|51.7|25.69|5.01|3.34"
 			},
 			[2] = {
-				"Agamand Family Dagger|1420|32|52.66|27.02|9.62|9.62"
+				"Agamand Family Dagger|1420|32|52.66|27.02|5.01|3.34"
 			},
 			[3] = {
-				"Agamand Family Mace|1420|32|51.88|27.12|9.62|9.62"
+				"Agamand Family Mace|1420|32|51.88|27.12|5.01|3.34"
 			},
 			[4] = {
-				"Agamand Family Sword|1420|32|52.66|25.87|9.62|9.62"
+				"Agamand Family Sword|1420|32|52.66|25.87|5.01|3.34"
 			},
 		},
 	},
@@ -5910,7 +5910,7 @@ local ModQuests={
 		End = "6467|1458|32|83.51|69.11",
 		Objectives = {
 			[1] = {
-				"Andron's Ledger|1458|32|55.4|76.94|9.62|9.62"
+				"Andron's Ledger|1458|32|55.4|76.94|5.01|3.34"
 			},
 		},
 	},
@@ -6069,7 +6069,7 @@ local ModQuests={
 		End = "4576|1458|32|70.76|30.69",
 		Objectives = {
 			[1] = {
-				"Linen Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Linen Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 			[2] = {
 				"Dalaran Mana Gem|1421|35|65|49.5|10.02|16.7",
@@ -6163,7 +6163,7 @@ local ModQuests={
 		End = "6467|1458|32|83.51|69.11",
 		Objectives = {
 			[1] = {
-				"Dalaran Status Report|1421|32|64|65|9.62|9.62"
+				"Dalaran Status Report|1421|32|64|65|5.01|3.34"
 			},
 		},
 	},
@@ -6597,7 +6597,7 @@ local ModQuests={
 		End = "3464|1413|32|51.93|30.32",
 		Objectives = {
 			[1] = {
-				"Stolen Silver|1413|32|58.04|53.87|9.62|9.62"
+				"Stolen Silver|1413|32|58.04|53.87|5.01|3.34"
 			},
 		},
 	},
@@ -6660,7 +6660,7 @@ local ModQuests={
 		End = "9317|1454|32|76.52|24.41",
 		Objectives = {
 			[1] = {
-				"Samophlange Manual|1413|32|59.99|4.13|9.62|9.62"
+				"Samophlange Manual|1413|32|59.99|4.13|5.01|3.34"
 			},
 		},
 	},
@@ -6670,7 +6670,7 @@ local ModQuests={
 		End = "3389|1413|32|45.34|28.41",
 		Objectives = {
 			[1] = {
-				"Piece of Krom'zar's Banner|1413|32|44.38|28.14|9.62|9.62"
+				"Piece of Krom'zar's Banner|1413|32|44.38|28.14|5.01|3.34"
 			},
 		},
 	},
@@ -6790,7 +6790,7 @@ local ModQuests={
 		End = "3432|1413|32|51.95|31.58",
 		Objectives = {
 			[1] = {
-				"Find Mankrik's Wife|1413|32|49.33|50.32|9.62|9.62"
+				"Find Mankrik's Wife|1413|32|49.33|50.32|5.01|3.34"
 			},
 		},
 	},
@@ -6990,10 +6990,10 @@ local ModQuests={
 		End = "11833|1456|32|70.31|29.54",
 		Objectives = {
 			[1] = {
-				"Ragefire Trogg|1454|32|0|0|9.62|9.62"
+				"Ragefire Trogg|1454|32|0|0|5.01|3.34"
 			},
 			[2] = {
-				"Ragefire Shaman|1454|32|0|0|9.62|9.62"
+				"Ragefire Shaman|1454|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -7034,10 +7034,10 @@ local ModQuests={
 		End = "4949|1454|32|31.61|37.83",
 		Objectives = {
 			[1] = {
-				"Bazzalan|1454|32|0|0|9.62|9.62"
+				"Bazzalan|1454|32|0|0|5.01|3.34"
 			},
 			[2] = {
-				"Jergosh the Invoker|1454|32|0|0|9.62|9.62"
+				"Jergosh the Invoker|1454|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -7057,7 +7057,7 @@ local ModQuests={
 		End = "3216|1454|32|49.47|50.59",
 		Objectives = {
 			[1] = {
-				"Taragaman the Hungerer's Heart|1454|32|0|0|9.62|9.62"
+				"Taragaman the Hungerer's Heart|1454|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -7085,7 +7085,7 @@ local ModQuests={
 				"Investigate Cave in Boulderslide Ravine|1442|35|58.5|89.5|10.02|10.02"
 			},
 			[2] = {
-				"Resonite Crystal|1442|32|61.86|92.33|9.62|9.62"
+				"Resonite Crystal|1442|32|61.86|92.33|5.01|3.34"
 			},
 		},
 	},
@@ -7210,7 +7210,7 @@ local ModQuests={
 		End = "11861|1442|32|47.22|64.04",
 		Objectives = {
 			[1] = {
-				"Goggeroc|1442|32|57.5|89.5|9.62|9.62"
+				"Goggeroc|1442|32|57.5|89.5|5.01|3.34"
 			},
 		},
 	},
@@ -7220,7 +7220,7 @@ local ModQuests={
 		End = "11857|1413|32|35.19|27.76",
 		Objectives = {
 			[1] = {
-				"Kaya Escorted to Camp Aparaje|1442|32|77.1|90.84|9.62|9.62"
+				"Kaya Escorted to Camp Aparaje|1442|32|77.1|90.84|5.01|3.34"
 			},
 		},
 	},
@@ -7240,10 +7240,10 @@ local ModQuests={
 		End = "8582|1413|32|48.12|5.42",
 		Objectives = {
 			[1] = {
-				"Warsong Scout Update|1440|32|71.05|68.21|9.62|9.62"
+				"Warsong Scout Update|1440|32|71.05|68.21|5.01|3.34"
 			},
 			[2] = {
-				"Warsong Runner Update|1440|32|12.22|34.21|9.62|9.62"
+				"Warsong Runner Update|1440|32|12.22|34.21|5.01|3.34"
 			},
 			[3] = {
 				"Warsong Outrider Update|1440|35|90|46|40.08|3.34",
@@ -7397,7 +7397,7 @@ local ModQuests={
 		End = "11857|1413|32|35.19|27.76",
 		Objectives = {
 			[1] = {
-				"Grundig Darkcloud|1442|32|73.65|86.13|9.62|9.62"
+				"Grundig Darkcloud|1442|32|73.65|86.13|5.01|3.34"
 			},
 			[2] = {
 				"Grimtotem Brute|1442|35|75.5|83.5|10.02|3.34",
@@ -7439,7 +7439,7 @@ local ModQuests={
 		End = "15406|1941|32|70.53|72.34",
 		Objectives = {
 			[1] = {
-				"Chieftain Zul'Marosh's Head|1941|32|62.51|79.68|9.62|9.62"
+				"Chieftain Zul'Marosh's Head|1941|32|62.51|79.68|5.01|3.34"
 			},
 		},
 	},
@@ -7632,7 +7632,7 @@ local ModQuests={
 		End = "16224|1942|32|47.14|28.30",
 		Objectives = {
 			[1] = {
-				"Rathis Tomber's Supplies|1942|32|33.55|26.55|9.62|9.62"
+				"Rathis Tomber's Supplies|1942|32|33.55|26.55|5.01|3.34"
 			},
 		},
 	},
@@ -7966,7 +7966,7 @@ local ModQuests={
 		End = "16231|1942|32|44.88|32.51",
 		Objectives = {
 			[1] = {
-				"Investigate An'daroth|1942|32|36.82|15.59|9.62|9.62"
+				"Investigate An'daroth|1942|32|36.82|15.59|5.01|3.34"
 			},
 			[2] = {
 				"Sentinel Spy|1942|35|35|11.5|40.08|6.68",
@@ -7995,13 +7995,13 @@ local ModQuests={
 		End = "16231|1942|32|44.88|32.51",
 		Objectives = {
 			[1] = {
-				"Night Elf Plans: An'daroth|1942|32|13.69|26.83|9.62|9.62"
+				"Night Elf Plans: An'daroth|1942|32|13.69|26.83|5.01|3.34"
 			},
 			[2] = {
-				"Night Elf Plans: An'owyn|1942|32|12.78|25.13|9.62|9.62"
+				"Night Elf Plans: An'owyn|1942|32|12.78|25.13|5.01|3.34"
 			},
 			[3] = {
-				"Night Elf Plans: Scrying on the Sin'dorei|1942|32|10.44|22.58|9.62|9.62"
+				"Night Elf Plans: Scrying on the Sin'dorei|1942|32|10.44|22.58|5.01|3.34"
 			},
 		},
 	},
@@ -8011,13 +8011,13 @@ local ModQuests={
 		End = "16240|1942|32|54.83|48.35",
 		Objectives = {
 			[1] = {
-				"Apothecary Enith Rescued|1942|32|32.15|73.95|9.62|9.62"
+				"Apothecary Enith Rescued|1942|32|32.15|73.95|5.01|3.34"
 			},
 			[2] = {
-				"Apprentice Varnis Rescued|1942|32|40.98|83.21|9.62|9.62"
+				"Apprentice Varnis Rescued|1942|32|40.98|83.21|5.01|3.34"
 			},
 			[3] = {
-				"Ranger Vedoran Rescued|1942|32|32.79|89.93|9.62|9.62"
+				"Ranger Vedoran Rescued|1942|32|32.79|89.93|5.01|3.34"
 			},
 		},
 	},
@@ -8055,7 +8055,7 @@ local ModQuests={
 		End = "16237|1942|32|60.29|35.63",
 		Objectives = {
 			[1] = {
-				"Night Elf Moon Crystal Deactivated|1942|32|58.22|64.93|9.62|9.62"
+				"Night Elf Moon Crystal Deactivated|1942|32|58.22|64.93|5.01|3.34"
 			},
 		},
 	},
@@ -8065,17 +8065,17 @@ local ModQuests={
 		End = "16204|1942|32|54.87|48.55",
 		Objectives = {
 			[1] = {
-				"Mirdoran the Fallen|1942|32|37.36|79.33|9.62|9.62"
+				"Mirdoran the Fallen|1942|32|37.36|79.33|5.01|3.34"
 			},
 			[2] = {
 				"Borgoth the Bloodletter|1942|35|41|83|5.01|3.34",
 				"Borgoth the Bloodletter|1942|35|32.5|90|5.01|3.34"
 			},
 			[3] = {
-				"Jurion the Deceiver|1942|32|32.1|74.46|9.62|9.62"
+				"Jurion the Deceiver|1942|32|32.1|74.46|5.01|3.34"
 			},
 			[4] = {
-				"Masophet the Black|1942|32|29.28|88.88|9.62|9.62"
+				"Masophet the Black|1942|32|29.28|88.88|5.01|3.34"
 			},
 		},
 	},
@@ -8193,7 +8193,7 @@ local ModQuests={
 		End = "16201|1942|32|72.29|19.10",
 		Objectives = {
 			[1] = {
-				"Aquantion|1942|32|71.32|15.05|9.62|9.62"
+				"Aquantion|1942|32|71.32|15.05|5.01|3.34"
 			},
 		},
 	},
@@ -8208,10 +8208,10 @@ local ModQuests={
 		End = "16239|1942|32|55.07|48.83",
 		Objectives = {
 			[1] = {
-				"Stone of Flame|1942|32|40.37|49.75|9.62|9.62"
+				"Stone of Flame|1942|32|40.37|49.75|5.01|3.34"
 			},
 			[2] = {
-				"Stone of Light|1942|32|34.3|47.67|9.62|9.62"
+				"Stone of Light|1942|32|34.3|47.67|5.01|3.34"
 			},
 		},
 	},
@@ -8297,7 +8297,7 @@ local ModQuests={
 		End = "16289|1942|32|44.84|32.81",
 		Objectives = {
 			[1] = {
-				"Investigate the Amani Catacombs|1942|32|62.9|30.93|9.62|9.62"
+				"Investigate the Amani Catacombs|1942|32|62.9|30.93|5.01|3.34"
 			},
 			[2] = {
 				"Mummified Troll Remains Burned|1942|35|58.5|27.5|45.09|3.34",
@@ -8370,7 +8370,7 @@ local ModQuests={
 		End = "16220|1942|32|72.37|29.64",
 		Objectives = {
 			[1] = {
-				"Escort Ranger Lilatha back to the Farstrider Enclave|1942|32|72.24|30.12|9.62|9.62"
+				"Escort Ranger Lilatha back to the Farstrider Enclave|1942|32|72.24|30.12|5.01|3.34"
 			},
 		},
 	},
@@ -8479,7 +8479,7 @@ local ModQuests={
 		End = "16220|1942|32|72.37|29.64",
 		Objectives = {
 			[1] = {
-				"Head of Kel'gash the Wicked|1942|32|65.29|79.46|9.62|9.62"
+				"Head of Kel'gash the Wicked|1942|32|65.29|79.46|5.01|3.34"
 			},
 		},
 	},
@@ -8800,13 +8800,13 @@ local ModQuests={
 		End = "16464|1942|32|72.61|31.57",
 		Objectives = {
 			[1] = {
-				"Poison the Raw Meat Rack|1942|32|65.1|66.75|9.62|9.62"
+				"Poison the Raw Meat Rack|1942|32|65.1|66.75|5.01|3.34"
 			},
 			[2] = {
-				"Poison the Smoked Meat Rack|1942|32|63.04|74.99|9.62|9.62"
+				"Poison the Smoked Meat Rack|1942|32|63.04|74.99|5.01|3.34"
 			},
 			[3] = {
-				"Poison the Fresh Fish Rack|1942|32|68.23|57.79|9.62|9.62"
+				"Poison the Fresh Fish Rack|1942|32|68.23|57.79|5.01|3.34"
 			},
 		},
 	},
@@ -9116,7 +9116,7 @@ local ModQuests={
 		End = "16197|1942|32|46.55|28.38",
 		Objectives = {
 			[1] = {
-				"Linen Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Linen Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 			[2] = {
 				"Spindleweb Silk Gland|1942|35|20.5|9|35.07|13.36",
@@ -9237,7 +9237,7 @@ local ModQuests={
 		End = "16268|1942|32|47.20|34.31",
 		Objectives = {
 			[1] = {
-				"Pitted Gold Band|1942|32|62|29|9.62|9.62"
+				"Pitted Gold Band|1942|32|62|29|5.01|3.34"
 			},
 		},
 	},
@@ -10755,7 +10755,7 @@ local ModQuests={
 		End = "16268|1942|32|47.20|34.31",
 		Objectives = {
 			[1] = {
-				"Archeologist's Shrunken Head|1942|32|67.86|54.49|9.62|9.62"
+				"Archeologist's Shrunken Head|1942|32|67.86|54.49|5.01|3.34"
 			},
 		},
 	},

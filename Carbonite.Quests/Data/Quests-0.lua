@@ -46,10 +46,10 @@ local ModQuests={
 				"Pendant of the Sea Lion|1450|35|36|41|5.01|10.02"
 			},
 			[2] = {
-				"Half Pendant of Aquatic Agility|1413|32|57|8|9.62|9.62"
+				"Half Pendant of Aquatic Agility|1413|32|57|8|5.01|3.34"
 			},
 			[3] = {
-				"Half Pendant of Aquatic Endurance|1421|32|30|29|9.62|9.62"
+				"Half Pendant of Aquatic Endurance|1421|32|30|29|5.01|3.34"
 			},
 		},
 	},
@@ -148,7 +148,7 @@ local ModQuests={
 		End = "14444|1456|32|59.32|51.65",
 		Objectives = {
 			[1] = {
-				"Cairne's Hoofprint|1456|32|60.3|51.68|9.62|9.62"
+				"Cairne's Hoofprint|1456|32|60.3|51.68|5.01|3.34"
 			},
 		},
 	},
@@ -163,7 +163,7 @@ local ModQuests={
 		End = "7007|1421|32|37.34|44.15",
 		Objectives = {
 			[1] = {
-				"Water Sapta|1413|32|65.83|43.78|9.62|9.62"
+				"Water Sapta|1413|32|65.83|43.78|5.01|3.34"
 			},
 		},
 	},
@@ -199,7 +199,7 @@ local ModQuests={
 		End = "5675|1458|32|85.06|25.99",
 		Objectives = {
 			[1] = {
-				"Summoned Voidwalker|1458|32|86.66|27.12|9.62|9.62"
+				"Summoned Voidwalker|1458|32|86.66|27.12|5.01|3.34"
 			},
 		},
 	},
@@ -214,7 +214,7 @@ local ModQuests={
 		End = "5675|1458|32|85.06|25.99",
 		Objectives = {
 			[1] = {
-				"Egalin's Grimoire|1420|32|51|68|9.62|9.62"
+				"Egalin's Grimoire|1420|32|51|68|5.01|3.34"
 			},
 		},
 	},
@@ -224,7 +224,7 @@ local ModQuests={
 		End = "5675|1458|32|85.06|25.99",
 		Objectives = {
 			[1] = {
-				"Summoned Succubus|1458|32|86.66|27.12|9.62|9.62"
+				"Summoned Succubus|1458|32|86.66|27.12|5.01|3.34"
 			},
 		},
 	},
@@ -237,7 +237,7 @@ local ModQuests={
 				"Dalin's Heart|1421|35|47|85|10.02|10.02"
 			},
 			[2] = {
-				"Comar's Heart|1437|32|49.88|12.53|9.62|9.62"
+				"Comar's Heart|1437|32|49.88|12.53|5.01|3.34"
 			},
 		},
 	},
@@ -304,7 +304,7 @@ local ModQuests={
 		End = "5875|1454|32|48.25|45.28",
 		Objectives = {
 			[1] = {
-				"Tablet of Verga|1411|32|52|10|9.62|9.62"
+				"Tablet of Verga|1411|32|52|10|5.01|3.34"
 			},
 		},
 	},
@@ -314,7 +314,7 @@ local ModQuests={
 		End = "5875|1454|32|48.25|45.28",
 		Objectives = {
 			[1] = {
-				"Summoned Voidwalker|1454|32|49.45|49.99|9.62|9.62"
+				"Summoned Voidwalker|1454|32|49.45|49.99|5.01|3.34"
 			},
 		},
 	},
@@ -364,7 +364,7 @@ local ModQuests={
 		End = "5875|1454|32|48.25|45.28",
 		Objectives = {
 			[1] = {
-				"Summoned Succubus|1454|32|49.45|49.99|9.62|9.62"
+				"Summoned Succubus|1454|32|49.45|49.99|5.01|3.34"
 			},
 		},
 	},
@@ -419,7 +419,7 @@ local ModQuests={
 		End = "61934|1411|32|38.96|58.22",
 		Objectives = {
 			[1] = {
-				"Glowing Ember|1411|32|38.96|58.22|9.62|9.62"
+				"Glowing Ember|1411|32|38.96|58.22|5.01|3.34"
 			},
 		},
 	},
@@ -459,7 +459,7 @@ local ModQuests={
 		End = "5899|1413|32|43.42|77.41",
 		Objectives = {
 			[1] = {
-				"Filled Blue Waterskin|1440|32|33.3|67.4|9.62|9.62"
+				"Filled Blue Waterskin|1440|32|33.3|67.4|5.01|3.34"
 			},
 		},
 	},
@@ -469,7 +469,7 @@ local ModQuests={
 		End = "5899|1413|32|43.42|77.41",
 		Objectives = {
 			[1] = {
-				"Filled Brown Waterskin|1413|32|44.2|76.7|9.62|9.62"
+				"Filled Brown Waterskin|1413|32|44.2|76.7|5.01|3.34"
 			},
 		},
 	},
@@ -479,7 +479,7 @@ local ModQuests={
 		End = "5899|1413|32|43.42|77.41",
 		Objectives = {
 			[1] = {
-				"Filled Red Waterskin|1424|32|62.17|20.82|9.62|9.62"
+				"Filled Red Waterskin|1424|32|62.17|20.82|5.01|3.34"
 			},
 		},
 	},
@@ -889,7 +889,7 @@ local ModQuests={
 				"Step on the grate to begin the Affray|1413|35|68.5|48.5|5.01|6.68"
 			},
 			[2] = {
-				"Step on the grate to begin the Affray|1413|32|68.61|48.72|9.62|9.62"
+				"Step on the grate to begin the Affray|1413|32|68.61|48.72|5.01|3.34"
 			},
 		},
 	},
@@ -1025,7 +1025,7 @@ local ModQuests={
 		End = "6251|1413|32|62.63|35.50",
 		Objectives = {
 			[1] = {
-				"Summoned Felhunter|1413|32|62.61|35.23|9.62|9.62"
+				"Summoned Felhunter|1413|32|62.61|35.23|5.01|3.34"
 			},
 		},
 	},
@@ -1072,7 +1072,7 @@ local ModQuests={
 				"Moldy Tome|1424|35|27.5|72.5|5.01|3.34"
 			},
 			[2] = {
-				"Tattered Manuscript|1441|32|44|33|9.62|9.62"
+				"Tattered Manuscript|1441|32|44|33|5.01|3.34"
 			},
 		},
 	},
@@ -1131,7 +1131,7 @@ local ModQuests={
 		End = "1496|1420|32|58.20|51.45",
 		Objectives = {
 			[1] = {
-				"Ulag the Cleaver|1420|32|59.61|48.13|9.62|9.62"
+				"Ulag the Cleaver|1420|32|59.61|48.13|5.01|3.34"
 			},
 		},
 	},
@@ -1324,7 +1324,7 @@ local ModQuests={
 				"Mithril Tube|1454|35|80|23|5.01|3.34"
 			},
 			[2] = {
-				"Accurate Scope|1454|32|50.8|70.34|9.62|9.62"
+				"Accurate Scope|1454|32|50.8|70.34|5.01|3.34"
 			},
 			[3] = {
 				"Advanced Target Dummy|1454|35|80|23|5.01|3.34"
@@ -1478,7 +1478,7 @@ local ModQuests={
 		End = "3033|1456|32|76.48|27.22",
 		Objectives = {
 			[1] = {
-				"Face Lunaclaw and earn the strength of body and heart it possesses.|1413|32|42|60.87|9.62|9.62"
+				"Face Lunaclaw and earn the strength of body and heart it possesses.|1413|32|42|60.87|5.01|3.34"
 			},
 		},
 	},
@@ -2284,7 +2284,7 @@ local ModQuests={
 		End = "3448|1413|32|52.26|31.93",
 		Objectives = {
 			[1] = {
-				"Filled Dreadmist Peak Sampler|1413|32|48.4|18.9|9.62|9.62"
+				"Filled Dreadmist Peak Sampler|1413|32|48.4|18.9|5.01|3.34"
 			},
 		},
 	},
@@ -2556,7 +2556,7 @@ local ModQuests={
 		End = "13179|1459|32|49.85|85.57",
 		Objectives = {
 			[1] = {
-				"Stormpike Soldier's Flesh|1459|32|42.57|16.8|9.62|9.62"
+				"Stormpike Soldier's Flesh|1459|32|42.57|16.8|5.01|3.34"
 			},
 		},
 	},
@@ -3380,7 +3380,7 @@ local ModQuests={
 		End = "13840|1416|32|62.27|58.89",
 		Objectives = {
 			[1] = {
-				"Frostwolf Banner|1459|32|51|93|9.62|9.62"
+				"Frostwolf Banner|1459|32|51|93|5.01|3.34"
 			},
 		},
 	},
@@ -3648,7 +3648,7 @@ local ModQuests={
 		End = "14368|234|32|-1.00|-1.00",
 		Objectives = {
 			[1] = {
-				"Hydrospawn Essence|1444|32|0|0|9.62|9.62"
+				"Hydrospawn Essence|1444|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -3743,7 +3743,7 @@ local ModQuests={
 		End = "14463|1419|32|34.13|50.14",
 		Objectives = {
 			[1] = {
-				"Satyr Blood|1444|32|0|0|9.62|9.62"
+				"Satyr Blood|1444|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -3862,7 +3862,7 @@ local ModQuests={
 		End = "14469|1448|32|41.38|44.85",
 		Objectives = {
 			[1] = {
-				"Kroshius' Infernal Core|1448|32|45.33|35.3|9.62|9.62"
+				"Kroshius' Infernal Core|1448|32|45.33|35.3|5.01|3.34"
 			},
 		},
 	},
@@ -3877,7 +3877,7 @@ local ModQuests={
 		End = "9516|1448|32|35.93|44.42",
 		Objectives = {
 			[1] = {
-				"The Traitor's Heart|1448|32|40.76|48.42|9.62|9.62"
+				"The Traitor's Heart|1448|32|40.76|48.42|5.01|3.34"
 			},
 		},
 	},
@@ -3887,7 +3887,7 @@ local ModQuests={
 		End = "14437|1428|32|12.44|31.63",
 		Objectives = {
 			[1] = {
-				"Xorothian Stardust|1448|32|36.18|44.46|9.62|9.62"
+				"Xorothian Stardust|1448|32|36.18|44.46|5.01|3.34"
 			},
 		},
 	},
@@ -3912,7 +3912,7 @@ local ModQuests={
 				"Large Brilliant Shard|1458|35|67.5|38.5|5.01|3.34"
 			},
 			[2] = {
-				"Dark Iron Ore|1427|32|0|0|9.62|9.62"
+				"Dark Iron Ore|1427|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -3922,7 +3922,7 @@ local ModQuests={
 		End = "14437|1428|32|12.44|31.63",
 		Objectives = {
 			[1] = {
-				"Black Dragonscale|1444|32|0|0|9.62|9.62"
+				"Black Dragonscale|1444|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -3944,7 +3944,7 @@ local ModQuests={
 		End = "14437|1428|32|12.44|31.63",
 		Objectives = {
 			[1] = {
-				"Arcanite Bar|1453|32|61.78|75.67|9.62|9.62"
+				"Arcanite Bar|1453|32|61.78|75.67|5.01|3.34"
 			},
 		},
 	},
@@ -4345,7 +4345,7 @@ local ModQuests={
 		End = "14722|1453|32|53.93|81.69",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4355,7 +4355,7 @@ local ModQuests={
 		End = "20604|1947|32|63.51|67.74",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4365,7 +4365,7 @@ local ModQuests={
 		End = "14722|1453|32|53.93|81.69",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4375,7 +4375,7 @@ local ModQuests={
 		End = "14722|1453|32|53.93|81.69",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4669,7 +4669,7 @@ local ModQuests={
 		End = "20604|1947|32|63.51|67.74",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4679,7 +4679,7 @@ local ModQuests={
 		End = "14725|1457|32|64.02|23.00",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4973,7 +4973,7 @@ local ModQuests={
 		End = "14723|1455|32|43.22|31.57",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4983,7 +4983,7 @@ local ModQuests={
 		End = "14723|1455|32|43.22|31.57",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -4993,7 +4993,7 @@ local ModQuests={
 		End = "14723|1455|32|43.22|31.57",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5287,7 +5287,7 @@ local ModQuests={
 		End = "14724|1455|32|74.09|48.22",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5297,7 +5297,7 @@ local ModQuests={
 		End = "14724|1455|32|74.09|48.22",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5307,7 +5307,7 @@ local ModQuests={
 		End = "14724|1455|32|74.09|48.22",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5601,7 +5601,7 @@ local ModQuests={
 		End = "14729|1458|32|71.66|29.23",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5611,7 +5611,7 @@ local ModQuests={
 		End = "14729|1458|32|71.66|29.23",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5621,7 +5621,7 @@ local ModQuests={
 		End = "14729|1458|32|71.66|29.23",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5915,7 +5915,7 @@ local ModQuests={
 		End = "14728|1456|32|43.05|42.72",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5925,7 +5925,7 @@ local ModQuests={
 		End = "14728|1456|32|43.05|42.72",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -5935,7 +5935,7 @@ local ModQuests={
 		End = "14728|1456|32|43.05|42.72",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6371,7 +6371,7 @@ local ModQuests={
 		End = "14726|1454|32|63.60|51.23",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6381,7 +6381,7 @@ local ModQuests={
 		End = "14726|1454|32|63.60|51.23",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6391,7 +6391,7 @@ local ModQuests={
 		End = "14726|1454|32|63.60|51.23",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6543,7 +6543,7 @@ local ModQuests={
 		End = "14727|1454|32|37.70|87.90",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6553,7 +6553,7 @@ local ModQuests={
 		End = "14727|1454|32|37.70|87.90",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6563,7 +6563,7 @@ local ModQuests={
 		End = "14727|1454|32|37.70|87.90",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -6944,7 +6944,7 @@ local ModQuests={
 		End = "14841|1952|32|34.04|34.82",
 		Objectives = {
 			[1] = {
-				"Copper Modulator|1434|32|28.5|75.12|9.62|9.62"
+				"Copper Modulator|1434|32|28.5|75.12|5.01|3.34"
 			},
 		},
 	},
@@ -6971,7 +6971,7 @@ local ModQuests={
 		End = "14841|1952|32|34.04|34.82",
 		Objectives = {
 			[1] = {
-				"Green Firework|1426|32|52.5|36|9.62|9.62"
+				"Green Firework|1426|32|52.5|36|5.01|3.34"
 			},
 		},
 	},
@@ -7986,7 +7986,7 @@ local ModQuests={
 		End = "6741|1458|32|67.74|37.89",
 		Objectives = {
 			[1] = {
-				"Cluck like a chicken for Innkeeper Norman|1458|32|67.65|37.77|9.62|9.62"
+				"Cluck like a chicken for Innkeeper Norman|1458|32|67.65|37.77|5.01|3.34"
 			},
 		},
 	},
@@ -8026,7 +8026,7 @@ local ModQuests={
 		End = "11814|1411|32|56.13|74.24",
 		Objectives = {
 			[1] = {
-				"Do the \"train\" for Kali Remik|1411|32|56.16|74.3|9.62|9.62"
+				"Do the \"train\" for Kali Remik|1411|32|56.16|74.3|5.01|3.34"
 			},
 		},
 	},
@@ -8419,7 +8419,7 @@ local ModQuests={
 		End = "13418|1454|32|53.33|66.49",
 		Objectives = {
 			[1] = {
-				"Find Metzen the Reindeer and rescue him|1446|32|73.3|48|9.62|9.62"
+				"Find Metzen the Reindeer and rescue him|1446|32|73.3|48|5.01|3.34"
 			},
 			[2] = {
 				"Pouch of Reindeer Dust|1454|35|79|31|5.01|3.34",
@@ -8466,7 +8466,7 @@ local ModQuests={
 		End = "180715|1954|32|62.53|80.89",
 		Objectives = {
 			[1] = {
-				"Deeprock Salt|1444|32|0|0|9.62|9.62"
+				"Deeprock Salt|1444|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -8496,7 +8496,7 @@ local ModQuests={
 		End = "180715|1954|32|62.53|80.89",
 		Objectives = {
 			[1] = {
-				"Deeprock Salt|1444|32|0|0|9.62|9.62"
+				"Deeprock Salt|1444|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -9907,7 +9907,7 @@ local ModQuests={
 		End = "16647|1954|32|74.39|47.15",
 		Objectives = {
 			[1] = {
-				"Summoned Voidwalker slain|1942|32|26.99|15.24|9.62|9.62"
+				"Summoned Voidwalker slain|1942|32|26.99|15.24|5.01|3.34"
 			},
 		},
 	},
@@ -9948,7 +9948,7 @@ local ModQuests={
 		End = "17717|1954|32|89.26|35.20",
 		Objectives = {
 			[1] = {
-				"Filled Shimmering Vessel|1954|32|92.62|37.5|9.62|9.62"
+				"Filled Shimmering Vessel|1954|32|92.62|37.5|5.01|3.34"
 			},
 		},
 	},
@@ -10049,7 +10049,7 @@ local ModQuests={
 		End = "25223|1954|32|92.05|38.81",
 		Objectives = {
 			[1] = {
-				"Tyr's Hand Holy Water|1423|32|78.12|71.3|9.62|9.62"
+				"Tyr's Hand Holy Water|1423|32|78.12|71.3|5.01|3.34"
 			},
 		},
 	},
@@ -10062,7 +10062,7 @@ local ModQuests={
 				"Arcane Catalyst|1954|35|54|69.5|10.02|16.7"
 			},
 			[2] = {
-				"Crepuscular Powder|1954|32|80.44|50.91|9.62|9.62"
+				"Crepuscular Powder|1954|32|80.44|50.91|5.01|3.34"
 			},
 			[3] = {
 				"Azerothian Diamond|1954|35|87.5|50.5|10.02|6.68",
@@ -10117,13 +10117,13 @@ local ModQuests={
 		End = "18267|1944|32|55.95|39.20",
 		Objectives = {
 			[1] = {
-				"Capture The Overlook|1944|32|39.94|48.38|9.62|9.62"
+				"Capture The Overlook|1944|32|39.94|48.38|5.01|3.34"
 			},
 			[2] = {
-				"Capture the Stadium|1944|32|35.57|51.43|9.62|9.62"
+				"Capture the Stadium|1944|32|35.57|51.43|5.01|3.34"
 			},
 			[3] = {
-				"Capture Broken Hill|1944|32|40.44|56.7|9.62|9.62"
+				"Capture Broken Hill|1944|32|40.44|56.7|5.01|3.34"
 			},
 		},
 	},
@@ -10723,7 +10723,7 @@ local ModQuests={
 		End = "20612|1954|32|56.56|52.46",
 		Objectives = {
 			[1] = {
-				"Wool Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Wool Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -10733,7 +10733,7 @@ local ModQuests={
 		End = "20612|1954|32|56.56|52.46",
 		Objectives = {
 			[1] = {
-				"Silk Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Silk Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -10743,7 +10743,7 @@ local ModQuests={
 		End = "20612|1954|32|56.56|52.46",
 		Objectives = {
 			[1] = {
-				"Mageweave Cloth|1954|32|65.37|46.99|9.62|9.62"
+				"Mageweave Cloth|1954|32|65.37|46.99|5.01|3.34"
 			},
 		},
 	},
@@ -11276,7 +11276,7 @@ local ModQuests={
 				"Salandria taken to the Caverns of Time|1446|35|60|57|10.02|10.02"
 			},
 			[2] = {
-				"Toy Dragon|1446|32|63.59|57.64|9.62|9.62"
+				"Toy Dragon|1446|32|63.59|57.64|5.01|3.34"
 			},
 		},
 	},
@@ -11412,7 +11412,7 @@ local ModQuests={
 		End = "23338|1952|32|46.50|45.10",
 		Objectives = {
 			[1] = {
-				"Essence of the Eagle|1952|32|46.68|45.09|9.62|9.62"
+				"Essence of the Eagle|1952|32|46.68|45.09|5.01|3.34"
 			},
 		},
 	},
@@ -11422,7 +11422,7 @@ local ModQuests={
 		End = "23338|1952|32|46.50|45.10",
 		Objectives = {
 			[1] = {
-				"Essence of the Falcon|1952|32|60.78|60.13|9.62|9.62"
+				"Essence of the Falcon|1952|32|60.78|60.13|5.01|3.34"
 			},
 		},
 	},
@@ -11432,7 +11432,7 @@ local ModQuests={
 		End = "22924|1949|32|61.47|38.27",
 		Objectives = {
 			[1] = {
-				"Essence of the Hawk|1952|32|45.66|93.44|9.62|9.62"
+				"Essence of the Hawk|1952|32|45.66|93.44|5.01|3.34"
 			},
 		},
 	},
@@ -11447,7 +11447,7 @@ local ModQuests={
 		End = "22832|1946|32|80.18|65.15",
 		Objectives = {
 			[1] = {
-				"Southfury Moonstone|1447|32|14.14|47.81|9.62|9.62"
+				"Southfury Moonstone|1447|32|14.14|47.81|5.01|3.34"
 			},
 		},
 	},
@@ -11457,10 +11457,10 @@ local ModQuests={
 		End = "22832|1946|32|80.18|65.15",
 		Objectives = {
 			[1] = {
-				"Anzu|1952|32|0|0|9.62|9.62"
+				"Anzu|1952|32|0|0|5.01|3.34"
 			},
 			[2] = {
-				"Essence-Infused Moonstone|1952|32|0|0|9.62|9.62"
+				"Essence-Infused Moonstone|1952|32|0|0|5.01|3.34"
 			},
 		},
 	},
@@ -12216,13 +12216,13 @@ local ModQuests={
 		End = "24497|1411|32|46.31|15.00",
 		Objectives = {
 			[1] = {
-				"Maintain a Trot for 8 seconds|1411|32|46.18|17.23|9.62|9.62"
+				"Maintain a Trot for 8 seconds|1411|32|46.18|17.23|5.01|3.34"
 			},
 			[2] = {
-				"Maintain a Canter for 8 seconds|1411|32|46.33|15.89|9.62|9.62"
+				"Maintain a Canter for 8 seconds|1411|32|46.33|15.89|5.01|3.34"
 			},
 			[3] = {
-				"Maintain a Gallop for 8 seconds|1411|32|45.79|15.25|9.62|9.62"
+				"Maintain a Gallop for 8 seconds|1411|32|45.79|15.25|5.01|3.34"
 			},
 		},
 	},
@@ -13733,7 +13733,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Blood Jade Amulet|121|32|15.5|60|9.62|9.62"
+				"Blood Jade Amulet|121|32|15.5|60|5.01|3.34"
 			},
 		},
 	},
@@ -13743,7 +13743,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Glowing Ivory Figurine|117|32|29|30|9.62|9.62"
+				"Glowing Ivory Figurine|117|32|29|30|5.01|3.34"
 			},
 		},
 	},
@@ -13753,7 +13753,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Wicked Sun Brooch|120|32|27|67|9.62|9.62"
+				"Wicked Sun Brooch|120|32|27|67|5.01|3.34"
 			},
 		},
 	},
@@ -13763,7 +13763,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Intricate Bone Figurine|120|32|21.9|58.4|9.62|9.62"
+				"Intricate Bone Figurine|120|32|21.9|58.4|5.01|3.34"
 			},
 		},
 	},
@@ -13773,7 +13773,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Bright Armor Relic|115|32|67|52.5|9.62|9.62"
+				"Bright Armor Relic|115|32|67|52.5|5.01|3.34"
 			},
 		},
 	},
@@ -13783,7 +13783,7 @@ local ModQuests={
 		End = "28701|125|32|40.68|35.35",
 		Objectives = {
 			[1] = {
-				"Shifting Sun Curio|127|32|18|42|9.62|9.62"
+				"Shifting Sun Curio|127|32|18|42|5.01|3.34"
 			},
 		},
 	},
@@ -14242,7 +14242,7 @@ local ModQuests={
 				"Northern Stew|126|35|52.5|39|5.01|3.34"
 			},
 			[2] = {
-				"Jug of Wine|126|32|53.6|32.8|9.62|9.62"
+				"Jug of Wine|126|32|53.6|32.8|5.01|3.34"
 			},
 		},
 	},

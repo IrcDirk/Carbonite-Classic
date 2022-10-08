@@ -7,7 +7,7 @@ function Nx.ModQuests:Data4()
 	
 local ModQuests={
 	[55] = {
-		Quest = [[Morbent Fel|1|32|20|0|0|3850]],
+		Quest = [[Morbent Fel|1|32|20|0|0|0]],
 		Start = "311|1431|32|7.78|34.07",
 		End = "311|1431|32|7.78|34.07",
 		Objectives = {
@@ -17,7 +17,7 @@ local ModQuests={
 		},
 	},
 	[98] = {
-		Quest = [[The Legend of Stalvan|1|32|22|0|0|4100]],
+		Quest = [[The Legend of Stalvan|1|32|22|0|0|0]],
 		Start = "264|1431|32|73.54|46.82",
 		End = "265|1431|32|75.81|45.30",
 		Objectives = {
@@ -27,7 +27,7 @@ local ModQuests={
 		},
 	},
 	[185] = {
-		Quest = [[Tiger Mastery|0|31|28|186|0|1250]],
+		Quest = [[Tiger Mastery|0|31|28|186|0|0]],
 		Start = "717|1434|32|35.62|10.62",
 		End = "717|1434|32|35.62|10.62",
 		Objectives = {
@@ -53,7 +53,7 @@ local ModQuests={
 		},
 	},
 	[186] = {
-		Quest = [[Tiger Mastery|0|33|28|187|0|1300]],
+		Quest = [[Tiger Mastery|0|33|28|187|0|0]],
 		Start = "717|1434|32|35.62|10.62",
 		End = "717|1434|32|35.62|10.62",
 		Objectives = {
@@ -87,7 +87,7 @@ local ModQuests={
 		},
 	},
 	[187] = {
-		Quest = [[Tiger Mastery|0|35|28|188|0|2050]],
+		Quest = [[Tiger Mastery|0|35|28|188|0|0]],
 		Start = "717|1434|32|35.62|10.62",
 		End = "717|1434|32|35.62|10.62",
 		Objectives = {
@@ -104,7 +104,7 @@ local ModQuests={
 		},
 	},
 	[188] = {
-		Quest = [[Tiger Mastery|0|37|28|0|0|2850]],
+		Quest = [[Tiger Mastery|0|37|28|0|0|0]],
 		Start = "717|1434|32|35.62|10.62",
 		End = "717|1434|32|35.62|10.62",
 		Objectives = {
@@ -114,7 +114,7 @@ local ModQuests={
 		},
 	},
 	[189] = {
-		Quest = [[Bloodscalp Ears|0|35|30|0|0|2050]],
+		Quest = [[Bloodscalp Ears|0|35|30|0|0|0]],
 		Start = "737|1434|32|27.00|77.13",
 		End = "737|1434|32|27.00|77.13",
 		Objectives = {
@@ -146,7 +146,7 @@ local ModQuests={
 		},
 	},
 	[190] = {
-		Quest = [[Panther Mastery|0|31|28|191|0|1250]],
+		Quest = [[Panther Mastery|0|31|28|191|0|0]],
 		Start = "718|1434|32|35.55|10.55",
 		End = "718|1434|32|35.55|10.55",
 		Objectives = {
@@ -172,7 +172,7 @@ local ModQuests={
 		},
 	},
 	[191] = {
-		Quest = [[Panther Mastery|0|33|28|192|0|1300]],
+		Quest = [[Panther Mastery|0|33|28|192|0|0]],
 		Start = "718|1434|32|35.55|10.55",
 		End = "718|1434|32|35.55|10.55",
 		Objectives = {
@@ -187,7 +187,7 @@ local ModQuests={
 		},
 	},
 	[192] = {
-		Quest = [[Panther Mastery|0|38|28|193|0|2150]],
+		Quest = [[Panther Mastery|0|38|28|193|0|0]],
 		Start = "718|1434|32|35.55|10.55",
 		End = "718|1434|32|35.55|10.55",
 		Objectives = {
@@ -228,7 +228,7 @@ local ModQuests={
 		},
 	},
 	[193] = {
-		Quest = [[Panther Mastery|0|40|28|0|0|3150]],
+		Quest = [[Panther Mastery|0|40|28|0|0|0]],
 		Start = "718|1434|32|35.55|10.55",
 		End = "718|1434|32|35.55|10.55",
 		Objectives = {
@@ -238,7 +238,7 @@ local ModQuests={
 		},
 	},
 	[194] = {
-		Quest = [[Raptor Mastery|0|34|28|195|0|1350]],
+		Quest = [[Raptor Mastery|0|34|28|195|0|0]],
 		Start = "715|1434|32|35.66|10.81",
 		End = "715|1434|32|35.66|10.81",
 		Objectives = {
@@ -254,7 +254,7 @@ local ModQuests={
 		},
 	},
 	[195] = {
-		Quest = [[Raptor Mastery|0|36|28|196|0|1400]],
+		Quest = [[Raptor Mastery|0|36|28|196|0|0]],
 		Start = "715|1434|32|35.66|10.81",
 		End = "715|1434|32|35.66|10.81",
 		Objectives = {
@@ -276,17 +276,17 @@ local ModQuests={
 		},
 	},
 	[198] = {
-		Quest = [[Supplies to Private Thorsen|1|32|30|0|0|640]],
+		Quest = [[Supplies to Private Thorsen|1|32|30|0|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "738|1434|32|37.98|3.41",
 	},
 	[200] = {
-		Quest = [[Bookie Herod|1|35|30|328|0|1350]],
+		Quest = [[Bookie Herod|1|35|30|328|0|0]],
 		Start = "469|1434|32|38.04|3.01",
 		End = "287|1434|32|43.67|9.37",
 	},
 	[201] = {
-		Quest = [[Investigate the Camp|0|32|28|0|0|255]],
+		Quest = [[Investigate the Camp|0|32|28|0|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "773|1434|32|26.94|77.21",
 		Objectives = {
@@ -296,7 +296,7 @@ local ModQuests={
 		},
 	},
 	[202] = {
-		Quest = [[Colonel Kurzen|1|40|30|0|0|3150]],
+		Quest = [[Colonel Kurzen|1|40|30|0|0|0]],
 		Start = "469|1434|32|38.04|3.01",
 		End = "469|1434|32|38.04|3.01",
 		Objectives = {
@@ -319,7 +319,7 @@ local ModQuests={
 		},
 	},
 	[203] = {
-		Quest = [[The Second Rebellion|1|33|30|0|0|1950]],
+		Quest = [[The Second Rebellion|1|33|30|0|0|0]],
 		Start = "733|1434|32|38.02|3.33",
 		End = "733|1434|32|38.02|3.33",
 		Objectives = {
@@ -333,7 +333,7 @@ local ModQuests={
 		},
 	},
 	[204] = {
-		Quest = [[Bad Medicine|1|34|30|0|0|2700]],
+		Quest = [[Bad Medicine|1|34|30|0|0|0]],
 		Start = "733|1434|32|38.02|3.33",
 		End = "733|1434|32|38.02|3.33",
 		Objectives = {
@@ -354,20 +354,28 @@ local ModQuests={
 		},
 	},
 	[205] = {
-		Quest = [[Troll Witchery|1|40|30|0|0|3150]],
+		Quest = [[Troll Witchery|1|40|30|0|0|0]],
 		Start = "739|1434|32|37.83|3.56",
 		End = "739|1434|32|37.83|3.56",
 		Objectives = {
 			[1] = {
-				"nil|1434|35|45.12|38.88|9.62|9.62",
-				"nil|1434|35|43.20|40.32|48.10|19.24",
-				"nil|1434|35|43.20|43.20|48.10|9.62",
+				"nil|1434|35|45.12|28.80|38.48|9.62",
+				"nil|1434|35|43.20|30.24|57.72|9.62",
+				"nil|1434|35|41.28|31.68|86.57|9.62",
+				"nil|1434|35|41.28|33.12|86.57|9.62",
+				"nil|1434|35|40.32|34.56|105.81|9.62",
+				"nil|1434|35|41.28|36.00|96.19|9.62",
+				"nil|1434|35|41.28|37.44|105.81|9.62",
+				"nil|1434|35|42.24|38.88|96.19|9.62",
+				"nil|1434|35|42.24|40.32|86.57|9.62",
+				"nil|1434|35|43.20|41.76|76.95|9.62",
+				"nil|1434|35|43.20|43.20|67.33|9.62",
 				"nil|1434|35|45.12|44.64|28.86|9.62",
 			 },
 		},
 	},
 	[207] = {
-		Quest = [[Kurzen's Mystery|1|38|30|205|0|3550]],
+		Quest = [[Kurzen's Mystery|1|38|30|205|0|0]],
 		Start = "739|1434|32|37.83|3.56",
 		End = "739|1434|32|37.83|3.56",
 		Objectives = {
@@ -387,12 +395,12 @@ local ModQuests={
 		},
 	},
 	[210] = {
-		Quest = [[Krazek's Cookery|1|37|32|627|0|1400]],
+		Quest = [[Krazek's Cookery|1|37|32|627|0|0]],
 		Start = "770|1434|32|37.74|3.30",
 		End = "773|1434|32|26.94|77.21",
 	},
 	[212] = {
-		Quest = [[A Meal Served Cold|0|40|35|0|0|4700]],
+		Quest = [[A Meal Served Cold|0|40|35|0|0|0]],
 		Start = "1141|1453|32|51.78|93.61",
 		End = "1141|1453|32|51.78|93.61",
 		Objectives = {
@@ -409,7 +417,7 @@ local ModQuests={
 		},
 	},
 	[213] = {
-		Quest = [[Hostile Takeover|0|36|31|0|0|2800]],
+		Quest = [[Hostile Takeover|0|36|31|0|0|0]],
 		Start = "737|1434|32|27.00|77.13",
 		End = "737|1434|32|27.00|77.13",
 		Objectives = {
@@ -429,12 +437,12 @@ local ModQuests={
 		},
 	},
 	[215] = {
-		Quest = [[Jungle Secrets|1|33|30|200|0|1300]],
+		Quest = [[Jungle Secrets|1|33|30|200|0|0]],
 		Start = "738|1434|32|37.98|3.41",
 		End = "469|1434|32|38.04|3.01",
 	},
 	[222] = {
-		Quest = [[Worgen in the Woods|1|31|23|223|0|1900]],
+		Quest = [[Worgen in the Woods|1|31|23|223|0|0]],
 		Start = "663|1431|32|75.75|47.57",
 		End = "663|1431|32|75.75|47.57",
 		Objectives = {
@@ -466,7 +474,7 @@ local ModQuests={
 		},
 	},
 	[223] = {
-		Quest = [[Worgen in the Woods|1|31|23|0|0|3150]],
+		Quest = [[Worgen in the Woods|1|31|23|0|0|0]],
 		Start = "663|1431|32|75.75|47.57",
 		End = "661|1431|32|75.32|49.02",
 	},
@@ -476,7 +484,7 @@ local ModQuests={
 		End = "51708|1431|32|28.87|30.75",
 	},
 	[261] = {
-		Quest = [[Down the Scarlet Path|0|39|34|1052|0|3000]],
+		Quest = [[Down the Scarlet Path|0|39|34|1052|0|0]],
 		Start = "1182|1443|32|66.52|7.91",
 		End = "1182|1443|32|66.52|7.91",
 		Objectives = {
@@ -494,7 +502,7 @@ local ModQuests={
 		},
 	},
 	[304] = {
-		Quest = [[A Grim Task|0|31|26|0|0|3350]],
+		Quest = [[A Grim Task|0|31|26|0|0|0]],
 		Start = "1071|1437|32|49.80|18.26",
 		End = "1071|1437|32|49.80|18.26",
 		Objectives = {
@@ -514,32 +522,32 @@ local ModQuests={
 		},
 	},
 	[328] = {
-		Quest = [[The Hidden Key|0|37|30|329|0|1400]],
+		Quest = [[The Hidden Key|0|37|30|329|0|0]],
 		Start = "287|1434|32|43.67|9.37",
 		End = "288|1434|32|49.62|7.56",
 	},
 	[329] = {
-		Quest = [[The Spy Revealed!|0|37|30|330|0|1400]],
+		Quest = [[The Spy Revealed!|0|37|30|330|0|0]],
 		Start = "288|1434|32|49.62|7.56",
 		End = "469|1434|32|38.04|3.01",
 	},
 	[330] = {
-		Quest = [[Patrol Schedules|0|37|30|331|0|285]],
+		Quest = [[Patrol Schedules|0|37|30|331|0|0]],
 		Start = "469|1434|32|38.04|3.01",
 		End = "1422|1434|32|37.66|3.39",
 	},
 	[331] = {
-		Quest = [[Report to Doren|0|37|30|0|0|2850]],
+		Quest = [[Report to Doren|0|37|30|0|0|0]],
 		Start = "1422|1434|32|37.66|3.39",
 		End = "469|1434|32|38.04|3.01",
 	},
 	[338] = {
-		Quest = [[The Green Hills of Stranglethorn|0|40|30|0|0|4700]],
+		Quest = [[The Green Hills of Stranglethorn|0|40|30|0|0|0]],
 		Start = "716|1434|32|35.66|10.53",
 		End = "716|1434|32|35.66|10.53",
 	},
 	[339] = {
-		Quest = [[Chapter I|0|40|30|0|0|780]],
+		Quest = [[Chapter I|0|40|30|0|0|0]],
 		Start = "716|1434|32|35.66|10.53",
 		End = "716|1434|32|35.66|10.53",
 		Objectives = {
@@ -620,7 +628,7 @@ local ModQuests={
 		},
 	},
 	[340] = {
-		Quest = [[Chapter II|0|40|30|0|0|780]],
+		Quest = [[Chapter II|0|40|30|0|0|0]],
 		Start = "716|1434|32|35.66|10.53",
 		End = "716|1434|32|35.66|10.53",
 		Objectives = {
@@ -689,7 +697,7 @@ local ModQuests={
 		},
 	},
 	[341] = {
-		Quest = [[Chapter III|0|40|30|0|0|780]],
+		Quest = [[Chapter III|0|40|30|0|0|0]],
 		Start = "716|1434|32|35.66|10.53",
 		End = "716|1434|32|35.66|10.53",
 		Objectives = {
@@ -755,7 +763,7 @@ local ModQuests={
 		},
 	},
 	[342] = {
-		Quest = [[Chapter IV|0|40|30|0|0|780]],
+		Quest = [[Chapter IV|0|40|30|0|0|0]],
 		Start = "716|1434|32|35.66|10.53",
 		End = "716|1434|32|35.66|10.53",
 		Objectives = {
@@ -812,13 +820,13 @@ local ModQuests={
 		End = "1449|1434|32|35.27|60.41",
 		Objectives = {
 			[1] = {
-				"nil|1449|35|67.20|11.52|28.86|9.62",
-				"nil|1449|35|67.20|12.96|28.86|19.24",
-				"nil|1444|35|40.32|10.08|67.33|19.24",
-				"nil|1444|35|39.36|12.96|86.57|19.24",
-				"nil|1444|35|38.40|15.84|96.19|19.24",
-				"nil|1444|35|37.44|18.72|105.81|9.62",
-				"nil|1444|35|37.44|20.16|115.43|9.62",
+				"nil|1449|35|66.24|11.52|38.48|9.62",
+				"nil|1449|35|63.36|12.96|67.33|9.62",
+				"nil|1449|35|61.44|14.40|96.19|9.62",
+				"nil|1449|35|59.52|15.84|115.43|19.24",
+				"nil|1449|35|59.52|18.72|115.43|9.62",
+				"nil|1449|35|60.48|20.16|86.57|9.62",
+				"nil|1449|35|61.44|21.60|57.72|9.62",
 				"nil|1444|35|36.48|21.60|134.67|9.62",
 				"nil|1444|35|36.48|23.04|144.29|9.62",
 				"nil|1444|35|36.48|24.48|153.91|9.62",
@@ -853,27 +861,27 @@ local ModQuests={
 		},
 	},
 	[350] = {
-		Quest = [[Look to an Old Friend|1|31|16|2745|0|250]],
+		Quest = [[Look to an Old Friend|1|31|16|2745|0|0]],
 		Start = "332|1453|32|78.31|70.74",
 		End = "482|1453|32|66.03|74.10",
 	},
 	[394] = {
-		Quest = [[The Head of the Beast|1|31|16|395|0|250]],
+		Quest = [[The Head of the Beast|1|31|16|395|0|0]],
 		Start = "482|1453|32|66.03|74.10",
 		End = "332|1453|32|78.31|70.74",
 	},
 	[395] = {
-		Quest = [[Brotherhood's End|1|31|16|396|0|630]],
+		Quest = [[Brotherhood's End|1|31|16|396|0|0]],
 		Start = "332|1453|32|78.31|70.74",
 		End = "1646|1453|32|57.74|47.86",
 	},
 	[396] = {
-		Quest = [[An Audience with the King|1|31|16|0|0|3750]],
+		Quest = [[An Audience with the King|1|31|16|0|0|0]],
 		Start = "29611|1453|32|79.99|38.47",
 		End = "29611|1453|32|79.99|38.47",
 	},
 	[434] = {
-		Quest = [[The Attack!|1|31|16|394|0|1900]],
+		Quest = [[The Attack!|1|31|16|394|0|0]],
 		Start = "7766|1453|32|73.22|35.58",
 		End = "482|1453|32|66.03|74.10",
 		Objectives = {
@@ -889,12 +897,12 @@ local ModQuests={
 		},
 	},
 	[495] = {
-		Quest = [[The Crown of Will|2|39|34|518|0|300]],
+		Quest = [[The Crown of Will|2|39|34|518|0|0]],
 		Start = "2227|1458|32|57.63|93.80",
 		End = "2278|1424|32|62.63|20.65",
 	},
 	[500] = {
-		Quest = [[Crushridge Bounty|0|36|30|504|0|3500]],
+		Quest = [[Crushridge Bounty|0|36|30|504|0|0]],
 		Start = "2263|1424|32|49.47|58.73",
 		End = "2263|1424|32|49.47|58.73",
 		Objectives = {
@@ -928,7 +936,7 @@ local ModQuests={
 		},
 	},
 	[503] = {
-		Quest = [[Gol'dir|2|36|29|506|0|2800]],
+		Quest = [[Gol'dir|2|36|29|506|0|0]],
 		Start = "2229|1424|32|63.24|20.66",
 		End = "2316|1416|32|59.96|43.74",
 		Objectives = {
@@ -941,7 +949,7 @@ local ModQuests={
 		},
 	},
 	[504] = {
-		Quest = [[Crushridge Warmongers|0|40|30|0|0|4700]],
+		Quest = [[Crushridge Warmongers|0|40|30|0|0|0]],
 		Start = "2263|1424|32|49.47|58.73",
 		End = "2263|1424|32|49.47|58.73",
 		Objectives = {
@@ -958,7 +966,7 @@ local ModQuests={
 		},
 	},
 	[505] = {
-		Quest = [[Syndicate Assassins|1|33|26|0|0|1950]],
+		Quest = [[Syndicate Assassins|1|33|26|0|0|0]],
 		Start = "2276|1424|32|48.14|59.11",
 		End = "2276|1424|32|48.14|59.11",
 		Objectives = {
@@ -987,27 +995,27 @@ local ModQuests={
 		},
 	},
 	[506] = {
-		Quest = [[Blackmoore's Legacy|2|36|29|507|0|2100]],
+		Quest = [[Blackmoore's Legacy|2|36|29|507|0|0]],
 		Start = "2316|1416|32|59.96|43.74",
 		End = "2229|1424|32|63.24|20.66",
 	},
 	[508] = {
-		Quest = [[Taretha's Gift|2|40|29|0|0|3900]],
+		Quest = [[Taretha's Gift|2|40|29|0|0|0]],
 		Start = "2317|1416|32|39.30|14.31",
 		End = "2229|1424|32|63.24|20.66",
 	},
 	[510] = {
-		Quest = [[Foreboding Plans|0|34|26|512|0|1350]],
+		Quest = [[Foreboding Plans|0|34|26|512|0|0]],
 		Start = "1740|1416|32|58.32|67.92",
 		End = "2276|1424|32|48.14|59.11",
 	},
 	[511] = {
-		Quest = [[Encrypted Letter|0|34|30|514|0|1350]],
+		Quest = [[Encrypted Letter|0|34|30|514|0|0]],
 		Start = "1740|1416|32|58.32|67.92",
 		End = "2277|1424|32|50.57|57.09",
 	},
 	[512] = {
-		Quest = [[Noble Deaths|0|36|26|0|0|2800]],
+		Quest = [[Noble Deaths|0|36|26|0|0|0]],
 		Start = "2276|1424|32|48.14|59.11",
 		End = "2276|1424|32|48.14|59.11",
 		Objectives = {
@@ -1047,12 +1055,12 @@ local ModQuests={
 		},
 	},
 	[514] = {
-		Quest = [[Letter to Stormpike|1|34|30|525|0|1350]],
+		Quest = [[Letter to Stormpike|1|34|30|525|0|0]],
 		Start = "2277|1424|32|50.57|57.09",
 		End = "1356|1455|32|74.64|11.74",
 	},
 	[518] = {
-		Quest = [[The Crown of Will|2|39|34|519|0|2250]],
+		Quest = [[The Crown of Will|2|39|34|519|0|0]],
 		Start = "2278|1424|32|62.63|20.65",
 		End = "2278|1424|32|62.63|20.65",
 		Objectives = {
@@ -1080,12 +1088,12 @@ local ModQuests={
 		},
 	},
 	[522] = {
-		Quest = [[Assassin's Contract|1|38|30|523|0|710]],
+		Quest = [[Assassin's Contract|1|38|30|523|0|0]],
 		Start = "2434|1424|32|50.06|57.91",
 		End = "2276|1424|32|48.14|59.11",
 	},
 	[523] = {
-		Quest = [[Baron's Demise|1|40|30|0|0|3900]],
+		Quest = [[Baron's Demise|1|40|30|0|0|0]],
 		Start = "2276|1424|32|48.14|59.11",
 		End = "2276|1424|32|48.14|59.11",
 		Objectives = {
@@ -1103,12 +1111,12 @@ local ModQuests={
 		},
 	},
 	[525] = {
-		Quest = [[Further Mysteries|1|34|30|537|0|1350]],
+		Quest = [[Further Mysteries|1|34|30|537|0|0]],
 		Start = "1356|1455|32|74.64|11.74",
 		End = "2276|1424|32|48.14|59.11",
 	},
 	[533] = {
-		Quest = [[Infiltration|2|34|29|503|0|2700]],
+		Quest = [[Infiltration|2|34|29|503|0|0]],
 		Start = "2229|1424|32|63.24|20.66",
 		End = "2229|1424|32|63.24|20.66",
 		Objectives = {
@@ -1127,7 +1135,7 @@ local ModQuests={
 		},
 	},
 	[535] = {
-		Quest = [[Valik|2|34|29|0|0|270]],
+		Quest = [[Valik|2|34|29|0|0|0]],
 		Start = "2333|1416|32|57.17|69.51",
 		End = "2333|1416|32|57.17|69.51",
 		Objectives = {
@@ -1137,7 +1145,7 @@ local ModQuests={
 		},
 	},
 	[537] = {
-		Quest = [[Dark Council|1|40|30|0|0|3150]],
+		Quest = [[Dark Council|1|40|30|0|0|0]],
 		Start = "2276|1424|32|48.14|59.11",
 		End = "2276|1424|32|48.14|59.11",
 		Objectives = {
@@ -1173,12 +1181,12 @@ local ModQuests={
 		},
 	},
 	[538] = {
-		Quest = [[Southshore|1|38|20|540|0|710]],
+		Quest = [[Southshore|1|38|20|540|0|0]],
 		Start = "1440|1453|32|77.07|30.21",
 		End = "2277|1424|32|50.57|57.09",
 	},
 	[540] = {
-		Quest = [[Preserving Knowledge|1|38|20|542|0|3550]],
+		Quest = [[Preserving Knowledge|1|38|20|542|0|0]],
 		Start = "2277|1424|32|50.57|57.09",
 		End = "2277|1424|32|50.57|57.09",
 		Objectives = {
@@ -1215,12 +1223,12 @@ local ModQuests={
 		},
 	},
 	[542] = {
-		Quest = [[Return to Milton|1|38|20|0|0|3550]],
+		Quest = [[Return to Milton|1|38|20|0|0|0]],
 		Start = "2277|1424|32|50.57|57.09",
 		End = "1440|1453|32|77.07|30.21",
 	},
 	[543] = {
-		Quest = [[The Perenolde Tiara|1|40|30|0|0|4700]],
+		Quest = [[The Perenolde Tiara|1|40|30|0|0|0]],
 		Start = "2285|1453|32|76.94|47.83",
 		End = "2285|1453|32|76.94|47.83",
 		Objectives = {
@@ -1232,7 +1240,7 @@ local ModQuests={
 		},
 	},
 	[544] = {
-		Quest = [[Prison Break In|2|34|30|545|0|3350]],
+		Quest = [[Prison Break In|2|34|30|545|0|0]],
 		Start = "2410|1424|32|61.60|20.85",
 		End = "2410|1424|32|61.60|20.85",
 		Objectives = {
@@ -1251,7 +1259,7 @@ local ModQuests={
 		},
 	},
 	[545] = {
-		Quest = [[Dalaran Patrols|2|35|30|0|0|2050]],
+		Quest = [[Dalaran Patrols|2|35|30|0|0|0]],
 		Start = "2410|1424|32|61.60|20.85",
 		End = "2410|1424|32|61.60|20.85",
 		Objectives = {
@@ -1308,16 +1316,16 @@ local ModQuests={
 		},
 	},
 	[550] = {
-		Quest = [[Battle of Hillsbrad|2|32|19|0|0|2550]],
+		Quest = [[Battle of Hillsbrad|2|32|19|0|0|0]],
 		End = "36273|1458|32|56.25|92.21",
 	},
 	[551] = {
-		Quest = [[The Ensorcelled Parchment|1|40|30|554|0|780]],
+		Quest = [[The Ensorcelled Parchment|1|40|30|554|0|0]],
 		Start = "1765|1416|32|39.18|14.66",
 		End = "2277|1424|32|50.57|57.09",
 	},
 	[552] = {
-		Quest = [[Helcular's Revenge|2|33|29|553|0|2650]],
+		Quest = [[Helcular's Revenge|2|33|29|553|0|0]],
 		Start = "2429|1424|32|63.88|19.66",
 		End = "2429|1424|32|63.88|19.66",
 		Objectives = {
@@ -1358,7 +1366,7 @@ local ModQuests={
 		},
 	},
 	[553] = {
-		Quest = [[Helcular's Revenge|2|33|29|0|0|3300]],
+		Quest = [[Helcular's Revenge|2|33|29|0|0|0]],
 		Start = "2429|1424|32|63.88|19.66",
 		End = "1767|1424|32|52.75|53.37",
 		Objectives = {
@@ -1374,12 +1382,12 @@ local ModQuests={
 		},
 	},
 	[554] = {
-		Quest = [[Stormpike's Deciphering|0|40|28|0|0|1550]],
+		Quest = [[Stormpike's Deciphering|0|40|28|0|0|0]],
 		Start = "2277|1424|32|50.57|57.09",
 		End = "1356|1455|32|74.64|11.74",
 	},
 	[555] = {
-		Quest = [[Soothing Turtle Bisque|0|31|28|0|0|2500]],
+		Quest = [[Soothing Turtle Bisque|0|31|28|0|0|0]],
 		Start = "2430|1424|32|51.89|58.68",
 		End = "2430|1424|32|51.89|58.68",
 		Objectives = {
@@ -1449,7 +1457,7 @@ local ModQuests={
 		},
 	},
 	[556] = {
-		Quest = [[Stone Tokens|2|32|30|0|0|2550]],
+		Quest = [[Stone Tokens|2|32|30|0|0|0]],
 		Start = "2437|1424|32|61.50|20.93",
 		End = "2437|1424|32|61.50|20.93",
 		Objectives = {
@@ -1496,7 +1504,7 @@ local ModQuests={
 		},
 	},
 	[557] = {
-		Quest = [[Bracers of Binding|2|34|30|0|0|2700]],
+		Quest = [[Bracers of Binding|2|34|30|0|0|0]],
 		Start = "2437|1424|32|61.50|20.93",
 		End = "2437|1424|32|61.50|20.93",
 		Objectives = {
@@ -1531,7 +1539,7 @@ local ModQuests={
 		},
 	},
 	[559] = {
-		Quest = [[Farren's Proof|0|32|25|560|0|2550]],
+		Quest = [[Farren's Proof|0|32|25|560|0|0]],
 		Start = "2228|1424|32|51.46|58.39",
 		End = "2228|1424|32|51.46|58.39",
 		Objectives = {
@@ -1557,17 +1565,17 @@ local ModQuests={
 		},
 	},
 	[560] = {
-		Quest = [[Farren's Proof|0|32|25|561|0|255]],
+		Quest = [[Farren's Proof|0|32|25|561|0|0]],
 		Start = "2228|1424|32|51.46|58.39",
 		End = "2263|1424|32|49.47|58.73",
 	},
 	[561] = {
-		Quest = [[Farren's Proof|0|32|25|562|0|255]],
+		Quest = [[Farren's Proof|0|32|25|562|0|0]],
 		Start = "2263|1424|32|49.47|58.73",
 		End = "2228|1424|32|51.46|58.39",
 	},
 	[562] = {
-		Quest = [[Stormwind Ho!|1|32|25|563|0|1950]],
+		Quest = [[Stormwind Ho!|1|32|25|563|0|0]],
 		Start = "2228|1424|32|51.46|58.39",
 		End = "2228|1424|32|51.46|58.39",
 		Objectives = {
@@ -1604,12 +1612,12 @@ local ModQuests={
 		},
 	},
 	[563] = {
-		Quest = [[Reassignment|0|32|25|0|0|3200]],
+		Quest = [[Reassignment|0|32|25|0|0|0]],
 		Start = "2228|1424|32|51.46|58.39",
 		End = "2439|1453|32|75.82|36.72",
 	},
 	[564] = {
-		Quest = [[Costly Menace|0|34|30|0|0|2700]],
+		Quest = [[Costly Menace|0|34|30|0|0|0]],
 		Start = "2382|1424|32|52.42|55.96",
 		End = "2382|1424|32|52.42|55.96",
 		Objectives = {
@@ -1704,7 +1712,7 @@ local ModQuests={
 		},
 	},
 	[565] = {
-		Quest = [[Bartolo's Yeti Fur Cloak|1|34|29|0|0|2700]],
+		Quest = [[Bartolo's Yeti Fur Cloak|1|34|29|0|0|0]],
 		Start = "2438|1424|32|49.43|55.53",
 		End = "2438|1424|32|49.43|55.53",
 		Objectives = {
@@ -1856,7 +1864,7 @@ local ModQuests={
 		},
 	},
 	[566] = {
-		Quest = [[WANTED: Baron Vardus|2|40|17|0|0|3150]],
+		Quest = [[WANTED: Baron Vardus|2|40|17|0|0|0]],
 		Start = "1763|1424|32|62.63|20.75",
 		End = "2215|1424|32|62.33|20.45",
 		Objectives = {
@@ -1867,7 +1875,7 @@ local ModQuests={
 		},
 	},
 	[568] = {
-		Quest = [[The Defense of Grom'gol|2|36|33|569|0|2800]],
+		Quest = [[The Defense of Grom'gol|2|36|33|569|0|0]],
 		Start = "2464|1434|32|32.17|28.90",
 		End = "2464|1434|32|32.17|28.90",
 		Objectives = {
@@ -1889,7 +1897,7 @@ local ModQuests={
 		},
 	},
 	[569] = {
-		Quest = [[The Defense of Grom'gol|2|37|33|0|0|2850]],
+		Quest = [[The Defense of Grom'gol|2|37|33|0|0|0]],
 		Start = "2464|1434|32|32.17|28.90",
 		End = "2464|1434|32|32.17|28.90",
 		Objectives = {
@@ -1912,7 +1920,7 @@ local ModQuests={
 		},
 	},
 	[570] = {
-		Quest = [[Mok'thardin's Enchantment|2|38|33|572|0|2150]],
+		Quest = [[Mok'thardin's Enchantment|2|38|33|572|0|0]],
 		Start = "2465|1434|32|32.12|29.24",
 		End = "2465|1434|32|32.12|29.24",
 		Objectives = {
@@ -1993,7 +2001,7 @@ local ModQuests={
 		},
 	},
 	[574] = {
-		Quest = [[Special Forces|1|38|30|202|0|2850]],
+		Quest = [[Special Forces|1|38|30|202|0|0]],
 		Start = "733|1434|32|38.02|3.33",
 		End = "469|1434|32|38.04|3.01",
 		Objectives = {
@@ -2013,7 +2021,7 @@ local ModQuests={
 		},
 	},
 	[575] = {
-		Quest = [[Supply and Demand|0|31|26|0|0|1250]],
+		Quest = [[Supply and Demand|0|31|26|0|0|0]],
 		Start = "2495|1434|32|28.29|77.59",
 		End = "2495|1434|32|28.29|77.59",
 		Objectives = {
@@ -2034,7 +2042,7 @@ local ModQuests={
 		},
 	},
 	[577] = {
-		Quest = [[Some Assembly Required|0|36|31|628|0|1400]],
+		Quest = [[Some Assembly Required|0|36|31|628|0|0]],
 		Start = "2495|1434|32|28.29|77.59",
 		End = "2495|1434|32|28.29|77.59",
 		Objectives = {
@@ -2054,7 +2062,7 @@ local ModQuests={
 		},
 	},
 	[578] = {
-		Quest = [[The Stone of the Tides|1|37|32|601|0|2850]],
+		Quest = [[The Stone of the Tides|1|37|32|601|0|0]],
 		Start = "2496|1434|32|27.23|76.87",
 		End = "2496|1434|32|27.23|76.87",
 		Objectives = {
@@ -2064,7 +2072,7 @@ local ModQuests={
 		},
 	},
 	[581] = {
-		Quest = [[Hunt for Yenniku|2|34|30|582|0|2000]],
+		Quest = [[Hunt for Yenniku|2|34|30|582|0|0]],
 		Start = "2497|1434|32|32.16|27.72",
 		End = "2497|1434|32|32.16|27.72",
 		Objectives = {
@@ -2096,7 +2104,7 @@ local ModQuests={
 		},
 	},
 	[582] = {
-		Quest = [[Headhunting|2|37|30|0|0|2100]],
+		Quest = [[Headhunting|2|37|30|0|0|0]],
 		Start = "2497|1434|32|32.16|27.72",
 		End = "2497|1434|32|32.16|27.72",
 		Objectives = {
@@ -2116,7 +2124,7 @@ local ModQuests={
 		},
 	},
 	[585] = {
-		Quest = [[Speaking with Nezzliok|2|40|30|0|0|2350]],
+		Quest = [[Speaking with Nezzliok|2|40|30|0|0|0]],
 		Start = "2076|1434|32|32.22|27.60",
 		End = "2076|1434|32|32.22|27.60",
 		Objectives = {
@@ -2132,7 +2140,7 @@ local ModQuests={
 		},
 	},
 	[596] = {
-		Quest = [[Bloody Bone Necklaces|2|37|30|0|0|2100]],
+		Quest = [[Bloody Bone Necklaces|2|37|30|0|0|0]],
 		Start = "2519|1434|32|32.27|27.71",
 		End = "2519|1434|32|32.27|27.71",
 		Objectives = {
@@ -2164,7 +2172,7 @@ local ModQuests={
 		},
 	},
 	[601] = {
-		Quest = [[Water Elementals|1|37|32|602|0|2850]],
+		Quest = [[Water Elementals|1|37|32|602|0|0]],
 		Start = "2496|1434|32|27.23|76.87",
 		End = "2496|1434|32|27.23|76.87",
 		Objectives = {
@@ -2179,17 +2187,17 @@ local ModQuests={
 		},
 	},
 	[602] = {
-		Quest = [[Magical Analysis|0|37|32|0|0|1400]],
+		Quest = [[Magical Analysis|0|37|32|0|0|0]],
 		Start = "2496|1434|32|27.23|76.87",
 		End = "2543|1416|32|18.84|78.49",
 	},
 	[603] = {
-		Quest = [[Ansirem's Key|1|37|32|610|0|1400]],
+		Quest = [[Ansirem's Key|1|37|32|610|0|0]],
 		Start = "2543|1416|32|18.84|78.49",
 		End = "2542|1434|32|27.28|77.53",
 	},
 	[605] = {
-		Quest = [[Singing Blue Shards|0|35|30|600|0|2750]],
+		Quest = [[Singing Blue Shards|0|35|30|600|0|0]],
 		Start = "2498|1434|32|27.12|77.21",
 		End = "2498|1434|32|27.12|77.21",
 		Objectives = {
@@ -2240,7 +2248,7 @@ local ModQuests={
 		},
 	},
 	[610] = {
-		Quest = [[\"Pretty Boy\" Duncan|1|39|32|611|0|2250]],
+		Quest = [[\"Pretty Boy\" Duncan|1|39|32|611|0|0]],
 		Start = "2542|1434|32|27.28|77.53",
 		End = "2542|1434|32|27.28|77.53",
 		Objectives = {
@@ -2250,7 +2258,7 @@ local ModQuests={
 		},
 	},
 	[611] = {
-		Quest = [[The Curse of the Tides|1|40|32|0|0|3150]],
+		Quest = [[The Curse of the Tides|1|40|32|0|0|0]],
 		Start = "2542|1434|32|27.28|77.53",
 		End = "2496|1434|32|27.23|76.87",
 		Objectives = {
@@ -2260,17 +2268,17 @@ local ModQuests={
 		},
 	},
 	[616] = {
-		Quest = [[The Haunted Isle|1|37|32|578|0|285]],
+		Quest = [[The Haunted Isle|1|37|32|578|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "2496|1434|32|27.23|76.87",
 	},
 	[622] = {
-		Quest = [[Return to Corporal Kaleb|0|37|32|0|0|2850]],
+		Quest = [[Return to Corporal Kaleb|0|37|32|0|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "770|1434|32|37.74|3.30",
 	},
 	[627] = {
-		Quest = [[Favor for Krazek|1|37|32|622|0|2100]],
+		Quest = [[Favor for Krazek|1|37|32|622|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "773|1434|32|26.94|77.21",
 		Objectives = {
@@ -2288,7 +2296,7 @@ local ModQuests={
 		},
 	},
 	[628] = {
-		Quest = [[Excelsior|0|38|31|0|0|2850]],
+		Quest = [[Excelsior|0|38|31|0|0|0]],
 		Start = "2495|1434|32|28.29|77.59",
 		End = "2495|1434|32|28.29|77.59",
 		Objectives = {
@@ -2302,7 +2310,7 @@ local ModQuests={
 		},
 	},
 	[629] = {
-		Quest = [[The Vile Reef|2|37|30|0|0|2850]],
+		Quest = [[The Vile Reef|2|37|30|0|0|0]],
 		Start = "2519|1434|32|32.27|27.71",
 		End = "2519|1434|32|32.27|27.71",
 		Objectives = {
@@ -2312,17 +2320,17 @@ local ModQuests={
 		},
 	},
 	[631] = {
-		Quest = [[The Thandol Span|0|31|28|632|0|2500]],
+		Quest = [[The Thandol Span|0|31|28|632|0|0]],
 		Start = "1075|1437|32|49.92|18.22",
 		End = "2652|1437|32|51.28|7.95",
 	},
 	[632] = {
-		Quest = [[The Thandol Span|0|31|28|633|0|2500]],
+		Quest = [[The Thandol Span|0|31|28|633|0|0]],
 		Start = "2652|1437|32|51.28|7.95",
 		End = "1075|1437|32|49.92|18.22",
 	},
 	[633] = {
-		Quest = [[The Thandol Span|0|31|28|634|0|2500]],
+		Quest = [[The Thandol Span|0|31|28|634|0|0]],
 		Start = "1075|1437|32|49.92|18.22",
 		End = "1075|1437|32|49.92|18.22",
 		Objectives = {
@@ -2332,22 +2340,22 @@ local ModQuests={
 		},
 	},
 	[634] = {
-		Quest = [[Plea To The Alliance|0|31|28|0|0|1250]],
+		Quest = [[Plea To The Alliance|0|31|28|0|0|0]],
 		Start = "1075|1437|32|49.92|18.22",
 		End = "2700|1417|32|45.83|47.56",
 	},
 	[635] = {
-		Quest = [[Crystal in the Mountains|0|35|30|0|0|275]],
+		Quest = [[Crystal in the Mountains|0|35|30|0|0|0]],
 		Start = "587|1434|32|34.04|16.78",
 		End = "138492|1417|32|62.50|33.73",
 	},
 	[638] = {
-		Quest = [[Trollbane|2|37|32|639|0|710]],
+		Quest = [[Trollbane|2|37|32|639|0|0]],
 		Start = "2497|1434|32|32.16|27.72",
 		End = "2703|1417|32|73.80|33.96",
 	},
 	[639] = {
-		Quest = [[Sigil of Strom|2|37|32|640|0|2850]],
+		Quest = [[Sigil of Strom|2|37|32|640|0|0]],
 		Start = "2703|1417|32|73.80|33.96",
 		End = "2703|1417|32|73.80|33.96",
 		Objectives = {
@@ -2360,7 +2368,7 @@ local ModQuests={
 		},
 	},
 	[640] = {
-		Quest = [[The Broken Sigil|2|40|32|0|0|3150]],
+		Quest = [[The Broken Sigil|2|40|32|0|0|0]],
 		Start = "2703|1417|32|73.80|33.96",
 		End = "2706|1417|32|74.72|36.29",
 		Objectives = {
@@ -2375,12 +2383,12 @@ local ModQuests={
 		},
 	},
 	[641] = {
-		Quest = [[Sigil of Thoradin|2|40|32|643|0|315]],
+		Quest = [[Sigil of Thoradin|2|40|32|643|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2703|1417|32|73.80|33.96",
 	},
 	[642] = {
-		Quest = [[The Princess Trapped|0|37|30|651|0|2850]],
+		Quest = [[The Princess Trapped|0|37|30|651|0|0]],
 		Start = "138492|1417|32|62.50|33.73",
 		End = "2701|1417|32|84.31|30.95",
 		Objectives = {
@@ -2412,7 +2420,7 @@ local ModQuests={
 		},
 	},
 	[651] = {
-		Quest = [[Stones of Binding|0|38|30|652|0|2850]],
+		Quest = [[Stones of Binding|0|38|30|652|0|0]],
 		Start = "2701|1417|32|84.31|30.95",
 		End = "2702|1417|32|36.23|57.38",
 		Objectives = {
@@ -2428,12 +2436,12 @@ local ModQuests={
 		},
 	},
 	[653] = {
-		Quest = [[Myzrael's Allies|1|40|30|687|0|2350]],
+		Quest = [[Myzrael's Allies|1|40|30|687|0|0]],
 		Start = "2688|1417|32|36.08|58.09",
 		End = "2786|1455|32|50.83|5.62",
 	},
 	[655] = {
-		Quest = [[Hammerfall|2|34|29|672|0|270]],
+		Quest = [[Hammerfall|2|34|29|672|0|0]],
 		Start = "2792|1417|32|72.64|33.93",
 		End = "2706|1417|32|74.72|36.29",
 	},
@@ -2443,7 +2451,7 @@ local ModQuests={
 		End = "2713|1417|32|60.24|53.92",
 	},
 	[658] = {
-		Quest = [[Hints of a New Plague?|1|36|30|657|0|2800]],
+		Quest = [[Hints of a New Plague?|1|36|30|657|0|0]],
 		Start = "2712|1417|32|60.18|53.85",
 		End = "2712|1417|32|60.18|53.85",
 		Objectives = {
@@ -2453,12 +2461,12 @@ local ModQuests={
 		},
 	},
 	[659] = {
-		Quest = [[Hints of a New Plague?|1|33|30|658|0|1300]],
+		Quest = [[Hints of a New Plague?|1|33|30|658|0|0]],
 		Start = "2711|1424|32|50.35|59.05",
 		End = "2712|1417|32|60.18|53.85",
 	},
 	[660] = {
-		Quest = [[Hints of a New Plague?|1|37|30|661|0|2850]],
+		Quest = [[Hints of a New Plague?|1|37|30|661|0|0]],
 		Start = "2713|1417|32|60.24|53.92",
 		End = "2712|1417|32|60.18|53.85",
 		Objectives = {
@@ -2468,12 +2476,12 @@ local ModQuests={
 		},
 	},
 	[661] = {
-		Quest = [[Hints of a New Plague?|1|37|30|0|0|3550]],
+		Quest = [[Hints of a New Plague?|1|37|30|0|0|0]],
 		Start = "2712|1417|32|60.18|53.85",
 		End = "2711|1424|32|50.35|59.05",
 	},
 	[662] = {
-		Quest = [[Deep Sea Salvage|0|40|35|0|0|3150]],
+		Quest = [[Deep Sea Salvage|0|40|35|0|0|0]],
 		Start = "2767|1417|32|32.80|81.48",
 		End = "2767|1417|32|32.80|81.48",
 		Objectives = {
@@ -2492,12 +2500,12 @@ local ModQuests={
 		},
 	},
 	[663] = {
-		Quest = [[Land Ho!|0|35|35|0|0|690]],
+		Quest = [[Land Ho!|0|35|35|0|0|0]],
 		Start = "2766|1417|32|31.78|82.68",
 		End = "2610|1417|32|32.28|81.38",
 	},
 	[664] = {
-		Quest = [[Drowned Sorrows|0|40|35|0|0|3150]],
+		Quest = [[Drowned Sorrows|0|40|35|0|0|0]],
 		Start = "2769|1417|32|34.00|80.80",
 		End = "2769|1417|32|34.00|80.80",
 		Objectives = {
@@ -2535,7 +2543,7 @@ local ModQuests={
 		},
 	},
 	[665] = {
-		Quest = [[Sunken Treasure|0|40|35|666|0|3150]],
+		Quest = [[Sunken Treasure|0|40|35|666|0|0]],
 		Start = "2768|1417|32|33.87|80.55",
 		End = "2774|1417|32|33.86|80.45",
 		Objectives = {
@@ -2545,7 +2553,7 @@ local ModQuests={
 		},
 	},
 	[666] = {
-		Quest = [[Sunken Treasure|0|40|35|668|0|3900]],
+		Quest = [[Sunken Treasure|0|40|35|668|0|0]],
 		Start = "2774|1417|32|33.86|80.45",
 		End = "2774|1417|32|33.86|80.45",
 		Objectives = {
@@ -2555,22 +2563,22 @@ local ModQuests={
 		},
 	},
 	[668] = {
-		Quest = [[Sunken Treasure|0|40|35|669|0|1550]],
+		Quest = [[Sunken Treasure|0|40|35|669|0|0]],
 		Start = "2774|1417|32|33.86|80.45",
 		End = "2610|1417|32|32.28|81.38",
 	},
 	[669] = {
-		Quest = [[Sunken Treasure|0|40|35|670|0|3150]],
+		Quest = [[Sunken Treasure|0|40|35|670|0|0]],
 		Start = "2610|1417|32|32.28|81.38",
 		End = "2487|1434|32|27.17|77.01",
 	},
 	[670] = {
-		Quest = [[Sunken Treasure|0|40|35|0|0|3150]],
+		Quest = [[Sunken Treasure|0|40|35|0|0|0]],
 		Start = "2487|1434|32|27.17|77.01",
 		End = "2610|1417|32|32.28|81.38",
 	},
 	[671] = {
-		Quest = [[Foul Magics|2|33|30|0|0|2650]],
+		Quest = [[Foul Magics|2|33|30|0|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2706|1417|32|74.72|36.29",
 		Objectives = {
@@ -2588,7 +2596,7 @@ local ModQuests={
 		},
 	},
 	[672] = {
-		Quest = [[Raising Spirits|2|34|29|674|0|2700]],
+		Quest = [[Raising Spirits|2|34|29|674|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2706|1417|32|74.72|36.29",
 		Objectives = {
@@ -2777,7 +2785,7 @@ local ModQuests={
 		},
 	},
 	[673] = {
-		Quest = [[Foul Magics|2|40|35|0|0|3150]],
+		Quest = [[Foul Magics|2|40|35|0|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2706|1417|32|74.72|36.29",
 		Objectives = {
@@ -2787,17 +2795,17 @@ local ModQuests={
 		},
 	},
 	[674] = {
-		Quest = [[Raising Spirits|2|34|29|675|0|270]],
+		Quest = [[Raising Spirits|2|34|29|675|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2792|1417|32|72.64|33.93",
 	},
 	[675] = {
-		Quest = [[Raising Spirits|2|34|29|701|0|270]],
+		Quest = [[Raising Spirits|2|34|29|701|0|0]],
 		Start = "2792|1417|32|72.64|33.93",
 		End = "2706|1417|32|74.72|36.29",
 	},
 	[676] = {
-		Quest = [[The Hammer May Fall|2|32|30|677|0|2550]],
+		Quest = [[The Hammer May Fall|2|32|30|677|0|0]],
 		Start = "2770|1424|32|61.87|19.57",
 		End = "2771|1417|32|74.24|33.92",
 		Objectives = {
@@ -2828,7 +2836,7 @@ local ModQuests={
 		},
 	},
 	[677] = {
-		Quest = [[Call to Arms|2|32|30|678|0|2550]],
+		Quest = [[Call to Arms|2|32|30|678|0|0]],
 		Start = "2771|1417|32|74.24|33.92",
 		End = "2771|1417|32|74.24|33.92",
 		Objectives = {
@@ -2923,7 +2931,7 @@ local ModQuests={
 		},
 	},
 	[678] = {
-		Quest = [[Call to Arms|0|38|30|679|0|2850]],
+		Quest = [[Call to Arms|0|38|30|679|0|0]],
 		Start = "2771|1417|32|74.24|33.92",
 		End = "2771|1417|32|74.24|33.92",
 		Objectives = {
@@ -2957,7 +2965,7 @@ local ModQuests={
 		},
 	},
 	[679] = {
-		Quest = [[Call to Arms|2|40|30|0|0|3150]],
+		Quest = [[Call to Arms|2|40|30|0|0|0]],
 		Start = "2771|1417|32|74.24|33.92",
 		End = "2771|1417|32|74.24|33.92",
 		Objectives = {
@@ -2980,7 +2988,7 @@ local ModQuests={
 		},
 	},
 	[680] = {
-		Quest = [[The Real Threat|2|40|30|0|0|3900]],
+		Quest = [[The Real Threat|2|40|30|0|0|0]],
 		Start = "2772|1417|32|74.04|33.07",
 		End = "2772|1417|32|74.04|33.07",
 		Objectives = {
@@ -2990,7 +2998,7 @@ local ModQuests={
 		},
 	},
 	[681] = {
-		Quest = [[Northfold Manor|1|31|30|0|0|2500]],
+		Quest = [[Northfold Manor|1|31|30|0|0|0]],
 		Start = "2700|1417|32|45.83|47.56",
 		End = "2700|1417|32|45.83|47.56",
 		Objectives = {
@@ -3018,7 +3026,7 @@ local ModQuests={
 		},
 	},
 	[682] = {
-		Quest = [[Stromgarde Badges|1|37|30|0|0|3550]],
+		Quest = [[Stromgarde Badges|1|37|30|0|0|0]],
 		Start = "2700|1417|32|45.83|47.56",
 		End = "2700|1417|32|45.83|47.56",
 		Objectives = {
@@ -3036,7 +3044,7 @@ local ModQuests={
 		},
 	},
 	[684] = {
-		Quest = [[Wanted!  Marez Cowl|1|39|29|0|0|3750]],
+		Quest = [[Wanted!  Marez Cowl|1|39|29|0|0|0]],
 		Start = "2713|1417|32|46.04|47.76",
 		End = "2700|1417|32|45.83|47.56",
 		Objectives = {
@@ -3046,7 +3054,7 @@ local ModQuests={
 		},
 	},
 	[685] = {
-		Quest = [[Wanted!  Otto and Falconcrest|1|40|29|0|0|3900]],
+		Quest = [[Wanted!  Otto and Falconcrest|1|40|29|0|0|0]],
 		Start = "2713|1417|32|46.04|47.76",
 		End = "2700|1417|32|45.83|47.56",
 		Objectives = {
@@ -3059,17 +3067,17 @@ local ModQuests={
 		},
 	},
 	[687] = {
-		Quest = [[Theldurin the Lost|0|40|30|692|0|1550]],
+		Quest = [[Theldurin the Lost|0|40|30|692|0|0]],
 		Start = "2787|1417|32|74.54|35.64",
 		End = "2785|1418|32|51.39|76.87",
 	},
 	[688] = {
-		Quest = [[Myzrael's Allies|2|40|30|687|0|2350]],
+		Quest = [[Myzrael's Allies|2|40|30|687|0|0]],
 		Start = "2688|1417|32|36.08|58.09",
 		End = "2787|1417|32|74.54|35.64",
 	},
 	[689] = {
-		Quest = [[A King's Tribute|1|31|25|0|0|2500]],
+		Quest = [[A King's Tribute|1|31|25|0|0|0]],
 		Start = "2790|1455|32|39.04|88.05",
 		End = "2790|1455|32|39.04|88.05",
 		Objectives = {
@@ -3086,12 +3094,12 @@ local ModQuests={
 		},
 	},
 	[690] = {
-		Quest = [[Malin's Request|1|32|30|0|0|1950]],
+		Quest = [[Malin's Request|1|32|30|0|0|0]],
 		Start = "2708|1453|32|50.51|87.47",
 		End = "2789|1417|32|46.65|47.01",
 	},
 	[691] = {
-		Quest = [[Worth Its Weight in Gold|1|36|30|0|0|3500]],
+		Quest = [[Worth Its Weight in Gold|1|36|30|0|0|0]],
 		Start = "2788|1417|32|46.20|47.75",
 		End = "2788|1417|32|46.20|47.75",
 		Objectives = {
@@ -3161,7 +3169,7 @@ local ModQuests={
 		},
 	},
 	[693] = {
-		Quest = [[Wand over Fist|1|39|30|0|0|3000]],
+		Quest = [[Wand over Fist|1|39|30|0|0|0]],
 		Start = "2789|1417|32|46.65|47.01",
 		End = "2789|1417|32|46.65|47.01",
 		Objectives = {
@@ -3171,7 +3179,7 @@ local ModQuests={
 		},
 	},
 	[694] = {
-		Quest = [[Trelane's Defenses|1|39|30|695|0|3000]],
+		Quest = [[Trelane's Defenses|1|39|30|695|0|0]],
 		Start = "2789|1417|32|46.65|47.01",
 		End = "2788|1417|32|46.20|47.75",
 		Objectives = {
@@ -3187,12 +3195,12 @@ local ModQuests={
 		},
 	},
 	[695] = {
-		Quest = [[An Apprentice's Enchantment|0|39|30|696|0|300]],
+		Quest = [[An Apprentice's Enchantment|0|39|30|696|0|0]],
 		Start = "2788|1417|32|46.20|47.75",
 		End = "2789|1417|32|46.65|47.01",
 	},
 	[696] = {
-		Quest = [[Attack on the Tower|0|39|30|697|0|3000]],
+		Quest = [[Attack on the Tower|0|39|30|697|0|0]],
 		Start = "2789|1417|32|46.65|47.01",
 		End = "2789|1417|32|46.65|47.01",
 		Objectives = {
@@ -3208,12 +3216,12 @@ local ModQuests={
 		},
 	},
 	[697] = {
-		Quest = [[Malin's Request|0|39|30|0|0|3750]],
+		Quest = [[Malin's Request|0|39|30|0|0|0]],
 		Start = "2789|1417|32|46.65|47.01",
 		End = "2708|1453|32|50.51|87.47",
 	},
 	[698] = {
-		Quest = [[Lack of Surplus|2|40|35|699|0|3150]],
+		Quest = [[Lack of Surplus|2|40|35|699|0|0]],
 		Start = "5591|1435|32|44.70|57.21",
 		End = "5592|1435|32|81.32|80.97",
 		Objectives = {
@@ -3352,12 +3360,12 @@ local ModQuests={
 		},
 	},
 	[700] = {
-		Quest = [[A King's Tribute|0|31|25|0|0|2500]],
+		Quest = [[A King's Tribute|0|31|25|0|0|0]],
 		Start = "2790|1455|32|39.04|88.05",
 		End = "2784|1455|32|39.09|56.20",
 	},
 	[701] = {
-		Quest = [[Guile of the Raptor|2|37|29|702|0|2850]],
+		Quest = [[Guile of the Raptor|2|37|29|702|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2706|1417|32|74.72|36.29",
 		Objectives = {
@@ -3392,12 +3400,12 @@ local ModQuests={
 		},
 	},
 	[702] = {
-		Quest = [[Guile of the Raptor|2|37|29|0|0|285]],
+		Quest = [[Guile of the Raptor|2|37|29|0|0|0]],
 		Start = "2706|1417|32|74.72|36.29",
 		End = "2792|1417|32|72.64|33.93",
 	},
 	[703] = {
-		Quest = [[Barbecued Buzzard Wings|0|40|33|0|0|2350]],
+		Quest = [[Barbecued Buzzard Wings|0|40|33|0|0|0]],
 		Start = "2817|1418|32|42.39|52.93",
 		End = "2817|1418|32|42.39|52.93",
 		Objectives = {
@@ -3534,7 +3542,7 @@ local ModQuests={
 		},
 	},
 	[704] = {
-		Quest = [[Agmond's Fate|0|38|30|0|0|2850]],
+		Quest = [[Agmond's Fate|0|38|30|0|0|0]],
 		Start = "1344|1432|32|65.93|65.62",
 		End = "1344|1432|32|65.93|65.62",
 		Objectives = {
@@ -3555,7 +3563,7 @@ local ModQuests={
 		},
 	},
 	[705] = {
-		Quest = [[Pearl Diving|0|37|30|0|0|3550]],
+		Quest = [[Pearl Diving|0|37|30|0|0|0]],
 		Start = "2817|1418|32|42.39|52.93",
 		End = "2817|1418|32|42.39|52.93",
 		Objectives = {
@@ -3565,16 +3573,16 @@ local ModQuests={
 		},
 	},
 	[707] = {
-		Quest = [[Ironband Wants You!|1|37|30|738|0|710]],
+		Quest = [[Ironband Wants You!|1|37|30|738|0|0]],
 		Start = "1356|1455|32|74.64|11.74",
 		End = "1344|1432|32|65.93|65.62",
 	},
 	[708] = {
-		Quest = [[The Black Box|1|40|30|0|0|2350]],
+		Quest = [[The Black Box|1|40|30|0|0|0]],
 		End = "2092|1455|32|72.73|94.01",
 	},
 	[709] = {
-		Quest = [[Solution to Doom|0|40|30|0|0|3150]],
+		Quest = [[Solution to Doom|0|40|30|0|0|0]],
 		Start = "2785|1418|32|51.39|76.87",
 		End = "2785|1418|32|51.39|76.87",
 		Objectives = {
@@ -3584,7 +3592,7 @@ local ModQuests={
 		},
 	},
 	[710] = {
-		Quest = [[Study of the Elements: Rock|0|37|35|711|0|2850]],
+		Quest = [[Study of the Elements: Rock|0|37|35|711|0|0]],
 		Start = "2921|1418|32|25.95|44.87",
 		End = "2921|1418|32|25.95|44.87",
 		Objectives = {
@@ -3609,7 +3617,7 @@ local ModQuests={
 		},
 	},
 	[711] = {
-		Quest = [[Study of the Elements: Rock|0|39|35|712|0|3000]],
+		Quest = [[Study of the Elements: Rock|0|39|35|712|0|0]],
 		Start = "2921|1418|32|25.95|44.87",
 		End = "2921|1418|32|25.95|44.87",
 		Objectives = {
@@ -3649,7 +3657,7 @@ local ModQuests={
 		},
 	},
 	[713] = {
-		Quest = [[Coolant Heads Prevail|0|37|35|714|0|2850]],
+		Quest = [[Coolant Heads Prevail|0|37|35|714|0|0]],
 		Start = "2921|1418|32|25.95|44.87",
 		End = "2921|1418|32|25.95|44.87",
 		Objectives = {
@@ -3661,7 +3669,7 @@ local ModQuests={
 		},
 	},
 	[714] = {
-		Quest = [[Gyro... What?|0|37|35|0|0|2850]],
+		Quest = [[Gyro... What?|0|37|35|0|0|0]],
 		Start = "2921|1418|32|25.95|44.87",
 		End = "2921|1418|32|25.95|44.87",
 		Objectives = {
@@ -3679,7 +3687,7 @@ local ModQuests={
 		},
 	},
 	[715] = {
-		Quest = [[Liquid Stone|0|37|35|0|0|2100]],
+		Quest = [[Liquid Stone|0|37|35|0|0|0]],
 		Start = "2920|1418|32|25.82|44.24",
 		End = "2920|1418|32|25.82|44.24",
 		Objectives = {
@@ -3692,7 +3700,7 @@ local ModQuests={
 		},
 	},
 	[718] = {
-		Quest = [[Mirages|0|38|35|733|0|2150]],
+		Quest = [[Mirages|0|38|35|733|0|0]],
 		Start = "2860|1418|32|53.80|43.30",
 		End = "2860|1418|32|53.80|43.30",
 		Objectives = {
@@ -3702,7 +3710,7 @@ local ModQuests={
 		},
 	},
 	[719] = {
-		Quest = [[A Dwarf and His Tools|0|35|35|0|0|2750]],
+		Quest = [[A Dwarf and His Tools|0|35|35|0|0|0]],
 		Start = "2910|1418|32|53.42|43.39",
 		End = "2910|1418|32|53.42|43.39",
 		Objectives = {
@@ -3720,17 +3728,17 @@ local ModQuests={
 		},
 	},
 	[720] = {
-		Quest = [[A Sign of Hope|1|35|35|721|0|1350]],
+		Quest = [[A Sign of Hope|1|35|35|721|0|0]],
 		Start = "2868|1418|32|53.03|33.94",
 		End = "2910|1418|32|53.42|43.39",
 	},
 	[721] = {
-		Quest = [[A Sign of Hope|0|35|35|722|0|2750]],
+		Quest = [[A Sign of Hope|0|35|35|722|0|0]],
 		Start = "2910|1418|32|53.42|43.39",
 		End = "2909|1432|32|37.28|85.78",
 	},
 	[722] = {
-		Quest = [[Amulet of Secrets|0|40|35|723|0|3150]],
+		Quest = [[Amulet of Secrets|0|40|35|723|0|0]],
 		Start = "2909|1432|32|37.28|85.78",
 		End = "2909|1432|32|37.28|85.78",
 		Objectives = {
@@ -3740,37 +3748,37 @@ local ModQuests={
 		},
 	},
 	[723] = {
-		Quest = [[Prospect of Faith|0|40|35|724|0|2350]],
+		Quest = [[Prospect of Faith|0|40|35|724|0|0]],
 		Start = "2909|1432|32|37.28|85.78",
 		End = "2910|1418|32|53.42|43.39",
 	},
 	[724] = {
-		Quest = [[Prospect of Faith|0|40|35|0|0|3150]],
+		Quest = [[Prospect of Faith|0|40|35|0|0|0]],
 		Start = "2910|1418|32|53.42|43.39",
 		End = "2916|1455|32|77.54|11.82",
 	},
 	[725] = {
-		Quest = [[Passing Word of a Threat|0|40|35|726|0|1550]],
+		Quest = [[Passing Word of a Threat|0|40|35|726|0|0]],
 		Start = "2916|1455|32|77.54|11.82",
 		End = "2918|1455|32|77.34|9.71",
 	},
 	[726] = {
-		Quest = [[Passing Word of a Threat|0|40|35|762|0|2350]],
+		Quest = [[Passing Word of a Threat|0|40|35|762|0|0]],
 		Start = "2918|1455|32|77.34|9.71",
 		End = "2916|1455|32|77.54|11.82",
 	},
 	[727] = {
-		Quest = [[To Ironforge for Yagyin's Digest|0|40|30|735|0|780]],
+		Quest = [[To Ironforge for Yagyin's Digest|0|40|30|735|0|0]],
 		Start = "2785|1418|32|51.39|76.87",
 		End = "2786|1455|32|50.83|5.62",
 	},
 	[728] = {
-		Quest = [[To the Undercity for Yagyin's Digest|2|40|30|736|0|780]],
+		Quest = [[To the Undercity for Yagyin's Digest|2|40|30|736|0|0]],
 		Start = "2785|1418|32|51.39|76.87",
 		End = "2934|1458|32|53.74|54.46",
 	},
 	[733] = {
-		Quest = [[Scrounging|0|40|35|0|0|3150]],
+		Quest = [[Scrounging|0|40|35|0|0|0]],
 		Start = "2860|1418|32|53.80|43.30",
 		End = "2860|1418|32|53.80|43.30",
 		Objectives = {
@@ -3809,27 +3817,27 @@ local ModQuests={
 		},
 	},
 	[737] = {
-		Quest = [[Forbidden Knowledge|0|40|30|0|0|2350]],
+		Quest = [[Forbidden Knowledge|0|40|30|0|0|0]],
 		Start = "2934|1458|32|53.74|54.46",
 		End = "2785|1418|32|51.39|76.87",
 	},
 	[738] = {
-		Quest = [[Find Agmond|1|38|30|739|0|1450]],
+		Quest = [[Find Agmond|1|38|30|739|0|0]],
 		Start = "1344|1432|32|65.93|65.62",
 		End = "2875|1418|32|50.89|62.40",
 	},
 	[847] = {
-		Quest = [[Guile of the Raptor|2|37|29|0|0|2850]],
+		Quest = [[Guile of the Raptor|2|37|29|0|0|0]],
 		Start = "2792|1417|32|72.64|33.93",
 		End = "2706|1417|32|74.72|36.29",
 	},
 	[981] = {
-		Quest = [[The Tower of Althalaxx|0|31|13|0|0|2500]],
+		Quest = [[The Tower of Althalaxx|0|31|13|0|0|0]],
 		Start = "3661|1439|32|54.97|24.89",
 		End = "3663|1440|32|26.20|38.70",
 	},
 	[1012] = {
-		Quest = [[Insane Druids|0|32|24|0|0|3200]],
+		Quest = [[Insane Druids|0|32|24|0|0|0]],
 		Start = "3848|1440|32|85.24|44.71",
 		End = "3848|1440|32|85.24|44.71",
 		Objectives = {
@@ -3845,12 +3853,12 @@ local ModQuests={
 		},
 	},
 	[1021] = {
-		Quest = [[Vile Satyr! Dryads in Danger!|0|32|26|1031|0|2550]],
+		Quest = [[Vile Satyr! Dryads in Danger!|0|32|26|1031|0|0]],
 		Start = "3901|1440|32|87.10|43.49",
 		End = "3920|1440|32|78.33|44.82",
 	},
 	[1031] = {
-		Quest = [[The Branch of Cenarius|0|32|26|0|0|2550]],
+		Quest = [[The Branch of Cenarius|0|32|26|0|0|0]],
 		Start = "3920|1440|32|78.33|44.82",
 		End = "3901|1440|32|87.10|43.49",
 		Objectives = {
@@ -3867,7 +3875,7 @@ local ModQuests={
 		},
 	},
 	[1032] = {
-		Quest = [[Satyr Slaying!|0|32|26|0|0|2550]],
+		Quest = [[Satyr Slaying!|0|32|26|0|0|0]],
 		Start = "3901|1440|32|87.10|43.49",
 		End = "3901|1440|32|87.10|43.49",
 		Objectives = {
@@ -3891,7 +3899,7 @@ local ModQuests={
 		},
 	},
 	[1049] = {
-		Quest = [[Compendium of the Fallen|2|38|28|0|0|3550]],
+		Quest = [[Compendium of the Fallen|2|38|28|0|0|0]],
 		Start = "3978|1456|32|34.40|46.87",
 		End = "3978|1456|32|34.40|46.87",
 		Objectives = {
@@ -3901,12 +3909,12 @@ local ModQuests={
 		},
 	},
 	[1050] = {
-		Quest = [[Mythology of the Titans|1|38|28|0|0|3550]],
+		Quest = [[Mythology of the Titans|1|38|28|0|0|0]],
 		Start = "3979|1455|32|74.97|12.48",
 		End = "3979|1455|32|74.97|12.48",
 	},
 	[1051] = {
-		Quest = [[Vorrel's Revenge|2|33|25|0|0|3300]],
+		Quest = [[Vorrel's Revenge|2|33|25|0|0|0]],
 		Start = "3981|302|32|-1.00|-1.00",
 		End = "3982|1424|32|62.67|18.88",
 		Objectives = {
@@ -3916,22 +3924,22 @@ local ModQuests={
 		},
 	},
 	[1052] = {
-		Quest = [[Down the Scarlet Path|0|40|34|0|0|1550]],
+		Quest = [[Down the Scarlet Path|0|40|34|0|0|0]],
 		Start = "1182|1443|32|66.52|7.91",
 		End = "3980|1424|32|51.47|58.35",
 	},
 	[1053] = {
-		Quest = [[In the Name of the Light|1|40|34|0|0|4700]],
+		Quest = [[In the Name of the Light|1|40|34|0|0|0]],
 		Start = "3980|1424|32|51.47|58.35",
 		End = "3980|1424|32|51.47|58.35",
 	},
 	[1106] = {
-		Quest = [[Martek the Exiled|0|35|26|1108|0|1350]],
+		Quest = [[Martek the Exiled|0|35|26|1108|0|0]],
 		Start = "4454|1441|32|78.06|77.13",
 		End = "4618|1418|32|42.22|52.69",
 	},
 	[1107] = {
-		Quest = [[Encrusted Tail Fins|0|35|28|0|0|3450]],
+		Quest = [[Encrusted Tail Fins|0|35|28|0|0|0]],
 		Start = "4453|1441|32|78.14|77.12",
 		End = "4453|1441|32|78.14|77.12",
 		Objectives = {
@@ -3941,7 +3949,7 @@ local ModQuests={
 		},
 	},
 	[1108] = {
-		Quest = [[Indurium|0|39|28|0|0|3000]],
+		Quest = [[Indurium|0|39|28|0|0|0]],
 		Start = "4618|1418|32|42.22|52.69",
 		End = "4618|1418|32|42.22|52.69",
 		Objectives = {
@@ -3971,7 +3979,7 @@ local ModQuests={
 		},
 	},
 	[1110] = {
-		Quest = [[Rocket Car Parts|0|31|28|0|0|2500]],
+		Quest = [[Rocket Car Parts|0|31|28|0|0|0]],
 		Start = "4452|1441|32|77.79|77.27",
 		End = "4452|1441|32|77.79|77.27",
 		Objectives = {
@@ -3981,17 +3989,17 @@ local ModQuests={
 		},
 	},
 	[1111] = {
-		Quest = [[Wharfmaster Dizzywig|0|36|30|1112|0|1400]],
+		Quest = [[Wharfmaster Dizzywig|0|36|30|1112|0|0]],
 		Start = "4452|1441|32|77.79|77.27",
 		End = "3453|1413|32|63.35|38.45",
 	},
 	[1112] = {
-		Quest = [[Parts for Kravel|0|36|30|0|0|1400]],
+		Quest = [[Parts for Kravel|0|36|30|0|0|0]],
 		Start = "3453|1413|32|63.35|38.45",
 		End = "4452|1441|32|77.79|77.27",
 	},
 	[1113] = {
-		Quest = [[Hearts of Zeal|0|33|30|0|0|3300]],
+		Quest = [[Hearts of Zeal|0|33|30|0|0|0]],
 		Start = "2055|1458|32|48.82|69.28",
 		End = "2055|1458|32|48.82|69.28",
 		Objectives = {
@@ -4001,17 +4009,17 @@ local ModQuests={
 		},
 	},
 	[1114] = {
-		Quest = [[Delivery to the Gnomes|0|36|30|0|0|700]],
+		Quest = [[Delivery to the Gnomes|0|36|30|0|0|0]],
 		Start = "4452|1441|32|77.79|77.27",
 		End = "4454|1441|32|78.06|77.13",
 	},
 	[1115] = {
-		Quest = [[The Rumormonger|0|36|30|1116|0|1400]],
+		Quest = [[The Rumormonger|0|36|30|1116|0|0]],
 		Start = "4452|1441|32|77.79|77.27",
 		End = "773|1434|32|26.94|77.21",
 	},
 	[1116] = {
-		Quest = [[Dream Dust in the Swamp|0|36|30|1117|0|3500]],
+		Quest = [[Dream Dust in the Swamp|0|36|30|1117|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "773|1434|32|26.94|77.21",
 		Objectives = {
@@ -4104,12 +4112,12 @@ local ModQuests={
 		},
 	},
 	[1117] = {
-		Quest = [[Rumors for Kravel|0|36|30|0|0|3500]],
+		Quest = [[Rumors for Kravel|0|36|30|0|0|0]],
 		Start = "773|1434|32|26.94|77.21",
 		End = "4452|1441|32|77.79|77.27",
 	},
 	[1136] = {
-		Quest = [[Frostmaw|2|37|26|0|0|4250]],
+		Quest = [[Frostmaw|2|37|26|0|0|0]],
 		Start = "3441|1456|32|61.54|80.92",
 		End = "3441|1456|32|61.54|80.92",
 		Objectives = {
@@ -4119,12 +4127,12 @@ local ModQuests={
 		},
 	},
 	[1137] = {
-		Quest = [[News for Fizzle|0|38|28|0|0|1450]],
+		Quest = [[News for Fizzle|0|38|28|0|0|0]],
 		Start = "4618|1418|32|42.22|52.69",
 		End = "4454|1441|32|78.06|77.13",
 	},
 	[1143] = {
-		Quest = [[The Tower of Althalaxx|0|31|13|981|0|2500]],
+		Quest = [[The Tower of Althalaxx|0|31|13|981|0|0]],
 		Start = "3661|1439|32|54.97|24.89",
 		End = "3661|1439|32|54.97|24.89",
 		Objectives = {
@@ -4134,17 +4142,17 @@ local ModQuests={
 		},
 	},
 	[1145] = {
-		Quest = [[The Swarm Grows|2|33|29|1146|0|1300]],
+		Quest = [[The Swarm Grows|2|33|29|1146|0|0]],
 		Start = "3428|1413|32|51.07|29.63",
 		End = "4485|1454|32|75.23|34.24",
 	},
 	[1146] = {
-		Quest = [[The Swarm Grows|2|33|29|1147|0|1950]],
+		Quest = [[The Swarm Grows|2|33|29|1147|0|0]],
 		Start = "4485|1454|32|75.23|34.24",
 		End = "4483|1441|32|67.58|63.94",
 	},
 	[1147] = {
-		Quest = [[The Swarm Grows|2|35|29|0|0|2750]],
+		Quest = [[The Swarm Grows|2|35|29|0|0|0]],
 		Start = "4483|1441|32|67.58|63.94",
 		End = "4483|1441|32|67.58|63.94",
 		Objectives = {
@@ -4183,7 +4191,7 @@ local ModQuests={
 		},
 	},
 	[1148] = {
-		Quest = [[Parts of the Swarm|0|35|28|1184|0|2750]],
+		Quest = [[Parts of the Swarm|0|35|28|1184|0|0]],
 		Start = "4130|1441|32|71.74|83.32",
 		End = "3428|1413|32|51.07|29.63",
 		Objectives = {
@@ -4238,7 +4246,7 @@ local ModQuests={
 		},
 	},
 	[1160] = {
-		Quest = [[Test of Lore|0|36|25|6628|0|2100]],
+		Quest = [[Test of Lore|0|36|25|6628|0|0]],
 		Start = "4488|1458|32|57.80|65.42",
 		End = "4488|1458|32|57.80|65.42",
 		Objectives = {
@@ -4248,7 +4256,7 @@ local ModQuests={
 		},
 	},
 	[1164] = {
-		Quest = [[To Steal From Thieves|2|36|27|0|0|2800]],
+		Quest = [[To Steal From Thieves|2|36|27|0|0|0]],
 		Start = "4486|1458|32|63.83|49.45",
 		End = "4486|1458|32|63.83|49.45",
 		Objectives = {
@@ -4264,7 +4272,7 @@ local ModQuests={
 		},
 	},
 	[1175] = {
-		Quest = [[A Bump in the Road|0|33|28|0|0|2650]],
+		Quest = [[A Bump in the Road|0|33|28|0|0|0]],
 		Start = "4629|1441|32|81.63|77.95",
 		End = "4629|1441|32|81.63|77.95",
 		Objectives = {
@@ -4350,7 +4358,7 @@ local ModQuests={
 		},
 	},
 	[1177] = {
-		Quest = [[Hungry!|0|36|32|0|0|2800]],
+		Quest = [[Hungry!|0|36|32|0|0|0]],
 		Start = "4503|1445|32|35.15|38.26",
 		End = "4503|1445|32|35.15|38.26",
 		Objectives = {
@@ -4386,22 +4394,22 @@ local ModQuests={
 		},
 	},
 	[1178] = {
-		Quest = [[Goblin Sponsorship|0|37|29|1180|0|710]],
+		Quest = [[Goblin Sponsorship|0|37|29|1180|0|0]],
 		Start = "4630|1441|32|80.18|75.88",
 		End = "3391|1413|32|62.68|36.23",
 	},
 	[1180] = {
-		Quest = [[Goblin Sponsorship|0|37|29|1181|0|710]],
+		Quest = [[Goblin Sponsorship|0|37|29|1181|0|0]],
 		Start = "3391|1413|32|62.68|36.23",
 		End = "4631|1434|32|26.35|73.56",
 	},
 	[1181] = {
-		Quest = [[Goblin Sponsorship|0|37|29|1182|0|285]],
+		Quest = [[Goblin Sponsorship|0|37|29|1182|0|0]],
 		Start = "4631|1434|32|26.35|73.56",
 		End = "2496|1434|32|27.23|76.87",
 	},
 	[1182] = {
-		Quest = [[Goblin Sponsorship|0|37|29|1183|0|2850]],
+		Quest = [[Goblin Sponsorship|0|37|29|1183|0|0]],
 		Start = "2496|1434|32|27.23|76.87",
 		End = "2496|1434|32|27.23|76.87",
 		Objectives = {
@@ -4411,22 +4419,22 @@ local ModQuests={
 		},
 	},
 	[1183] = {
-		Quest = [[Goblin Sponsorship|0|37|29|1186|0|710]],
+		Quest = [[Goblin Sponsorship|0|37|29|1186|0|0]],
 		Start = "2496|1434|32|27.23|76.87",
 		End = "4630|1441|32|80.18|75.88",
 	},
 	[1184] = {
-		Quest = [[Parts of the Swarm|2|35|28|0|0|1350]],
+		Quest = [[Parts of the Swarm|2|35|28|0|0|0]],
 		Start = "3428|1413|32|51.07|29.63",
 		End = "4485|1454|32|75.23|34.24",
 	},
 	[1186] = {
-		Quest = [[The Eighteenth Pilot|0|37|29|1187|0|285]],
+		Quest = [[The Eighteenth Pilot|0|37|29|1187|0|0]],
 		Start = "4630|1441|32|80.18|75.88",
 		End = "4706|1441|32|80.33|76.09",
 	},
 	[1201] = {
-		Quest = [[Theramore Spies|2|35|30|1202|0|2750]],
+		Quest = [[Theramore Spies|2|35|30|1202|0|0]],
 		Start = "4791|1445|32|35.21|30.66",
 		End = "4791|1445|32|35.21|30.66",
 		Objectives = {
@@ -4454,7 +4462,7 @@ local ModQuests={
 		},
 	},
 	[1202] = {
-		Quest = [[The Theramore Docks|2|35|30|0|0|2750]],
+		Quest = [[The Theramore Docks|2|35|30|0|0|0]],
 		Start = "4791|1445|32|35.21|30.66",
 		End = "4791|1445|32|35.21|30.66",
 		Objectives = {
@@ -4464,7 +4472,7 @@ local ModQuests={
 		},
 	},
 	[1203] = {
-		Quest = [[Jarl Needs a Blade|0|35|30|0|0|3450]],
+		Quest = [[Jarl Needs a Blade|0|35|30|0|0|0]],
 		Start = "4792|1445|32|55.44|26.27",
 		End = "4792|1445|32|55.44|26.27",
 		Objectives = {
@@ -4474,7 +4482,7 @@ local ModQuests={
 		},
 	},
 	[1204] = {
-		Quest = [[Mudrock Soup and Bugs|1|38|33|1258|0|2850]],
+		Quest = [[Mudrock Soup and Bugs|1|38|33|1258|0|0]],
 		Start = "4794|1445|32|66.34|45.47",
 		End = "4794|1445|32|66.34|45.47",
 		Objectives = {
@@ -4506,7 +4514,7 @@ local ModQuests={
 		},
 	},
 	[1206] = {
-		Quest = [[Jarl Needs Eyes|0|35|30|1203|0|2750]],
+		Quest = [[Jarl Needs Eyes|0|35|30|1203|0|0]],
 		Start = "4792|1445|32|55.44|26.27",
 		End = "4792|1445|32|55.44|26.27",
 		Objectives = {
@@ -4523,7 +4531,7 @@ local ModQuests={
 		},
 	},
 	[1218] = {
-		Quest = [[Marsh Frog Legs|0|35|30|1206|0|1350]],
+		Quest = [[Marsh Frog Legs|0|35|30|1206|0|0]],
 		Start = "4792|1445|32|55.44|26.27",
 		End = "4792|1445|32|55.44|26.27",
 		Objectives = {
@@ -4541,17 +4549,17 @@ local ModQuests={
 		},
 	},
 	[1219] = {
-		Quest = [[The Orc Report|0|35|30|1220|0|690]],
+		Quest = [[The Orc Report|0|35|30|1220|0|0]],
 		Start = "20985|1445|32|55.44|25.92",
 		End = "23951|1445|32|65.07|47.13",
 	},
 	[1220] = {
-		Quest = [[Captain Vimes|0|35|30|0|0|2750]],
+		Quest = [[Captain Vimes|0|35|30|0|0|0]],
 		Start = "4947|1445|32|65.00|47.00",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1222] = {
-		Quest = [[Stinky's Escape|1|37|30|0|0|2850]],
+		Quest = [[Stinky's Escape|1|37|30|0|0|0]],
 		Start = "4880|1445|32|46.88|17.52",
 		End = "4794|1445|32|66.34|45.47",
 		Objectives = {
@@ -4561,37 +4569,37 @@ local ModQuests={
 		},
 	},
 	[1238] = {
-		Quest = [[The Lost Report|2|35|30|0|0|2050]],
+		Quest = [[The Lost Report|2|35|30|0|0|0]],
 		Start = "20985|1445|32|55.44|25.92",
 		End = "4791|1445|32|35.21|30.66",
 	},
 	[1239] = {
-		Quest = [[The Severed Head|2|35|30|1240|0|2050]],
+		Quest = [[The Severed Head|2|35|30|1240|0|0]],
 		Start = "20985|1445|32|55.44|25.92",
 		End = "4791|1445|32|35.21|30.66",
 	},
 	[1240] = {
-		Quest = [[The Troll Witchdoctor|2|35|30|0|0|2750]],
+		Quest = [[The Troll Witchdoctor|2|35|30|0|0|0]],
 		Start = "4791|1445|32|35.21|30.66",
 		End = "2519|1434|32|32.27|27.71",
 	},
 	[1246] = {
-		Quest = [[The Missing Diplomat|1|31|28|1447|0|250]],
+		Quest = [[The Missing Diplomat|1|31|28|1447|0|0]],
 		Start = "482|1453|32|66.03|74.10",
 		End = "4961|1453|32|74.27|59.17",
 	},
 	[1247] = {
-		Quest = [[The Missing Diplomat|1|31|28|1248|0|250]],
+		Quest = [[The Missing Diplomat|1|31|28|1248|0|0]],
 		Start = "4961|1453|32|74.27|59.17",
 		End = "482|1453|32|66.03|74.10",
 	},
 	[1248] = {
-		Quest = [[The Missing Diplomat|1|33|28|1249|0|660]],
+		Quest = [[The Missing Diplomat|1|33|28|1249|0|0]],
 		Start = "482|1453|32|66.03|74.10",
 		End = "4963|1437|32|10.60|60.77",
 	},
 	[1249] = {
-		Quest = [[The Missing Diplomat|1|33|28|0|0|1300]],
+		Quest = [[The Missing Diplomat|1|33|28|0|0|0]],
 		Start = "4963|1437|32|10.60|60.77",
 		End = "4963|1437|32|10.60|60.77",
 		Objectives = {
@@ -4601,27 +4609,27 @@ local ModQuests={
 		},
 	},
 	[1250] = {
-		Quest = [[The Missing Diplomat|1|33|28|1264|0|265]],
+		Quest = [[The Missing Diplomat|1|33|28|1264|0|0]],
 		Start = "4962|1437|32|10.54|60.26",
 		End = "4963|1437|32|10.60|60.77",
 	},
 	[1251] = {
-		Quest = [[The Black Shield|2|35|30|1321|0|690]],
+		Quest = [[The Black Shield|2|35|30|1321|0|0]],
 		Start = "20992|1445|32|29.63|48.62",
 		End = "4926|1445|32|36.42|31.88",
 	},
 	[1252] = {
-		Quest = [[Lieutenant Paval Reethe|1|35|30|1259|0|780]],
+		Quest = [[Lieutenant Paval Reethe|1|35|30|1259|0|0]],
 		Start = "21042|1445|32|29.83|48.24",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1253] = {
-		Quest = [[The Black Shield|1|35|30|1319|0|690]],
+		Quest = [[The Black Shield|1|35|30|1319|0|0]],
 		Start = "20992|1445|32|29.63|48.62",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1258] = {
-		Quest = [[... and Bugs|1|40|33|0|0|3150]],
+		Quest = [[... and Bugs|1|40|33|0|0|0]],
 		Start = "4794|1445|32|66.34|45.47",
 		End = "4794|1445|32|66.34|45.47",
 		Objectives = {
@@ -4640,17 +4648,17 @@ local ModQuests={
 		},
 	},
 	[1259] = {
-		Quest = [[Lieutenant Paval Reethe|1|40|30|1285|0|315]],
+		Quest = [[Lieutenant Paval Reethe|1|40|30|1285|0|0]],
 		Start = "4944|1445|32|68.21|48.62",
 		End = "4948|1445|32|68.05|48.11",
 	},
 	[1260] = {
-		Quest = [[Morgan Stern|0|38|33|1204|0|710]],
+		Quest = [[Morgan Stern|0|38|33|1204|0|0]],
 		Start = "1141|1453|32|51.78|93.61",
 		End = "4794|1445|32|66.34|45.47",
 	},
 	[1261] = {
-		Quest = [[Marg Speaks|2|40|30|1262|0|3150]],
+		Quest = [[Marg Speaks|2|40|30|1262|0|0]],
 		Start = "2076|1434|32|32.22|27.60",
 		End = "4791|1445|32|35.21|30.66",
 		Objectives = {
@@ -4698,17 +4706,17 @@ local ModQuests={
 		},
 	},
 	[1262] = {
-		Quest = [[Report to Zor|2|40|30|0|0|3150]],
+		Quest = [[Report to Zor|2|40|30|0|0|0]],
 		Start = "4791|1445|32|35.21|30.66",
 		End = "4047|1454|32|38.93|38.40",
 	},
 	[1264] = {
-		Quest = [[The Missing Diplomat|1|33|28|1265|0|1300]],
+		Quest = [[The Missing Diplomat|1|33|28|1265|0|0]],
 		Start = "4963|1437|32|10.60|60.77",
 		End = "4964|1445|32|68.02|48.71",
 	},
 	[1265] = {
-		Quest = [[The Missing Diplomat|1|35|28|1266|0|275]],
+		Quest = [[The Missing Diplomat|1|35|28|1266|0|0]],
 		Start = "4964|1445|32|68.02|48.71",
 		End = "4967|1445|32|45.20|24.40",
 		Objectives = {
@@ -4718,27 +4726,27 @@ local ModQuests={
 		},
 	},
 	[1266] = {
-		Quest = [[The Missing Diplomat|1|36|28|0|0|700]],
+		Quest = [[The Missing Diplomat|1|36|28|0|0|0]],
 		Start = "4967|1445|32|45.20|24.40",
 		End = "4966|1445|32|45.25|24.63",
 	},
 	[1267] = {
-		Quest = [[The Missing Diplomat|1|38|28|0|0|4300]],
+		Quest = [[The Missing Diplomat|1|38|28|0|0|0]],
 		Start = "4968|1445|32|66.27|49.04",
 		End = "4968|1445|32|66.27|49.04",
 	},
 	[1268] = {
-		Quest = [[Suspicious Hoofprints|2|35|30|0|0|1350]],
+		Quest = [[Suspicious Hoofprints|2|35|30|0|0|0]],
 		Start = "21016|1445|32|29.70|47.64",
 		End = "4926|1445|32|36.42|31.88",
 	},
 	[1269] = {
-		Quest = [[Lieutenant Paval Reethe|2|37|30|0|0|710]],
+		Quest = [[Lieutenant Paval Reethe|2|37|30|0|0|0]],
 		Start = "21042|1445|32|29.83|48.24",
 		End = "4926|1445|32|36.42|31.88",
 	},
 	[1270] = {
-		Quest = [[Stinky's Escape|2|37|30|0|0|2850]],
+		Quest = [[Stinky's Escape|2|37|30|0|0|0]],
 		Start = "4880|1445|32|46.88|17.52",
 		End = "3446|1413|32|62.37|37.62",
 		Objectives = {
@@ -4753,7 +4761,7 @@ local ModQuests={
 		End = "1141|1453|32|51.78|93.61",
 	},
 	[1273] = {
-		Quest = [[Questioning Reethe|2|37|30|0|0|3550]],
+		Quest = [[Questioning Reethe|2|37|30|0|0|0]],
 		Start = "4983|1445|32|40.96|36.69",
 		End = "4926|1445|32|36.42|31.88",
 		Objectives = {
@@ -4763,62 +4771,62 @@ local ModQuests={
 		},
 	},
 	[1276] = {
-		Quest = [[The Black Shield|2|37|30|0|0|1400]],
+		Quest = [[The Black Shield|2|37|30|0|0|0]],
 		Start = "4926|1445|32|36.42|31.88",
 		End = "4943|1456|32|54.01|80.77",
 	},
 	[1282] = {
-		Quest = [[They Call Him Smiling Jim|1|35|30|11123|0|275]],
+		Quest = [[They Call Him Smiling Jim|1|35|30|11123|0|0]],
 		Start = "4921|1445|32|66.15|46.07",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1284] = {
-		Quest = [[Suspicious Hoofprints|1|35|30|0|0|1350]],
+		Quest = [[Suspicious Hoofprints|1|35|30|0|0|0]],
 		Start = "21016|1445|32|29.70|47.64",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1285] = {
-		Quest = [[Daelin's Men|1|38|30|1286|0|285]],
+		Quest = [[Daelin's Men|1|38|30|1286|0|0]],
 		Start = "4948|1445|32|68.05|48.11",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1286] = {
-		Quest = [[The Deserters|1|38|30|1287|0|2850]],
+		Quest = [[The Deserters|1|38|30|1287|0|0]],
 		Start = "4944|1445|32|68.21|48.62",
 		End = "5089|1445|32|36.09|54.31",
 	},
 	[1287] = {
-		Quest = [[The Deserters|0|38|30|0|0|2850]],
+		Quest = [[The Deserters|0|38|30|0|0|0]],
 		Start = "5089|1445|32|36.09|54.31",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1301] = {
-		Quest = [[James Hyal|0|35|30|1302|0|690]],
+		Quest = [[James Hyal|0|35|30|1302|0|0]],
 		Start = "5081|1453|32|51.12|95.52",
 		End = "5082|1437|32|8.40|61.80",
 	},
 	[1302] = {
-		Quest = [[James Hyal|0|35|30|0|0|690]],
+		Quest = [[James Hyal|0|35|30|0|0|0]],
 		Start = "5082|1437|32|8.40|61.80",
 		End = "5083|1445|32|67.88|48.24",
 	},
 	[1319] = {
-		Quest = [[The Black Shield|1|35|30|1320|0|275]],
+		Quest = [[The Black Shield|1|35|30|1320|0|0]],
 		Start = "4944|1445|32|68.21|48.62",
 		End = "4941|1445|32|64.75|50.43",
 	},
 	[1320] = {
-		Quest = [[The Black Shield|1|35|30|0|0|1350]],
+		Quest = [[The Black Shield|1|35|30|0|0|0]],
 		Start = "4941|1445|32|64.75|50.43",
 		End = "4944|1445|32|68.21|48.62",
 	},
 	[1321] = {
-		Quest = [[The Black Shield|2|35|30|1322|0|275]],
+		Quest = [[The Black Shield|2|35|30|1322|0|0]],
 		Start = "4926|1445|32|36.42|31.88",
 		End = "5087|1445|32|36.53|30.79",
 	},
 	[1322] = {
-		Quest = [[The Black Shield|2|37|30|1323|0|2850]],
+		Quest = [[The Black Shield|2|37|30|1323|0|0]],
 		Start = "5087|1445|32|36.53|30.79",
 		End = "5087|1445|32|36.53|30.79",
 		Objectives = {
@@ -4835,12 +4843,12 @@ local ModQuests={
 		},
 	},
 	[1323] = {
-		Quest = [[The Black Shield|2|37|30|0|0|1400]],
+		Quest = [[The Black Shield|2|37|30|0|0|0]],
 		Start = "5087|1445|32|36.53|30.79",
 		End = "4926|1445|32|36.42|31.88",
 	},
 	[1324] = {
-		Quest = [[The Missing Diplomat|1|38|28|0|0|2150]],
+		Quest = [[The Missing Diplomat|1|38|28|0|0|0]],
 		Start = "4966|1445|32|45.25|24.63",
 		End = "4967|1445|32|45.20|24.40",
 		Objectives = {
@@ -4850,17 +4858,17 @@ local ModQuests={
 		},
 	},
 	[1361] = {
-		Quest = [[Regthar Deathgate|2|32|30|1362|0|640]],
+		Quest = [[Regthar Deathgate|2|32|30|1362|0|0]],
 		Start = "2229|1424|32|63.24|20.66",
 		End = "3389|1413|32|45.34|28.41",
 	},
 	[1362] = {
-		Quest = [[The Kolkar of Desolace|2|32|30|0|0|640]],
+		Quest = [[The Kolkar of Desolace|2|32|30|0|0|0]],
 		Start = "3389|1413|32|45.34|28.41",
 		End = "5395|1443|32|56.19|59.57",
 	},
 	[1365] = {
-		Quest = [[Khan Dez'hepah|2|35|30|0|0|3450]],
+		Quest = [[Khan Dez'hepah|2|35|30|0|0|0]],
 		Start = "5395|1443|32|56.19|59.57",
 		End = "5395|1443|32|56.19|59.57",
 		Objectives = {
@@ -4870,7 +4878,7 @@ local ModQuests={
 		},
 	},
 	[1366] = {
-		Quest = [[Centaur Bounty|2|31|30|0|0|3750]],
+		Quest = [[Centaur Bounty|2|31|30|0|0|0]],
 		Start = "5395|1443|32|56.19|59.57",
 		End = "5395|1443|32|56.19|59.57",
 		Objectives = {
@@ -4944,17 +4952,17 @@ local ModQuests={
 		},
 	},
 	[1367] = {
-		Quest = [[Magram Alliance|0|33|30|1369|0|660]],
+		Quest = [[Magram Alliance|0|33|30|1369|0|0]],
 		Start = "5412|1443|32|56.29|59.68",
 		End = "5398|1443|32|74.97|68.16",
 	},
 	[1368] = {
-		Quest = [[Gelkis Alliance|0|33|30|1370|0|660]],
+		Quest = [[Gelkis Alliance|0|33|30|1370|0|0]],
 		Start = "5412|1443|32|56.29|59.68",
 		End = "5397|1443|32|36.22|79.25",
 	},
 	[1369] = {
-		Quest = [[Broken Tears|0|33|30|1371|0|2650]],
+		Quest = [[Broken Tears|0|33|30|1371|0|0]],
 		Start = "5398|1443|32|74.97|68.16",
 		End = "5398|1443|32|74.97|68.16",
 		Objectives = {
@@ -4967,7 +4975,7 @@ local ModQuests={
 		},
 	},
 	[1370] = {
-		Quest = [[Stealing Supplies|0|35|30|1373|0|1350]],
+		Quest = [[Stealing Supplies|0|35|30|1373|0|0]],
 		Start = "5397|1443|32|36.22|79.25",
 		End = "5397|1443|32|36.22|79.25",
 		Objectives = {
@@ -4982,7 +4990,7 @@ local ModQuests={
 		},
 	},
 	[1371] = {
-		Quest = [[Gizmo for Warug|0|35|30|0|0|2050]],
+		Quest = [[Gizmo for Warug|0|35|30|0|0|0]],
 		Start = "5398|1443|32|74.97|68.16",
 		End = "5398|1443|32|74.97|68.16",
 		Objectives = {
@@ -4992,7 +5000,7 @@ local ModQuests={
 		},
 	},
 	[1373] = {
-		Quest = [[Ongeku|0|37|30|1374|0|2850]],
+		Quest = [[Ongeku|0|37|30|1374|0|0]],
 		Start = "5397|1443|32|36.22|79.25",
 		End = "5397|1443|32|36.22|79.25",
 		Objectives = {
@@ -5002,7 +5010,7 @@ local ModQuests={
 		},
 	},
 	[1374] = {
-		Quest = [[Khan Jehn|0|37|30|1380|0|2850]],
+		Quest = [[Khan Jehn|0|37|30|1380|0|0]],
 		Start = "5397|1443|32|36.22|79.25",
 		End = "5397|1443|32|36.22|79.25",
 		Objectives = {
@@ -5012,7 +5020,7 @@ local ModQuests={
 		},
 	},
 	[1375] = {
-		Quest = [[Khan Shaka|0|37|30|1381|0|2850]],
+		Quest = [[Khan Shaka|0|37|30|1381|0|0]],
 		Start = "5398|1443|32|74.97|68.16",
 		End = "5398|1443|32|74.97|68.16",
 		Objectives = {
@@ -5022,12 +5030,12 @@ local ModQuests={
 		},
 	},
 	[1382] = {
-		Quest = [[Strange Alliance|0|35|30|1384|0|2050]],
+		Quest = [[Strange Alliance|0|35|30|1384|0|0]],
 		Start = "5396|1443|32|66.66|10.93",
 		End = "5397|1443|32|36.22|79.25",
 	},
 	[1384] = {
-		Quest = [[Raid on the Kolkar|0|32|30|1370|0|2550]],
+		Quest = [[Raid on the Kolkar|0|32|30|1370|0|0]],
 		Start = "5397|1443|32|36.22|79.25",
 		End = "5397|1443|32|36.22|79.25",
 		Objectives = {
@@ -5049,12 +5057,12 @@ local ModQuests={
 		},
 	},
 	[1385] = {
-		Quest = [[Brutal Politics|0|35|30|1386|0|2050]],
+		Quest = [[Brutal Politics|0|35|30|1386|0|0]],
 		Start = "5396|1443|32|66.66|10.93",
 		End = "5398|1443|32|74.97|68.16",
 	},
 	[1386] = {
-		Quest = [[Assault on the Kolkar|0|32|30|1369|0|2550]],
+		Quest = [[Assault on the Kolkar|0|32|30|1369|0|0]],
 		Start = "5398|1443|32|74.97|68.16",
 		End = "5398|1443|32|74.97|68.16",
 		Objectives = {
@@ -5096,7 +5104,7 @@ local ModQuests={
 		},
 	},
 	[1387] = {
-		Quest = [[Centaur Bounty|0|31|30|0|0|3750]],
+		Quest = [[Centaur Bounty|0|31|30|0|0|0]],
 		Start = "5752|1443|32|66.74|10.87",
 		End = "5752|1443|32|66.74|10.87",
 		Objectives = {
@@ -5169,7 +5177,7 @@ local ModQuests={
 		},
 	},
 	[1389] = {
-		Quest = [[Draenethyst Crystals|0|35|30|0|0|2750]],
+		Quest = [[Draenethyst Crystals|0|35|30|0|0|0]],
 		Start = "1776|1435|32|25.98|31.40",
 		End = "1776|1435|32|25.98|31.40",
 		Objectives = {
@@ -5179,12 +5187,12 @@ local ModQuests={
 		},
 	},
 	[1392] = {
-		Quest = [[Noboru the Cudgel|0|39|29|0|0|2250]],
+		Quest = [[Noboru the Cudgel|0|39|29|0|0|0]],
 		Start = "5477|1435|32|54.90|34.10",
 		End = "1776|1435|32|25.98|31.40",
 	},
 	[1393] = {
-		Quest = [[Galen's Escape|0|38|30|0|0|2850]],
+		Quest = [[Galen's Escape|0|38|30|0|0|0]],
 		Start = "5391|1435|32|65.47|18.16",
 		End = "32569|1435|32|47.81|39.76",
 		Objectives = {
@@ -5195,12 +5203,12 @@ local ModQuests={
 		},
 	},
 	[1394] = {
-		Quest = [[Final Passage|2|36|25|0|0|4200]],
+		Quest = [[Final Passage|2|36|25|0|0|0]],
 		Start = "4488|1458|32|57.80|65.42",
 		End = "2986|1441|32|53.95|41.49",
 	},
 	[1396] = {
-		Quest = [[Encroaching Wildlife|1|37|30|1421|0|2850]],
+		Quest = [[Encroaching Wildlife|1|37|30|1421|0|0]],
 		Start = "5476|1435|32|26.74|59.83",
 		End = "5476|1435|32|26.74|59.83",
 		Objectives = {
@@ -5297,12 +5305,12 @@ local ModQuests={
 		},
 	},
 	[1418] = {
-		Quest = [[Neeka Bloodscar|2|35|30|1420|0|1350]],
+		Quest = [[Neeka Bloodscar|2|35|30|1420|0|0]],
 		Start = "1442|1435|32|47.74|55.20",
 		End = "5394|1418|32|6.48|47.18",
 	},
 	[1419] = {
-		Quest = [[Coyote Thieves|2|40|30|0|0|3150]],
+		Quest = [[Coyote Thieves|2|40|30|0|0|0]],
 		Start = "5394|1418|32|6.48|47.18",
 		End = "5394|1418|32|6.48|47.18",
 		Objectives = {
@@ -5465,12 +5473,12 @@ local ModQuests={
 		},
 	},
 	[1420] = {
-		Quest = [[Report to Helgrum|2|40|30|0|0|2350]],
+		Quest = [[Report to Helgrum|2|40|30|0|0|0]],
 		Start = "5394|1418|32|6.48|47.18",
 		End = "1442|1435|32|47.74|55.20",
 	},
 	[1421] = {
-		Quest = [[The Lost Caravan|1|35|30|1398|0|2750]],
+		Quest = [[The Lost Caravan|1|35|30|1398|0|0]],
 		Start = "5476|1435|32|26.74|59.83",
 		End = "5476|1435|32|26.74|59.83",
 		Objectives = {
@@ -5485,12 +5493,12 @@ local ModQuests={
 		End = "5393|1419|32|66.52|21.39",
 	},
 	[1433] = {
-		Quest = [[Alliance Relations|2|33|30|1435|0|265]],
+		Quest = [[Alliance Relations|2|33|30|1435|0|0]],
 		Start = "5641|1443|32|52.57|54.39",
 		End = "4498|1443|32|52.25|53.44",
 	},
 	[1434] = {
-		Quest = [[Befouled by Satyr|2|33|25|0|0|2650]],
+		Quest = [[Befouled by Satyr|2|33|25|0|0|0]],
 		Start = "5641|1443|32|52.57|54.39",
 		End = "5641|1443|32|52.57|54.39",
 		Objectives = {
@@ -5576,7 +5584,7 @@ local ModQuests={
 		},
 	},
 	[1435] = {
-		Quest = [[The Burning of Spirits|2|33|25|0|0|2650]],
+		Quest = [[The Burning of Spirits|2|33|25|0|0|0]],
 		Start = "4498|1443|32|52.25|53.44",
 		End = "4498|1443|32|52.25|53.44",
 		Objectives = {
@@ -5597,12 +5605,12 @@ local ModQuests={
 		},
 	},
 	[1436] = {
-		Quest = [[Alliance Relations|2|33|30|0|0|2650]],
+		Quest = [[Alliance Relations|2|33|30|0|0|0]],
 		Start = "5641|1443|32|52.57|54.39",
 		End = "5640|1454|32|22.56|52.63",
 	},
 	[1437] = {
-		Quest = [[Vahlarriel's Search|0|33|30|1465|0|1950]],
+		Quest = [[Vahlarriel's Search|0|33|30|1465|0|0]],
 		Start = "5642|1443|32|66.44|11.82",
 		End = "50961|1443|32|56.52|17.84",
 		Objectives = {
@@ -5612,12 +5620,12 @@ local ModQuests={
 		},
 	},
 	[1438] = {
-		Quest = [[Vahlarriel's Search|0|33|30|1439|0|2650]],
+		Quest = [[Vahlarriel's Search|0|33|30|1439|0|0]],
 		Start = "5642|1443|32|66.44|11.82",
 		End = "5644|1443|32|54.86|26.13",
 	},
 	[1439] = {
-		Quest = [[Search for Tyranis|0|33|30|0|0|2650]],
+		Quest = [[Search for Tyranis|0|33|30|0|0|0]],
 		Start = "5644|1443|32|54.86|26.13",
 		End = "5644|1443|32|54.86|26.13",
 		Objectives = {
@@ -5627,7 +5635,7 @@ local ModQuests={
 		},
 	},
 	[1440] = {
-		Quest = [[Return to Vahlarriel|0|33|30|0|0|3300]],
+		Quest = [[Return to Vahlarriel|0|33|30|0|0|0]],
 		Start = "5644|1443|32|54.86|26.13",
 		End = "5642|1443|32|66.44|11.82",
 		Objectives = {
@@ -5637,7 +5645,7 @@ local ModQuests={
 		},
 	},
 	[1447] = {
-		Quest = [[The Missing Diplomat|1|31|28|1247|0|1250]],
+		Quest = [[The Missing Diplomat|1|31|28|1247|0|0]],
 		Start = "4961|1453|32|74.27|59.17",
 		End = "4961|1453|32|74.27|59.17",
 		Objectives = {
@@ -5647,22 +5655,22 @@ local ModQuests={
 		},
 	},
 	[1453] = {
-		Quest = [[Reclaimers' Business in Desolace|1|33|30|0|0|1300]],
+		Quest = [[Reclaimers' Business in Desolace|1|33|30|0|0|0]],
 		Start = "5637|1455|32|69.95|21.26",
 		End = "5638|1443|32|66.20|9.63",
 	},
 	[1454] = {
-		Quest = [[The Karnitol Shipwreck|1|39|30|1455|0|3000]],
+		Quest = [[The Karnitol Shipwreck|1|39|30|1455|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "35251|1443|32|36.11|30.45",
 	},
 	[1455] = {
-		Quest = [[The Karnitol Shipwreck|1|39|30|1456|0|1500]],
+		Quest = [[The Karnitol Shipwreck|1|39|30|1456|0|0]],
 		Start = "35251|1443|32|36.11|30.45",
 		End = "5638|1443|32|66.20|9.63",
 	},
 	[1456] = {
-		Quest = [[The Karnitol Shipwreck|1|39|30|1457|0|3000]],
+		Quest = [[The Karnitol Shipwreck|1|39|30|1457|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5638|1443|32|66.20|9.63",
 		Objectives = {
@@ -5687,12 +5695,12 @@ local ModQuests={
 		},
 	},
 	[1457] = {
-		Quest = [[The Karnitol Shipwreck|0|39|30|0|0|2250]],
+		Quest = [[The Karnitol Shipwreck|0|39|30|0|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5637|1455|32|69.95|21.26",
 	},
 	[1458] = {
-		Quest = [[Reagents for Reclaimers Inc.|0|33|30|1459|0|2650]],
+		Quest = [[Reagents for Reclaimers Inc.|0|33|30|1459|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5638|1443|32|66.20|9.63",
 		Objectives = {
@@ -5733,7 +5741,7 @@ local ModQuests={
 		},
 	},
 	[1459] = {
-		Quest = [[Reagents for Reclaimers Inc.|0|35|30|1466|0|2750]],
+		Quest = [[Reagents for Reclaimers Inc.|0|35|30|1466|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5638|1443|32|66.20|9.63",
 		Objectives = {
@@ -5860,12 +5868,12 @@ local ModQuests={
 		},
 	},
 	[1465] = {
-		Quest = [[Vahlarriel's Search|0|33|30|1438|0|1950]],
+		Quest = [[Vahlarriel's Search|0|33|30|1438|0|0]],
 		Start = "50961|1443|32|56.52|17.84",
 		End = "5642|1443|32|66.44|11.82",
 	},
 	[1466] = {
-		Quest = [[Reagents for Reclaimers Inc.|0|40|30|1467|0|3150]],
+		Quest = [[Reagents for Reclaimers Inc.|0|40|30|1467|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5638|1443|32|66.20|9.63",
 		Objectives = {
@@ -5923,17 +5931,17 @@ local ModQuests={
 		},
 	},
 	[1467] = {
-		Quest = [[Reagents for Reclaimers Inc.|0|40|30|0|0|3150]],
+		Quest = [[Reagents for Reclaimers Inc.|0|40|30|0|0|0]],
 		Start = "5638|1443|32|66.20|9.63",
 		End = "5637|1455|32|69.95|21.26",
 	},
 	[1480] = {
-		Quest = [[The Corrupter|2|33|25|1481|0|1300]],
+		Quest = [[The Corrupter|2|33|25|1481|0|0]],
 		Start = "4663|1443|32|56.77|30.00",
 		End = "4498|1443|32|52.25|53.44",
 	},
 	[1481] = {
-		Quest = [[The Corrupter|2|33|25|1482|0|2650]],
+		Quest = [[The Corrupter|2|33|25|1482|0|0]],
 		Start = "4498|1443|32|52.25|53.44",
 		End = "4498|1443|32|52.25|53.44",
 		Objectives = {
@@ -5966,7 +5974,7 @@ local ModQuests={
 		},
 	},
 	[1482] = {
-		Quest = [[The Corrupter|2|35|25|0|0|2750]],
+		Quest = [[The Corrupter|2|35|25|0|0|0]],
 		Start = "4498|1443|32|52.25|53.44",
 		End = "4498|1443|32|52.25|53.44",
 		Objectives = {
@@ -5993,12 +6001,12 @@ local ModQuests={
 		},
 	},
 	[1484] = {
-		Quest = [[The Corrupter|2|33|25|0|0|265]],
+		Quest = [[The Corrupter|2|33|25|0|0|0]],
 		Start = "4498|1443|32|52.25|53.44",
 		End = "5641|1443|32|52.57|54.39",
 	},
 	[1488] = {
-		Quest = [[The Corrupter|2|40|25|0|0|3900]],
+		Quest = [[The Corrupter|2|40|25|0|0|0]],
 		Start = "5641|1443|32|52.57|54.39",
 		End = "5641|1443|32|52.57|54.39",
 		Objectives = {
@@ -6023,7 +6031,7 @@ local ModQuests={
 		End = "2817|1418|32|42.39|52.93",
 	},
 	[1712] = {
-		Quest = [[Cyclonian|0|40|30|1713|0|2350]],
+		Quest = [[Cyclonian|0|40|30|1713|0|0]],
 		Start = "6176|1416|32|80.50|66.92",
 		End = "6176|1416|32|80.50|66.92",
 		Objectives = {
@@ -6060,7 +6068,7 @@ local ModQuests={
 		},
 	},
 	[1713] = {
-		Quest = [[The Summoning|0|40|30|0|0|2350]],
+		Quest = [[The Summoning|0|40|30|0|0|0]],
 		Start = "6176|1416|32|80.50|66.92",
 		End = "6176|1416|32|80.50|66.92",
 		Objectives = {
@@ -6166,12 +6174,12 @@ local ModQuests={
 		},
 	},
 	[1792] = {
-		Quest = [[Whirlwind Weapon|0|40|30|0|0|3900]],
+		Quest = [[Whirlwind Weapon|0|40|30|0|0|0]],
 		Start = "6176|1416|32|80.50|66.92",
 		End = "6176|1416|32|80.50|66.92",
 	},
 	[1796] = {
-		Quest = [[Components for the Enchanted Gold Bloodrobe|0|31|31|4781|0|2500]],
+		Quest = [[Components for the Enchanted Gold Bloodrobe|0|31|31|4781|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -6181,7 +6189,7 @@ local ModQuests={
 		},
 	},
 	[1799] = {
-		Quest = [[Fragments of the Orb of Orahil|0|40|35|4961|0|3150]],
+		Quest = [[Fragments of the Orb of Orahil|0|40|35|4961|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6208,12 +6216,12 @@ local ModQuests={
 		},
 	},
 	[1947] = {
-		Quest = [[Journey to the Marsh|0|38|30|0|0|285]],
+		Quest = [[Journey to the Marsh|0|38|30|0|0|0]],
 		Start = "5885|1454|32|38.45|86.13",
 		End = "6546|1445|32|46.06|57.09",
 	},
 	[1948] = {
-		Quest = [[Items of Power|0|40|30|0|0|3150]],
+		Quest = [[Items of Power|0|40|30|0|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6227,12 +6235,12 @@ local ModQuests={
 		},
 	},
 	[1949] = {
-		Quest = [[Hidden Secrets|0|38|30|1950|0|1450]],
+		Quest = [[Hidden Secrets|0|38|30|1950|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6548|1441|32|78.29|75.70",
 	},
 	[1951] = {
-		Quest = [[Rituals of Power|0|40|30|0|0|3150]],
+		Quest = [[Rituals of Power|0|40|30|0|0|0]],
 		Start = "6548|1441|32|78.29|75.70",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6242,17 +6250,17 @@ local ModQuests={
 		},
 	},
 	[1952] = {
-		Quest = [[Mage's Wand|0|40|30|0|0|3150]],
+		Quest = [[Mage's Wand|0|40|30|0|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 	},
 	[1953] = {
-		Quest = [[Return to the Marsh|0|40|35|1954|0|315]],
+		Quest = [[Return to the Marsh|0|40|35|1954|0|0]],
 		Start = "7311|1454|32|39.16|86.27",
 		End = "6546|1445|32|46.06|57.09",
 	},
 	[1954] = {
-		Quest = [[The Infernal Orb|0|40|35|1955|0|2350]],
+		Quest = [[The Infernal Orb|0|40|35|1955|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6279,7 +6287,7 @@ local ModQuests={
 		},
 	},
 	[1955] = {
-		Quest = [[The Exorcism|0|40|35|1956|0|2350]],
+		Quest = [[The Exorcism|0|40|35|1956|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6289,7 +6297,7 @@ local ModQuests={
 		},
 	},
 	[1956] = {
-		Quest = [[Power in Uldaman|0|40|35|1957|0|3900]],
+		Quest = [[Power in Uldaman|0|40|35|1957|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6299,7 +6307,7 @@ local ModQuests={
 		},
 	},
 	[1957] = {
-		Quest = [[Mana Surges|0|40|35|0|0|2350]],
+		Quest = [[Mana Surges|0|40|35|0|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -6309,12 +6317,12 @@ local ModQuests={
 		},
 	},
 	[1958] = {
-		Quest = [[Celestial Power|0|40|35|0|0|3150]],
+		Quest = [[Celestial Power|0|40|35|0|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 	},
 	[2240] = {
-		Quest = [[The Hidden Chamber|1|40|35|0|0|3900]],
+		Quest = [[The Hidden Chamber|1|40|35|0|0|0]],
 		Start = "6906|230|32|-1.00|-1.00",
 		End = "1356|1455|32|74.64|11.74",
 		Objectives = {
@@ -6324,7 +6332,7 @@ local ModQuests={
 		},
 	},
 	[2258] = {
-		Quest = [[Badlands Reagent Run|2|39|36|2202|0|3000]],
+		Quest = [[Badlands Reagent Run|2|39|36|2202|0|0]],
 		Start = "6868|1418|32|2.42|46.06",
 		End = "6868|1418|32|2.42|46.06",
 		Objectives = {
@@ -6696,12 +6704,12 @@ local ModQuests={
 		},
 	},
 	[2398] = {
-		Quest = [[The Lost Dwarves|1|40|35|2240|0|315]],
+		Quest = [[The Lost Dwarves|1|40|35|2240|0|0]],
 		Start = "1356|1455|32|74.64|11.74",
 		End = "6906|230|32|-1.00|-1.00",
 	},
 	[2418] = {
-		Quest = [[Power Stones|0|36|30|0|0|3500]],
+		Quest = [[Power Stones|0|36|30|0|0|0]],
 		Start = "2817|1418|32|42.39|52.93",
 		End = "2817|1418|32|42.39|52.93",
 		Objectives = {
@@ -6714,7 +6722,7 @@ local ModQuests={
 		},
 	},
 	[2500] = {
-		Quest = [[Badlands Reagent Run|1|39|36|0|0|3000]],
+		Quest = [[Badlands Reagent Run|1|39|36|0|0|0]],
 		Start = "1470|1432|32|37.07|49.38",
 		End = "1470|1432|32|37.07|49.38",
 		Objectives = {
@@ -6931,12 +6939,12 @@ local ModQuests={
 		},
 	},
 	[2745] = {
-		Quest = [[Infiltrating the Castle|1|31|16|2746|0|250]],
+		Quest = [[Infiltrating the Castle|1|31|16|2746|0|0]],
 		Start = "482|1453|32|66.03|74.10",
 		End = "7766|1453|32|73.22|35.58",
 	},
 	[2746] = {
-		Quest = [[Items of Some Consequence|1|31|16|0|0|630]],
+		Quest = [[Items of Some Consequence|1|31|16|0|0|0]],
 		Start = "7766|1453|32|73.22|35.58",
 		End = "7766|1453|32|73.22|35.58",
 		Objectives = {
@@ -7061,7 +7069,7 @@ local ModQuests={
 		},
 	},
 	[2751] = {
-		Quest = [[Barbaric Battlements|2|32|32|0|0|2550]],
+		Quest = [[Barbaric Battlements|2|32|32|0|0|0]],
 		Start = "7790|1454|32|79.24|22.40",
 		End = "7790|1454|32|79.24|22.40",
 		Objectives = {
@@ -7077,7 +7085,7 @@ local ModQuests={
 		},
 	},
 	[2752] = {
-		Quest = [[On Iron Pauldrons|2|32|32|0|0|2550]],
+		Quest = [[On Iron Pauldrons|2|32|32|0|0|0]],
 		Start = "7790|1454|32|79.24|22.40",
 		End = "7790|1454|32|79.24|22.40",
 		Objectives = {
@@ -7090,7 +7098,7 @@ local ModQuests={
 		},
 	},
 	[2753] = {
-		Quest = [[Trampled Under Foot|2|36|32|0|0|2800]],
+		Quest = [[Trampled Under Foot|2|36|32|0|0|0]],
 		Start = "7790|1454|32|79.24|22.40",
 		End = "7790|1454|32|79.24|22.40",
 		Objectives = {
@@ -7100,7 +7108,7 @@ local ModQuests={
 		},
 	},
 	[2754] = {
-		Quest = [[Horns of Frenzy|2|36|32|0|0|2800]],
+		Quest = [[Horns of Frenzy|2|36|32|0|0|0]],
 		Start = "7790|1454|32|79.24|22.40",
 		End = "7790|1454|32|79.24|22.40",
 		Objectives = {
@@ -7119,7 +7127,7 @@ local ModQuests={
 		},
 	},
 	[2755] = {
-		Quest = [[Joys of Omosh|2|36|32|0|0|280]],
+		Quest = [[Joys of Omosh|2|36|32|0|0|0]],
 		Start = "7790|1454|32|79.24|22.40",
 		End = "7790|1454|32|79.24|22.40",
 		Objectives = {
@@ -7130,7 +7138,7 @@ local ModQuests={
 		},
 	},
 	[2756] = {
-		Quest = [[The Old Ways|0|40|40|0|0|3150]],
+		Quest = [[The Old Ways|0|40|40|0|0|0]],
 		Start = "7792|1454|32|80.94|23.32",
 		End = "7792|1454|32|80.94|23.32",
 		Objectives = {
@@ -7143,27 +7151,27 @@ local ModQuests={
 		},
 	},
 	[2757] = {
-		Quest = [[Booty Bay or Bust!|2|40|40|2760|0|1550]],
+		Quest = [[Booty Bay or Bust!|2|40|40|2760|0|0]],
 		Start = "7793|1454|32|80.45|23.52",
 		End = "7794|1434|32|28.87|75.42",
 	},
 	[2758] = {
-		Quest = [[The Origins of Smithing|1|40|40|2759|0|3150]],
+		Quest = [[The Origins of Smithing|1|40|40|2759|0|0]],
 		Start = "7798|1453|32|62.85|36.81",
 		End = "7798|1453|32|62.85|36.81",
 	},
 	[2759] = {
-		Quest = [[In Search of Galvan|1|40|40|2760|0|1550]],
+		Quest = [[In Search of Galvan|1|40|40|2760|0|0]],
 		Start = "7798|1453|32|62.85|36.81",
 		End = "7794|1434|32|28.87|75.42",
 	},
 	[2760] = {
-		Quest = [[The Mithril Order|0|40|40|0|0|3150]],
+		Quest = [[The Mithril Order|0|40|40|0|0|0]],
 		Start = "7794|1434|32|28.87|75.42",
 		End = "7802|1434|32|50.54|20.32",
 	},
 	[2841] = {
-		Quest = [[Rig Wars|0|35|25|0|0|2750]],
+		Quest = [[Rig Wars|0|35|25|0|0|0]],
 		Start = "3412|1454|32|75.99|25.41",
 		End = "3412|1454|32|75.99|25.41",
 		Objectives = {
@@ -7176,7 +7184,7 @@ local ModQuests={
 		},
 	},
 	[2842] = {
-		Quest = [[Chief Engineer Scooty|0|35|20|2843|0|275]],
+		Quest = [[Chief Engineer Scooty|0|35|20|2843|0|0]],
 		Start = "3413|1454|32|75.49|25.36",
 		End = "7853|1434|32|27.60|77.48",
 	},
@@ -7191,22 +7199,22 @@ local ModQuests={
 		},
 	},
 	[2929] = {
-		Quest = [[The Grand Betrayal|1|35|25|0|0|2750]],
+		Quest = [[The Grand Betrayal|1|35|25|0|0|0]],
 		Start = "7937|1455|32|68.75|48.97",
 		End = "7937|1455|32|68.75|48.97",
 	},
 	[2945] = {
-		Quest = [[Grime-Encrusted Ring|0|34|28|0|0|2700]],
+		Quest = [[Grime-Encrusted Ring|0|34|28|0|0|0]],
 		Start = "6212|226|32|-1.00|-1.00",
 		End = "142487|226|32|-1.00|-1.00",
 	},
 	[2947] = {
-		Quest = [[Return of the Ring|1|34|28|2948|0|2700]],
+		Quest = [[Return of the Ring|1|34|28|2948|0|0]],
 		Start = "142487|226|32|-1.00|-1.00",
 		End = "6826|1455|32|36.38|3.61",
 	},
 	[2948] = {
-		Quest = [[Gnome Improvement|1|35|28|0|0|2750]],
+		Quest = [[Gnome Improvement|1|35|28|0|0|0]],
 		Start = "6826|1455|32|36.38|3.61",
 		End = "6826|1455|32|36.38|3.61",
 		Objectives = {
@@ -7220,12 +7228,12 @@ local ModQuests={
 		},
 	},
 	[2949] = {
-		Quest = [[Return of the Ring|2|34|28|2950|0|2700]],
+		Quest = [[Return of the Ring|2|34|28|2950|0|0]],
 		Start = "142487|226|32|-1.00|-1.00",
 		End = "3412|1454|32|75.99|25.41",
 	},
 	[2950] = {
-		Quest = [[Nogg's Ring Redo|2|35|28|0|0|2750]],
+		Quest = [[Nogg's Ring Redo|2|35|28|0|0|0]],
 		Start = "3412|1454|32|75.99|25.41",
 		End = "3412|1454|32|75.99|25.41",
 		Objectives = {
@@ -7235,7 +7243,7 @@ local ModQuests={
 		},
 	},
 	[3341] = {
-		Quest = [[Bring the End|2|37|33|0|0|4300]],
+		Quest = [[Bring the End|2|37|33|0|0|0]],
 		Start = "2308|1458|32|74.05|33.31",
 		End = "2308|1458|32|74.05|33.31",
 		Objectives = {
@@ -7245,12 +7253,12 @@ local ModQuests={
 		},
 	},
 	[3523] = {
-		Quest = [[Scourge of the Downs|0|37|32|3525|0|285]],
+		Quest = [[Scourge of the Downs|0|37|32|3525|0|0]],
 		Start = "8516|300|32|-1.00|-1.00",
 		End = "8516|300|32|-1.00|-1.00",
 	},
 	[3525] = {
-		Quest = [[Extinguishing the Idol|0|37|32|0|0|4250]],
+		Quest = [[Extinguishing the Idol|0|37|32|0|0|0]],
 		Start = "8516|300|32|-1.00|-1.00",
 		End = "152097|300|32|-1.00|-1.00",
 		Objectives = {
@@ -7262,40 +7270,40 @@ local ModQuests={
 		},
 	},
 	[3636] = {
-		Quest = [[Bring the Light|1|37|32|0|0|4300]],
+		Quest = [[Bring the Light|1|37|32|0|0|0]],
 		Start = "1284|1453|32|50.31|45.48",
 		End = "1284|1453|32|50.31|45.48",
 	},
 	[4485] = {
-		Quest = [[The Tome of Nobility|0|40|40|0|0|315]],
+		Quest = [[The Tome of Nobility|0|40|40|0|0|0]],
 		End = "6171|1453|32|50.48|47.50",
 	},
 	[4486] = {
-		Quest = [[The Tome of Nobility|0|40|40|0|0|315]],
+		Quest = [[The Tome of Nobility|0|40|40|0|0|0]],
 		End = "6171|1453|32|50.48|47.50",
 	},
 	[4736] = {
-		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|630]],
+		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|0]],
 		Start = "5172|1455|32|50.35|5.66",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4737] = {
-		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|630]],
+		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|0]],
 		Start = "3326|1454|32|48.47|45.43",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4738] = {
-		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|630]],
+		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|0]],
 		Start = "461|1453|32|39.24|84.96",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4739] = {
-		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|630]],
+		Quest = [[In Search of Menara Voidrender|0|31|31|1796|0|0]],
 		Start = "4563|1458|32|86.21|15.93",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4781] = {
-		Quest = [[Components for the Enchanted Gold Bloodrobe|0|34|31|4782|0|2000]],
+		Quest = [[Components for the Enchanted Gold Bloodrobe|0|34|31|4782|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "2670|1434|32|28.71|76.89",
 		Objectives = {
@@ -7305,12 +7313,12 @@ local ModQuests={
 		},
 	},
 	[4782] = {
-		Quest = [[Components for the Enchanted Gold Bloodrobe|0|34|31|4783|0|1350]],
+		Quest = [[Components for the Enchanted Gold Bloodrobe|0|34|31|4783|0|0]],
 		Start = "2670|1434|32|28.71|76.89",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4783] = {
-		Quest = [[Components for the Enchanted Gold Bloodrobe|0|37|31|4784|0|2850]],
+		Quest = [[Components for the Enchanted Gold Bloodrobe|0|37|31|4784|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7368,7 +7376,7 @@ local ModQuests={
 		},
 	},
 	[4784] = {
-		Quest = [[Components for the Enchanted Gold Bloodrobe|0|37|31|4786|0|2100]],
+		Quest = [[Components for the Enchanted Gold Bloodrobe|0|37|31|4786|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7388,7 +7396,7 @@ local ModQuests={
 		End = "2670|1434|32|28.71|76.89",
 	},
 	[4786] = {
-		Quest = [[The Completed Robe|0|38|31|0|0|3550]],
+		Quest = [[The Completed Robe|0|38|31|0|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7398,7 +7406,7 @@ local ModQuests={
 		},
 	},
 	[4961] = {
-		Quest = [[Cleansing of the Orb of Orahil|0|40|35|4976|0|2350]],
+		Quest = [[Cleansing of the Orb of Orahil|0|40|35|4976|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6546|1445|32|46.06|57.09",
 		Objectives = {
@@ -7408,7 +7416,7 @@ local ModQuests={
 		},
 	},
 	[4962] = {
-		Quest = [[Shard of a Felhound|0|40|35|0|0|2350]],
+		Quest = [[Shard of a Felhound|0|40|35|0|0|0]],
 		Start = "6254|1413|32|62.64|35.30",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7426,7 +7434,7 @@ local ModQuests={
 		},
 	},
 	[4963] = {
-		Quest = [[Shard of an Infernal|0|40|35|0|0|2350]],
+		Quest = [[Shard of an Infernal|0|40|35|0|0|0]],
 		Start = "6252|1413|32|62.56|35.23",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7437,7 +7445,7 @@ local ModQuests={
 		},
 	},
 	[4964] = {
-		Quest = [[The Completed Orb of Dar'Orahil|0|40|35|0|0|3900]],
+		Quest = [[The Completed Orb of Dar'Orahil|0|40|35|0|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7447,27 +7455,27 @@ local ModQuests={
 		},
 	},
 	[4965] = {
-		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|1350]],
+		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|0]],
 		Start = "5172|1455|32|50.35|5.66",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4967] = {
-		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|1350]],
+		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|0]],
 		Start = "3326|1454|32|48.47|45.43",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4968] = {
-		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|1350]],
+		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|0]],
 		Start = "461|1453|32|39.24|84.96",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4969] = {
-		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|1350]],
+		Quest = [[Knowledge of the Orb of Orahil|0|35|35|1799|0|0]],
 		Start = "4563|1458|32|86.21|15.93",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[4975] = {
-		Quest = [[The Completed Orb of Noh'Orahil|0|40|35|0|0|3900]],
+		Quest = [[The Completed Orb of Noh'Orahil|0|40|35|0|0|0]],
 		Start = "6266|1413|32|62.51|35.45",
 		End = "6266|1413|32|62.51|35.45",
 		Objectives = {
@@ -7477,12 +7485,12 @@ local ModQuests={
 		},
 	},
 	[4976] = {
-		Quest = [[Returning the Cleansed Orb|0|40|35|0|0|1550]],
+		Quest = [[Returning the Cleansed Orb|0|40|35|0|0|0]],
 		Start = "6546|1445|32|46.06|57.09",
 		End = "6266|1413|32|62.51|35.45",
 	},
 	[5283] = {
-		Quest = [[The Art of the Armorsmith|0|40|40|0|0|3150]],
+		Quest = [[The Art of the Armorsmith|0|40|40|0|0|0]],
 		Start = "5164|1455|32|49.96|42.81",
 		End = "5164|1455|32|49.96|42.81",
 		Objectives = {
@@ -7492,12 +7500,12 @@ local ModQuests={
 		},
 	},
 	[5284] = {
-		Quest = [[The Way of the Weaponsmith|0|40|40|0|0|3150]],
+		Quest = [[The Way of the Weaponsmith|0|40|40|0|0|0]],
 		Start = "11146|1455|32|50.33|43.56",
 		End = "11146|1455|32|50.33|43.56",
 	},
 	[5301] = {
-		Quest = [[The Art of the Armorsmith|0|40|40|0|0|3150]],
+		Quest = [[The Art of the Armorsmith|0|40|40|0|0|0]],
 		Start = "11177|1454|32|79.80|24.06",
 		End = "11177|1454|32|79.80|24.06",
 		Objectives = {
@@ -7513,7 +7521,7 @@ local ModQuests={
 		},
 	},
 	[5302] = {
-		Quest = [[The Way of the Weaponsmith|0|40|40|0|0|3150]],
+		Quest = [[The Way of the Weaponsmith|0|40|40|0|0|0]],
 		Start = "11178|1454|32|79.41|23.74",
 		End = "11178|1454|32|79.41|23.74",
 		Objectives = {
@@ -7532,12 +7540,12 @@ local ModQuests={
 		},
 	},
 	[5361] = {
-		Quest = [[Family Tree|2|35|32|0|0|2050]],
+		Quest = [[Family Tree|2|35|32|0|0|0]],
 		Start = "10537|1441|32|45.67|50.74",
 		End = "11259|1443|32|55.41|55.81",
 	},
 	[5381] = {
-		Quest = [[Hand of Iruxos|2|38|32|5581|0|2850]],
+		Quest = [[Hand of Iruxos|2|38|32|5581|0|0]],
 		Start = "11624|1443|32|25.82|68.21",
 		End = "11624|1443|32|25.82|68.21",
 		Objectives = {
@@ -7547,7 +7555,7 @@ local ModQuests={
 		},
 	},
 	[5386] = {
-		Quest = [[Catch of the Day|2|37|32|0|0|2100]],
+		Quest = [[Catch of the Day|2|37|32|0|0|0]],
 		Start = "11259|1443|32|55.41|55.81",
 		End = "11259|1443|32|55.41|55.81",
 		Objectives = {
@@ -7557,7 +7565,7 @@ local ModQuests={
 		},
 	},
 	[5501] = {
-		Quest = [[Bone Collector|0|32|29|0|0|2250]],
+		Quest = [[Bone Collector|0|32|29|0|0|0]],
 		Start = "11438|1443|32|62.33|38.99",
 		End = "11438|1443|32|62.33|38.99",
 		Objectives = {
@@ -7567,7 +7575,7 @@ local ModQuests={
 		},
 	},
 	[5561] = {
-		Quest = [[Kodo Roundup|0|34|30|0|0|2000]],
+		Quest = [[Kodo Roundup|0|34|30|0|0|0]],
 		Start = "11596|1443|32|60.86|61.86",
 		End = "11596|1443|32|60.86|61.86",
 		Objectives = {
@@ -7577,7 +7585,7 @@ local ModQuests={
 		},
 	},
 	[5581] = {
-		Quest = [[Portals of the Legion|2|38|32|0|0|3550]],
+		Quest = [[Portals of the Legion|2|38|32|0|0|0]],
 		Start = "11624|1443|32|25.82|68.21",
 		End = "11624|1443|32|25.82|68.21",
 		Objectives = {
@@ -7609,7 +7617,7 @@ local ModQuests={
 		},
 	},
 	[5741] = {
-		Quest = [[Sceptre of Light|0|33|30|6027|0|2650]],
+		Quest = [[Sceptre of Light|0|33|30|6027|0|0]],
 		Start = "11863|1443|32|38.88|27.16",
 		End = "11863|1443|32|38.88|27.16",
 		Objectives = {
@@ -7619,17 +7627,17 @@ local ModQuests={
 		},
 	},
 	[5762] = {
-		Quest = [[Hemet Nesingwary Jr.|0|31|28|0|0|1250]],
+		Quest = [[Hemet Nesingwary Jr.|0|31|28|0|0|0]],
 		Start = "4452|1441|32|77.79|77.27",
 		End = "715|1434|32|35.66|10.81",
 	},
 	[5763] = {
-		Quest = [[Hunting in Stranglethorn|2|31|28|0|0|1250]],
+		Quest = [[Hunting in Stranglethorn|2|31|28|0|0|0]],
 		Start = "11877|1443|32|25.05|72.27",
 		End = "715|1434|32|35.66|10.81",
 	},
 	[5821] = {
-		Quest = [[Bodyguard for Hire|0|35|30|0|0|2750]],
+		Quest = [[Bodyguard for Hire|0|35|30|0|0|0]],
 		Start = "11625|1443|32|67.00|37.00",
 		End = "11596|1443|32|60.86|61.86",
 		Objectives = {
@@ -7639,7 +7647,7 @@ local ModQuests={
 		},
 	},
 	[5943] = {
-		Quest = [[Gizelton Caravan|0|38|32|0|0|2850]],
+		Quest = [[Gizelton Caravan|0|38|32|0|0|0]],
 		Start = "11626|1443|32|45.00|76.00",
 		End = "11596|1443|32|60.86|61.86",
 		Objectives = {
@@ -7649,7 +7657,7 @@ local ModQuests={
 		},
 	},
 	[6027] = {
-		Quest = [[Book of the Ancients|0|38|30|0|0|3550]],
+		Quest = [[Book of the Ancients|0|38|30|0|0|0]],
 		Start = "11863|1443|32|38.88|27.16",
 		End = "11863|1443|32|38.88|27.16",
 		Objectives = {
@@ -7659,12 +7667,12 @@ local ModQuests={
 		},
 	},
 	[6132] = {
-		Quest = [[Get Me Out of Here!|0|39|34|0|0|2250]],
+		Quest = [[Get Me Out of Here!|0|39|34|0|0|0]],
 		Start = "12277|1443|32|33.95|53.50",
 		End = "6019|1443|32|47.83|61.83",
 	},
 	[6134] = {
-		Quest = [[Ghost-o-plasm Round Up|0|39|34|0|0|2250]],
+		Quest = [[Ghost-o-plasm Round Up|0|39|34|0|0|0]],
 		Start = "6019|1443|32|47.83|61.83",
 		End = "6019|1443|32|47.83|61.83",
 		Objectives = {
@@ -7679,12 +7687,12 @@ local ModQuests={
 		},
 	},
 	[6141] = {
-		Quest = [[Brother Anton|1|39|34|261|0|300]],
+		Quest = [[Brother Anton|1|39|34|261|0|0]],
 		Start = "12336|1453|32|52.63|43.18",
 		End = "1182|1443|32|66.52|7.91",
 	},
 	[6142] = {
-		Quest = [[Clam Bait|2|35|31|0|0|2750]],
+		Quest = [[Clam Bait|2|35|31|0|0|0]],
 		Start = "12031|1443|32|22.64|71.97",
 		End = "12031|1443|32|22.64|71.97",
 		Objectives = {
@@ -7725,7 +7733,7 @@ local ModQuests={
 		},
 	},
 	[6143] = {
-		Quest = [[Other Fish to Fry|2|36|32|0|0|2800]],
+		Quest = [[Other Fish to Fry|2|36|32|0|0|0]],
 		Start = "12340|1443|32|23.32|72.87",
 		End = "12340|1443|32|23.32|72.87",
 		Objectives = {
@@ -7800,7 +7808,7 @@ local ModQuests={
 		},
 	},
 	[6161] = {
-		Quest = [[Claim Rackmore's Treasure!|0|36|30|0|0|2800]],
+		Quest = [[Claim Rackmore's Treasure!|0|36|30|0|0|0]],
 		Start = "177787|1443|32|36.07|30.41",
 		End = "177786|1443|32|30.00|8.71",
 		Objectives = {
@@ -7900,7 +7908,7 @@ local ModQuests={
 		},
 	},
 	[6521] = {
-		Quest = [[An Unholy Alliance|2|36|28|0|0|3500]],
+		Quest = [[An Unholy Alliance|2|36|28|0|0|0]],
 		Objectives = {
 			[1] = {
 				"Ambassador Malcin's Head|1413|32|48.52|95.62|5.01|3.34"
@@ -7908,12 +7916,12 @@ local ModQuests={
 		},
 	},
 	[6522] = {
-		Quest = [[An Unholy Alliance|2|36|28|6521|0|2800]],
+		Quest = [[An Unholy Alliance|2|36|28|6521|0|0]],
 		Start = "4421|301|32|-1.00|-1.00",
 		End = "36273|1458|32|56.25|92.21",
 	},
 	[6626] = {
-		Quest = [[A Host of Evil|0|35|28|0|0|3450]],
+		Quest = [[A Host of Evil|0|35|28|0|0|0]],
 		Start = "12866|1413|32|49.01|94.94",
 		End = "12866|1413|32|49.01|94.94",
 		Objectives = {
@@ -7951,7 +7959,7 @@ local ModQuests={
 		},
 	},
 	[7321] = {
-		Quest = [[Soothing Turtle Bisque|2|31|28|0|0|2500]],
+		Quest = [[Soothing Turtle Bisque|2|31|28|0|0|0]],
 		Start = "2393|1424|32|62.29|19.04",
 		End = "2393|1424|32|62.29|19.04",
 		Objectives = {
@@ -7998,57 +8006,57 @@ local ModQuests={
 		},
 	},
 	[7541] = {
-		Quest = [[Service to the Horde|2|40|30|0|0|1550]],
+		Quest = [[Service to the Horde|2|40|30|0|0|0]],
 		Start = "4047|1454|32|38.93|38.40",
 		End = "4047|1454|32|38.93|38.40",
 	},
 	[7863] = {
-		Quest = [[Sentinel Basic Care Package|1|34|25|0|0|585]],
+		Quest = [[Sentinel Basic Care Package|1|34|25|0|0|0]],
 		Start = "14753|1440|32|61.49|83.86",
 		End = "14753|1440|32|61.49|83.86",
 	},
 	[7866] = {
-		Quest = [[Outrider Basic Care Package|2|34|25|0|0|585]],
+		Quest = [[Outrider Basic Care Package|2|34|25|0|0|0]],
 		Start = "14754|1413|32|46.65|8.38",
 		End = "14754|1413|32|46.65|8.38",
 	},
 	[7871] = {
-		Quest = [[Vanquish the Invaders!|0|35|30|0|0|2750]],
+		Quest = [[Vanquish the Invaders!|0|35|30|0|0|0]],
 		Start = "14733|1440|32|61.85|83.90",
 		End = "14733|1440|32|61.85|83.90",
 	},
 	[7887] = {
-		Quest = [[Talismans of Merit|0|35|30|0|0|3005]],
+		Quest = [[Talismans of Merit|0|35|30|0|0|0]],
 		Start = "14733|1440|32|61.85|83.90",
 		End = "14733|1440|32|61.85|83.90",
 	},
 	[7924] = {
-		Quest = [[Mark of Honor|0|35|30|0|0|3005]],
+		Quest = [[Mark of Honor|0|35|30|0|0|0]],
 		Start = "14781|1413|32|46.60|8.41",
 		End = "14781|1413|32|46.60|8.41",
 	},
 	[8156] = {
-		Quest = [[Arathi Basin Resources!|0|35|30|0|0|2750]],
+		Quest = [[Arathi Basin Resources!|0|35|30|0|0|0]],
 		Start = "14984|1417|32|45.88|45.28",
 		End = "14984|1417|32|45.88|45.28",
 	},
 	[8159] = {
-		Quest = [[More Resource Crates|0|35|30|0|0|3005]],
+		Quest = [[More Resource Crates|0|35|30|0|0|0]],
 		Start = "14984|1417|32|45.88|45.28",
 		End = "14984|1417|32|45.88|45.28",
 	},
 	[8164] = {
-		Quest = [[More Resource Crates|0|35|30|0|0|3005]],
+		Quest = [[More Resource Crates|0|35|30|0|0|0]],
 		Start = "15022|1417|32|73.46|29.76",
 		End = "15022|1417|32|73.46|29.76",
 	},
 	[8167] = {
-		Quest = [[The Battle for Arathi Basin!|1|35|30|0|0|2750]],
+		Quest = [[The Battle for Arathi Basin!|1|35|30|0|0|0]],
 		Start = "14983|1417|32|45.82|45.46",
 		End = "14983|1417|32|45.82|45.46",
 	},
 	[8170] = {
-		Quest = [[The Battle for Arathi Basin!|2|35|30|0|0|2750]],
+		Quest = [[The Battle for Arathi Basin!|2|35|30|0|0|0]],
 		Start = "15021|1417|32|73.25|29.73",
 		End = "15021|1417|32|73.25|29.73",
 		Objectives = {
@@ -8099,12 +8107,12 @@ local ModQuests={
 		},
 	},
 	[8260] = {
-		Quest = [[Arathor Basic Care Package|0|34|25|0|0|585]],
+		Quest = [[Arathor Basic Care Package|0|34|25|0|0|0]],
 		Start = "15127|1417|32|45.97|45.21",
 		End = "15127|1417|32|45.97|45.21",
 	},
 	[8263] = {
-		Quest = [[Defiler's Basic Care Package|0|34|25|0|0|585]],
+		Quest = [[Defiler's Basic Care Package|0|34|25|0|0|0]],
 		Start = "15126|1417|32|73.37|29.67",
 		End = "15126|1417|32|73.37|29.67",
 	},

@@ -12,6 +12,7 @@
 
 Libs\libs.xml
 Locales\Locales.xml
+Taintless.xml
 Carbonite.lua
 NxUI.lua
 NxOptions.lua

@@ -2781,7 +2781,10 @@ function Nx.Quest:Init()
 
 	self.BlizzAcceptQuest = AcceptQuest
 	AcceptQuest = self.AcceptQuest
-
+	
+	self.BlizzGetQuestReward = GetQuestReward -- dont remove needed to record finished quests
+	GetQuestReward = self.GetQuestReward
+	
 	QuestFrameDetailPanel:HookScript ("OnShow", function ()
 		local auto = Nx.qdb.profile.Quest.AutoAccept
 		if IsShiftKeyDown() and IsControlKeyDown() then

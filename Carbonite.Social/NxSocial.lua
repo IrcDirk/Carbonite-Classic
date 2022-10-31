@@ -630,6 +630,40 @@ function Nx.Social:Init()
 	hooksecurefunc ("ShowUIPanel", Nx.Social.PShowUIPanel)
 	hooksecurefunc ("HideUIPanel", Nx.Social.PHideUIPanel)
 	hooksecurefunc ("CloseWindows", Nx.Social.PCloseWindows)
+	
+	hooksecurefunc ("GuildFramePopup_Show",  function() 
+		local ff = FriendsFrame
+		local ffH = self.FFHolder
+
+		ff:SetToplevel (false)
+		ff:SetParent (ffH)
+		ff:SetPoint ("TOPLEFT", ffH, "TOPLEFT", 0, 0)
+
+		if ff:IsVisible() then
+
+			if ff:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
+				ff:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+			end
+
+			if ff:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
+				ff:Raise()
+			end
+		end
+		
+		local f = GuildControlPopupFrame
+		if f:IsVisible() then
+
+			if f:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
+				f:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+			end
+
+			if f:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
+				f:Raise()
+			end
+		end
+	end)
+
+	
 	Nx.Window:SetAttribute("NxPunkHUD","H",Nx.scdb.profile.Social.PunkTWinHide)
 	Nx.Window:SetAttribute("NxPunkHUD","L",Nx.scdb.profile.Social.PunkTWinLock)
 end
@@ -690,7 +724,27 @@ function Nx.Social:ShowUIPanel (frame)
 			C_Timer.After(0, function() self.Bar:Select (self.TabSelected, true) end)
 			--self.Bar:Select (self.TabSelected, true)
 		end
+		
+		local ff = FriendsFrame
+		local ffH = self.FFHolder
 
+		ff:SetToplevel (false)
+		ff:SetParent (ffH)
+		ff:SetPoint ("TOPLEFT", ffH, "TOPLEFT", 0, 0)
+
+		if ff:IsVisible() then
+
+			if ff:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
+				ff:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+			end
+
+			if ff:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
+				ff:Raise()
+--					Nx.prt ("raise")
+			end
+		end
+
+		
 --[[	--V4
 		local guildTabI = self.OrigTabI + 2
 
@@ -917,23 +971,6 @@ function Nx.Social:OnUpdate()
 			if self.Win:IsMovingOrSizing() then
 				return
 			end
-
---			Nx.prt ("Soc vis")
-
---[[
-			local f = GuildControlPopupFrame
-			if f:IsVisible() then
-
-				if f:GetFrameStrata() ~= wf:GetFrameStrata() then
-					f:SetFrameStrata (wf:GetFrameStrata())
-				end
-
-				if f:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
-					f:Raise()
---					Nx.prt ("raise")
-				end
-			end
---]]
 
 			--[[local f = ChannelFrameDaughterFrame
 			if f:IsVisible() then

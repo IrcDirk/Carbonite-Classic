@@ -866,7 +866,7 @@ function Nx:SetupEverything()
 		end)
 	end
 	
-	GuildControlPopupFrame.initialized = 1
+	--GuildControlPopupFrame.initialized = 1
 end
 
 function Nx:ADDON_LOADED (event, arg1, ...)

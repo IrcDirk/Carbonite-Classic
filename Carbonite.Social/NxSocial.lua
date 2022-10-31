@@ -631,37 +631,42 @@ function Nx.Social:Init()
 	hooksecurefunc ("HideUIPanel", Nx.Social.PHideUIPanel)
 	hooksecurefunc ("CloseWindows", Nx.Social.PCloseWindows)
 	
-	hooksecurefunc ("GuildFramePopup_Show",  function() 
-		local ff = FriendsFrame
-		local ffH = self.FFHolder
+	local func = function ()
+		if Nx.scdb.profile.Social.SocialEnable then
+			local ff = FriendsFrame
+			local ffH = self.FFHolder
 
-		ff:SetToplevel (false)
-		ff:SetParent (ffH)
-		ff:SetPoint ("TOPLEFT", ffH, "TOPLEFT", 0, 0)
+			ff:SetToplevel (false)
+			ff:SetParent (ffH)
+			ff:SetPoint ("TOPLEFT", ffH, "TOPLEFT", 0, 0)
 
-		if ff:IsVisible() then
+			if ff:IsVisible() then
 
-			if ff:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
-				ff:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+				if ff:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
+					ff:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+				end
+
+				if ff:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
+					ff:Raise()
+				end
 			end
+			
+			local f = GuildControlPopupFrame
+			if f:IsVisible() then
 
-			if ff:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
-				ff:Raise()
+				if f:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
+					f:SetFrameStrata (self.Win.Frm:GetFrameStrata())
+				end
+
+				if f:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
+					f:Raise()
+				end
 			end
 		end
-		
-		local f = GuildControlPopupFrame
-		if f:IsVisible() then
-
-			if f:GetFrameStrata() ~= self.Win.Frm:GetFrameStrata() then
-				f:SetFrameStrata (self.Win.Frm:GetFrameStrata())
-			end
-
-			if f:GetFrameLevel() <= self.Win.Frm:GetFrameLevel() then
-				f:Raise()
-			end
-		end
-	end)
+	end
+	
+	GuildControlPopupFrameCancelButton:HookScript("OnClick", func)
+	hooksecurefunc ("GuildFramePopup_Show", func)
 
 	
 	Nx.Window:SetAttribute("NxPunkHUD","H",Nx.scdb.profile.Social.PunkTWinHide)

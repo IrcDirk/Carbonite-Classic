@@ -2846,30 +2846,13 @@ function Nx.Quest:Init()
 		["Erratic Sentry"] = "Erratic Sentries",
 	}
 
-	--hooksecurefunc ("ShowUIPanel", CarboniteQuest.ShowUIPanel)
-	--hooksecurefunc ("HideUIPanel", CarboniteQuest.HideUIPanel)
-	--[[hooksecurefunc ("ToggleQuestLog", function(...)
-		Nx.Map.WMFOnShow = false
-		local orig = IsAltKeyDown() and not self.IgnoreAlt
+	local func = function ()
+		local testAlt = IsAltKeyDown() and not self.IgnoreAlt
 		if Nx.qdb.profile.Quest.UseAltLKey then
-			orig = not orig
+			testAlt = not testAlt
 		end
-		if not orig then
-			
-		end
-		Nx.Map.WMFOnShow = truel
-	end)]]--
-	Nx.Quest.OldToggleQuestLog = ToggleQuestLog
-	function ToggleQuestLog(...)
-		Nx.Map.WMFOnShow = false
-		local orig = IsAltKeyDown() and not self.IgnoreAlt
-		if Nx.qdb.profile.Quest.UseAltLKey then
-			orig = not orig
-		end
-		if orig then
-			--WorldMapFrame:SetQuestLogPanelShown(true)
-			Nx.Quest:OldToggleQuestLog()
-		else
+		if not testAlt then 
+			QuestLogFrame:Hide()
 			if self.InShowUIPanel then
 				Nx.Quest:HideUIPanel(QuestMapFrame)
 				self.InShowUIPanel = false
@@ -2877,38 +2860,9 @@ function Nx.Quest:Init()
 				Nx.Quest:ShowUIPanel(QuestMapFrame)
 				self.InShowUIPanel = true
 			end
-		end	
-		Nx.Map.WMFOnShow = true
+		end
 	end
-	--[[Nx.Quest.OldWindow = ToggleQuestLog
-	function ToggleQuestLog(...)
-		local orig = IsAltKeyDown() and not self.IgnoreAlt
-		if Nx.qdb.profile.Quest.UseAltLKey then
-			orig = not orig
-		end
-		if orig then
-			Nx.Map.WMFOnShow = false
-			self.IsOrigOpen = WorldMapFrame:IsShown()
-			if self.IsOrigOpen then
-				HideUIPanel(WorldMapFrame)
-			else
-				QuestMapFrame_Open(true)
-				OpenQuestLog()
-			end
-			Nx.Map.WMFOnShow = true
-		else
-			--if self.IsOpen then
-			--	self.IsOpen = QuestMapFrame:IsShown()
-			--end
-			if self.InShowUIPanel then
-				Nx.Quest:HideUIPanel(QuestMapFrame)
-				self.InShowUIPanel = false
-			else
-				Nx.Quest:ShowUIPanel(QuestMapFrame)
-				self.InShowUIPanel = true
-			end
-		end
-	end]]--
+	QuestLogFrame:HookScript ("OnShow", func)
 end
 
 -------

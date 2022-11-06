@@ -6183,6 +6183,17 @@ end
 -- Check world zone hotspots type
 -- This is very fast. No need to make a quad tree
 
+function Nx.Map:CheckDropdownListVisible()
+	for i = 1, 10 do
+		local _DropdownList = _G["DropDownList" .. i]
+		if _DropdownList and _DropdownList:IsVisible() and _DropdownList:GetFrameStrata() == "FULLSCREEN_DIALOG" then
+			return true
+		end
+	end
+	
+	return false
+end
+
 function Nx.Map:CheckWorldHotspotsType (wx, wy, quad)
 
 	for n, spot in ipairs (quad) do
@@ -6193,7 +6204,7 @@ function Nx.Map:CheckWorldHotspotsType (wx, wy, quad)
 			if spot.MapId ~= curId then
 
 --				Nx.prt ("hotspot %s %s %s %s %s", spot.MapId, spot.WX1, spot.WX2, spot.WY1, spot.WY2)
-				self:SetCurrentMap (spot.MapId)			
+				if not Nx.Map:CheckDropdownListVisible() then self:SetCurrentMap (spot.MapId) end		
 			end
 			Nx.Map.MouseIsOverMap = spot.MapId
 			self.WorldHotspotTipStr = spot.NxTipBase .. "\n"

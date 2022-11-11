@@ -838,18 +838,18 @@ function CarboniteWarehouse:OnInitialize()
 		"SetAction", 
 		"SetAuctionItem", 
 		"SetBagItem", 
-		--"SetGuildBankItem", 
+		"SetGuildBankItem", 
 		"SetHyperlink", 
 		"SetInboxItem", 
 		"SetInventoryItem", 
 		"SetLootItem",
 		"SetLootRollItem", 
 		"SetMerchantItem", 
-		--"SetRecipeReagentItem",
-		--"SetRecipeResultItem", 
+		"SetCraftItem",
 		"SetQuestItem", 
 		"SetQuestLogItem", 
 		"SetTradeTargetItem",
+		"SetTradeSkillItem",
 	}
 
 	for k, name in ipairs (ttHooks) do

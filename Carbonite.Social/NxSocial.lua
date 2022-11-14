@@ -1178,7 +1178,7 @@ function Nx.Social.List:Create()
 	local function func (self)
 		if UnitIsPlayer ("target") and UnitCanCooperate ("player", "target") then
 --			Nx.prt ("target %s", UnitName ("target"))
-			AddFriend (UnitName ("target"))			--V4 was AddFriend ("target")
+			C_FriendList.AddFriend (UnitName ("target"))			--V4 was C_FriendList.AddFriend ("target")
 		else
 			StaticPopup_Show ("ADD_FRIEND")
 		end
@@ -1294,7 +1294,7 @@ end
 
 function Nx.Social.List:Menu_OnMakePalFriend()
 	if self.MenuSelName then
-		AddFriend (self.MenuSelName)
+		C_FriendList.AddFriend (self.MenuSelName)
 	end
 end
 
@@ -1305,7 +1305,7 @@ function Nx.Social.List:Menu_OnMakePalsFriends()
 	for _, friends in pairs (pal) do
 		for fName, v in pairs (friends) do
 			if not self:FindFriendI (fName) then	-- Not a friend?
-				AddFriend (fName)
+				C_FriendList.AddFriend (fName)
 			end
 		end
 	end

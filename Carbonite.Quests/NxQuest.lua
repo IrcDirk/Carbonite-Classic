@@ -5358,85 +5358,84 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 		end
 	end
 
-	if tipStr and #tipStr > 5 and #tipStr < 70 and not self.TTIgnore[tipStr] then
+	if tipStr and #tipStr >= 5 and #tipStr < 70 and not self.TTIgnore[tipStr] then
 		tipStr = self.TTChange[tipStr] or tipStr
 		local tipStrLower = strlower (tipStr)
 
 		local curq = self.CurQ
-
-		for curi, cur in ipairs (curq) do
-
-			if not cur.Goto then		-- Skip Goto and Party quests
-
-				local s1 = strfind (cur.ObjText, tipStr, 1, true)
-				if not s1 then
-					s1 = strfind (cur.DescText, tipStr, 1, true)
-				end
-				if not s1 then
-					s1 = strfind (cur.ObjText, tipStrLower, 1, true)
-				end
-				if not s1 then
-					s1 = strfind (cur.DescText, tipStrLower, 1, true)
-				end
-				if not s1 then
-					for n = 1, cur.LBCnt do
-						if cur[n] then	-- V4
-							s1 = strfind (cur[n], tipStr)
-							if s1 then
-								break
-							end
-						end
-					end
-				end
-
-				if s1 then
-					local color = self:GetDifficultyColor (cur.Level)
-					color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
-
-					tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
-
-					for n = 1, cur.LBCnt do
-						if strfind (cur[n], tipStr) then
-							local color, s1 = self:CalcPercentColor (cur[n], cur[n + 100])
-							if s1 then
-								local oName = strsub (cur[n], 1, s1 - 1)
-								tip:AddLine (format ("    |cffb0b0b0%s%s%s", oName, color, strsub (cur[n], s1)))
+		local _, unit = tip:GetUnit()
+		-- Check if our tooltip is on a unit first
+		if unit then
+--			Nx.prt("TTN %s U %s", name, unit)
+			local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
+			local unitQuests = Nx.Units2Quests[tonumber(npcID)]
+			if npcID and unitQuests then	
+				local npcQuests = {Nx.Split('|', unitQuests)};
+				for k, str in ipairs (npcQuests) do
+					local id, objn = Nx.Split(',', str)
+					id = tonumber(id)
+					objn = tonumber(objn)
+					local i, cur = self:FindCur (id)
+					if cur then
+						local color = self:GetDifficultyColor (cur.Level)
+						color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+						tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
+						if cur[objn] then
+							local oName, oCount = Nx.Split(':', cur[objn]);
+							if oName and oCount then
+								tip:AddLine (format ("    |cffb0b0b0%s:%s%s", oName, color, oCount))
 							else
-								tip:AddLine (format ("    %s%s", color, cur[n]))
+								tip:AddLine (format ("    %s%s", color, cur[objn]))
 							end
 						end
 					end
+				end
+			end
+		else
+			-- Iterate over our current quests to find matches for item objectives
+			for curi, cur in ipairs (curq) do
 
---					Nx.prt ("TTProcess %s #%s", tipStr, tip:NumLines())
-
-					return true;
-				else
-					local name, unit = tip:GetUnit()
-					if unit then
-						local unitType, _, _, _, _, npcID = strsplit('-', UnitGUID(unit) or '')
-						if npcID and Nx.Units2Quests[tonumber(npcID)] then	
-							local npcQuests = {Nx.Split('|', Nx.Units2Quests[tonumber(npcID)])};
-							for k, str in ipairs (npcQuests) do
-								local id, objn = Nx.Split(',', str)
-								id = tonumber(id)
-								objn = tonumber(objn)
-								local i, cur = self:FindCur (id)
-								if cur then
-									local color = self:GetDifficultyColor (cur.Level)
-									color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
-									tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
-									if cur[objn] then
-										local oName, oCount = Nx.Split(':', cur[objn]);
-										if oName and oCount then
-											tip:AddLine (format ("    |cffb0b0b0%s:%s%s", oName, color, oCount))
-										else
-											tip:AddLine (format ("    %s%s", color, cur[objn]))
-										end
-										return
-									end
+				if not cur.Goto then		-- Skip Goto and Party quests
+	
+					local s1 = strfind (cur.ObjText, tipStr, 1, true)
+					if not s1 then
+						s1 = strfind (cur.DescText, tipStr, 1, true)
+					end
+					if not s1 then
+						s1 = strfind (cur.ObjText, tipStrLower, 1, true)
+					end
+					if not s1 then
+						s1 = strfind (cur.DescText, tipStrLower, 1, true)
+					end
+					if not s1 then
+						for n = 1, cur.LBCnt do
+							if cur[n] then	-- V4
+								s1 = strfind (cur[n], tipStr)
+								if s1 then
+									break
 								end
 							end
 						end
+					end
+	
+					if s1 then
+						local color = self:GetDifficultyColor (cur.Level)
+						color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+	
+						tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
+	
+						for n = 1, cur.LBCnt do
+							if strfind (cur[n], tipStr) then
+								local color, s1 = self:CalcPercentColor (cur[n], cur[n + 100])
+								if s1 then
+									local oName = strsub (cur[n], 1, s1 - 1)
+									tip:AddLine (format ("    |cffb0b0b0%s%s%s", oName, color, strsub (cur[n], s1)))
+								else
+									tip:AddLine (format ("    %s%s", color, cur[n]))
+								end
+							end
+						end
+	--					Nx.prt ("TTProcess %s #%s", tipStr, tip:NumLines())
 					end
 				end
 			end

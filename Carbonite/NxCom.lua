@@ -431,12 +431,21 @@ function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, a
 
 	local self = Nx.Com
 
-	if event == "--CHAT_MSG_SYSTEM" then
+	if event == "CHAT_MSG_SYSTEM" then
 		local message = arg1
-	
-		local ONLINE = ERR_FRIEND_ONLINE_SS:gsub("%%s", "(.-)"):gsub("[%[%]]", "%%%1")
-		local OFFLINE = ERR_FRIEND_OFFLINE_S:gsub("%%s", "(.-)")
 		
+		local NOT_FOUND = ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)")
+		local name = strmatch(message, NOT_FOUND)
+		
+		if name then 
+			for k, v in ipairs (self.Friends) do
+				if name == v then tremove(self.Friends, k) end
+			end
+		end
+		
+		--local ONLINE = ERR_FRIEND_ONLINE_SS:gsub("%%s", "(.-)"):gsub("[%[%]]", "%%%1")
+		--local OFFLINE = ERR_FRIEND_OFFLINE_S:gsub("%%s", "(.-)")
+		--[[
 		local action = ""
 		local _, name = strmatch(message, ONLINE)
 		
@@ -460,6 +469,7 @@ function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, a
 				end
 			end
 		end
+		]]--
 		--[[ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", function(frame, event, message)
 		   local action = "OFFLINE"
 		   local _, name = strmatch(message, ONLINE)

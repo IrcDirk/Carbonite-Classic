@@ -929,7 +929,7 @@ function Nx:InitEvents()
 	Com:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", "OnChatEvent")
 	Com:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE", "OnChatEvent")
 	Com:RegisterEvent("CHAT_MSG_CHANNEL", "OnChat_msg_channel")
-	--Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
+	Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
 	
 	AuctionAssist:RegisterEvent("AUCTION_HOUSE_SHOW", "OnAuction_house_show")
 	AuctionAssist:RegisterEvent("AUCTION_HOUSE_CLOSED", "OnAuction_house_closed")

@@ -436,8 +436,12 @@ function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, a
 		
 		local NOT_FOUND = ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)")
 		local name = strmatch(message, NOT_FOUND)
-		
 		if name then 
+			if not Nx.strpos(name, "-") then
+				local realmname = GetRealmName()
+				name = name .. (realmname and "-" .. realmname or "")
+			end
+			
 			for k, v in ipairs (self.Friends) do
 				if name == v then tremove(self.Friends, k) end
 			end

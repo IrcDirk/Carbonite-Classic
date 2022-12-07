@@ -4735,11 +4735,9 @@ function Nx.Map:GetMiniInfo (mapId)
 	local t = self.MiniMapBlks[id]
 
 	if not t then			-- "Isle of Quel'Danas"??
-		Nx.prt("GetMiniInfo: missing %s %s", id, mapId)
-
---		if NxData.DebugMap then
---			Nx.prt ("GetMiniInfo: missing %s", id)
---		end
+		if Nx.db.profile.Debug.DebugMap then
+			Nx.prt("GetMiniInfo: missing %s %s", id, mapId))
+		end
 		return
 	end
 

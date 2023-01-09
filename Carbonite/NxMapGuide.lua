@@ -287,30 +287,6 @@ Nx.GuideInfo = {
 			Tx = "INV_Ore_Copper_01",
 			Persist = "ShowGatherM",
 		},
-		--[[{
-			Name = L["Timber"],
-			Tx = "INV_Tradeskillitem_03",
-			Persist = "ShowGatherL",
-		},
-		{
-			Name = L["Artifacts"],
-			T = "$ A",
-			Id = "Art",
-			Tx = "Trade_Archaeology",
-			Persist = "ShowGatherA",
-		},
-		{
-			Name = L["Everfrost"],
-			T = "$ E",
-			Id = "Everfrost",
-			Tx = "spell_shadow_teleport",
-		},
-		{
-			Name = L["Gas"],
-			T = "$ G",
-			Id = "Gas",
-			Tx = "inv_gizmo_zapthrottlegascollector",
-		},]]--
 	},
 	{
 		Name = L["Instances"],
@@ -901,21 +877,6 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			f.Id = a
 			folder[a] = f
 		end
-	--[[elseif folder.Name == L["Timber"] then
-		for a,b in pairs(Nx.GatherInfo["L"]) do
-			local name, tx, skill = Nx:GetGather ("L", a)
-			if not name then
-				break
-			end
-			local f = {}
-			f.Name = name
-			f.Column2 = format("Level %d", skill)
-			f.Column3 = "Lumbermill"
-			f.T = "$L" .. a
-			f.Tx = tx
-			f.Id = a
-			folder[a] = f
-		end]]--
 	elseif folder.Name == L["Ore"] then
 		for a,b in pairs(Nx.GatherInfo["M"]) do
 			local name, tx, skill = Nx:GetGather ("M", a)
@@ -1083,14 +1044,6 @@ function Nx.Map.Guide:ClearShowFolders()
 		local folder = self:FindFolder (L["Ore"], gFolder)
 		self:AddShowFolders (folder)
 	end
-	--[[if Nx.db.char.Map.ShowGatherL then
-		local folder = self:FindFolder (L["Timber"], gFolder)
-		self:AddShowFolders (folder)
-	end
-	if Nx.db.char.Map.ShowGatherA then
-		local folder = self:FindFolder (L["Artifacts"], gFolder)
-		self:AddShowFolders (folder)
-	end]]--
 	if Nx.db.char.Map.ShowQuestGivers > 1 then
 		local folder = self:FindFolder (L["Quest Givers"])
 		self:AddShowFolders (folder)
@@ -1314,15 +1267,13 @@ function Nx.Map.Guide:UpdateMapIcons()
 				longType = "Herb"
 			elseif typ == "M" then
 				longType = "Mine"
-			--elseif typ == "L" then
-			--	longType = "Timber"
 			end
 			local fid = folder.Id
 			local data = longType and Nx:GetData (longType) or Nx.db.profile.GatherData["Misc"]
 			local carbMapId = mapId
 			local zoneT = data[carbMapId]
 			if zoneT then
-				if (typ == "M" and Nx.db.profile.Guide.ShowMines[fid]) or (typ == "H" and Nx.db.profile.Guide.ShowHerbs[fid]) or (typ == "L" and Nx.db.profile.Guide.ShowTimber[fid]) then
+				if (typ == "M" and Nx.db.profile.Guide.ShowMines[fid]) or (typ == "H" and Nx.db.profile.Guide.ShowHerbs[fid]) then
 				local nodeT = zoneT[fid]
 				if nodeT then
 					local iconType = fid == "Art" and "!G" or "!Ga"
@@ -1333,11 +1284,7 @@ function Nx.Map.Guide:UpdateMapIcons()
 						if level == Nx.Map.DungeonLevel then
 							icon = map:AddIconPt (iconType, wx, wy, level, nil, "Interface\\Icons\\"..tex, level)
 							if skill > 0 then
-								if typ == "L" then
-									name = name .. "\nL" .. skill .. " " .. L["Lumbermill"]
-								else
-									name = name .. " [" .. L["Skill"] .. ": " .. skill .. "]"
-								end
+								name = name .. " [" .. L["Skill"] .. ": " .. skill .. "]"
 							end
 							map:SetIconTip (icon, name)
 						end
@@ -1820,8 +1767,6 @@ function Nx.Map.Guide:FindClosest (findType)
 					longType = "Herb"
 				elseif type == "M" then
 					longType = "Mine"
---				elseif type == "L" then
---					longType = "Timber"
 				end
 				if longType then
 					local fid = folder.Id

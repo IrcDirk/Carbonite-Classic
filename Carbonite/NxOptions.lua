@@ -1888,15 +1888,6 @@ local function guidegatherConfig ()
 								Nx.Opts:NXCmdDeleteMine()
 							end,
 						},
-						--[[CmdDelTimber = {
-							order = 5,
-							type = "execute",
-							width = "full",
-							name = L["Delete Timber Gather Locations"],
-							func = function ()
-								Nx.Opts:NXCmdDeleteTimber()
-							end,
-						},]]--
 						CmdDelMisc = {
 							order = 6,
 							type = "execute",
@@ -3874,74 +3865,6 @@ local function guidegatherConfig ()
 ]]--
 					},
 				},
-				--[[TimberDisp = {
-					order = 5,
-					type = "group",
-					name = L["Timber"],
-					args = {
-						tenableall = {
-							order = 1,
-							type = "execute",
-							width = "double",
-							name = L["Enable All"],
-							func = function()
-								for i = 1,3 do
-									Nx.db.profile.Guide.ShowTimber[i] = true
-								end
-							end,
-						},
-						tdisableall = {
-							order = 2,
-							type = "execute",
-							width = "double",
-							name = L["Disable All"],
-							func = function()
-								for i = 1,3 do
-									Nx.db.profile.Guide.ShowTimber[i] = false
-								end
-							end,
-						},
-						small = {
-							order = 3,
-							type = "toggle",
-							width = "full",
-							name = L["Small Timber"],
-							desc = L["Display"] .. " " .. L["Small Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[1]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[1] = not Nx.db.profile.Guide.ShowTimber[1]
-							end,
-						},
-						med = {
-							order = 4,
-							type = "toggle",
-							width = "full",
-							name = L["Medium Timber"],
-							desc = L["Display"] .. " " .. L["Medium Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[2]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[2] = not Nx.db.profile.Guide.ShowTimber[2]
-							end,
-						},
-						large = {
-							order = 5,
-							type = "toggle",
-							width = "full",
-							name = L["Large Timber"],
-							desc = L["Display"] .. " " .. L["Large Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[3]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[3] = not Nx.db.profile.Guide.ShowTimber[3]
-							end,
-						},
-					},
-				},]]--
 			},
 		}
 	end
@@ -4706,13 +4629,6 @@ function Nx.Opts:NXCmdDeleteHerb()
 		Nx:GatherDeleteHerb()
 	end
 	Nx:ShowMessage (L["Delete Herbalism Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
-end
-
-function Nx.Opts:NXCmdDeleteTimber()
-	local function func()
-		Nx.GatherDeleteTimber()
-	end
-	Nx:ShowMessage (L["Delete Timber Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
 end
 
 function Nx.Opts:NXCmdDeleteMine()

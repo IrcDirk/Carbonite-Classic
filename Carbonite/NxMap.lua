@@ -785,13 +785,6 @@ function Nx.Map:Create (index)
 	local item = showMenu:AddItem (0, L["Show Mining Locations"], func, m)
 	m.MenuIShowMine = item
 	item:SetChecked (Nx.db.char.Map, "ShowGatherM")
---	local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
---	m.MenuIShowTimber = item
---	item:SetChecked (Nx.db.char.Map, "ShowGatherL")
---	local item = showMenu:AddItem (0, L["Show Artifact Locations"], func, m)
---	m.MenuIShowArt = item
---	item:SetChecked (Nx.db.char.Map, "ShowGatherA")
-
 
 	local function func (self)
 		self.Guide.POIDraw = nil
@@ -3489,13 +3482,6 @@ end
 --------
 -- Key binding toggle mining
 -- global func
-
-function Nx:NXMapKeyTogTimber()
-	local map = Nx.Map:GetMap (1)
-	Nx.db.char.Map.ShowGatherL = not Nx.db.char.Map.ShowGatherL
-	map.MenuIShowTimber:SetChecked (Nx.db.char.Map, "ShowGatherL")
-	map.Guide:UpdateGatherFolders()
-end
 
 function Nx:NXMapKeyTogMine()
 	local map = Nx.Map:GetMap (1)

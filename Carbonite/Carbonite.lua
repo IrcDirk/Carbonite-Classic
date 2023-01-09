@@ -61,7 +61,6 @@ BINDING_NAME_NxMAPTOGHERB	= L["NxMAPTOGHERB"]
 BINDING_NAME_NxMAPTOGMINE	= L["NxMAPTOGMINE"]
 BINDING_NAME_NxTOGGLEGUIDE	= L["NxTOGGLEGUIDE"]
 BINDING_NAME_NxMAPSKIPTARGET	= L["NxMAPSKIPTARGET"]
-BINDING_NAME_NxMAPTOGTIMBER	= L["NxMAPTOGTIMBER"]
 
 Nx.Tick = 0
 
@@ -358,12 +357,7 @@ local defaults = {
 				[82] = true,
 				[83] = true,
 				[84] = true,
-			},
-			ShowTimber = {
-				[1] = true,
-				[2] = true,
-				[3] = true,
-			},
+			}
 		},
 		Comm = {
 			Global = true,
@@ -1162,11 +1156,6 @@ function Nx:OnUnit_spellcast_sent (event, arg1, arg2, arg3, arg4)
 			Nx.UEvents:AddOpen ("Art", arg4)
 		elseif arg2 == L["Extract Gas"] then
 			Nx.UEvents:AddOpen ("Gas", L["Extract Gas"])
-		elseif Nx:IsGathering(arg2) == L["Logging"] then
-			Nx.GatherTarget = Nx.TooltipLastText
-			if Nx.GatherTarget then
-				Nx.UEvents:AddTimber(Nx.GatherTarget)
-			end
 		elseif arg2 == L["Opening"] or arg2 == L["Opening - No Text"] then
 			Nx.GatherTarget = Nx.TooltipLastText
 
@@ -1790,7 +1779,6 @@ function Nx:InitGlobal()
 			Nx.db.profile.GatherData = gath
 			gath.NXHerb = {}
 			gath.NXMine = {}
-			gath.NXTimber = {}
 		end
 
 		gath.Version = Nx.VERSIONGATHER
@@ -1843,8 +1831,6 @@ function Nx:GetData (name, ch)
 
 	elseif name == "Herb" then
 		return Nx.db.profile.GatherData.NXHerb
-	elseif name == "Timber" then
-		return Nx.db.profile.GatherData.NXTimber
 	elseif name == "Mine" then
 		return Nx.db.profile.GatherData.NXMine
 
@@ -2218,10 +2204,6 @@ function Nx:AddHerbEvent (name, time, mapId, x, y)
 	self:AddEvent ("H", name, time, mapId, x, y)
 end
 
-function Nx:AddTimberEvent(name, time, mapId, x, y)
-	self:AddEvent ("T", name, time, mapId, x, y)
-end
-
 function Nx:AddMineEvent (name, time, mapId, x, y)
 	self:AddEvent ("M", name, time, mapId, x, y)
 end
@@ -2593,26 +2575,6 @@ function Nx.UEvents:AddHerb (name)
 	end
 end
 
-
-function Nx.UEvents:AddTimber(name)
-	local mapId, x, y, level = self:GetPlyrPos()
-	local size = false
-	if Nx.db.profile.Guide.GatherEnabled then		
-		if name == L["Small Timber"] then
-			size = 1
-		elseif name == L["Timber"] then
-			size = 2
-		elseif name == L["Large Timber"] then
-			size = 3
-		end
-		if size then
-			Nx.prt(size)
-			Nx:AddTimberEvent (name, Nx:Time(), mapId, x, y)
-			Nx:GatherTimber (size, mapId, x, y, level)
-		end
-		self:UpdateAll (true)
-	end
-end
 ------
 -- Add mine to list
 
@@ -2840,11 +2802,6 @@ Nx.GatherInfo = {
 		["Art"] = { 0, "Trade_Archaeology", L["Artifact"]},
 		["Everfrost"] = { 0, "spell_shadow_teleport", L["Everfrost"]},
 		["Gas"] = { 0, "inv_gizmo_zapthrottlegascollector",	L["Gas"]},
-	},
-	["L"] = {
-		{ 1,	"inv_tradeskillitem_03",L["Small Timber"]},
-		{ 2,	"inv_tradeskillitem_03",L["Medium Timber"]},
-		{ 3,	"inv_tradeskillitem_03",L["Large Timber"]},
 	},
 	["H"] = {	-- Herbs
 		{ 340,	"inv_misc_herb_ancientlichen",L["Ancient Lichen"]},
@@ -3094,7 +3051,6 @@ end
 function Nx:GatherVerUpgrade()
 	Nx:GatherVerUpgradeType ("NXHerb")
 	Nx:GatherVerUpgradeType ("NXMine")
-	Nx:GatherVerUpgradeType ("NXTimber")
 end
 
 function Nx:GatherVerUpgradeType (tName)
@@ -3108,10 +3064,6 @@ function Nx:GatherHerb (id, mapId, x, y, level)
 	self:Gather ("NXHerb", id, mapId, x, y, level)
 end
 
-
-function Nx:GatherTimber(id, mapId, x, y, level)
-	self:Gather ("NXTimber", id, mapId, x, y, level)
-end
 --------
 -- Save location of gathered mining
 -- xy is zone coords
@@ -3188,10 +3140,6 @@ end
 
 function Nx:GatherDeleteHerb()
 	Nx.db.profile.GatherData.NXHerb = {}
-end
-
-function Nx:GatherDeleteTimber()
-	Nx.db.profile.GatherData.NXTimber = {}
 end
 
 function Nx:GatherDeleteMine()

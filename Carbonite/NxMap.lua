@@ -1541,21 +1541,6 @@ function Nx.Map:UpdateWorldMap()
 			v:SetScale (.001)
 		end
 	end
-	--[[if not InCombatLockdown() then
-		self.Arch:DrawNone();
-		if Nx.db.char.Map.ShowArchBlobs then
-			for i = 1, ArchaeologyMapUpdateAll(Nx.Map:GetCurrentMapAreaID()) do
-				self.Arch:DrawBlob(ArcheologyGetVisibleBlobID(i), true)
-			end
-			self:ClipZoneFrm( self.Cont, self.Zone, self.Arch, 1 )
-			self.Arch:SetFrameLevel(self.Level)
-			self.Arch:SetFillAlpha(255 * self.ArchAlpha)
-			self.Arch:SetBorderAlpha( 255 * self.ArchAlpha )
-			self.Arch:Show()
-		else
-			self.Arch:Hide()
-		end
-	end]]--
 end
 
 --------

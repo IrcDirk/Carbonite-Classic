@@ -2966,10 +2966,10 @@ function Nx.Warehouse:CaptureItems()
 	local inv = {}
 	ch["WareBags"] = inv
 
---	self:AddBag (KEYRING_CONTAINER, false, inv)
---	self:AddBag (BACKPACK_CONTAINER, false, inv)
+	self:AddBag (KEYRING_CONTAINER, false, inv)
+	self:AddBag (BACKPACK_CONTAINER, false, inv)
 
-	for bag = 0, NUM_BAG_SLOTS do
+	for bag = 1, NUM_BAG_SLOTS do
 		self:AddBag (bag, false, inv)
 	end
 

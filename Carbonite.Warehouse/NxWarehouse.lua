@@ -39,6 +39,13 @@ Nx.VERSIONWare			= .15				-- Warehouse data
 BINDING_HEADER_CarboniteWarehouse = "|cffc0c0ff" .. L["Carbonite Warehouse"] .. "|r"
 BINDING_NAME_NxTOGGLEWAREHOUSE	= L["NxTOGGLEWAREHOUSE"]
 
+function GetContainerItemInfo (bag, slot)
+	local containerInfo = C_Container.GetContainerItemInfo (bag, slot)
+	if containerInfo then 
+		return containerInfo.iconFileID, containerInfo.stackCount, containerInfo.isLocked, containerInfo.quality, containerInfo.isReadable, containerInfo.hasLoot, containerInfo.hyperlink, containerInfo.isFiltered, containerInfo.hasNoValue, containerInfo.itemID, containerInfo.isBound
+	end
+	return nil
+end
 
 local defaults = {
 	profile = {
@@ -3017,13 +3024,11 @@ function Nx.Warehouse:AddBag (bag, isBank, inv)
 	local slots = C_Container.GetContainerNumSlots (bag)
 
 	for slot = 1, slots do
-		local itemInfo = C_Container.GetContainerItemInfo (bag, slot)
-		if itemInfo then
-			if not itemInfo.isLocked then
-				local link = C_Container.GetContainerItemLink (bag, slot)
-				if link then
-					self:AddLink (link, itemInfo.stackCount, inv)
-				end
+		local tex, stack, locked, quality, _, _, link = GetContainerItemInfo(bag, slot)
+		if not locked then
+			local link = C_Container.GetContainerItemLink (bag, slot)
+			if link then
+				self:AddLink (link, stack, inv)
 			end
 		end
 	end
@@ -3089,7 +3094,7 @@ function Nx.Warehouse.OnMerchant_show()
 			for bag = 0, NUM_BAG_SLOTS do
 				for slot = 1, C_Container.GetContainerNumSlots(bag) do
 					local sellit = false
-					local tex, stack, locked, quality, _, _, link = C_Container.GetContainerItemInfo(bag, slot)
+					local tex, stack, locked, quality, _, _, link = GetContainerItemInfo(bag, slot)
 					if not locked and tex then
 						local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
 						if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
@@ -3155,7 +3160,7 @@ function Nx.Warehouse.OnMerchant_show()
 						end
 						if sellit then
 							if not Nx.wdb.profile.Warehouse.SellTesting then
-								UseContainerItem(bag,slot)
+								C_Container.UseContainerItem(bag,slot)
 							end
 							if Nx.wdb.profile.Warehouse.SellVerbose then
 								local moneyStr = Nx.Util_GetMoneyStr(stack * price)

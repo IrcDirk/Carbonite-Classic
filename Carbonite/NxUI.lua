@@ -5905,7 +5905,7 @@ function Nx.List:Update (showLast)
 					f:SetScale (scale)
 					f:SetWidth (29)
 					f:SetHeight (30)
-					f:SetAlpha (self.ItemFrameAlpha)
+					f:SetAlpha (tonumber(self.ItemFrameAlpha))
 
 					local id = tonumber (v1)					
 					f:SetID (id)
@@ -5926,7 +5926,7 @@ function Nx.List:Update (showLast)
 						end
  					end
 
-					local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo (id)
+					local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo (tonumber(id))
 					f:SetAttribute ("item", link)
 
 					if doBind then
@@ -7940,7 +7940,7 @@ function NxWatchListItem_OnUpdate(self, elapsed)
 	if ( rangeTimer ) then
 		rangeTimer = rangeTimer - elapsed;
 		if ( rangeTimer <= 0 ) then
-			local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(self.questLogIndex);
+			local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(tonumber(self.questLogIndex));
 			if ( not charges or charges ~= self.charges ) then
 				--ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST);
 				return;

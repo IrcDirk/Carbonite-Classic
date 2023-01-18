@@ -5494,7 +5494,7 @@ function Nx.Quest.List:Open()
 	tinsert (UISpecialFrames, win.Frm:GetName())
 
 	win.Frm:SetToplevel (true)
-	win.Frm:SetMinResize (250, 120)
+	win.Frm:SetResizeBounds (250, 120)
 
 	win:SetUser (self, self.OnWin)
 	CarboniteQuest:RegisterEvent ("PLAYER_LOGIN", "OnQuestUpdate")
@@ -8061,7 +8061,7 @@ function Nx.Quest:UpdateIcons (map)
 											elseif tracking then
 												f.texture:SetVertexColor (trkR, trkG, trkB, trkA)
 											else
-												f.texture:SetVertexColor (r, g, b, col[4])
+												f.texture:SetVertexColor (r, g, b, tonumber(col[4]))
 											end
 										end
 
@@ -8078,7 +8078,7 @@ function Nx.Quest:UpdateIcons (map)
 											elseif tracking then
 												f.texture:SetColorTexture (trkR, trkG, trkB, trkA)
 											else
-												f.texture:SetColorTexture (r, g, b, col[4])
+												f.texture:SetColorTexture (r, g, b, tonumber(col[4]))
 											end
 										end
 

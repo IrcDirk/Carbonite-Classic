@@ -11364,7 +11364,7 @@ function Nx.Map.MoveWorldMap()
 		Nx.Map.WMDT[i]:SetTexture(textures[i])
 	end	
 	Nx.Map.WMDF:SetAllPoints()
-	NXWorldMapUnitPositionFrame:SetParent("WMDF")
+	NXWorldMapUnitPositionFrame:SetParent(WMDF)
 	NXWorldMapUnitPositionFrame:SetAllPoints()
 	NXWorldMapUnitPositionFrame:SetFrameLevel(40)
 	Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()

@@ -4909,7 +4909,7 @@ function Nx.Map:GetLegacyMapInfo(uiMapId)
     if not c then return end
     
     local m, f = floor(c / 10000), (c % 10000)
-    return m, f, MapMigrationData[m].mapFile
+    return m, f, MapMigrationData[m].mapFile, MapMigrationData[m]
 end
 MapMigrationData = {
     [4] = { mapFile = "Durotar", [0] = 1, [8] = 2, [12] = 5, [19] = 6, [11] = 4, [10] = 3},

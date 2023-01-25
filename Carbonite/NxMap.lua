@@ -2304,6 +2304,12 @@ function Nx.Map:MinimapUpdate()
 			self.MMMenuIFull:SetChecked(lOpts.NXMMFull)
 			Nx.Menu:CheckUpdate(self.MMMenuIFull)
 		end
+		if Nx.db.profile.MiniMap.InstanceTogFullSize then
+			local _, instanceType = GetInstanceInfo()
+			if self:IsInstanceMap (Nx.Map.RMapId) or (instanceType ~= nil and instanceType ~= "none") then
+				lOpts.NXMMFull=true
+			end
+		end	
 		if zoomType == 0 then
 			al = 1
 		end
@@ -4444,6 +4450,7 @@ function Nx.Map:Update (elapsed)
 	end
 	local dungeontest = Nx.Map:GetCurrentMapDungeonLevel()
 	self.InstanceId = false
+	
 	if self:IsInstanceMap (Nx.Map.UpdateMapID) and not self.CurOpts.NXInstanceMaps then
 		self.InstanceId = Nx.Map.UpdateMapID
 		plZX = plZX * 100
@@ -4476,11 +4483,16 @@ function Nx.Map:Update (elapsed)
 			self.InstLevelSet = -1
 		end
 
-		self.PlyrX = x + plZX * 1002 / 25600
-		self.PlyrY = y + plZY * 668 / 25600 + (lvl - 1) * 668 / 256
+		local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
+		local layers = C_Map.GetMapArtLayers(mapId)
+
+		self.PlyrX = x + plZX * layers[layerIndex].layerWidth / 25600
+		self.PlyrY = y + plZY * layers[layerIndex].layerHeight / 25600 + (lvl - 1) * layers[layerIndex].layerHeight / 256
 --		self.InstanceLevel = GetCurrentMapDungeonLevel()
 
 		self.PlyrSpeed = 0
+		
+		Nx.Map.MouseOver = false
 	elseif plZX > 0 or plZY > 0 then	-- Update world position of player if we can get it
 
 		plZX = plZX * 100
@@ -5225,12 +5237,6 @@ function Nx.Map:SwitchRealMap (id)
 		self:SetInstanceMap()				-- Turn it off
 	end
 
-	if Nx.db.profile.MiniMap.InstanceTogFullSize then
-		self.LOpts.NXMMFull = false
-		if self:IsInstanceMap (id) then
-			self.LOpts.NXMMFull = true
-		end
-	end
 	local map = Nx.Map:GetMap (1)
 	map.Guide:UpdateMapIcons()
 end
@@ -9054,6 +9060,20 @@ function Nx.Map:InitTables()
 		end
 	end
 	for k, v in pairs (Nx.Zones) do
+		if Nx.Map:GetContinentMapID(k) == 113 then
+			local name, minLvl, maxLvl, faction, cont, entryId, ex, ey, z = Nx.Split ("|", v)
+			if cont == "5" then 
+				local _, _ , _, data = Nx.Map:GetLegacyMapInfo(k);
+				for mk, mv in pairs (data) do
+					mk = tonumber(mk)
+					if mk ~= nil and mv ~= k then 
+						Nx.Zones[mv] = v
+					end
+				end
+			end
+		end
+	end
+	for k, v in pairs (Nx.Zones) do
 		if worldInfo[k] then
 			local name, minLvl, maxLvl, faction, cont, entryId, ex, ey = Nx.Split ("|", v)
 			worldInfo[k].Cont = tonumber(cont)
@@ -9437,7 +9457,11 @@ function Nx.Map:SetToCurrentZone()
 end
 
 function Nx.Map:GetCurrentMapAreaID()
-	local mapID = Nx.Map.MouseOver and WorldMapFrame:GetMapID() or MapUtil.GetDisplayableMapForPlayer()
+	local displayableMapID = MapUtil.GetDisplayableMapForPlayer()
+	local mapID = Nx.Map.MouseOver and WorldMapFrame:GetMapID() or displayableMapID
+
+	local _, instanceType = GetInstanceInfo() 
+	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
 	return mapID
 end
 

@@ -1236,7 +1236,7 @@ function Nx.Notes:Record (typ, name, id, x, y, level)
 	self.RecId = id
 	self.RecX = x
 	self.RecY = y
-	self.RecL = level
+	self.RecL = level or 0
 	if typ == "Note" then
 
 		local function func (name, self)

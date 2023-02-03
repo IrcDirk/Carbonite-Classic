@@ -1121,6 +1121,8 @@ end
 
 function Nx.Notes:CreateItem (typ, flags, name, p1, p2, p3, p4, p5)
 
+	p5 = p5 or 0
+
 	flags = flags + 35
 
 	name = gsub (name, "[~^]", "")

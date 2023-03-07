@@ -321,7 +321,7 @@ local function socialConfig()
 								local g = arr[2]
 								local b = arr[3]
 								local a = arr[4]
-								return r,g,b,a
+								return r,g,b,tonumber(a)
 							end,
 							set = function(_,r,g,b,a)
 								Nx.scdb.profile.Social.PunkIconColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -340,7 +340,7 @@ local function socialConfig()
 								local g = arr[2]
 								local b = arr[3]
 								local a = arr[4]
-								return r,g,b,a
+								return r,g,b,tonumber(a)
 							end,
 							set = function(_,r,g,b,a)
 								Nx.scdb.profile.Social.PunkAreaColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -375,7 +375,7 @@ local function socialConfig()
 								local g = arr[2]
 								local b = arr[3]
 								local a = arr[4]
-								return r,g,b,a
+								return r,g,b,tonumber(a)
 							end,
 							set = function(_,r,g,b,a)
 								Nx.scdb.profile.Social.PunkMAreaColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -423,7 +423,7 @@ local function socialConfig()
 								local g = arr[2]
 								local b = arr[3]
 								local a = arr[4]
-								return r,g,b,a
+								return r,g,b,tonumber(a)
 							end,
 							set = function(_,r,g,b,a)
 								Nx.scdb.profile.Social.PunkBGAreaColor = r .. "|" .. g .. "|" .. b .. "|" .. a

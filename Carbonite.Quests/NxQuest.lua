@@ -2853,7 +2853,7 @@ function Nx.Quest:Init()
 			testAlt = not testAlt
 		end
 		if not testAlt then 
-			QuestLogFrame:Hide()
+			HideUIPanel(QuestLogFrame);
 			if self.InShowUIPanel then
 				Nx.Quest:HideUIPanel(QuestMapFrame)
 				self.InShowUIPanel = false

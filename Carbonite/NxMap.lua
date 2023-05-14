@@ -253,7 +253,29 @@ function Nx.Map:SetMapByID(zone)
 		end
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
+		if zone == 12 then zone = 1414 end
+		if zone == 13 then zone = 1415 end
 		WorldMapFrame:SetMapID(zone) 
+	end
+end
+
+
+function Nx.Map:GetMapInfo(mapId)
+	if mapId and mapId ~= 0 then
+		if mapId == 12 then mapId = 1414 end
+		if mapId == 13 then mapId = 1415 end
+		local mapInfo = C_Map.GetMapInfo(mapId)
+		if mapInfo.mapType == 2 then
+			if mapInfo.mapID == 1414 then mapInfo.mapID = 12 end
+			if mapInfo.mapID == 1415 then mapInfo.mapID = 13 end
+        	end
+		if mapInfo.mapType == 3 then
+			if mapInfo.parentMapID == 1414 then mapInfo.parentMapID = 12 end
+			if mapInfo.parentMapID == 1415 then mapInfo.parentMapID = 13 end
+        	end
+		return mapInfo
+	else
+		return nil
 	end
 end
 
@@ -4210,7 +4232,8 @@ function Nx.Map:UpdateWorld()
 	self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
 
 	self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-	local mapInfo = C_Map.GetMapInfo(mapId)
+--	local mapInfo = C_Map.GetMapInfo(mapId)
+	local mapInfo = Nx.Map:GetMapInfo(mapId)
 	local mapFileName = winfo.Overlay or (mapInfo.name and mapInfo.name:gsub(" ", "") or "")
 	if not mapFileName then
 		if Nx.Map:GetCurrentMapContinent() == WORLDMAP_COSMIC_ID then
@@ -4253,6 +4276,9 @@ function Nx.Map:UpdateWorld()
 	if GetMapArtLayerTexturesMapId == nil then
 		return
 	end
+
+	if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
+	if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
 	
 	local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
 	
@@ -4497,8 +4523,11 @@ function Nx.Map:Update (elapsed)
 
 		plZX = plZX * 100
 		plZY = plZY * 100
+		PLMapID = MapUtil.GetDisplayableMapForPlayer()
+		if PLMapID == 1414 then PLMapID = 12 end
+		if PLMapID == 1415 then PLMapID = 13 end
 
-		local x, y = self:GetWorldPos (MapUtil.GetDisplayableMapForPlayer(), plZX, plZY)
+		local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
 
 		if elapsed > 0 then
 
@@ -9021,14 +9050,13 @@ function Nx.Map:InitTables()
 	--V403
 
 	Nx.Map.MapZones = {
-		 [0] = {12,13,1945,113,0,-1},
-		 
-		 [1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950},
-		 [2] = {1416,1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957,124},
-	     [3] = {1944,1946,1948,1949,1951,1952,1953,1955},
-         [4] = {114,115,116,117,118,119,120,121,123,125,127,170},
-		 [90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
-		 [100] = {},
+		[0] = {12,13,1945,113,0,-1},
+		[1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950},
+		[2] = {1416,1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957,124},
+		[3] = {1944,1946,1948,1949,1951,1952,1953,1955},
+		[4] = {114,115,116,117,118,119,120,121,123,125,127,170},
+		[90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
+		[100] = {},
 	}
 
 	--[[for mi, mapName in pairs (Nx.Map.MapZones[2]) do
@@ -9462,6 +9490,8 @@ function Nx.Map:GetCurrentMapAreaID()
 
 	local _, instanceType = GetInstanceInfo() 
 	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
+	if mapID == 1414 then mapID = 12 end
+	if mapID == 1415 then mapID = 13 end
 	return mapID
 end
 
@@ -9579,6 +9609,8 @@ function Nx.Map:GotoCurrentZone()
 	else
 		self:SetToCurrentZone()
 		local mapId = MapUtil.GetDisplayableMapForPlayer()
+		if mapId == 1414 then mapId = 12 end
+		if mapId == 1415 then mapId = 13 end
 		self:CenterMap (mapId)
 	end
 end
@@ -9606,6 +9638,7 @@ function Nx.Map:CenterMap (mapId, scale)
 		return
 	end
 	mapId = mapId or self.MapId
+
 --[[ -- Map capture
 	if 1 then
 		self:CenterMap1To1 (floor (mapId / 1000) * 1000)
@@ -9890,7 +9923,7 @@ function Nx.Map:GetZonePos (mapId, worldX, worldY)
 
 --	self.GetZonePosCnt = (self.GetZonePosCnt or 0) + 1
 
---	Nx.prt ("WXY %f %f", worldX, worldY)
+--	Nx.prt ("WXY for map %s is %f %f", mapId, worldX, worldY)
 
 	local winfo = self.MapWorldInfo[mapId]
 
@@ -11345,7 +11378,6 @@ function Nx.Map.MoveWorldMap()
 	if not mapInfo.name then
 		return
 	end	
-	
 	local layers = C_Map.GetMapArtLayers(curId)
 	local layerInfo = layers[1]
 	local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
@@ -11545,7 +11577,8 @@ function Nx.Map:GetMapNameByID (mapId)
 	if not mapId then
 		mapId = Nx.Map:GetCurrentMapAreaID()
 	end
-	local mapInfo = C_Map.GetMapInfo(mapId)
+--	local mapInfo = C_Map.GetMapInfo(mapId)
+	local mapInfo = Nx.Map:GetMapInfo(mapId)
 	return mapInfo and mapInfo.name or nil
 end
 

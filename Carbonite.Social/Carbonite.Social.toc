@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: Carbonite Social & Punks @project-version@
 ## Version: @project-version@
 ## Author: No One

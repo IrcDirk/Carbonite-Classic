@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: Carbonite Maps - Classic
 ## Version: @project-version@
 ## Notes: Released Under GPL

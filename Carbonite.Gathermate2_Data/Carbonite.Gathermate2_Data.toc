@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Notes: Wowhead Data dump for GatherMate2
 ## Title: GatherMate2Data - Carbonite Edition
 ## Author: kagaro, Xinhuan, Rythal (repackaging for Carb), IrcDirk (new versions for Carb)

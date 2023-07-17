@@ -7296,7 +7296,7 @@ local ModQuests={
 				"Leaded Vial|1453|35|55.5|85|5.01|6.68"
 			},
 			[3] = {
-				"Bronze Tube|!85~2021~-|32|28.5|75.12|5.01|3.34"
+				"Bronze Tube|1434|32|28.5|75.12|5.01|3.34"
 			},
 			[4] = {
 				"Spool of Light Chartreuse Silk Thread|1453|32|50.59|60.13|5.01|3.34"

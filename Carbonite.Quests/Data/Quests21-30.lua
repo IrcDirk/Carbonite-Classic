@@ -1063,7 +1063,7 @@ local ModQuests={
 		End = "276|1431|32|79.80|48.02",
 		Objectives = {
 			[1] = {
-				"Bronze Tube|!85~2021~-|32|28.5|75.12|5.01|3.34"
+				"Bronze Tube|1434|32|28.5|75.12|5.01|3.34"
 			},
 		},
 	},
@@ -4235,7 +4235,7 @@ local ModQuests={
 		End = "3885|1440|32|49.80|67.21",
 		Objectives = {
 			[1] = {
-				"Sarilus Foulborne's Head|!97~1019~-|32|48.22|19.15|5.01|3.34"
+				"Sarilus Foulborne's Head|1413|32|48.22|19.15|5.01|3.34"
 			},
 		},
 	},

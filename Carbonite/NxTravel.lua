@@ -383,9 +383,9 @@ function Nx.Travel:MakePath (tracking, srcMapId, srcX, srcY, dstMapId, dstX, dst
 	local Map = Nx.Map
 	local winfo = Map.MapWorldInfo
 
-	local srcInfo = winfo[srcMapId]
+	local srcInfo = winfo[srcMapId] or {}
 	srcMapId = srcInfo.EntryMId or srcMapId
-	local dstInfo = winfo[dstMapId]
+	local dstInfo = winfo[dstMapId] or {}
 	dstMapId = dstInfo.EntryMId or dstMapId
 
 	local x = dstX - srcX

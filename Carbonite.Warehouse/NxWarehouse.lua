@@ -841,7 +841,7 @@ function CarboniteWarehouse:OnInitialize()
 	tinsert (Nx.BarData,{"MapWarehouse", L["-Warehouse-"], Nx.Warehouse.OnButToggleWarehouse, false })
 	Nx.Map.Maps[1]:CreateToolBar()
 
-	local ttHooks = {
+--[[	local ttHooks = {
 		"SetAction", 
 		"SetAuctionItem", 
 		"SetBagItem", 
@@ -863,6 +863,8 @@ function CarboniteWarehouse:OnInitialize()
 			hooksecurefunc (GameTooltip, name, Nx.Warehouse.TooltipProcess)
 			hooksecurefunc (ItemRefTooltip, name, Nx.Warehouse.ReftipProcess)
 	end
+]]--
+	hooksecurefunc("GameTooltip_UpdateStyle", Nx.Warehouse.TooltipProcess);
 
 	hooksecurefunc("PlaceAuctionBid", function(ltype, index, bid)
 			local link = GetAuctionItemLink(ltype, index)
@@ -3083,7 +3085,7 @@ function Nx.Warehouse.OnMerchant_show()
 				RepairAllItems()
 				local moneyStr = Nx.Util_GetMoneyStr(cost)
 				Nx.prt(L["AUTO-REPAIR"] .. ": " .. moneyStr)
-			else
+			elseif not guildrepaired then
 				Nx.prt(L["AUTO-REPAIR"] .. ": " .. L["Not enough funds to repair."])
 			end
 		end

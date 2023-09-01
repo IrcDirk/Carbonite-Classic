@@ -11498,7 +11498,7 @@ function Nx.Map:UpdatePlayerPositions() -- Copy of the local defined player arro
 			local atlas = UnitInSubgroup(unit) and "WhiteCircle-RaidBlips" or "WhiteDotCircle-RaidBlips"
 			local class = select(2, UnitClass(unit))
 			local r, g, b = CheckColorOverrideForPVPInactive(unit, timeNow, GetClassColor(class))
-			NXWorldMapUnitPositionFrame:AddUnitAtlas(unit, atlas, Nx.db.profile.Map.InstanceGroupSize, Nx.db.profile.Map.InstanceGroupSize, r, g, b, 1)
+			NXWorldMapUnitPositionFrame:AddUnit(unit, atlas, Nx.db.profile.Map.InstanceGroupSize, Nx.db.profile.Map.InstanceGroupSize, r, g, b, 1)
 		end
 	end
 
@@ -11538,7 +11538,7 @@ function Nx.Map.NXWorldMapUnitPositionFrame_UpdateFull(timeNow)
 			local atlas = UnitInSubgroup(unit) and "WhiteCircle-RaidBlips" or "WhiteDotCircle-RaidBlips"
 			local class = select(2, UnitClass(unit))
 			local r, g, b = CheckColorOverrideForPVPInactive(unit, timeNow, GetClassColor(class))
-			NXWorldMapUnitPositionFrame:AddUnitAtlas(unit, atlas, Nx.db.profile.Map.InstanceGroupSize, Nx.db.profile.Map.InstanceGroupSize, r, g, b, 1)
+			NXWorldMapUnitPositionFrame:AddUnit(unit, atlas, Nx.db.profile.Map.InstanceGroupSize, Nx.db.profile.Map.InstanceGroupSize, r, g, b, 1)
 		end
 	end
 	

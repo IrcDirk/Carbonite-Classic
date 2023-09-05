@@ -28,7 +28,6 @@ NXClassLocToCap = {		-- Convert localized class name to generic caps
 -- Main Carbonite
 L["Carbonite"] = true
 L["CARBONITE"] = true
-L["Whats New!"] = "Новости аддона"
 L["Loading"] = "Загрузка"
 L["Loading Done"] = "Загрузка Завершена"
 L["None"] = "Нет"
@@ -166,16 +165,7 @@ L["CLICK (.+):"] = "клик (.+):"
 L["Key %s %s #%s %s"] = "Ключ %s %s #%s %s"
 L["shift left/right click to change size"] = "shift левый/правый клик для изменения размера"
 L["Reset old tool bar data"] = "Сбросить данные старой панели инструментов"
-L["|cffffff00%dg"] = "|cffffff00%d зол."
-L["%s |cffbfbfbf%ds"] = "%s |cffbfbfbf%d сер."
-L["%s |cff7f7f00%dc"] = "%s |cff7f7f00%d мед."
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = "Соединение: %s с %s"
 L["Fly: %s to %s"] = "Лететь: %s до %s"
-
--- NxHud.lua
-L[" %.1f deg"] = " %.1f град."
-L[" %d deg"] = " %d град."
-L["Remove Current Point"] = "Удалить текущую точку"
-L["Remove All Points"] = "Удалить все точки"

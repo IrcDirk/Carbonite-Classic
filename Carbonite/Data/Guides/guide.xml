@@ -2,14 +2,11 @@
 ..\..\FrameXML\UI.xsd">
 	<Include file="GuideDefault.lua" />
 	<Include file="AlchemyTrainer.lua" />
-	<Include file="AltarOfShadows.lua" />
 	<Include file="Anvil.lua" />	
 	<Include file="Auctioneer.lua" />
 	<Include file="Banker.lua" />
-	<Include file="Barber.lua" />
 	<Include file="BlacksmithingTrainer.lua" />
 	<Include file="CookingTrainer.lua" />
-	<Include file="DeathKnightTrainer.lua" />
 	<Include file="DruidTrainer.lua" />
 	<Include file="EnchantingTrainer.lua" />
 	<Include file="EngineeringTrainer.lua" />
@@ -20,8 +17,6 @@
 	<Include file="HerbalismTrainer.lua" />
 	<Include file="HunterTrainer.lua" />
 	<Include file="Innkeeper.lua" />
-	<Include file="InscriptionTrainer.lua" />
-	<Include file="JewelcraftingTrainer.lua" />
 	<Include file="LeatherworkingTrainer.lua" />	
 	<Include file="MageTrainer.lua" />
 	<Include file="Mailbox.lua" />	

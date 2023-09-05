@@ -7,7 +7,6 @@ if not L then return end
 
 L["None"] = true
 L["Goto"] = true
-L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = true
 L["Show Selected Zone"] = true
 L["Menu"] = true
@@ -119,10 +118,3 @@ L["Guard"] = true
 L["Well Defended"] = true
 L["Losing"] = true
 L["Report Status"] = true
-
--- Zone status
-L["arena"] = true
-L["friendly"] = true
-L["hostile"] = true
-L["sanctuary"] = true
-L["contested"] = true

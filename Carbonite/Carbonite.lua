@@ -61,6 +61,7 @@ BINDING_NAME_NxMAPTOGHERB	= L["NxMAPTOGHERB"]
 BINDING_NAME_NxMAPTOGMINE	= L["NxMAPTOGMINE"]
 BINDING_NAME_NxTOGGLEGUIDE	= L["NxTOGGLEGUIDE"]
 BINDING_NAME_NxMAPSKIPTARGET	= L["NxMAPSKIPTARGET"]
+BINDING_NAME_NxMAPTOGTIMBER	= L["NxMAPTOGTIMBER"]
 
 Nx.Tick = 0
 
@@ -139,9 +140,7 @@ Nx.GlowOn = false
 Nx.Whatsnew = {}
 Nx.Whatsnew.Categories = {"Maps"}
 Nx.Whatsnew.Maps = {
-  [1568657164] = {"Sept 16th 2019","","This is Alpha version of Carbonite Classic, all bugs/issues please report to", "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."},
-  [1653631200] = {"May 27th 2022","","Fixed map path generation using FlightMasters", "Fixed HandyNotes icons disappearing while standing still", "Fixed Carbonite Map causing errors while trying to open map in combat", "Fixed Carbonite maps going out while traveling between islands/subcontinents in Kalimdor/Eastern Kingdoms/Outlands", "Fixed Warehouse module not showing equipped wands", "Add tracking of goods bought in Auction House in Warehouse module", "Add localizations for various strings (need translators for some languages)", "Updated translations for some of the Carbonite modules"},
-  [1660510987] = {"Aug 14th 2022","","Implemented WotLK Classic support for Pre-patch","Updated Flight Masters data", "Updated Flight Masters locales for DE,ES,FR,KO,PT,RU,TW Languages", "Fixed various small errors caused by division by zero."}
+  [1568657164] = {"Sept 16th 2019","","This is Alpha version of Carbonite Classic, all bugs/issues please report to", "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."}
 }
 Nx.Whatsnew.WhichCat = 1
 Nx.Whatsnew.HasWhatsNew = nil
@@ -357,7 +356,12 @@ local defaults = {
 				[82] = true,
 				[83] = true,
 				[84] = true,
-			}
+			},
+			ShowTimber = {
+				[1] = true,
+				[2] = true,
+				[3] = true,
+			},
 		},
 		Comm = {
 			Global = true,
@@ -450,7 +454,6 @@ local defaults = {
 			InstancePlayerSize = 24,
 			InstanceGroupSize = 24,
 			InstanceScale = 16,
-			mapUpdate = .05,
 		},
 		MiniMap = {
 			AboveIcons = false,
@@ -536,36 +539,35 @@ Nx.BrokerMenuTemplate = {
 local menuFrame = CreateFrame("Frame", "CarboniteMenuFrame", UIParent, "UIDropDownMenuTemplate")
 
 Nx.Broker = LibStub("LibDataBroker-1.1"):NewDataObject("Broker_Carbonite", {
-	type = "data source",
-	icon = "Interface\\AddOns\\Carbonite\\Gfx\\MMBut",
-	label = "Carbonite",
-	text = "Carbonite",
-	OnTooltipShow = function(tooltip)
-						if not tooltip or not tooltip.AddLine then return end
-						tooltip:AddLine("Carbonite")
-						tooltip:AddLine(L["Left-Click to Toggle Map"])
-						if Nx.db.profile.MiniMap.ButOwn then
-							tooltip:AddLine(L["Shift Left-Click to Toggle Minimize"])
-						end
-						tooltip:AddLine(L["Middle-Click to Toggle Guide"])
-						tooltip:AddLine(L["Right-Click for Menu"])
-					end,
-	OnClick = function(frame, msg)
-				if msg == "LeftButton" then
-					if (IsShiftKeyDown()) then
-						Nx.db.profile.MiniMap.ButWinMinimize = not Nx.db.profile.MiniMap.ButWinMinimize
-						Nx.Map.Dock:UpdateOptions()
-					else
-						Nx.Map:ToggleSize(0)
-					end
-				elseif msg == "MiddleButton" then
-					Nx.Map:GetMap(1).Guide:ToggleShow()
-				elseif msg == "RightButton" then
-					EasyMenu(Nx.BrokerMenuTemplate, menuFrame, "cursor", 0, 0, "MENU")
-				end
-			end,
-})
-
+						type = "data source",
+						icon = "Interface\\AddOns\\Carbonite\\Gfx\\MMBut",
+						label = "Carbonite",
+						text = "Carbonite",
+						OnTooltipShow = function(tooltip)
+											if not tooltip or not tooltip.AddLine then return end
+											tooltip:AddLine("Carbonite")
+											tooltip:AddLine(L["Left-Click to Toggle Map"])
+											if Nx.db.profile.MiniMap.ButOwn then
+												tooltip:AddLine(L["Shift Left-Click to Toggle Minimize"])
+											end
+											tooltip:AddLine(L["Middle-Click to Toggle Guide"])
+											tooltip:AddLine(L["Right-Click for Menu"])
+										end,
+						OnClick = function(frame, msg)
+									if msg == "LeftButton" then
+										if (IsShiftKeyDown()) then
+											Nx.db.profile.MiniMap.ButWinMinimize = not Nx.db.profile.MiniMap.ButWinMinimize
+											Nx.Map.Dock:UpdateOptions()
+										else
+											Nx.Map:ToggleSize(0)
+										end
+									elseif msg == "MiddleButton" then
+										Nx.Map:GetMap(1).Guide:ToggleShow()
+									elseif msg == "RightButton" then
+										EasyMenu(Nx.BrokerMenuTemplate, menuFrame, "cursor", 0, 0, "MENU")
+									end
+								end,
+						})
 function Nx:OnInitialize()
 	local ver = GetBuildInfo()
 	local v1, v2, v3 = Nx.Split (".", ver)
@@ -838,30 +840,6 @@ function Nx:SetupEverything()
 	
 	Nx.Initialized = true
 	Nx:OnPlayer_login("PLAYER_LOGIN")
-	
-	-- Adding support for Zygor Waypoint system
-	if ZGV and ZGV.Pointer then
-		hooksecurefunc(ZGV.Pointer, "SetWaypoint", function (e, m, x, y, data, arrow)
-			local map = Nx.Map:GetMap (1)
-			if not m then
-				if WorldMapFrame:IsShown() then m=WorldMapFrame:GetMapID() else m=C_Map.GetBestMapForUnit("player") end
-			end
-			
-			x = x or 0;	
-			y = y or 0;
-			
-			local wx, wy = map:GetWorldPos (m, x*100, y*100)
-			local title = (ZGV.CurrentStep and ZGV.CurrentStep.current_waypoint_goal_num and ZGV.CurrentStep.goals) and ZGV.CurrentStep.goals[ZGV.CurrentStep.current_waypoint_goal_num]:GetText() or ""
-			
-			if ZygorGuidesViewerFrame:IsVisible() then 
-				map:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, title or "Zygor Waypoint (check step in Zygor Guide Viewer)", nil, m)
-			end
-			
-			return waypoint
-		end)
-	end
-	
-	--GuildControlPopupFrame.initialized = 1
 end
 
 function Nx:ADDON_LOADED (event, arg1, ...)
@@ -924,7 +902,7 @@ function Nx:InitEvents()
 	Com:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", "OnChatEvent")
 	Com:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE", "OnChatEvent")
 	Com:RegisterEvent("CHAT_MSG_CHANNEL", "OnChat_msg_channel")
-	Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
+	--Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
 	
 	AuctionAssist:RegisterEvent("AUCTION_HOUSE_SHOW", "OnAuction_house_show")
 	AuctionAssist:RegisterEvent("AUCTION_HOUSE_CLOSED", "OnAuction_house_closed")
@@ -1157,6 +1135,11 @@ function Nx:OnUnit_spellcast_sent (event, arg1, arg2, arg3, arg4)
 			Nx.UEvents:AddOpen ("Art", arg4)
 		elseif arg2 == L["Extract Gas"] then
 			Nx.UEvents:AddOpen ("Gas", L["Extract Gas"])
+		elseif Nx:IsGathering(arg2) == L["Logging"] then
+			Nx.GatherTarget = Nx.TooltipLastText
+			if Nx.GatherTarget then
+				Nx.UEvents:AddTimber(Nx.GatherTarget)
+			end
 		elseif arg2 == L["Opening"] or arg2 == L["Opening - No Text"] then
 			Nx.GatherTarget = Nx.TooltipLastText
 
@@ -1358,8 +1341,7 @@ function Nx:NXOnUpdate (elapsed)
 			Nx.Warehouse:RecordCharacter()
 		end
 	end
-	
-	--[[if Nx.WhatsNewUnread() then
+	if Nx.WhatsNewUnread() then
 		if Nx.Tick % 50 == 0 then
 			if Nx.GlowOn then
 				NXMiniMapBut:SetNormalTexture("Interface\\AddOns\\Carbonite\\Gfx\\MMBut")
@@ -1369,7 +1351,7 @@ function Nx:NXOnUpdate (elapsed)
 				Nx.GlowOn = true
 			end
 		end
-	end]]--
+	end
 	if not Nx.Whatsnew.HasWhatsNew then -- Adding it here to be at bottom of menu always.
 		Nx.Whatsnew.HasWhatsNew = true
 		Nx.NXMiniMapBut.Menu:AddItem(0,"")
@@ -1511,6 +1493,7 @@ function Nx:ShowMessage (msg, func1Txt, func1, func2Txt, func2)
 	local pop = StaticPopupDialogs["NxMsg"]
 
 	if not pop then
+
 		pop = {
 			["whileDead"] = 1,
 			["hideOnEscape"] = 1,
@@ -1780,6 +1763,7 @@ function Nx:InitGlobal()
 			Nx.db.profile.GatherData = gath
 			gath.NXHerb = {}
 			gath.NXMine = {}
+			gath.NXTimber = {}
 		end
 
 		gath.Version = Nx.VERSIONGATHER
@@ -1832,6 +1816,8 @@ function Nx:GetData (name, ch)
 
 	elseif name == "Herb" then
 		return Nx.db.profile.GatherData.NXHerb
+	elseif name == "Timber" then
+		return Nx.db.profile.GatherData.NXTimber
 	elseif name == "Mine" then
 		return Nx.db.profile.GatherData.NXMine
 
@@ -2205,6 +2191,10 @@ function Nx:AddHerbEvent (name, time, mapId, x, y)
 	self:AddEvent ("H", name, time, mapId, x, y)
 end
 
+function Nx:AddTimberEvent(name, time, mapId, x, y)
+	self:AddEvent ("T", name, time, mapId, x, y)
+end
+
 function Nx:AddMineEvent (name, time, mapId, x, y)
 	self:AddEvent ("M", name, time, mapId, x, y)
 end
@@ -2236,7 +2226,7 @@ function Nx.Title:Init()
 	f:SetBackdrop (bk)
 	f:SetBackdropColor (0, 0, .1, 1)
 
-	local lf = CreateFrame ("Frame", nil, f, "BackdropTemplate")
+	local lf = CreateFrame ("Frame", nil, f)
 
 	lf:SetWidth (256)
 	lf:SetHeight (128)
@@ -2576,6 +2566,26 @@ function Nx.UEvents:AddHerb (name)
 	end
 end
 
+
+function Nx.UEvents:AddTimber(name)
+	local mapId, x, y, level = self:GetPlyrPos()
+	local size = false
+	if Nx.db.profile.Guide.GatherEnabled then		
+		if name == L["Small Timber"] then
+			size = 1
+		elseif name == L["Timber"] then
+			size = 2
+		elseif name == L["Large Timber"] then
+			size = 3
+		end
+		if size then
+			Nx.prt(size)
+			Nx:AddTimberEvent (name, Nx:Time(), mapId, x, y)
+			Nx:GatherTimber (size, mapId, x, y, level)
+		end
+		self:UpdateAll (true)
+	end
+end
 ------
 -- Add mine to list
 
@@ -2804,6 +2814,11 @@ Nx.GatherInfo = {
 		["Everfrost"] = { 0, "spell_shadow_teleport", L["Everfrost"]},
 		["Gas"] = { 0, "inv_gizmo_zapthrottlegascollector",	L["Gas"]},
 	},
+	["L"] = {
+		{ 1,	"inv_tradeskillitem_03",L["Small Timber"]},
+		{ 2,	"inv_tradeskillitem_03",L["Medium Timber"]},
+		{ 3,	"inv_tradeskillitem_03",L["Large Timber"]},
+	},
 	["H"] = {	-- Herbs
 		{ 340,	"inv_misc_herb_ancientlichen",L["Ancient Lichen"]},
 		{ 220,	"inv_misc_herb_13",L["Arthas' Tears"]},
@@ -2835,7 +2850,7 @@ Nx.GatherInfo = {
 		{ 350,	"inv_enchant_dustsoul",L["Netherdust Bush"]},
 		{ 365,	"inv_misc_herb_nightmarevine",L["Nightmare Vine"]},
 		{ 1,	"inv_misc_flower_02",L["Peacebloom"]},
-		{ 285,	"inv_misc_herb_plaguebloom",L["Plaguebloom"]},
+		{ 285,	"inv_misc_herb_plaguebloom",L["Sorrowmoss"]},
 		{ 210,	"inv_misc_herb_17",L["Purple Lotus"]},
 		{ 325,	"inv_misc_herb_ragveil",L["Ragveil"]},
 		{ 1,	"inv_misc_herb_10",L["Silverleaf"]},
@@ -2854,13 +2869,49 @@ Nx.GatherInfo = {
 		{ 435,	"inv_misc_herb_icethorn",L["Icethorn"]},
 		{ 450,	"inv_misc_herb_frostlotus",L["Frost Lotus"]},
 		{ 360,	"inv_misc_herb_11a",L["Firethorn"]},
+		{ 425,	"inv_misc_herb_azsharasveil",L["Azshara's Veil"]},
+		{ 425,	"inv_misc_herb_cinderbloom",L["Cinderbloom"]},
+		{ 425,	"inv_misc_herb_stormvine",L["Stormvine"]},
+		{ 475,	"inv_misc_herb_heartblossom",L["Heartblossom"]},
+		{ 500,	"inv_misc_herb_whiptail",L["Whiptail"]},
+		{ 525,	"inv_misc_herb_twilightjasmine",L["Twilight Jasmine"]},
+		{ 600,	"inv_misc_herb_foolscap",L["Fool's Cap"]},
+		{ 550,	"inv_misc_herb_goldenlotus",L["Golden Lotus"]},
+		{ 500,	"inv_misc_herb_jadetealeaf",L["Green Tea Leaf"]},
+		{ 525,	"inv_misc_herb_rainpoppy",L["Rain Poppy"]},
+		{ 575,	"inv_misc_herb_shaherb",L["Sha-Touched Herb"]},
+		{ 545,	"inv_misc_herb_silkweed",L["Silkweed"]},
+		{ 575,	"inv_misc_herb_snowlily",L["Snow Lily"]},
+		{ 600,	"inv_misc_herb_chamlotus",L["Chameleon Lotus"]},
+		{ 600,	"inv_misc_herb_frostweed",L["Frostweed"]},
+		{ 600,	"inv_misc_herb_flytrap",L["Gorgrond Flytrap"]},
+		{ 600,	"inv_misc_herb_starflower",L["Starflower"]},
+		{ 600,	"inv_misc_herb_arrowbloom",L["Nagrand Arrowbloom"]},
+		{ 600,	"inv_misc_herb_taladororchid",L["Talador Orchid"]},
+		{ 600,	"inv_misc_herb_fireweed",L["Fireweed"]},
+		{ 600,	"inv_farm_pumpkinseed_yellow",L["Withered Herb"]},
+		{ 700,	"inv_herbalism_70_aethril",L["Aethril"]},
+		{ 700,	"inv_herbalism_70_dreamleaf",L["Dreamleaf"]},
+		{ 700,	"inv_herbalism_70_felwort",L["Felwort"]},
+		{ 700,	"inv_herbalism_70_fjarnskaggl",L["Fjarnskaggl"]},
+		{ 700,	"inv_herbalism_70_foxflower",L["Foxflower"]},
+		{ 700,	"inv_herbalism_70_starlightrosepetals",L["Starlight Rose"]},
+		{ 700,  "inv_misc_herb_astralglory",L["Astral Glory"]},
+		-- BfA
+		{ 700,  "inv_misc_herb_akundasbite",L["Akunda's Bite"]},
+		{ 700,  "inv_misc_herb_anchorweed",L["Anchor Weed"]},
+		{ 700,  "inv_misc_herb_riverbud",L["Riverbud"]},
+		{ 700,  "inv_misc_herb_seastalk",L["Sea Stalks"]},
+		{ 700,  "inv_misc_herb_pollen",L["Siren's Sting"]},
+		{ 700,  "inv_misc_herb_starmoss",L["Star Moss"]},
+		{ 700,  "inv_misc_herb_winterskiss",L["Winter's Kiss"]},
 	},
 	["M"] = {	-- Mine node
 		{ 325,	"inv_ore_adamantium",L["Adamantite Deposit"]},
 		{ 375,	"inv_misc_gem_01",L["Ancient Gem Vein"]},
 		{ 1,	"inv_ore_copper_01",L["Copper Vein"]},
 		{ 230,	"inv_ore_mithril_01",L["Dark Iron Deposit"]},
-		{ 300,	"inv_ore_feliron",L["Fel Iron Deposit"]},
+		{ 275,	"inv_ore_feliron",L["Fel Iron Deposit"]},
 		{ 155,	"inv_ore_copper_01",L["Gold Vein"]},
 		{ 65,	"inv_ore_thorium_01",L["Incendicite Mineral Vein"]},
 		{ 150,	"inv_ore_mithril_01",L["Indurium Mineral Vein"]},
@@ -2881,7 +2932,43 @@ Nx.GatherInfo = {
 		{ 375,	"inv_ore_cobalt",L["Rich Cobalt Deposit"]},
 		{ 425,	"inv_ore_saronite_01",L["Saronite Deposit"]},
 		{ 425,	"inv_ore_saronite_01",L["Rich Saronite Deposit"]},
-		{ 450,	"inv_ore_platinum_01",L["Titanium Vein"]},		
+		{ 450,	"inv_ore_platinum_01",L["Titanium Vein"]},
+		{ 425,	"item_elementiumore",L["Obsidium Deposit"]},
+		{ 450,	"item_elementiumore",L["Rich Obsidium Deposit"]},
+		{ 475,	"item_pyriumore",L["Elementium Vein"]},
+		{ 500,	"item_pyriumore",L["Rich Elementium Vein"]},
+		{ 525,	"inv_ore_arcanite_01",L["Pyrite Deposit"]},
+		{ 525,	"inv_ore_arcanite_01",L["Rich Pyrite Deposit"]},
+		{ 515,	"inv_ore_ghostiron",L["Ghost Iron Deposit"]},
+		{ 550,	"inv_ore_ghostiron",L["Rich Ghost Iron Deposit"]},
+		{ 550,	"inv_ore_manticyte",L["Kyparite Deposit"]},
+		{ 575,	"inv_ore_manticyte",L["Rich Kyparite Deposit"]},
+		{ 600,	"inv_ore_trilliumwhite",L["Trillium Vein"]},
+		{ 600,	"inv_ore_trilliumWhite",L["Rich Trillium Vein"]},
+		{ 600,	"inv_ore_trueironore",L["Rich True Iron Deposit"]},
+		{ 600,	"inv_ore_trueironore",L["Smoldering True Iron Deposit"]},
+		{ 600,	"inv_ore_trueironore",L["True Iron Deposit"]},
+		{ 600,	"inv_ore_blackrock_ore",L["Blackrock Deposit"]},
+		{ 600,	"inv_ore_blackrock_ore",L["Rich Blackrock Deposit"]},
+		{ 700,	"inv_felslate",L["Felslate Deposit"]},
+		{ 700,	"inv_felslate",L["Felslate Seam"]},
+		{ 700,	"inv_felslate",L["Living Felslate"]},
+		{ 700,	"inv_leystone",L["Leystone Deposit"]},
+		{ 700,	"inv_leystone",L["Leystone Seam"]},
+		{ 700,	"inv_leystone",L["Living Leystone"]},		
+		{ 700,  "inv_misc_starmetal",L["Empyrium Deposit"]},
+		{ 700,  "inv_misc_starmetal",L["Rich Empyrium Deposit"]},
+		{ 700,  "inv_misc_starmetal",L["Empyrium Seam"]},
+		-- BfA
+		{ 800,  "inv_ore_monalite",L["Monelite Deposit"]},
+		{ 800,  "inv_ore_monalite",L["Rich Monelite Deposit"]},
+		{ 800,  "inv_ore_monalite",L["Monelite Seam"]},
+		{ 800,  "inv_ore_platinum",L["Platinum Deposit"]},
+		{ 800,  "inv_ore_platinum",L["Rich Platinum Deposit"]},
+		{ 800,  "inv_ore_stormsilver",L["Storm Silver Deposit"]},
+		{ 800,  "inv_ore_stormsilver",L["Rich Storm Silver Deposit"]},
+		{ 800,  "inv_ore_stormsilver",L["Storm Silver Seam"]},
+		
 	}
 }
 
@@ -2918,9 +3005,15 @@ function Nx:GetGather (typ, id)
 end
 
 Nx.GatherCache = {}
+Nx.GatherCache.L = {}
 Nx.GatherCache.H = {}
 Nx.GatherCache.M = {}
 function Nx:IsGathering(nodename)
+	if #Nx.GatherCache.L == 0 then
+		for k, v in ipairs (Nx.GatherInfo["L"]) do
+			Nx.GatherCache.L[v[3]] = true
+		end
+	end
 	if #Nx.GatherCache.H == 0 then
 		for k, v in ipairs (Nx.GatherInfo["H"]) do
 			Nx.GatherCache.H[v[3]] = true
@@ -2931,6 +3024,7 @@ function Nx:IsGathering(nodename)
 			Nx.GatherCache.M[v[3]] = true
 		end
 	end
+	if Nx.GatherCache.L[nodename] then return L["Logging"] end
 	if Nx.GatherCache.H[nodename] then return "Herb Gathering" end
 	if Nx.GatherCache.M[nodename] then return L["Mining"] end
 end
@@ -2970,6 +3064,7 @@ end
 function Nx:GatherVerUpgrade()
 	Nx:GatherVerUpgradeType ("NXHerb")
 	Nx:GatherVerUpgradeType ("NXMine")
+	Nx:GatherVerUpgradeType ("NXTimber")
 end
 
 function Nx:GatherVerUpgradeType (tName)
@@ -2983,6 +3078,10 @@ function Nx:GatherHerb (id, mapId, x, y, level)
 	self:Gather ("NXHerb", id, mapId, x, y, level)
 end
 
+
+function Nx:GatherTimber(id, mapId, x, y, level)
+	self:Gather ("NXTimber", id, mapId, x, y, level)
+end
 --------
 -- Save location of gathered mining
 -- xy is zone coords
@@ -3059,6 +3158,10 @@ end
 
 function Nx:GatherDeleteHerb()
 	Nx.db.profile.GatherData.NXHerb = {}
+end
+
+function Nx:GatherDeleteTimber()
+	Nx.db.profile.GatherData.NXTimber = {}
 end
 
 function Nx:GatherDeleteMine()
@@ -3143,6 +3246,25 @@ function Nx:GatherNodeToCarb (id)
 		[250] = 40,
 		[251] = 42,
 		[252] = 43,
+		-- Legion
+		[253] = 47,
+		[254] = 49,
+		[255] = 48,
+		[256] = 44,
+		[257] = 46,
+		[258] = 45,
+		[259] = 50, -- guessing at this logically, needs confirmation after 7.3 release, regular node
+		[260] = 51, -- rich deposit
+		[261] = 52, -- seam
+		-- BfA
+		[262] = 53,
+		[263] = 54,
+		[264] = 55,
+		[265] = 56,
+		[266] = 57,
+		[267] = 58,
+		[268] = 59,
+		[269] = 60,
 	-- Herbalism Nodes
 		[401] = 30,
 		[402] = 34,
@@ -3219,6 +3341,22 @@ function Nx:GatherNodeToCarb (id)
 		[473] = 69,
 		[474] = 64,
 		[475] = 70,
+		-- Legion
+		[476] = 71,
+		[477] = 72,
+		[478] = 73,
+		[479] = 74,
+		[480] = 75,
+		[481] = 76,
+		[482] = 77,
+		-- BfA
+		[485] = 78,
+		[486] = 79,
+		[487] = 80,
+		[488] = 81,
+		[489] = 82,
+		[490] = 83,
+		[491] = 84,
 	}
 	return gatherIDs[id]
 end
@@ -3253,7 +3391,7 @@ function Nx:GatherImportCarb (nodeType)
 			for coords, nodetype in pairs(zoneT) do
 				local nx, ny = Nx:GatherConvert(coords)
 				local nodeId = Nx:GatherNodeToCarb (nodetype)
-				if not nodeId and (nodeType == "NXMine" or nodeType == "NXHerb") then
+				if nodeType == "NXMine" or nodeType == "NXHerb" then
 					nodeId = nodetype
 				end
 				if nx and ny and nodeId then

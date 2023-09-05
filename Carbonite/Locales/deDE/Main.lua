@@ -167,16 +167,7 @@ L["CLICK (.+):"] = "KLICK (.+):"
 L["Key %s %s #%s %s"] = true
 L["shift left/right click to change size"] = "Umschalt Links/Rechts Klick um Grß195\182\195\159e zu \194\164ndern"
 L["Reset old tool bar data"] = "Alte Funktionsleistendaten zur\195\188cksetzen"
-L["|cffffff00%dg"] = true
-L["%s |cffbfbfbf%ds"] = true
-L["%s |cff7f7f00%dc"] = true
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = "Verbindung: %s nach %s"
 L["Fly: %s to %s"] = "Fliege: %s nach %s"
-
--- NxHud.lua
-L[" %.1f deg"] = true
-L[" %d deg"] = true
-L["Remove Current Point"] = true
-L["Remove All Points"] = true

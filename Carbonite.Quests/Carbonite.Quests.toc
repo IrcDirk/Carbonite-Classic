@@ -1,4 +1,4 @@
-## Interface: 30402
+## Interface: 11404
 ## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One
@@ -6,7 +6,9 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: NXQuest
-## RequiredDeps: Carbonite
+## RequiredDeps: Carbonite 
+
+## X-WoWI-ID: 23404
 
 Locales\locales.xml
 Data\QuestCats.lua

@@ -68,10 +68,6 @@ L["Altar Of Shadows"] = "Autel des Ombres"
 L["Lightforged Beacon"] = "Balise Sancteforge"
 L["Mana Loom"] = "Tisse-Mana"
 L["Moonwell"] = "Puis de Lune"
-L["Name"] = true
-L["Info"] = true
-L["Info2"] = true
-L["Info3"] = true
 
 -- Menus
 L["Delete"] = "Effacer"

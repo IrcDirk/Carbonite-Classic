@@ -362,8 +362,6 @@ L["Tracking HUD"] = "Wegweiser"
 
 -- General Text
 L["Reload UI"] = "Oberf\195\164che neu laden"
-L["Reload"] = true
-L["Cancel"] = true
 L["Reset options"] = "Einstellungen zur\195\188cksetzen"
 L["Reset global options"] = "Globale  Einstellungen zur\195\188cksetzen"
 L["Reset window layouts"] = "Fensterlayout zur\195\188cksetzen"

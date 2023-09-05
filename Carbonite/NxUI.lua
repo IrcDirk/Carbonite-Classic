@@ -701,17 +701,17 @@ function Nx.Util_GetMoneyStr (money)
 
 	local g = floor (money / 10000)
 	if g > 0 then
-		str = format (L["|cffffff00%dg"], g)
+		str = format ("|cffffff00%dg", g)
 	end
 
 	local s = mod (floor (money / 100), 100)
 	if s > 0 then
-		str = format (L["%s |cffbfbfbf%ds"], str, s)
+		str = format ("%s |cffbfbfbf%ds", str, s)
 	end
 
 	local c = mod (money, 100)
 	if c > 0 then
-		str = format (L["%s |cff7f7f00%dc"], str, c)
+		str = format ("%s |cff7f7f00%dc", str, c)
 	end
 
 	return pre .. strtrim (str)
@@ -1302,7 +1302,7 @@ function Nx.Window:Menu_OnTrans (item)
 	svdata[self.MenuWin.LayoutMode.."T"] = trans < 1 and trans or nil
 
 	local f = self.MenuWin.Frm
-	f:SetAlpha (trans)
+	f:SetAlpha (tonumber(trans))
 end
 
 ---------------------------------------------------------------------------------------
@@ -2910,10 +2910,10 @@ function Nx.Window:OnEvent (event, ...)
 	local win = self.NxWin
 --	local win = self
 
-	Nx.prt ("Win Event %s %s", win.Name, event)
+--	Nx.prt ("Win Event %s %s", win.Name, event)
 
 	if win.Events and win.Events[event] then
-		securecall(win.Events[event], win.User, event, ...)
+		win.Events[event] (win.User, event, ...)
 	end
 end
 
@@ -3449,14 +3449,14 @@ Nx.Button.TypeData = {
 
 function Nx.Button:Init()
 
-	local f = CreateFrame ("Frame", nil, UIParent, "BackdropTemplate")
+	local f = CreateFrame ("Frame", nil, UIParent)
 	self.OverFrm = f
 
 	f:SetFrameStrata ("MEDIUM")
 	f:Hide()
 
 	local t = f:CreateTexture()
-	t:SetColorTexture (Nx.Util_str2rgba ("0.06|0.06|0.250|1"))
+	t:SetColorTexture (Nx.Util_str2rgb ("0.06|0.06|0.250"))
 	t:SetAllPoints (f)
 	t:SetBlendMode ("ADD")
 	f.texture = t
@@ -4034,9 +4034,9 @@ function Nx.Button:Update()
 		of:SetHeight (f:GetHeight() + 2)
 
 		if self.Pressed then
-			of.texture:SetColorTexture (Nx.Util_str2rgba (".188|.188|.5|1"))
+			of.texture:SetColorTexture (Nx.Util_str2rgb (".188|.188|.5"))
 		else
-			of.texture:SetColorTexture (Nx.Util_str2rgba ("0.06|0.06|.250|1"))
+			of.texture:SetColorTexture (Nx.Util_str2rgb ("0.06|0.06|.250"))
 		end
 
 --		local lev = f:GetFrameLevel()
@@ -4407,10 +4407,10 @@ function Nx.Menu:SetSkin()
 	f:SetBackdrop (bk)
 
 	local col = Nx.Skin:GetBGCol()
-	f:SetBackdropColor (col[1], col[2], col[3], tonumber(col[4]))
+	f:SetBackdropColor (col[1], col[2], col[3])
 
 	local col = Nx.Skin:GetBorderCol()
-	f:SetBackdropBorderColor (col[1], col[2], col[3], tonumber(col[4]))
+	f:SetBackdropBorderColor (col[1], col[2], col[3])
 end
 
 function Nx.Menu:OnUpdate (elapsed)
@@ -4690,7 +4690,7 @@ function Nx.Menu:Update()
 				item.AlphaTarget = self.Item_ALPHAFADE
 
 				if not itemF then
-					item.Frm = CreateFrame ("Frame", nil, mf, "BackdropTemplate")
+					item.Frm = CreateFrame ("Frame", nil, mf)
 					itemF = item.Frm
 					itemF.NxMenuItem = item
 
@@ -4742,7 +4742,7 @@ function Nx.Menu:Update()
 					local frm = item.CheckFrm
 
 					if not frm then
-						frm = CreateFrame ("Frame", nil, itemF, "BackdropTemplate")
+						frm = CreateFrame ("Frame", nil, itemF)
 						item.CheckFrm = frm
 
 						frm:SetWidth (12)
@@ -4768,7 +4768,7 @@ function Nx.Menu:Update()
 					local frm = item.SliderFrm
 
 					if not frm then
-						frm = CreateFrame ("Frame", nil, itemF, "BackdropTemplate")
+						frm = CreateFrame ("Frame", nil, itemF)
 						item.SliderFrm = frm
 
 						frm:SetWidth (102)
@@ -4782,7 +4782,7 @@ function Nx.Menu:Update()
 					local tfrm = item.SliderThumbFrm
 
 					if not tfrm then
-						tfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
+						tfrm = CreateFrame ("Frame", nil, frm)
 						item.SliderThumbFrm = tfrm
 
 --						tfrm:SetFrameStrata ("DIALOG")
@@ -5149,6 +5149,7 @@ function Nx.List:GetFrame (list, typ)
 			f = CreateFrame ("ColorSelect", nil, list.Frm)
 		elseif typ == "WatchItem" then							
 				f = CreateFrame ("Button", "NxListFrms" .. self.FrmsUniqueI, list.Frm, "NxWatchListItem")
+				f:RegisterForClicks("AnyUp", "AnyDown")
 				f:SetAttribute ("type1", "item")			
 		elseif typ == "Info" then
 			f = Nx.Info:CreateFrame (list.Frm)
@@ -5243,7 +5244,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 	-- Create list frame
 
-	local frm = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
+	local frm = CreateFrame ("Frame", nil, parentFrm)
 	inst.Frm = frm
 	frm.NxInst = inst
 
@@ -5267,7 +5268,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 		inst.HdrH = 12
 
-		local hfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
+		local hfrm = CreateFrame ("Frame", nil, frm)
 		inst.HdrFrm = hfrm
 		hfrm.NxInst = inst
 
@@ -5283,7 +5284,7 @@ function Nx.List:Create (saveName, xpos, ypos, width, height, parentFrm, showAll
 
 	-- Create selected line frame
 
-	local sfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
+	local sfrm = CreateFrame ("Frame", nil, frm)
 	inst.SelFrm = sfrm
 	sfrm.NxInst = inst
 
@@ -5909,13 +5910,10 @@ function Nx.List:Update (showLast)
 
 					local id = tonumber (v1)					
 					f:SetID (id)
-
 					SetItemButtonTexture (f, v2);
 					SetItemButtonCount (f, tonumber (v3));
 					f["charges"] = tonumber (v3);
-
 					f["questLogIndex"] = id
-
 					local start, duration, enable = GetQuestLogSpecialItemCooldown (id)
 					if start then
 						CooldownFrame_Set (f.Cooldown, start, duration, enable)
@@ -5926,7 +5924,9 @@ function Nx.List:Update (showLast)
 						end
  					end
 
-					local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo (tonumber(id))
+					local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo (id)
+					f["item"] = item
+					f["link"] = link
 					f:SetAttribute ("item", link)
 
 					if doBind then
@@ -6330,8 +6330,7 @@ function Nx.List:ItemSetFrame (typ)
 	if not self.FrmData then
 		self.FrmData = {}
 --		self.FrmDataFrm = {}
-	end
-
+	end	
 	self.FrmData[self.Num] = typ
 end
 
@@ -6740,7 +6739,7 @@ function Nx.TabBar:Create (name, parentFrm, width, height)
 
 	-- Create window frame
 
-	local f = CreateFrame ("Frame", name, parentFrm, "BackdropTemplate")
+	local f = CreateFrame ("Frame", name, parentFrm)
 	bar.Frm = f
 	f.NxInst = bar
 
@@ -6779,7 +6778,7 @@ function Nx.TabBar:CreateBorders()
 
 	local c2rgba = Nx.Util_str2rgba
 
-	local f = CreateFrame ("Frame", nil, self.Frm, "BackdropTemplate")
+	local f = CreateFrame ("Frame", nil, self.Frm)
 
 	self.TopFrm = f
 
@@ -7105,7 +7104,7 @@ function Nx.ToolBar:Create (name, parentFrm, size, alignR, alignB)
 		end
 	end
 	if f == nil then
-		f = CreateFrame ("Frame", name, parentFrm, "BackdropTemplate")
+		f = CreateFrame ("Frame", name, parentFrm)
 	end
 	bar.Frm = f
 	f.NxInst = bar
@@ -7274,7 +7273,7 @@ function Nx.ToolBar:SetFade (fade)
 
 --	Nx.prtVar ("TB Fade", fade)
 
-	self.Frm:SetAlpha (fade)
+	self.Frm:SetAlpha (tonumber(fade))
 end
 
 ---------------------------------------------------------------------------------------
@@ -7323,7 +7322,7 @@ function Nx.Slider:Create (parentFrm, typ, size, tlOff)
 		h = 10
 	end
 
-	local frm = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
+	local frm = CreateFrame ("Frame", nil, parentFrm)
 	inst.Frm = frm
 	frm.NxInst = inst
 
@@ -7347,7 +7346,7 @@ function Nx.Slider:Create (parentFrm, typ, size, tlOff)
 
 	-- Thumb
 
-	local tfrm = CreateFrame ("Frame", nil, frm, "BackdropTemplate")
+	local tfrm = CreateFrame ("Frame", nil, frm)
 	inst.ThumbFrm = tfrm
 
 	tfrm:SetWidth (w)
@@ -7635,7 +7634,7 @@ function Nx.Graph:Create (width, height, parentFrm)
 	g.ResetFrames = self.ResetFrames
 	g.GetFrame = self.GetFrame
 
-	local f = CreateFrame ("Frame", nil, parentFrm, "BackdropTemplate")
+	local f = CreateFrame ("Frame", nil, parentFrm)
 	g.MainFrm = f
 
 	f.NxGraph = g
@@ -7663,7 +7662,7 @@ function Nx.Graph:Create (width, height, parentFrm)
 
 	g:Clear()
 
-	local sf = CreateFrame ("Slider", nil, f, "NxSliderFrame")
+	local sf = CreateFrame ("Slider", nil, f, "NxSliderFrame", "BackdropTemplate")
 	g.SliderFrm = sf
 	sf.NxGraph = g
 
@@ -7860,7 +7859,7 @@ function Nx.Graph:GetFrame()
 	local f = self.Frms[pos]
 	if not f then
 
-		f = CreateFrame ("Frame", nil, self.MainFrm, "BackdropTemplate")
+		f = CreateFrame ("Frame", nil, self.MainFrm)
 		self.Frms[pos] = f
 		f.NxGraph = self
 
@@ -7940,7 +7939,7 @@ function NxWatchListItem_OnUpdate(self, elapsed)
 	if ( rangeTimer ) then
 		rangeTimer = rangeTimer - elapsed;
 		if ( rangeTimer <= 0 ) then
-			local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(tonumber(self.questLogIndex));
+			local link, item, charges, showItemWhenComplete = GetQuestLogSpecialItemInfo(self.questLogIndex);
 			if ( not charges or charges ~= self.charges ) then
 				--ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST);
 				return;

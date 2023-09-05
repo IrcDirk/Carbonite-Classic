@@ -6,7 +6,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "deDE")
 if not L then return end
 L["None"] = "Nichts"
 L["Goto"] = "Ziel hinzuf\195\188gen" -- gleicher Terminus
-L["Goto %.0f, %.0f"] = true
 L["Clear Goto"] = "Ziel entfernen"
 L["Show Selected Zone"] = "Zeige gew\195\164hlte Zone"
 L["Menu"] = "Men\195\188"
@@ -118,10 +117,3 @@ L["Guard"] = "Bewachen"
 L["Well Defended"] = "Gut verteidigt"
 L["Losing"] = "Wir verlieren"
 L["Report Status"] = "Statusbericht"
-
--- Zone status
-L["arena"] = true
-L["friendly"] = true
-L["hostile"] = true
-L["sanctuary"] = true
-L["contested"] = true

@@ -361,8 +361,6 @@ L["Tracking HUD"] = "HUD Pistage"
 
 -- General Text
 L["Reload UI"] = "Red\195\169marrer UI (user interface)"
-L["Reload"] = true
-L["Cancel"] = true
 L["Reset options"] = "Remettre \195\160 z\195\169ro les options (reset)"
 L["Reset global options"] = "Remettre \195\160 z\195\169ro les options globales (reset)"
 L["Reset window layouts"] = "Remettre \195\160 z\195\169ro mod\195\168le des fen\195\170tres (reset)"

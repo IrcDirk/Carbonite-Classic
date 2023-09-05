@@ -69,10 +69,6 @@ L["Lightforged Beacon"] = "Lichtgeschmiedetes Signal"
 L["Mana Loom"] = "Mana-Webstuhl"
 L["Grace Loom"] ="Webstuhl der anmutigen Königin"
 L["Moonwell"] = "Mondbrunnen"
-L["Name"] = true
-L["Info"] = true
-L["Info2"] = true
-L["Info3"] = true
 
 -- Menus
 L["Delete"] = "L\195\182schen"

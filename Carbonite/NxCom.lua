@@ -1141,11 +1141,11 @@ function Nx.Com:Send (chanId, msg, plName)
 			end
 
 		elseif chanId == "p" then	-- Addon party
-			--if (IsPartyLFG()) then
-			--	Nx:SendCommMessage (self.Name, msg, "INSTANCE_CHAT")
-			--else
+			if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
+				Nx:SendCommMessage (self.Name, msg, "INSTANCE_CHAT")
+			else
 				Nx:SendCommMessage (self.Name, msg, "PARTY")
-			--end
+			end
 		elseif chanId == "W" then	-- Addon whisper
 
 --			Nx.prt ("Send W %s", plName)
@@ -1153,11 +1153,11 @@ function Nx.Com:Send (chanId, msg, plName)
 
 		elseif chanId == "P" then	-- Party channel
 			if GetNumSubgroupMembers() > 0 then
-				--if (IsPartyLFG()) then
-				--	self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
-				--else
+				if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
+					self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
+				else
 					self:SendChatMessageFixed (msg, "PARTY")
-				--end
+				end
 			end
 
 		else

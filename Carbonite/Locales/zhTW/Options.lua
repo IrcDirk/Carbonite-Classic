@@ -361,6 +361,8 @@ L["Tracking HUD"] = "追踪窗口"
 
 -- General Text
 L["Reload UI"] = "重載界面"
+L["Reload"] = true
+L["Cancel"] = true
 L["Reset options"] = "重置設定"
 L["Reset global options"] = "重置全局設定"
 L["Reset window layouts"] = "重置窗口布局"

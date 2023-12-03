@@ -1,0 +1,11 @@
+## Interface: 60000
+## Title: Carbonite Notes - Candy Bucket Addon
+## Version: 1.0
+## Author: No one
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## RequiredDeps: Carbonite.Notes
+
+CandyBuckets.lua
+

@@ -22,8 +22,7 @@
 <UnitPositionFrame name="NXWorldMapUnitPositionFrame" frameLevel="1500" inherits="UnitPositionFrameTemplate">
 </UnitPositionFrame>
 
-<Slider name="NxSliderFrame" orientation="HORIZONTAL" virtual="true" inherits="BackdropTemplate">
-<!--
+<Slider name="NxSliderFrame" orientation="HORIZONTAL" virtual="true">
 	<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
 		<EdgeSize>
 			<AbsValue val="8" />
@@ -35,7 +34,6 @@
 			<AbsInset left="3" right="3" top="6" bottom="6" />
 		</BackgroundInsets>
 	</Backdrop>
--->
 	<ThumbTexture file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
 		<Size>
 			<AbsDimension x="32" y="32" />
@@ -133,11 +131,11 @@
 			<Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate" />
 		</Frames>
 		<Scripts>
-			<OnLoad function="QuestObjectiveItem_OnLoad" />
-			<OnEvent function="QuestObjectiveItem_OnEvent" />
+			<!--OnLoad function="QuestObjectiveItem_OnLoad" /-->
+			<!--OnEvent function="QuestObjectiveItem_OnEvent" /-->
+			<!--OnShow function="QuestObjectiveItem_OnShow" /-->
+			<!--OnHide function="QuestObjectiveItem_OnHide" /-->
 			<OnUpdate function="NxWatchListItem_OnUpdate" />
-			<OnShow function="QuestObjectiveItem_OnShow" />
-			<OnHide function="QuestObjectiveItem_OnHide" />
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 				GameTooltip:SetQuestLogSpecialItem(self.questLogIndex);

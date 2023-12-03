@@ -31,9 +31,6 @@
 	<Binding name="NxMAPTOGMINE" category="Carbonite">
 		Nx.NXMapKeyTogMine();
 	</Binding>
-	<Binding name="NxMAPTOGTIMBER" category="Carbonite">
-		Nx.NXMapKeyTogTimber();
-	</Binding>
 	<!-- Carbonite\NxMapGuide.lua -->
 	<Binding name="NxTOGGLEGUIDE" category="Carbonite">
 		Nx.NXGuideKeyToggleShow();

@@ -6,6 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Carbonite", "ruRU")
 if not L then return end
 L["None"] = "Нет"
 L["Goto"] = "Идти к"
+L["Goto %.0f, %.0f"] = "Идти к %.0f, %.0f"
 L["Clear Goto"] = "Очистить маршрут"
 L["Show Selected Zone"] = "Показать выбранную локацию"
 L["Menu"] = "Меню"
@@ -38,8 +39,8 @@ L["Show Cities"] = "Показать города"
 L["Show Towns"] = "Показать деревни"
 L["Show Extras"] = "Показать дополнения"
 L["Show Kill Icons"] = "Показать иконки смертей"
-L["Show Instance Raid Bosses"] = true
-L["Show Continent POIs"] = true
+L["Show Instance Raid Bosses"] = "Показывать боссов рейдового подземелья"
+L["Show Continent POIs"] = "Показывать POI на континенте"
 L["Minimap..."] = "Миникарта..."
 L["Full Size"] = "Полноразмерность"
 L["Transparency"] = "Прозрачность"
@@ -85,7 +86,7 @@ L["Report Player AFK"] = "Сообщить о отсутсвующем игро�
 L["Grow Conflict Bars"] = "Увеличить конфликтующие панели"
 L["Zoom In"] = "Приблизить"
 L["Zoom Out"] = "Отдалить"
-L["Guide"] = "Events"
+L["Guide"] = "Гайд"
 L["Combat"] = "Бой"
 L["Events"] = "События"
 L["Toggle Instance Map"] = "Вкл/Выкл карту подземелий"
@@ -101,11 +102,11 @@ L["Incoming"] = "Входящие"
 L["Speed"] = "Скорость"
 L["players"] = "игроки"
 L["Unknown map name"] = "Неизвестное имя карты"
-L["Show Instance Map"] = true
-L["Instance Scale..."] = true
-L["Player Arrow"] = true
-L["Group Player Size"] = true
-L["Raid Boss Size"] = true
+L["Show Instance Map"] = "Показывать карту подземелья"
+L["Instance Scale..."] = "Масштаб карты подземелья"
+L["Player Arrow"] = "Стрелочка игрока"
+L["Group Player Size"] = "Размер иконки игрока в группе"
+L["Raid Boss Size"] = "Размер иконки рейд босса"
 
 -- Battle ground messages
 L["Incoming"] = "Наступайте"		-- why was it commented? --mb because of next string?
@@ -117,3 +118,10 @@ L["Guard"] = "Защищайте"
 L["Well Defended"] = "Хорошо укрепленная"
 L["Losing"] = "Вы проигрываете"
 L["Report Status"] = "Текущее состояние"
+
+-- Zone status
+L["arena"] = "Арена"
+L["friendly"] = "Дружественная территория"
+L["hostile"] = "Вражеская территория"
+L["sanctuary"] = "Святилище"
+L["contested"] = "Оспариваемая территория"

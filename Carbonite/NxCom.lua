@@ -189,7 +189,7 @@ function Nx.Com:OnEvent (event)
 
 	if event == "PLAYER_LOGIN" then
 		local playername, realmname = UnitFullName("player")
-		self.PlyrName = playername .. "-" .. realmname
+		self.PlyrName = playername .. (realmname and "-" .. realmname or "")
 		self.PlyrMapId = Nx.Map:GetRealMapId()
 		self.PlyrX = 0
 		self.PlyrY = 0
@@ -333,7 +333,7 @@ function Nx.Com:OnFriendguild_update()
 		local con = finfo.connected
 		if not Nx.strpos(name, "-") then
 			local realmname = GetRealmName()
-			name = name .. "-" .. (realmname and "-" .. realmname or "")
+			name = name .. (realmname and "-" .. realmname or "")
 		end
 		if con then
 			if not gNames[name] then
@@ -431,12 +431,25 @@ function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, a
 
 	local self = Nx.Com
 
-	if event == "--CHAT_MSG_SYSTEM" then
+	if event == "CHAT_MSG_SYSTEM" then
 		local message = arg1
-	
-		local ONLINE = ERR_FRIEND_ONLINE_SS:gsub("%%s", "(.-)"):gsub("[%[%]]", "%%%1")
-		local OFFLINE = ERR_FRIEND_OFFLINE_S:gsub("%%s", "(.-)")
 		
+		local NOT_FOUND = ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)")
+		local name = strmatch(message, NOT_FOUND)
+		if name then 
+			if not Nx.strpos(name, "-") then
+				local realmname = GetRealmName()
+				name = name .. (realmname and "-" .. realmname or "")
+			end
+			
+			for k, v in ipairs (self.Friends) do
+				if name == v then tremove(self.Friends, k) end
+			end
+		end
+		
+		--local ONLINE = ERR_FRIEND_ONLINE_SS:gsub("%%s", "(.-)"):gsub("[%[%]]", "%%%1")
+		--local OFFLINE = ERR_FRIEND_OFFLINE_S:gsub("%%s", "(.-)")
+		--[[
 		local action = ""
 		local _, name = strmatch(message, ONLINE)
 		
@@ -460,6 +473,7 @@ function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, a
 				end
 			end
 		end
+		]]--
 		--[[ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", function(frame, event, message)
 		   local action = "OFFLINE"
 		   local _, name = strmatch(message, ONLINE)
@@ -531,7 +545,7 @@ function Nx.Com:OnChat_msg_addon (args, distribution, target)
 	local name = target
 	if not Nx.strpos(name, "-") then
 		local realmname = GetRealmName()
-		name = name .. "-" .. (realmname and "-" .. realmname or "")
+		name = name .. (realmname and "-" .. realmname or "")
 	end
 
 	if name ~= self.PlyrName then		-- Ignore myself
@@ -1127,11 +1141,11 @@ function Nx.Com:Send (chanId, msg, plName)
 			end
 
 		elseif chanId == "p" then	-- Addon party
-			--if (IsPartyLFG()) then
-			--	Nx:SendCommMessage (self.Name, msg, "INSTANCE_CHAT")
-			--else
+			if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
+				Nx:SendCommMessage (self.Name, msg, "INSTANCE_CHAT")
+			else
 				Nx:SendCommMessage (self.Name, msg, "PARTY")
-			--end
+			end
 		elseif chanId == "W" then	-- Addon whisper
 
 --			Nx.prt ("Send W %s", plName)
@@ -1139,11 +1153,11 @@ function Nx.Com:Send (chanId, msg, plName)
 
 		elseif chanId == "P" then	-- Party channel
 			if GetNumSubgroupMembers() > 0 then
-				--if (IsPartyLFG()) then
-				--	self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
-				--else
+				if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
+					self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
+				else
 					self:SendChatMessageFixed (msg, "PARTY")
-				--end
+				end
 			end
 
 		else
@@ -1449,6 +1463,9 @@ function Nx.Com:OnUpdate (elapsed)
 			h = 0
 		end
 		local hm = UnitHealthMax ("player")
+		if hm < 1 then
+			hm = 1 
+		end
 		local hper = h / hm * 20
 		if hper > 0 then
 			hper = max (hper, 1)

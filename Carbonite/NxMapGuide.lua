@@ -76,11 +76,11 @@ Nx.GuideInfo = {
 		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},
+		},]]--
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
-		},]]--
+		},
 		{
 			T = L["Mailbox"],
 			Tx = "INV_Letter_15",
@@ -99,10 +99,10 @@ Nx.GuideInfo = {
 		Name = L["Class Trainer"],
 		T = "^C",
 		Tx = "INV_Misc_Book_10",
-		--[[{
+		{
 			T = L["Death Knight Trainer"],
 			Tx = "Spell_Deathknight_ClassIcon",
-		},]]--
+		},
 		{
 			T = L["Druid Trainer"],
 			Tx = "Ability_Druid_Maul",
@@ -189,7 +189,7 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Herbalism",
 		},
-		--[[{
+		{
 			Pre = L["Inscription"],
 			Name = L["Trainer"],
 			T = "^P",
@@ -200,7 +200,7 @@ Nx.GuideInfo = {
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Misc_Gem_02",
-		},]]--
+		},
 		{
 			Pre = L["Leatherworking"],
 			Name = L["Trainer"],
@@ -243,12 +243,12 @@ Nx.GuideInfo = {
 			T = "^S",
 			Tx = "Trade_Fishing",
 		},
-		--[[{
+		{
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
 			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-		},]]--
+		},
 		{
 			Pre = L["Riding"],
 			Name = L["Trainer"],
@@ -285,30 +285,6 @@ Nx.GuideInfo = {
 			Tx = "INV_Ore_Copper_01",
 			Persist = "ShowGatherM",
 		},
-		--[[{
-			Name = L["Timber"],
-			Tx = "INV_Tradeskillitem_03",
-			Persist = "ShowGatherL",
-		},
-		{
-			Name = L["Artifacts"],
-			T = "$ A",
-			Id = "Art",
-			Tx = "Trade_Archaeology",
-			Persist = "ShowGatherA",
-		},
-		{
-			Name = L["Everfrost"],
-			T = "$ E",
-			Id = "Everfrost",
-			Tx = "spell_shadow_teleport",
-		},
-		{
-			Name = L["Gas"],
-			T = "$ G",
-			Id = "Gas",
-			Tx = "inv_gizmo_zapthrottlegascollector",
-		},]]--
 	},
 	{
 		Name = L["Instances"],
@@ -321,7 +297,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Inst = 2
 		},
-		--[[{
+		--[[{{
 			Name = "@O",
 			Inst = 3
 		},
@@ -329,7 +305,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Inst = 4
 		},
-		{
+		
 			Name = "@M",
 			Inst = 5
 		},
@@ -374,6 +350,7 @@ Nx.GuideInfo = {
 			Map = 2
 		},
 		--[[{
+		{
 			Name = "@O",
 			Map = 3
 		},
@@ -381,7 +358,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Map = 4
 		},
-		{
+		
 			Name = "@M",
 			Map = 5
 		},
@@ -482,10 +459,10 @@ function Nx.Map.Guide:Create (map)
 	list:SetUser (g, g.OnList2Event)
 	list:SetLineHeight (16, 11)
 	list:ColumnAdd ("", 1, 35)
-	list:ColumnAdd ("Name", 2, 220)
-	list:ColumnAdd ("Info", 3, 80)
-	list:ColumnAdd ("Info2", 4, 150)
-	list:ColumnAdd ("Info3", 5, 230)
+	list:ColumnAdd (L["Name"], 2, 220)
+	list:ColumnAdd (L["Info"], 3, 80)
+	list:ColumnAdd (L["Info2"], 4, 150)
+	list:ColumnAdd (L["Info3"], 5, 230)
 	win:Attach (list.Frm, .33, 1, 18, 1)
 
 	g.EditBox = Nx.EditBox:Create (win.Frm, g, g.OnEditBox, 30)
@@ -777,7 +754,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 		trainer = true
 	end
 	if folder.Pre and folder.Name then
-		folder.Name = folder.Pre .. folder.Name
+		folder.Name = folder.Pre --.. folder.Name
 		folder.Name = strtrim (gsub (folder.Name, "%u", " %1"), " ")
 	end
 	if parent and parent.Pre and folder.T then
@@ -807,25 +784,49 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			["Tram"] = "INV_Misc_MissileSmall_White",
 			["Zeppelin"] = "INV_Misc_MissileSmall_Red",
 		}
+                local txN = {
+                        [2] = "Boat",
+			[0] = "Portal",
+			[3] = "Tram",
+			[5] = "Zeppelin",
+                }
 		local portalT = {
 			["Blasted Lands"] = "Spell_Arcane_TeleportStonard",
 			["Darnassus"] = "Spell_Arcane_TeleportDarnassus",
 			["Teldrassil"] = "Spell_Arcane_TeleportDarnassus",
-			--["The Exodar"] = "Spell_Arcane_TeleportExodar",
+			["The Exodar"] = "Spell_Arcane_TeleportExodar",
 			--["Hellfire Peninsula"] = "Spell_Arcane_TeleportStonard",
 			["Ironforge"] = "Spell_Arcane_TeleportIronForge",
-			--["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
+			["Isle of Quel'Danas"] = "Achievement_Zone_IsleOfQuelDanas",
 			["Lake Wintergrasp"] = "Ability_WIntergrasp_rank1",
 			["Orgrimmar"] = "Spell_Arcane_TeleportOrgrimmar",
-			--["Shattrath"] = "Spell_Arcane_TeleportShattrath",
-			--["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
+			["Shattrath"] = "Spell_Arcane_TeleportShattrath",
+			["Silvermoon City"] = "Spell_Arcane_TeleportSilvermoon",
 			["Stormwind City"] = "Spell_Arcane_TeleportStormWind",
 			["Thunder Bluff"] = "Spell_Arcane_TeleportThunderBluff",
 			["Undercity"] = "Spell_Arcane_TeleportUnderCity",
-			--["Dalaran"] = "Spell_Arcane_TeleportDalaran",
+			["Dalaran"] = "Spell_Arcane_TeleportDalaran",
 			--["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
+                local portalN = {
+			[1419] = "Spell_Arcane_TeleportStonard",
+			[1944] = "Spell_Arcane_TeleportStonard",
+                        [1438] = "Spell_Arcane_TeleportDarnassus",
+			[1457] = "Spell_Arcane_TeleportDarnassus",
+			[1947] = "Spell_Arcane_TeleportExodar",
+			[1455] = "Spell_Arcane_TeleportIronForge",
+			[1957] = "Achievement_Zone_IsleOfQuelDanas",
+			[1454] = "Spell_Arcane_TeleportOrgrimmar",
+			[1954] = "Spell_Arcane_TeleportSilvermoon",
+			[1453] = "Spell_Arcane_TeleportStormWind",
+			[1456] = "Spell_Arcane_TeleportThunderBluff",
+			[1458] = "Spell_Arcane_TeleportUnderCity",
+			[1955] = "Spell_Arcane_TeleportShattrath",
+			[125]  = "Spell_Arcane_TeleportDalaran",
+			[1446] = "Achievement_Zone_Tanaris_01",
+			
+                }
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)
 			if conTime ~= 1 then
@@ -839,8 +840,10 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 					f.MapId = mapId1
 					f.ConIndex = i
 					f.T = "*" .. i .. facStr
-					local typ, locName = strmatch (name1, "(%S+) to (.+)")
-					f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+					local typ = txN[conTime]
+                                        f.Tx = typ == "Portal" and portalN[mapId2] or txT[typ]
+					--local typ, locName = strmatch (name1, "(%S+) to (.+)")
+					--f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
 				end
 				if #name2 > 0 and bit.band (flags, 1) ~= 0 then
 					local f = {}
@@ -851,8 +854,10 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 					f.ConIndex = i
 					f.Con2 = true
 					f.T = "*b" .. i .. facStr
-					local typ, locName = strmatch (name2, "(%S+) to (.+)")
-					f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
+					local typ = txN[conTime]
+                                        f.Tx = typ == "Portal" and portalN[mapId1] or txT[typ]
+					--local typ, locName = strmatch (name2, "(%S+) to (.+)")
+					--f.Tx = typ == "Portal" and portalT[locName] or txT[typ]
 				end
 			end
 		end
@@ -871,21 +876,6 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			f.Id = a
 			folder[a] = f
 		end
-	--[[elseif folder.Name == L["Timber"] then
-		for a,b in pairs(Nx.GatherInfo["L"]) do
-			local name, tx, skill = Nx:GetGather ("L", a)
-			if not name then
-				break
-			end
-			local f = {}
-			f.Name = name
-			f.Column2 = format("Level %d", skill)
-			f.Column3 = "Lumbermill"
-			f.T = "$L" .. a
-			f.Tx = tx
-			f.Id = a
-			folder[a] = f
-		end]]--
 	elseif folder.Name == L["Ore"] then
 		for a,b in pairs(Nx.GatherInfo["M"]) do
 			local name, tx, skill = Nx:GetGather ("M", a)
@@ -902,7 +892,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 		end
 	elseif folder.Map then
 		local Map = Nx.Map
-		local cont1 = 0--folder.Map
+		local cont1 = folder.Map
 		local cont2 = cont1
 		if cont1 == 0 then
 			cont1 = 1
@@ -1053,14 +1043,6 @@ function Nx.Map.Guide:ClearShowFolders()
 		local folder = self:FindFolder (L["Ore"], gFolder)
 		self:AddShowFolders (folder)
 	end
-	--[[if Nx.db.char.Map.ShowGatherL then
-		local folder = self:FindFolder (L["Timber"], gFolder)
-		self:AddShowFolders (folder)
-	end
-	if Nx.db.char.Map.ShowGatherA then
-		local folder = self:FindFolder (L["Artifacts"], gFolder)
-		self:AddShowFolders (folder)
-	end]]--
 	if Nx.db.char.Map.ShowQuestGivers > 1 then
 		local folder = self:FindFolder (L["Quest Givers"])
 		self:AddShowFolders (folder)
@@ -1284,15 +1266,13 @@ function Nx.Map.Guide:UpdateMapIcons()
 				longType = "Herb"
 			elseif typ == "M" then
 				longType = "Mine"
-			--elseif typ == "L" then
-			--	longType = "Timber"
 			end
 			local fid = folder.Id
 			local data = longType and Nx:GetData (longType) or Nx.db.profile.GatherData["Misc"]
 			local carbMapId = mapId
 			local zoneT = data[carbMapId]
 			if zoneT then
-				if (typ == "M" and Nx.db.profile.Guide.ShowMines[fid]) or (typ == "H" and Nx.db.profile.Guide.ShowHerbs[fid]) or (typ == "L" and Nx.db.profile.Guide.ShowTimber[fid]) then
+				if (typ == "M" and Nx.db.profile.Guide.ShowMines[fid]) or (typ == "H" and Nx.db.profile.Guide.ShowHerbs[fid]) then
 				local nodeT = zoneT[fid]
 				if nodeT then
 					local iconType = fid == "Art" and "!G" or "!Ga"
@@ -1303,11 +1283,7 @@ function Nx.Map.Guide:UpdateMapIcons()
 						if level == Nx.Map.DungeonLevel then
 							icon = map:AddIconPt (iconType, wx, wy, level, nil, "Interface\\Icons\\"..tex, level)
 							if skill > 0 then
-								if typ == "L" then
-									name = name .. "\nL" .. skill .. " " .. L["Lumbermill"]
-								else
-									name = name .. " [" .. L["Skill"] .. ": " .. skill .. "]"
-								end
+								name = name .. " [" .. L["Skill"] .. ": " .. skill .. "]"
 							end
 							map:SetIconTip (icon, name)
 						end
@@ -1349,10 +1325,14 @@ function Nx.Map.Guide:UpdateMapIcons()
 						local anyDaily
 						local show
 						local s = name
-						for n = 1, #qdata, 4 do
-							local qId = tonumber (strsub (qdata, n, n + 3), 16)
+						for n = 1, #qdata, 6 do
+							local qId = tonumber (strsub (qdata, n, n + 5), 16)
 							local quest = Nx.Quests[qId]
-							local qname, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
+							local qname = C_QuestLog.GetQuestInfo(qId)
+							local qnameorig, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
+							if not qname then
+								qname = qnameorig
+							end
 							if lvl < 1 then
 								lvl = Nx.CurCharacter["Level"]
 							end
@@ -1406,14 +1386,15 @@ function Nx.Map.Guide:UpdateMapIcons()
 							showComplete = false
 						end
 						if show or showComplete then
-							local qId = tonumber (strsub (qdata, 1, 4), 16)
+							local qId = tonumber (strsub (qdata, 1, 6), 16)
 							local quest = Nx.Quests[qId]
 							local startName, zone, x, y, level = Quest:GetSEPos (quest["Start"])
 							local wx, wy = Map:GetWorldPos (mapId, x, y)
-							
 							local tx = anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
 							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx)
-							
+--							local tx = "Interface\\Minimap\\ObjectIconsAtlas"--anyDaily and "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaimB" or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconExclaim"
+--							local tx1, txy1, tx2, ty2 = GetObjectIconTextureCoords(anyDaily and 4713 or 4726)
+--							local icon = map:AddIconPt (show and "!GQ" or "!GQC", wx, wy, level, nil, tx, tx1, txy1, tx2, ty2)
 							map:SetIconTip (icon, s)
 							icon.UDataQuestGiverD = qdata
 						end
@@ -1529,7 +1510,7 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
 										icon = map:AddIconPt (iconType, wx, wy, level, nil, tx)
 									--end
 									if not map:GetMapNameByID(mapId) then
-										Nx.prt("Guide Icon Err: " .. mapId)
+										Nx.prt("Guide Icon Err mapID: " .. mapId)
 									end
 									local str = format ("%s\n%s %.1f %.1f", name, map:GetMapNameByID(mapId), x, y)
 									map:SetIconTip (icon, str)
@@ -1785,8 +1766,6 @@ function Nx.Map.Guide:FindClosest (findType)
 					longType = "Herb"
 				elseif type == "M" then
 					longType = "Mine"
-				elseif type == "L" then
-					longType = "Timber"
 				end
 				if longType then
 					local fid = folder.Id
@@ -2689,12 +2668,12 @@ Nx.Map.Guide.ItemCats = {
 			Tx = "Trade_Engineering",
 			Item = -9,
 		},
-		--[[{
+		{
 			Name = "Jewelcrafting",
 			T = "Jewelcrafting",
 			Tx = "INV_Misc_Gem_02",
 			Item = -9,
-		},]]--
+		},
 		{
 			Name = "Leatherworking",
 			T = "Leatherworking",
@@ -2901,10 +2880,10 @@ Nx.Map.Guide.ItemStatRequiredSkill = {
 	"First Aid",
 	"Fishing",
 	"Herbalism",
-	--"Jewelcrafting",
+	"Jewelcrafting",
 	"Leatherworking",
 	"Mining",
-	--"Inscription",
+	"Inscription",
 	"Riding",
 	"Tailoring"
 }

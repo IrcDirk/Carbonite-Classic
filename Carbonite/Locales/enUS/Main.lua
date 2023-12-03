@@ -18,6 +18,7 @@ NXClassLocToCap = {		-- Convert localized class name to generic caps
 -- Main Carbonite
 L["Carbonite"] = true
 L["CARBONITE"] = true
+L["Whats New!"] = true
 L["Loading"] = true
 L["Loading Done"] = true
 L["None"] = true
@@ -155,7 +156,16 @@ L["CLICK (.+):"] = true
 L["Key %s %s #%s %s"] = true
 L["shift left/right click to change size"] = true
 L["Reset old tool bar data"] = true
+L["|cffffff00%dg"] = true
+L["%s |cffbfbfbf%ds"] = true
+L["%s |cff7f7f00%dc"] = true
 
 -- NxTravel.lua
 L["Connection: %s to %s"] = true
 L["Fly: %s to %s"] = true
+
+-- NxHud.lua
+L[" %.1f deg"] = true
+L[" %d deg"] = true
+L["Remove Current Point"] = true
+L["Remove All Points"] = true

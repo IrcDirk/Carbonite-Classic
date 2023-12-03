@@ -370,6 +370,22 @@ local function mapConfig ()
 								Nx.db.profile.Map.MaxRestoreHide = not Nx.db.profile.Map.MaxRestoreHide
 							end,
 						},
+						mapUpdate = {
+							order = 7,
+							type = "range",
+							name = L["Map update rate"],
+							desc = L["sets map update refresh rate"],
+							min = 0,
+							max = .25,
+							step = .01,
+							bigStep = .01,
+							get = function()
+								return Nx.db.profile.Map.mapUpdate
+							end,
+							set = function(info,value)
+								Nx.db.profile.Map.mapUpdate = value
+							end,
+						},
 						spacer1 = {
 							order = 8,
 							type = "description",
@@ -1872,15 +1888,6 @@ local function guidegatherConfig ()
 								Nx.Opts:NXCmdDeleteMine()
 							end,
 						},
-						--[[CmdDelTimber = {
-							order = 5,
-							type = "execute",
-							width = "full",
-							name = L["Delete Timber Gather Locations"],
-							func = function ()
-								Nx.Opts:NXCmdDeleteTimber()
-							end,
-						},]]--
 						CmdDelMisc = {
 							order = 6,
 							type = "execute",
@@ -2345,8 +2352,8 @@ local function guidegatherConfig ()
 							order = 33,
 							type = "toggle",
 							width = "full",
-							name = L["Sorrowmoss"],
-							desc = L["Display"] .. " " .. L["Sorrowmoss"] .. " " .. L["Nodes On Map"],
+							name = L["Plaguebloom"],
+							desc = L["Display"] .. " " .. L["Plaguebloom"] .. " " .. L["Nodes On Map"],
 							get = function()
 								return Nx.db.profile.Guide.ShowHerbs[31]
 							end,
@@ -2588,6 +2595,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[49] = not Nx.db.profile.Guide.ShowHerbs[49]
 							end,
 						},
+--[[
 						azsharaveil = {
 							order = 52,
 							type = "toggle",
@@ -3043,6 +3051,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[84] = not Nx.db.profile.Guide.ShowHerbs[84]
 							end,
 						},
+]]--
 					},
 				},
 				MinesDisp = {
@@ -3410,6 +3419,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[26] = not Nx.db.profile.Guide.ShowMines[26]
 							end,
 						},
+--[[
 						obsid = {
 							order = 29,
 							type = "toggle",
@@ -3852,76 +3862,9 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[60] = not Nx.db.profile.Guide.ShowMines[60]
 							end,
 						},
+]]--
 					},
 				},
-				--[[TimberDisp = {
-					order = 5,
-					type = "group",
-					name = L["Timber"],
-					args = {
-						tenableall = {
-							order = 1,
-							type = "execute",
-							width = "double",
-							name = L["Enable All"],
-							func = function()
-								for i = 1,3 do
-									Nx.db.profile.Guide.ShowTimber[i] = true
-								end
-							end,
-						},
-						tdisableall = {
-							order = 2,
-							type = "execute",
-							width = "double",
-							name = L["Disable All"],
-							func = function()
-								for i = 1,3 do
-									Nx.db.profile.Guide.ShowTimber[i] = false
-								end
-							end,
-						},
-						small = {
-							order = 3,
-							type = "toggle",
-							width = "full",
-							name = L["Small Timber"],
-							desc = L["Display"] .. " " .. L["Small Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[1]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[1] = not Nx.db.profile.Guide.ShowTimber[1]
-							end,
-						},
-						med = {
-							order = 4,
-							type = "toggle",
-							width = "full",
-							name = L["Medium Timber"],
-							desc = L["Display"] .. " " .. L["Medium Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[2]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[2] = not Nx.db.profile.Guide.ShowTimber[2]
-							end,
-						},
-						large = {
-							order = 5,
-							type = "toggle",
-							width = "full",
-							name = L["Large Timber"],
-							desc = L["Display"] .. " " .. L["Large Timber"] .. " " .. L["Nodes On Map"],
-							get = function()
-								return Nx.db.profile.Guide.ShowTimber[3]
-							end,
-							set = function()
-								Nx.db.profile.Guide.ShowTimber[3] = not Nx.db.profile.Guide.ShowTimber[3]
-							end,
-						},
-					},
-				},]]--
 			},
 		}
 	end
@@ -4105,7 +4048,7 @@ local function skinConfig()
 						local g = arr[2]
 						local b = arr[3]
 						local a = arr[4]
-						return r,g,b,a
+						return r,g,b,tonumber(a)
 					end,
 					set = function(_,r,g,b,a)
 						Nx.db.profile.Skin.WinBdColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -4124,7 +4067,7 @@ local function skinConfig()
 						local g = arr[2]
 						local b = arr[3]
 						local a = arr[4]
-						return r,g,b,a
+						return r,g,b,tonumber(a)
 					end,
 					set = function(_,r,g,b,a)
 						Nx.db.profile.Skin.WinFixedBgColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -4143,7 +4086,7 @@ local function skinConfig()
 						local g = arr[2]
 						local b = arr[3]
 						local a = arr[4]
-						return r,g,b,a
+						return r,g,b,tonumber(a)
 					end,
 					set = function(_,r,g,b,a)
 						Nx.db.profile.Skin.WinSizedBgColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -4325,7 +4268,7 @@ local function trackConfig()
 						local g = arr[2]
 						local b = arr[3]
 						local a = arr[4]
-						return r,g,b,a
+						return r,g,b,tonumber(a)
 					end,
 					set = function(_,r,g,b,a)
 						Nx.db.profile.Track.TButColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -4344,7 +4287,7 @@ local function trackConfig()
 						local g = arr[2]
 						local b = arr[3]
 						local a = arr[4]
-						return r,g,b,a
+						return r,g,b,tonumber(a)
 					end,
 					set = function(_,r,g,b,a)
 						Nx.db.profile.Track.TButCombatColor = r .. "|" .. g .. "|" .. b .. "|" .. a
@@ -4584,8 +4527,7 @@ end
 -- Open options
 
 function Nx.Opts:Open (pageName)
-	InterfaceOptionsFrame_OpenToCategory("Carbonite")
-	InterfaceOptionsFrame_OpenToCategory("Carbonite")
+	Settings.OpenToCategory("Carbonite")
 end
 
 --------
@@ -4686,13 +4628,6 @@ function Nx.Opts:NXCmdDeleteHerb()
 		Nx:GatherDeleteHerb()
 	end
 	Nx:ShowMessage (L["Delete Herbalism Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
-end
-
-function Nx.Opts:NXCmdDeleteTimber()
-	local function func()
-		Nx.GatherDeleteTimber()
-	end
-	Nx:ShowMessage (L["Delete Timber Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
 end
 
 function Nx.Opts:NXCmdDeleteMine()
@@ -4893,7 +4828,7 @@ function Nx.Opts:NXCmdReload()
 		ReloadUI()
 	end
 
-	Nx:ShowMessage (L["Reload UI"] .. "?", "Reload", func, "Cancel")
+	Nx:ShowMessage (L["Reload UI"] .. "?", L["Reload"], func, L["Cancel"])
 end
 
 function Nx.Opts:NXCmdHUDChange()

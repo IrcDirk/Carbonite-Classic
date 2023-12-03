@@ -48,7 +48,7 @@ L["Inscription"] = "주문각인"
 L["Jewelcrafting"] = "보석세공"
 L["Leatherworking"] = "가죽세공"
 L["Mining"] = "채광"
-L["Riding"] = "기계공학"
+L["Riding"] = "탈것 타기"
 L["Skinning"] = "무두질"
 L["Tailoring"] = "재봉술"
 L["Travel"] = "여행"
@@ -68,6 +68,10 @@ L["Altar Of Shadows"] = "어둠의 제단"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "마나 베틀"
 L["Moonwell"] = "달샘"
+L["Name"] = true
+L["Info"] = true
+L["Info2"] = true
+L["Info3"] = true
 
 -- Menus
 L["Delete"] = "삭제"

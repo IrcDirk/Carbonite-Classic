@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="NxTOGGLEFAV" header="CarboniteNotes" category="Carbonite">
+		Nx.NXFavKeyToggleShow();
+	</Binding> 
+</Bindings>

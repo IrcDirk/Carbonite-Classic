@@ -155,7 +155,7 @@ function lib.eventFrame:PLAYER_ENTERING_WORLD()
 	
 	--register the guild events now, since they fire so often before this event
 	self:RegisterEvent("PLAYER_GUILD_UPDATE")
-	self:RegisterEvent("GUILDBANK_UPDATE_WITHDRAWMONEY")
+	--self:RegisterEvent("GUILDBANK_UPDATE_WITHDRAWMONEY")
 end
 
 function lib.eventFrame:PLAYER_GUILD_UPDATE()
@@ -232,15 +232,7 @@ local num, itemString
 function lib.eventFrame:GUILDBANKBAGSLOTS_CHANGED()
 	if (GuildBankFrame and GuildBankFrame:IsVisible()) or (BagnonFrameguildbank and BagnonFrameguildbank:IsVisible()) then
 		local page = GetCurrentGuildBankTab()
-		if not guildBank[page] then
-			local name, icon = GetGuildBankTabInfo(page)
-			guildBank[page] = {
-				links = {},
-				stacks = {},
-				name = name,
-				texture = icon
-			}
-		end
+		
 		--98 slots on a page
 		for slot = 1, 98 do
 			--see if the slot has an item in it
@@ -449,10 +441,10 @@ end
 
 function lib:Start()
 	--events for saving the state of the guild bank
-	lib.eventFrame:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED")
-	lib.eventFrame:RegisterEvent("GUILDBANKFRAME_OPENED")
-	lib.eventFrame:RegisterEvent("GUILDBANK_UPDATE_TABS")
-	lib.eventFrame:RegisterEvent("GUILDBANK_UPDATE_MONEY")
+	--lib.eventFrame:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED")
+	--lib.eventFrame:RegisterEvent("GUILDBANKFRAME_OPENED")
+	--lib.eventFrame:RegisterEvent("GUILDBANK_UPDATE_TABS")
+	--lib.eventFrame:RegisterEvent("GUILDBANK_UPDATE_MONEY")
 	
 	--events for getting fresh data on login/reload
 	lib.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

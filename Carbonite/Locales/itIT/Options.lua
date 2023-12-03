@@ -361,6 +361,8 @@ L["Tracking HUD"] = true
 
 -- General Text
 L["Reload UI"] = "Ricarica Interfaccia Grafica"
+L["Reload"] = true
+L["Cancel"] = true
 L["Reset options"] = "Resetta Opzioni"
 L["Reset global options"] = "Resetta Opzioni Globali"
 L["Reset window layouts"] = "Resetta Impostazioni Finestre"

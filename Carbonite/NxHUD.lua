@@ -110,12 +110,12 @@ function Nx.HUD:Create()
 		local map = Nx.Map:GetMap(1)
 		tremove (map.Targets, 1)
 	end
-	local item = menu:AddItem(0,"Remove Current Point", func, self)
+	local item = menu:AddItem(0,L["Remove Current Point"], func, self)
 	local function func ()
 		local map = Nx.Map:GetMap(1)
 		map:Menu_OnClearGoto()
 	end
-	local item = menu:AddItem(0,"Remove All Points", func, self)
+	local item = menu:AddItem(0,L["Remove All Points"], func, self)
 end
 
 --------
@@ -237,7 +237,7 @@ function Nx.HUD:Update (map)
 		local str = format ("%s%d " .. L["yds"], col, dist)
 
 		if Nx.db.profile.Track.ShowDir then
-			local fmt = dirDist < 1 and " %.1f deg" or " %d deg"
+			local fmt = dirDist < 1 and L[" %.1f deg"] or L[" %d deg"]
 			str = str .. format (fmt, dirDist)
 		end
 

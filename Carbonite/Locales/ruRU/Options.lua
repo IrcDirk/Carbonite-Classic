@@ -65,9 +65,9 @@ L["Attempts to hide the two gryphons on your action bar."] = "Пытается �
 
 -- Map Options
 L["Map Options"] = "Настройки карты"
-L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] = "Использовать карту Carbonite вместо карты Blizzard (Alt-ь(M) откроет карту мира)"
+L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] = "Использовать карту Carbonite вместо карты Blizzard (Alt-(M) откроет карту мира)"
 L["When enabled, pressing 'M' will maximize the carbonite map instead of opening the world map."] = "Когда Вкл., ь(M) откроет карту Carbonite вместо обычной карты."
-L["Enable Combat Compatibility Mode"] = true
+L["Enable Combat Compatibility Mode"] = "Включить режим совместимости во время битвы"
 L["Take Map Function Control"] = "Взять контроль над картой"
 L["When enabled Carbonite takes control of 2 blizzard map functions to help prevent map flickers, and unneccsary lag causing calls to change the map."] = "Когда Вкл., Carbonite перенимает контроль над функциями обеих карт blizzard, помогает предотвратить мерцание и нежелательные баги вызванные запросами на смену карты."
 L["Hide Map In Combat"] = "Прятать карту во время боя"
@@ -110,13 +110,13 @@ L["Sets the secondary anchor point for tooltips on the map"] = "Задает м�
 L["Show All Tooltips Above Map"] = "Показывать всплывающее окно поверх карты"
 L["When enabled, makes sure the map tooltips are always on the top layer."] = "Когда Вкл., всплывающее окно всегда на самом верхнем слое на карте."
 L["Show Map Name"] = "Показывать название карты"
-L["When enabled, shows current map zone name in the titlebar."] = "Когда Вкл., показывает название текущей зоны карты в заглавии."
+L["When enabled, shows current map zone name in the titlebar."] = "Когда Вкл., показывает название текущей зоны карты в заголовке."
 L["Show Coordinates"] = "Отображать координаты"
-L["When enabled, Shows your current coordinates in the titlebar."] = "Когда Вкл., отображает ващ текущие координаты в заглавии карты."
+L["When enabled, Shows your current coordinates in the titlebar."] = "Когда Вкл., отображает ващ текущие координаты в заголовке карты."
 L["Show Speed"] = "Показывать скорость"
-L["When enabled, Shows your current movement speed in the titlebar."] = "Когда Вкл., показывает вашу текущую скорость в заглавии карты."
-L["Show Second Title Line"] = "Отображать вторую строку заглавия карты"
-L["When enabled, Shows a second line of info in the titlebar with PVP & subzone info. (REQUIRES RELOAD)"] = "Когда Вкл., отображает вторую строку в заглавии карты с информацией о PVP и текущей локации. (Нужен перезапуск ПИ)"
+L["When enabled, Shows your current movement speed in the titlebar."] = "Когда Вкл., показывает вашу текущую скорость в заголовке карты."
+L["Show Second Title Line"] = "Отображать вторую строку заголовка карты"
+L["When enabled, Shows a second line of info in the titlebar with PVP & subzone info. (REQUIRES RELOAD)"] = "Когда Вкл., отображает вторую строку в заголовке карты с информацией о PVP и текущей локации. (Нужен перезапуск ПИ)"
 L["Show Map POI"] = "Отображать POI на карте"
 L["When enabled, shows Points of Interest on the map."] = "Когда Вкл., отображает Достопримечательности(POI) на карте."
 L["Player Arrow Size"] = "Размер указателя игрока"
@@ -255,7 +255,7 @@ L["Menu Font Spacing"] = "Межстрочный интервал шрифта �
 L["Sets the spacing of the menu font"] = "Задает межстрочный интервал шрифта меню"
 
 -- Guide Options
-L["Guide Options"] = "Настройки путеводитель"
+L["Guide Options"] = "Настройки путеводителя"
 L["Max Vendors To Record"] = "Максимум записей продавцов"
 L["Sets the number of vendors you visit that will be held in memory for recall in the guide."] = "Задает количество продавцов которых вы посетили,которые будут хранится в памяти для использования в путеводителе."
 L["Gather Options"] = "Настройки добычи"
@@ -360,7 +360,9 @@ L["Skin"] = "Скин"
 L["Tracking HUD"] = "Стрелка направления"
 
 -- General Text
-L["Reload UI"] = "Перезагрузить ПИ"
+L["Reload UI"] = "Перезагрузить интерфейс"
+L["Reload"] = "Перезагрузка"
+L["Cancel"] = "Отмена"
 L["Reset options"] = "Сбросить настройки"
 L["Reset global options"] = "Сбросить глобальные настройки"
 L["Reset window layouts"] = "Сбросить настройки окон"

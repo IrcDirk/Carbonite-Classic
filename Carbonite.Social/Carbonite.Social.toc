@@ -1,0 +1,13 @@
+## Interface: 11500
+## Title: Carbonite Social & Punks @project-version@
+## Version: @project-version@
+## Author: No One
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXSocial
+## RequiredDeps: Carbonite
+
+Locales\locales.xml
+NxSocial.lua
+

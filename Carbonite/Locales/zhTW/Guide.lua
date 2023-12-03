@@ -48,7 +48,7 @@ L["Inscription"] = "銘文學"
 L["Jewelcrafting"] = "珠寶設計"
 L["Leatherworking"] = "製皮"
 L["Mining"] = "採礦"
-L["Riding"] = "騎乘"
+L["Riding"] = "騎術"
 L["Skinning"] = "剝皮"
 L["Tailoring"] = "裁縫"
 L["Travel"] = "旅行"
@@ -68,6 +68,10 @@ L["Altar Of Shadows"] = "暗影祭壇"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "魔法織布機"
 L["Moonwell"] = "月亮井"
+L["Name"] = true
+L["Info"] = true
+L["Info2"] = true
+L["Info3"] = true
 
 -- Menus
 L["Delete"] = "刪除"

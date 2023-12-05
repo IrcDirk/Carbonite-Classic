@@ -30,8 +30,8 @@ local _G = getfenv(0)
 CarboniteQuest = LibStub("AceAddon-3.0"):NewAddon("Carbonite.Quest", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Quest", true)
 
-Nx.VERSIONQOPTS		= .115				-- Quest options
-Nx.VERSIONCAP		= .115
+Nx.VERSIONQOPTS		=  1.15				-- Quest options
+Nx.VERSIONCAP		=  1.15
 Nx.Quest = {}
 Nx.Quest.List = {}
 Nx.Quest.AcceptPool = {}

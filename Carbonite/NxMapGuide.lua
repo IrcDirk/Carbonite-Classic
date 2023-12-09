@@ -76,11 +76,11 @@ Nx.GuideInfo = {
 		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},]]--
+		},
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
-		},
+		},]]--
 		{
 			T = L["Mailbox"],
 			Tx = "INV_Letter_15",
@@ -99,10 +99,10 @@ Nx.GuideInfo = {
 		Name = L["Class Trainer"],
 		T = "^C",
 		Tx = "INV_Misc_Book_10",
-		{
+		--[[{
 			T = L["Death Knight Trainer"],
 			Tx = "Spell_Deathknight_ClassIcon",
-		},
+		},]]--
 		{
 			T = L["Druid Trainer"],
 			Tx = "Ability_Druid_Maul",
@@ -189,7 +189,7 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Herbalism",
 		},
-		{
+		--[[{
 			Pre = L["Inscription"],
 			Name = L["Trainer"],
 			T = "^P",
@@ -200,7 +200,7 @@ Nx.GuideInfo = {
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Misc_Gem_02",
-		},
+		},]]--
 		{
 			Pre = L["Leatherworking"],
 			Name = L["Trainer"],
@@ -243,12 +243,12 @@ Nx.GuideInfo = {
 			T = "^S",
 			Tx = "Trade_Fishing",
 		},
-		{
+		--[[{
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
 			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-		},
+		},]]--
 		{
 			Pre = L["Riding"],
 			Name = L["Trainer"],

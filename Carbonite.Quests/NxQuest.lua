@@ -6857,7 +6857,7 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 end
 
 --hooksecurefunc("QuestWatch_Update", function (...) WatchFrame:Hide(); end);
-hooksecurefunc("WatchFrame_Update", function (...) WatchFrame:Hide(); end);
+hooksecurefunc("WatchFrame_Update", function (...) pcall(function () WatchFrame:Hide(); end); end);
 
 
 Nx.Quest.TrackedAchievements = {}

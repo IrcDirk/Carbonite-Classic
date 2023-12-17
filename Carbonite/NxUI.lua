@@ -5536,9 +5536,11 @@ function Nx.List:Resize (width, height)
 	width = max (self.MinW, width)
 	height = max (self.MinH, height)
 
-	f:SetWidth (width)
-	f:SetHeight (height)
-
+	pcall(function()
+		f:SetWidth (width)
+		f:SetHeight (height)
+	end)
+	
 	local sfrm = self.SelFrm
 	sfrm:SetWidth (width - 10)
 

@@ -6853,12 +6853,12 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 	end
 --	Nx.prtD ("OnQuestUpdate %s Done", event)
 
-	WatchFrame:Hide()
+--	WatchFrame:Hide()
 end
 
 --hooksecurefunc("QuestWatch_Update", function (...) WatchFrame:Hide(); end);
-hooksecurefunc("WatchFrame_Update", function (...) pcall(function () WatchFrame:Hide(); end); end);
-
+--hooksecurefunc("WatchFrame_Update", function (...) hooksecurefunc(WatchFrame, 'Hide', fixedSetPoint) pcall(WatchFrame:Hide(), nil); end);
+hooksecurefunc(WatchFrame, 'Show', function (f) f:Hide() end);
 
 Nx.Quest.TrackedAchievements = {}
 function CarboniteQuest:OnTrackedAchievementsUpdate (event, ...)

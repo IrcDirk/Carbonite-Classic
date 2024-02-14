@@ -160,6 +160,8 @@ function Nx.EmulateTomTom()
 	tom["AddMFWaypoint"] = Nx.TTSetCustomMFWaypoint
 	tom["RemoveWaypoint"] = Nx.TTRemoveWaypoint
 	tom["SetCrazyArrow"] = Nx.TTSetCrazyArrow
+	tom["DefaultCallbacks"] = Nx.TTDefaultCallbacks
+	tom["SetClosestWaypoint"] = Nx.TTSetClosestWaypoint
 	SLASH_WAY1 = '/way'
 	SLASH_CBWAY1 = '/cbway'
 	SlashCmdList["WAY"] = function (msg, editbox)

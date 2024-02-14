@@ -5096,7 +5096,7 @@ function Nx.Map:Update (elapsed)
 			self.TrackName = "Corpse"
 
 			local x, y = self:GetWorldPos (C_Map.GetBestMapForUnit("player"), cX * 100, cY * 100)
-			self:DrawTracking (plX, plY, x, y, false, "D")
+			self:DrawTracking (plX, plY, x, y, "D")
 
 			local f = self:GetIcon (1)
 
@@ -5117,7 +5117,7 @@ function Nx.Map:Update (elapsed)
 			self.TrackETA = Map.TaxiETA
 
 			local x, y = self.TaxiX, self.TaxiY
-			self:DrawTracking (plX, plY, x, y, false, "F")
+			self:DrawTracking (plX, plY, x, y, "F")
 
 --			Nx.prt ("taxi %s %s", x, y)
 
@@ -5138,10 +5138,10 @@ function Nx.Map:Update (elapsed)
 		if palX then
 
 			self.TrackName = palName
-			self:DrawTracking (plX, plY, palX, palY, false, "B")
+			self:DrawTracking (plX, plY, palX, palY, "B")
 		else
 			self.TrackName = comTrackName
-			self:DrawTracking (plX, plY, comTrackX, comTrackY, false)
+			self:DrawTracking (plX, plY, comTrackX, comTrackY)
 		end
 
 		self.Level = self.Level + 2
@@ -5913,7 +5913,7 @@ function Nx.Map:UpdateTracking()
 
 		local tr = self.Tracking[n]
 
-		self:DrawTracking (srcX, srcY, tr.TargetMX, tr.TargetMY, tr.TargetTex, tr.Mode, tr.TargetName)
+		self:DrawTracking (srcX, srcY, tr.TargetMX, tr.TargetMY, tr.Mode, tr)
 
 		if n == 1 then
 			self.TrackName = tr.TargetName
@@ -5950,38 +5950,40 @@ function Nx.Map:CalcTracking()
 	end
 end
 
+local function shortendistance(n)
+	if n >= 10^6 then
+		return string.format("%.2fm", n / 10^6)
+	elseif n >= 10^3 then
+		return string.format("%.2fk", n / 10^3)
+	else
+		return tostring(n)
+	end
+end
+
 --------
 -- Draw a tracking cursor and lines
 
-function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, tex, mode, name)
-
-	function shortendistance(n)
-		if n >= 10^6 then
-			return string.format("%.2fm", n / 10^6)
-		elseif n >= 10^3 then
-			return string.format("%.2fk", n / 10^3)
-		else
-			return tostring(n)
-		end
-	end
+function Nx.Map:DrawTracking (srcX, srcY, dstX, dstY, mode, target)
 
 	local x = dstX - srcX
 	local y = dstY - srcY
 
 	local dist = (x * x + y * y) ^ .5
 	self.TrackDistYd = dist * 4.575
-
-	if tex ~= false then
-
+	
+	if target then
 		local f = self:GetIcon (1)
+		f.NxTarget = target;
+		target.dist = dist;
 
 		local size = 16 * self.IconNavScale
 		self:ClipFrameByMapType (f, dstX, dstY, size, size, 0)
-
-		local s = name or self.TrackName
-		f.NxTip = format ("%s\n%s " .. L["yds"], s, shortendistance(ceil(dist * 4.575)))
-
-		f.texture:SetTexture (tex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
+		
+		if target.TargetDisplayID then
+			SetPortraitTextureFromCreatureDisplayID(f.texture, target.TargetDisplayID)
+		else
+			f.texture:SetTexture (target.TargetTex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
+		end
 	end
 
 	self.TrackDir = false
@@ -8692,6 +8694,14 @@ function Nx.Map:IconOnMouseUp (button)
 
 	local this = self			--V4
 	this.NxMap.OnMouseUp (this.NxMap.Frm, button)
+	
+	local target = this.NxTarget;
+	if target then
+		local callbacks = target.TargetCallbacks;
+		if callbacks and callbacks.OnClick then
+			callbacks.OnClick(target, this);
+		end
+	end
 end
 
 --------
@@ -8708,34 +8718,53 @@ function Nx.Map:IconOnEnter (motion)
 --	map.BackgndAlphaTarget = map.BackgndAlphaFull
 
 	map:BuildPlyrLists()
+	
+	--		Nx.prt ("MapIconEnter %s %s", this:GetName() or "nil", this.NxTip)
 
-	if this.NxTip then
---		Nx.prt ("MapIconEnter %s %s", this:GetName() or "nil", this.NxTip)
+	local tt = GameTooltip
+	local owner = this
+	local tippos = "ANCHOR_CURSOR"
 
-		local tt = GameTooltip
+	if Nx.db.profile.Map.TopTooltip then
+		owner = map.Win.Frm
+		tippos = "ANCHOR_TOPLEFT"
+	end
 
-		local str = Nx.Split ("~", this.NxTip)
-
-		local owner = this
-		local tippos = "ANCHOR_CURSOR"
-
-		if Nx.db.profile.Map.TopTooltip then
-			owner = map.Win.Frm
-			tippos = "ANCHOR_TOPLEFT"
-		end
-
-		owner.NXIconFrm = this
+	owner.NXIconFrm = this
 
 --		Nx.TooltipOwner = owner
 --		map.TooltipType = 2
 
-		tt:SetOwner (owner, tippos, 0, 0)
+	GameTooltip:SetOwner (owner, tippos, 0, 0)
+	owner["UpdateTooltip"] = Nx.Map.IconOnUpdateTooltip
 
-		Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
-
-		owner["UpdateTooltip"] = Nx.Map.IconOnUpdateTooltip
+	local target = this.NxTarget;
+	if target then
+		local callbacks = target.TargetCallbacks;
+		if callbacks then
+			local onShow = callbacks.OnTooltipShow;
+			if onShow then
+				onShow(GameTooltip, target, this);
+			elseif onShow ~= false then
+				local str = Nx.Split ("~", format ("%s\n%s " .. L["yds"], target.TargetName or this.TrackName, shortendistance(ceil(target.dist * 4.575))));
+				Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr);
+			end
+			
+			local t = this.NXType or -1
+			if t >= 9000 then					-- Quest
+				Nx.Quest:IconOnEnter (this)
+			end
+			
+			-- If we have callbacks, we don't need to do the default behaviour.
+			return;
+		end
 	end
-
+	
+	if this.NxTip then
+		local str = Nx.Split ("~", this.NxTip)
+		Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
+	end
+	
 	local t = this.NXType or -1
 
 	if t >= 9000 then					-- Quest
@@ -8751,19 +8780,43 @@ function Nx.Map:IconOnUpdateTooltip()
 
 	local f = self.NXIconFrm
 
-	if f and f.NxTip then
-
-		local map = f.NxMap
-		map:BuildPlyrLists()
-
-		local str = Nx.Split ("~", f.NxTip)
-		Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
-
-		if Nx.Quest then
-			Nx.Quest:TooltipProcess()
+	if f then
+		--	Nx.prt ("IconOnUpdateTooltip")
+		local target = f.NxTarget;
+		if target then
+			local callbacks = target.TargetCallbacks;
+			if callbacks then
+				local onUpdate = callbacks.OnTooltipUpdate;
+				if onUpdate then
+					onUpdate(GameTooltip, target, f);
+				elseif onUpdate ~= false then
+					local map = f.NxMap
+					map:BuildPlyrLists();
+					
+					local str = Nx.Split ("~", format ("%s\n%s " .. L["yds"], target.TargetName or self.TrackName, shortendistance(ceil(target.dist * 4.575))));
+					Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr);
+				
+					if Nx.Quest then
+						Nx.Quest:TooltipProcess()
+					end
+				end
+				
+				-- If we have callbacks, we don't need to do the default behaviour.
+				return;
+			end
 		end
-
---		Nx.prt ("IconOnUpdateTooltip")
+			
+		if f.NxTip then
+			local map = f.NxMap
+			map:BuildPlyrLists();
+			
+			local str = Nx.Split ("~", f.NxTip)
+			Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
+			
+			if Nx.Quest then
+				Nx.Quest:TooltipProcess()
+			end
+		end
 	end
 end
 
@@ -9985,13 +10038,15 @@ function Nx.Map:FramePosToWorldPos (x, y)
 end
 
 
-
 --------
--- Set map target
--- (type string, x, y, x2, y2, texture (nil for default, false for none), user id, name)
+-- Add a target to the map
+-- (target)
 
-function Nx.Map:SetTarget (typ, x1, y1, x2, y2, tex, id, name, keep, mapId)
+function Nx.Map:AddTarget (target)
 
+	assert (target)
+	assert (target.TargetX1)
+	
 	self.UpdateTrackingDelay = 0
 
 	local sbt = self.ScaleBeforeTarget
@@ -10001,43 +10056,49 @@ function Nx.Map:SetTarget (typ, x1, y1, x2, y2, tex, id, name, keep, mapId)
 		self.ScaleBeforeTarget = false
 --	end
 
-	if not keep then
+	if not target.keep then
 		self:ClearTargets()
 	end
 
 	self.ScaleBeforeTarget = sbt or not next (self.Targets) and Nx.db.profile.Map.RestoreScaleAfterTrack and self.Scale
 
-	local tar = {}
-	tinsert (self.Targets, tar)
-
-	assert (x1)
-
-	tar.TargetType = typ
-	tar.TargetX1 = x1
-	tar.TargetY1 = y1
-	tar.TargetX2 = x2
-	tar.TargetY2 = y2
-	tar.TargetMX = (x1 + x2) * .5		-- Mid point
-	tar.TargetMY = (y1 + y2) * .5
-	tar.TargetTex = tex
-	tar.TargetId = id
-	tar.TargetName = name
---	tar.ArrowPulse = 1
-
-	mapId = mapId or self.MapId
-	tar.MapId = mapId
+	tinsert (self.Targets, target)
+	
+	if not target.MapId then target.MapId = self.MapId; end
+	target.TargetMX = (target.TargetX1 + target.TargetX2) * .5		-- Mid point
+	target.TargetMY = (target.TargetY1 + target.TargetY2) * .5
 
 	local i = self.TargetNextUniqueId
-	tar.UniqueId = i
+	target.UniqueId = i
 	self.TargetNextUniqueId = i + 1
 
-	local typ = keep and "Target" or "TargetS"
-	local zx, zy = self:GetZonePos (mapId, tar.TargetMX, tar.TargetMY)
 	if Nx.Notes then
-		Nx.Notes:Record (typ, name, mapId, zx, zy)
+		local zx, zy = self:GetZonePos (target.MapId, target.TargetMX, target.TargetMY)
+		Nx.Notes:Record (options.keep and "Target" or "TargetS", target.TargetName, target.MapId, zx, zy)
 	end
 
-	return tar
+	return target
+end
+
+
+--------
+-- Set map target
+-- (type string, x, y, x2, y2, texture (nil for default, false for none), user id, name)
+
+function Nx.Map:SetTarget (typ, x1, y1, x2, y2, tex, id, name, keep, mapId)
+	-- This is a legacy function, for more extensibility, use the Nx.Map:AddTarget (target) function instead
+	return Nx.Map:AddTarget({
+		MapId = mapId,
+		TargetType = typ,
+		TargetX1 = x1,
+		TargetY1 = y1,
+		TargetX2 = x2,
+		TargetY2 = y2,
+		TargetTex = tex,
+		TargetId = id,
+		TargetName = name,
+		keep = keep,
+	});
 end
 
 --------
@@ -10129,12 +10190,12 @@ end
 -- Set map target at zone xy (pos 0-100)
 -- Ret target table
 
-function Nx.Map:SetTargetXY (mid, zx, zy, name, keep)
+function Nx.Map:SetTargetXY (mid, zx, zy, name, keep, tex)
 if Nx.Quest and Nx.Quest.Watch then
 	Nx.Quest.Watch:ClearAutoTarget()
 end
 	local wx, wy = self:GetWorldPos (mid, zx, zy)
-	return self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, name or "", keep, mid)
+	return self:SetTarget ("Goto", wx, wy, wx, wy, tex, nil, name or "", keep, mid)
 end
 
 --------
@@ -10269,8 +10330,59 @@ end
 function Nx:TTAddWaypoint (mid, zx, zy, opt)
 
 	local map = Nx.Map:GetMap (1)
-
-	local tar = map:SetTargetXY (mid, zx*100, zy*100, opt.title, true)
+	
+	if Nx.Quest and Nx.Quest.Watch then
+		Nx.Quest.Watch:ClearAutoTarget()
+	end
+	
+	local TargetCallbacks;
+	local callbacks = opt.callbacks;
+	if callbacks then
+		TargetCallbacks = {};
+		
+		local onclick = callbacks.world.onclick or callbacks.minimap.onclick;
+		if onclick then
+			TargetCallbacks.OnClick = function(target, f)
+				pcall(onclick, "onclick", tooltip, target.UniqueId, target.dist);
+			end;
+		else
+			TargetCallbacks.OnClick = false;
+		end
+		
+		local onupdate = callbacks.world.tooltip_update or callbacks.minimap.tooltip_update;
+		if onupdate then
+			TargetCallbacks.OnTooltipUpdate = function(tooltip, target, f)
+				pcall(onupdate, "tooltip_update", tooltip, target.UniqueId, target.dist);
+			end;
+		else
+			TargetCallbacks.OnTooltipUpdate = false;
+		end
+		
+		local onshow = callbacks.world.tooltip_show or callbacks.minimap.tooltip_show;
+		if onshow then
+			TargetCallbacks.OnTooltipShow = function(tooltip, target, f)
+				pcall(onshow, "tooltip_show", tooltip, target.UniqueId, target.dist);
+			end;
+		else
+			TargetCallbacks.OnTooltipShow = false;
+		end
+	end
+	
+	local wx, wy = map:GetWorldPos (mid, zx * 100, zy * 100)
+	local tar = map:AddTarget({
+		MapId = mid,
+		TargetType = "Goto",
+		TargetX1 = wx,
+		TargetY1 = wy,
+		TargetX2 = wx,
+		TargetY2 = wy,
+		TargetDisplayID = opt.worldmap_displayID or opt.minimap_displayID,
+		TargetTex = opt.worldmap_icon or opt.minimap_icon,
+		--TargetId = nil,	-- Not used
+		TargetName = opt.title or "",
+		TargetCallbacks = TargetCallbacks,
+		keep = true,
+	});
 
 	map:ChangeTargetOrder (-1, 1)
 
@@ -10295,6 +10407,24 @@ function Nx:TTAddZWaypoint (cont, zone, zx, zy, name, _persist, _minimap, _world
 	end
 
 	return Nx:TTSetTarget (mid, zx, zy, name, callbackT)
+end
+
+--------
+-- Used for callbacks = TomTom:DefaultCallbacks(opts)
+
+function Nx:TTDefaultCallbacks(opts)
+	return {
+		minimap = {},
+		world = {},
+		distance = {},
+	}
+end
+
+--------
+-- Used for TomTom:SetClosestWaypoint(verbose)
+
+function Nx:TTSetClosestWaypoint()
+	return 0	-- Do nothing, but at least return the expected data format.
 end
 
 --------

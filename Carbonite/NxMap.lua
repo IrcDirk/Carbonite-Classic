@@ -10074,7 +10074,7 @@ function Nx.Map:AddTarget (target)
 
 	if Nx.Notes then
 		local zx, zy = self:GetZonePos (target.MapId, target.TargetMX, target.TargetMY)
-		Nx.Notes:Record (options.keep and "Target" or "TargetS", target.TargetName, target.MapId, zx, zy)
+		Nx.Notes:Record (target.keep and "Target" or "TargetS", target.TargetName, target.MapId, zx, zy)
 	end
 
 	return target
@@ -10087,7 +10087,7 @@ end
 
 function Nx.Map:SetTarget (typ, x1, y1, x2, y2, tex, id, name, keep, mapId)
 	-- This is a legacy function, for more extensibility, use the Nx.Map:AddTarget (target) function instead
-	return Nx.Map:AddTarget({
+	return self:AddTarget({
 		MapId = mapId,
 		TargetType = typ,
 		TargetX1 = x1,

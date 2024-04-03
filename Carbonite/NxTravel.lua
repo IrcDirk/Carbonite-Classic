@@ -410,8 +410,8 @@ function Nx.Travel:MakePath (tracking, srcMapId, srcX, srcY, dstMapId, dstX, dst
 	self.FlyingMount = false
 
 	if riding >= 225 then
-		if cont1 == 1 or cont1 == 2 then
-			self.FlyingMount = false
+		if cont1 == 1 or cont1 == 2 or cont1 == 5 then
+			self.FlyingMount = GetSpellInfo (self.AzerothFlyName)
 		elseif cont1 == 3 then
 			self.FlyingMount = true
 		elseif cont1 == 4 then
@@ -891,16 +891,22 @@ function Nx.Travel:GetRidingSkill()
 		return 0
 	end
 
-	local RidingSkillName = L["Riding"]
-	local RidingSkill = 0
-        for skillIndex = 1, GetNumSkillLines() do
-		PlayerSkill = {GetSkillLineInfo(skillIndex)}
-		if PlayerSkill[1] == RidingSkillName then
-			RidingSkill = PlayerSkill[4]
-                       	break
+	local RidingSpells = {
+		[75] = GetSpellInfo (33389) or "",
+		[150] = GetSpellInfo (33392) or "",
+		[225] = GetSpellInfo (34092) or "",		-- Expert
+		[300] = GetSpellInfo (34093) or "",		-- Artisan
+		[375] = GetSpellInfo (90265) or "",		-- Master
+	}
+	local SkillRiding = 0
+
+	for skill, name in pairs (RidingSpells) do
+		if GetSpellInfo (name) then
+			SkillRiding = skill
+			break
 		end
 	end
-	return RidingSkill
+	return SkillRiding
 end
 
 ---------------------------------------------------------------------------------------

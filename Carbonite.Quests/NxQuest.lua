@@ -1856,6 +1856,19 @@ local function QuestOptions ()
 								Nx.qdb.profile.Quest.Load8 = not Nx.qdb.profile.Quest.Load8
 							end,
 						},
+						q9 = {
+							order = 14,
+							type = "toggle",
+							width = "full",
+							name = L["Load Quests for Levels 81-85"],
+							desc = L["Loads all the carbonite quest data in this range on reload"],
+							get = function()
+								return Nx.qdb.profile.Quest.Load9
+							end,
+							set = function()
+								Nx.qdb.profile.Quest.Load9 = not Nx.qdb.profile.Quest.Load9
+							end,
+						},
 						spacer3 = {
 							order = 19,
 							type = "description",
@@ -3110,6 +3123,14 @@ function Nx.Quest:LoadQuestDB()
 	else
 		Nx.ModQuests:Clear8()
 	end
+	if Nx.qdb.profile.Quest.Load9 then
+		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
+		timeDelay = timeDelay + 1
+		numQLoad = numQLoad + 1
+		maxQLoad = maxQLoad + 1
+	else
+		Nx.ModQuests:Clear8()
+	end
 	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 	
 	local qStep = 100 / maxQLoad
@@ -3479,7 +3500,7 @@ function Nx.Quest:RecordQuestsLog()
 						end
 
 						if Nx.qdb.profile.Quest.AutoTurnInAC and cur.IsAutoComplete then
-							ShowQuestComplete (qi)
+							ShowQuestComplete (GetQuestLogIndexByID(qi))
 						end
 
 						if Nx.qdb.profile.QuestWatch.RemoveComplete and not cur.IsAutoComplete then
@@ -3648,7 +3669,7 @@ function Nx.Quest:RecordQuestsLog()
 				end
 				cur.CanShare = GetQuestLogPushable()
 				cur.Complete = isComplete			-- 1 is Done, nil not. Otherwise failed
-				cur.IsAutoComplete = false --GetQuestLogIsAutoComplete (qn)
+				cur.IsAutoComplete = GetQuestLogIsAutoComplete (GetQuestLogIndexByID(qId))
 
 				local left = GetQuestLogTimeLeft()
 				if left then
@@ -5364,7 +5385,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 		local tipStrLower = strlower (tipStr)
 
 		local curq = self.CurQ
-		local _, unit = tip:GetUnit()
+		local unitName, unit = tip:GetUnit()
 		-- Check if our tooltip is on a unit first
 		if unit then
 --			Nx.prt("TTN %s U %s", name, unit)
@@ -7428,6 +7449,9 @@ function Nx.Quest.List:Update()
 				local sMapName
 				local sName, sMapId = Quest:UnpackSE (quest["Start"])
 				if sMapId then
+					if C_Map.GetMapInfo(sMapId) == nil then
+						Nx.prt("Gost incorrect map id %s for quest start NPC with id %s", sMapId, qId)
+					end
 					sMapName = Map:IdToName (sMapId)
 					filterName = format ("%s(%s)", sName, sMapName)
 				end
@@ -7435,6 +7459,9 @@ function Nx.Quest.List:Update()
 				local eMapName
 				local eName, eMapId = Quest:UnpackSE (quest["End"])
 				if eMapId then
+					if C_Map.GetMapInfo(eMapId) == nil then
+						Nx.prt("Gost incorrect map id %s for quest end NPC id %s", eMapId, qId)
+					end
 					eMapName = Map:IdToName (eMapId)
 					if sName ~= eName then
 						filterName = format ("%s%s(%s)", filterName, eName, eMapName)
@@ -7544,6 +7571,9 @@ function Nx.Quest.List:Update()
 						end
 --						str = zone and "|cff505050o" or ""
 						if zone then
+ 							if C_Map.GetMapInfo(zone) == nil then
+								Nx.prt("Got incorrect zone %s", zone)
+							end
 							list:ItemSetButton ("QuestWatch", false)
 							list:ItemSetButtonTip (questTip)
 							list:ItemSet (4, Map:IdToName (zone))

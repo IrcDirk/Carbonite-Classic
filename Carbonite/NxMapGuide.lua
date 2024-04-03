@@ -30,6 +30,7 @@ Nx.GuideAbr = {
 	["E"] = L["Eastern Kingdoms"],
 	["O"] = L["Outland"],
 	["N"] = L["Northrend"],
+	["M"] = L["The Maelstrom"],
 }
 Nx.GuideInfo = {
 	Name = L["All"],
@@ -44,10 +45,10 @@ Nx.GuideInfo = {
 		T = L["Stable Master"],
 		Tx = "Ability_Hunter_BeastTaming",
 	},
-	--[[{
+	{
 		T = L["Flight Master"],
 		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
-	},]]--
+	},
 	--[[{
 		T = L["Lightforged Beacon"],
 		Tx = "INV_Alchemy_AstralAlchemistStone",
@@ -67,7 +68,7 @@ Nx.GuideInfo = {
 			T = L["Innkeeper"],
 			Tx = "Spell_Shadow_Twilight",
 		},
-		--[[{
+		{
 			T = L["Void Storage"],
 			Tx = "spell_nature_astralrecalgroup",
 		},
@@ -75,7 +76,7 @@ Nx.GuideInfo = {
 			T = L["Transmogrifier"],
 			Tx = "INV_Arcane_Orb",
 		},
-		{
+		--[[{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
 		},]]--
@@ -161,12 +162,12 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Alchemy",
 		},
-		--[[{
+		{
 			Pre = L["Archaeology"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "trade_archaeology",
-		},]]--
+		},
 		{
 			Pre = L["Blacksmithing"],
 			Name = L["Trainer"],
@@ -307,11 +308,11 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Inst = 4
 		},
-		--[[{
+		{
 			Name = "@M",
 			Inst = 5
 		},
-		{
+		--[[{
 			Name = "@P",
 			Inst = 6
 		},
@@ -359,11 +360,11 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Map = 4
 		},
-		--[[{
+		{
 			Name = "@M",
 			Map = 5
 		},
-		{
+		--[[{
 			Name = "@P",
 			Map = 6
 		},
@@ -826,7 +827,7 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			[1955] = "Spell_Arcane_TeleportShattrath",
 			[125]  = "Spell_Arcane_TeleportDalaran",
 			[1446] = "Achievement_Zone_Tanaris_01",
-			
+			[244]  = "Spell_Arcane_TeleportTolBarad",
                 }
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)

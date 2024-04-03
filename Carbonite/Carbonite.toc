@@ -1,4 +1,4 @@
-## Interface: 11500
+## Interface: 11502
 ## Title: Carbonite Maps - Classic @project-version@
 ## Version: @project-version@
 ## Author: No one

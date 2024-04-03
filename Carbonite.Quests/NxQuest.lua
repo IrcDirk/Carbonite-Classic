@@ -7449,9 +7449,6 @@ function Nx.Quest.List:Update()
 				local sMapName
 				local sName, sMapId = Quest:UnpackSE (quest["Start"])
 				if sMapId then
-					if C_Map.GetMapInfo(sMapId) == nil then
-						Nx.prt("Gost incorrect map id %s for quest start NPC with id %s", sMapId, qId)
-					end
 					sMapName = Map:IdToName (sMapId)
 					filterName = format ("%s(%s)", sName, sMapName)
 				end
@@ -7459,9 +7456,6 @@ function Nx.Quest.List:Update()
 				local eMapName
 				local eName, eMapId = Quest:UnpackSE (quest["End"])
 				if eMapId then
-					if C_Map.GetMapInfo(eMapId) == nil then
-						Nx.prt("Gost incorrect map id %s for quest end NPC id %s", eMapId, qId)
-					end
 					eMapName = Map:IdToName (eMapId)
 					if sName ~= eName then
 						filterName = format ("%s%s(%s)", filterName, eName, eMapName)
@@ -7571,9 +7565,6 @@ function Nx.Quest.List:Update()
 						end
 --						str = zone and "|cff505050o" or ""
 						if zone then
- 							if C_Map.GetMapInfo(zone) == nil then
-								Nx.prt("Got incorrect zone %s", zone)
-							end
 							list:ItemSetButton ("QuestWatch", false)
 							list:ItemSetButtonTip (questTip)
 							list:ItemSet (4, Map:IdToName (zone))

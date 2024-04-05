@@ -3129,7 +3129,7 @@ function Nx.Quest:LoadQuestDB()
 		numQLoad = numQLoad + 1
 		maxQLoad = maxQLoad + 1
 	else
-		Nx.ModQuests:Clear9()
+		Nx.ModQuests:Clear8()
 	end
 	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 	
@@ -4009,12 +4009,14 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
 		return
 	end
 	
-	--local tm = GetTime()
-	local mapId = nil -- C_QuestLog.GetMapForQuestPOIs()
+
+	local mapId = C_QuestLog.GetMapForQuestPOIs()
 	if not mapId then
 		return
 	end
+	--local tm = GetTime()
 	local mapQuests = C_QuestLog.GetQuestsOnMap(mapId)
+
 	local num = mapQuests and #mapQuests or 0--QuestMapUpdateAllQuests()		-- Blizz calls these in this order
 	if num > 0 then
 --		QuestPOIUpdateIcons()
@@ -4083,7 +4085,7 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
 	if not Nx.Quest.List.LoggingIn and not WatchUpdate then
 		Nx.Quest.Watch:Update()
 	end
-	--Nx.prt ("%f secs", GetTime() - tm)
+--	Nx.prt ("%f secs", GetTime() - tm)
 end
 
 
@@ -7449,6 +7451,9 @@ function Nx.Quest.List:Update()
 				local sMapName
 				local sName, sMapId = Quest:UnpackSE (quest["Start"])
 				if sMapId then
+					if C_Map.GetMapInfo(sMapId) == nil then
+						Nx.prt("Gost incorrect map id %s for quest start NPC with id %s", sMapId, qId)
+					end
 					sMapName = Map:IdToName (sMapId)
 					filterName = format ("%s(%s)", sName, sMapName)
 				end
@@ -7456,6 +7461,9 @@ function Nx.Quest.List:Update()
 				local eMapName
 				local eName, eMapId = Quest:UnpackSE (quest["End"])
 				if eMapId then
+					if C_Map.GetMapInfo(eMapId) == nil then
+						Nx.prt("Gost incorrect map id %s for quest end NPC id %s", eMapId, qId)
+					end
 					eMapName = Map:IdToName (eMapId)
 					if sName ~= eName then
 						filterName = format ("%s%s(%s)", filterName, eName, eMapName)
@@ -7565,6 +7573,9 @@ function Nx.Quest.List:Update()
 						end
 --						str = zone and "|cff505050o" or ""
 						if zone then
+ 							if C_Map.GetMapInfo(zone) == nil then
+								Nx.prt("Got incorrect zone %s", zone)
+							end
 							list:ItemSetButton ("QuestWatch", false)
 							list:ItemSetButtonTip (questTip)
 							list:ItemSet (4, Map:IdToName (zone))

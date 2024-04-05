@@ -3129,7 +3129,7 @@ function Nx.Quest:LoadQuestDB()
 		numQLoad = numQLoad + 1
 		maxQLoad = maxQLoad + 1
 	else
-		Nx.ModQuests:Clear8()
+		Nx.ModQuests:Clear9()
 	end
 	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 	

@@ -1685,6 +1685,11 @@ function Nx.Map:InitFrames()
 			1,1,1,1,
 			1,1,1,1,
 			1,1,1,1
+		},
+		{
+			1,1,1,0,
+			1,1,1,0,
+			1,1,1,0
 		}
 	}
 
@@ -1697,7 +1702,7 @@ function Nx.Map:InitFrames()
 		local mapFileName = self.MapInfo[n].FileName
 		local texi = 1
 
---		Nx.prtD ("Map Update ".. mapFileName)
+--		Nx.prt ("Map Update ".. mapFileName)
 		local tileX = self.MapInfo[n].TileX or 4
 		local tileY = self.MapInfo[n].TileY or 3
 		
@@ -9103,14 +9108,26 @@ function Nx.Map:InitTables()
 	--V403
 
 	Nx.Map.MapZones = {
-		[0] = {12,13,1945,113,0,-1},
-		[1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950},
-		[2] = {1416,1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957,124},
+		[0] = {12,13,1945,113,948,0,-1},
+		[1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,1456,1457,1943,1947,1950,198,199,249,327},
+		[2] = {1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957,124,179,201,202,204,205,210,217,218,224,241,244,245},
 		[3] = {1944,1946,1948,1949,1951,1952,1953,1955},
 		[4] = {114,115,116,117,118,119,120,121,123,125,127,170},
+		[5] = {174,194,207,276,407},
 		[90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
 		[100] = {},
 	}
+
+	for mi, mapName in pairs (Nx.Map.MapZones[2]) do
+		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
+			if mapName == mapName2 and mi ~= mi2 then			-- Duplicate name? (Gilneas, Ruins of Gilneas (EU))
+				Nx.Map.MapZones[2][mi2] = mapName .. "2"			-- Hack it!
+--				Nx.prt ("Dup zone name %s", mapName)
+				break
+			end
+		end
+	end
+	self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
 
 	--[[for mi, mapName in pairs (Nx.Map.MapZones[2]) do
 		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
@@ -9123,7 +9140,7 @@ function Nx.Map:InitTables()
 	end]]--
 
 	-- Support maps with multiple level
-	self.ContCnt = 4
+	self.ContCnt = 5
 
 --	continentNums = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 90 }
 	for k, v in pairs (worldInfo) do
@@ -9138,20 +9155,6 @@ function Nx.Map:InitTables()
 			Nx.Map.MapWorldInfo[k] = Nx.Map.MapWorldInfo[winfo.BaseMap]
 			Nx.Map.MapWorldInfo[k].RBaseMap = k
 			Nx.Map.MapWorldInfo[k].OBaseMap = winfo.BaseMap
-		end
-	end
-	for k, v in pairs (Nx.Zones) do
-		if Nx.Map:GetContinentMapID(k) == 113 then
-			local name, minLvl, maxLvl, faction, cont, entryId, ex, ey, z = Nx.Split ("|", v)
-			if cont == "5" then 
-				local _, _ , _, data = Nx.Map:GetLegacyMapInfo(k);
-				for mk, mv in pairs (data) do
-					mk = tonumber(mk)
-					if mk ~= nil and mv ~= k then 
-						Nx.Zones[mv] = v
-					end
-				end
-			end
 		end
 	end
 	for k, v in pairs (Nx.Zones) do

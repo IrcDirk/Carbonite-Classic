@@ -3,7 +3,8 @@
 	<Include file="GuideDefault.lua" />
 	<Include file="AlchemyTrainer.lua" />
 	<Include file="AltarOfShadows.lua" />
-	<Include file="Anvil.lua" />	
+	<Include file="Anvil.lua" />
+	<Include file="ArchaeologyTrainer.lua" />
 	<Include file="Auctioneer.lua" />
 	<Include file="Banker.lua" />
 	<Include file="Barber.lua" />
@@ -15,17 +16,18 @@
 	<Include file="EngineeringTrainer.lua" />
 	<Include file="FirstAidTrainer.lua" />
 	<Include file="FishingTrainer.lua" />
-	<Include file="FlightMaster.lua" />	
+	<Include file="FlightMaster.lua" />
+	<Include file="FlyingTrainer.lua" />
 	<Include file="Forge.lua" />
 	<Include file="HerbalismTrainer.lua" />
 	<Include file="HunterTrainer.lua" />
 	<Include file="Innkeeper.lua" />
 	<Include file="InscriptionTrainer.lua" />
 	<Include file="JewelcraftingTrainer.lua" />
-	<Include file="LeatherworkingTrainer.lua" />	
+	<Include file="LeatherworkingTrainer.lua" />
 	<Include file="MageTrainer.lua" />
-	<Include file="Mailbox.lua" />	
-	<Include file="MiningTrainer.lua" />		
+	<Include file="Mailbox.lua" />
+	<Include file="MiningTrainer.lua" />
 	<Include file="PaladinTrainer.lua" />
 	<Include file="PriestTrainer.lua" />
 	<Include file="RidingTrainer.lua" />
@@ -34,6 +36,8 @@
 	<Include file="SkinningTrainer.lua" />
 	<Include file="StableMaster.lua" />
 	<Include file="TailoringTrainer.lua" />
+	<Include file="Transmogrifier.lua" />
+	<Include file="VoidStorage.lua" />
 	<Include file="WarlockTrainer.lua" />
 	<Include file="WarriorTrainer.lua" />
 </Ui>

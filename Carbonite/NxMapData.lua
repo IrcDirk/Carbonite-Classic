@@ -269,9 +269,9 @@ Map.MapWorldInfo = {
 		QAchievementIdA = 4902,
 	},
 	[1434] = {
-		Scale = 12.7625,
-		X = -444.1666,
-		Y = 2233.75,		
+		Scale = 8.1999997558594,
+		X = -348.74997558594,
+		Y = 2203.333203125,
 		Overlay = "stranglethornjungle",
 		Name = L["Northern Stranglethorn"],
 		QAchievementId = 4906,
@@ -916,13 +916,6 @@ Map.MapWorldInfo = {
 		Name = L["Ruins of Gilneas City"],
 		City = true,
 		StartZone = true,
-	},
-	[224] = {
-		Scale = 13.104166015625,
-		X = -595.41665039063,
-		Y = 2192.9166015625,
-		Overlay = "stranglethornvale",
-		Name = L["Stranglethorn Vale"],
 	},
 	[241] = {
 		Scale = 10.541666015625,

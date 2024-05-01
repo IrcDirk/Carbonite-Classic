@@ -822,10 +822,10 @@ function Nx.Map:Create (index)
 	item:SetChecked (Nx.db.char.Map, "ShowCustom")
 	local item = showMenu:AddItem(0, L["Show Instance Raid Bosses"], func, m)
 	item:SetChecked (Nx.db.char.Map, "ShowRaidBoss")
---	local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
---	item:SetChecked (Nx.db.char.Map, "ShowWorldQuest")
---	local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)	
---	item:SetChecked (Nx.db.char.Map, "ShowArchBlobs")	
+	local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
+	item:SetChecked (Nx.db.char.Map, "ShowWorldQuest")
+	local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)	
+	item:SetChecked (Nx.db.char.Map, "ShowArchBlobs")	
 	local item = showMenu:AddItem(0, L["Show Quest Blobs"], func, m)
 	item:SetChecked (Nx.db.char.Map, "ShowQuestBlobs")
 
@@ -1190,6 +1190,27 @@ function Nx.Map:Create (index)
 		m:AddIconRect ("TestZR", i, 5, i+1, 6, "00ff0080")
 	end
 --]]
+	local questwin = CreateFrame("QuestPOIFrame")
+	m.QuestWin = questwin
+	m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
+	m.QuestWin:Hide()
+	--m.QuestWin:SetSize(WorldMapButton:GetSize())
+	m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
+	m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
+	m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])
+	m.QuestWin:SetBorderTexture([[Interface\WorldMap\UI-QuestBlob-Outside]])
+	m.QuestWin:SetBorderScalar(0.15)
+
+	local arch = CreateFrame("ArchaeologyDigSiteFrame")
+	m.Arch = arch
+	m.Arch:SetParent(m.TextScFrm:GetScrollChild())
+	m.Arch:Hide()
+	--m.Arch:SetSize(WorldMapButton:GetSize())
+	m.Arch:SetFillAlpha(255 * m.ArchAlpha)
+	m.Arch:SetBorderAlpha(255 * m.ArchAlpha )
+	m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
+	m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
+	m.Arch:SetBorderScalar( 0.15 )
 
 	Nx.Map.RMapId = 9000		-- Safe default
 	Nx.Map.UpdateMapID = 9000
@@ -1563,6 +1584,21 @@ function Nx.Map:UpdateWorldMap()
 			v:SetScale (.001)
 		end
 	end
+	if not InCombatLockdown() then
+		self.Arch:DrawNone();
+		if Nx.db.char.Map.ShowArchBlobs then
+			for i = 1, ArchaeologyMapUpdateAll(Nx.Map:GetCurrentMapAreaID()) do
+				self.Arch:DrawBlob(ArcheologyGetVisibleBlobID(i), true)
+			end
+			self:ClipZoneFrm( self.Cont, self.Zone, self.Arch, 1 )
+			self.Arch:SetFrameLevel(self.Level)
+			self.Arch:SetFillAlpha(255 * self.ArchAlpha)
+			self.Arch:SetBorderAlpha( 255 * self.ArchAlpha )
+			self.Arch:Show()
+		else
+			self.Arch:Hide()
+		end
+	end
 end
 
 --------
@@ -1915,7 +1951,7 @@ function Nx.Map:MinimapOwnInit()
 
 	mm:SetParent (self.Frm)
 
-	--self.MMFrm:SetQuestBlobRingAlpha(1)
+	self.MMFrm:SetQuestBlobRingAlpha(1)
 	self.MMFrm:SetPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
 	self.MMFrm:SetStaticPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
 	mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)
@@ -3586,17 +3622,17 @@ function Nx.Map:OnEvent (event, ...)
 		if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
 			map.Win.Frm:Hide()
 		end
-		--map.Arch:Hide()
-		--map.QuestWin:Hide()
-		--map.Arch:SetParent(nil)
-		--map.QuestWin:SetParent(nil)
-		--map.Arch:ClearAllPoints()
-		--map.QuestWin:ClearAllPoints()
+		map.Arch:Hide()
+		map.QuestWin:Hide()
+		map.Arch:SetParent(nil)
+		map.QuestWin:SetParent(nil)
+		map.Arch:ClearAllPoints()
+		map.QuestWin:ClearAllPoints()
 	elseif event == "PLAYER_REGEN_ENABLED" then
-		--map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
-		--map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
-		--map.Arch:Show()
-		--map.QuestWin:Hide()
+		map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
+		map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
+		map.Arch:Show()
+		map.QuestWin:Hide()
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		-- DETECT EXIT INSTANCE
 		if Nx.Map.NInstMapId then 
@@ -4818,7 +4854,7 @@ function Nx.Map:Update (elapsed)
 		--for i = 1, poiNum do
 		local tPOIs = {}--C_TaxiMap.GetTaxiNodesForMap(rid)
 		local pPOIs = {}--C_PetInfo.GetPetTamersForMap(rid)
-		local dPOIs = {}--C_ResearchInfo.GetDigSitesForMap(rid)
+		local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
 		
 		local zPOIs = Nx.ArrayConcat(tPOIs, pPOIs, dPOIs)
 		

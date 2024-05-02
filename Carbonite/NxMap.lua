@@ -1755,9 +1755,10 @@ function Nx.Map:InitFrames()
 				t:SetAllPoints (cf)
 				cf.texture = t
 
-				if n == 0 then
-					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal"..texi)
-					texi = texi + 1
+				if n == 1 then
+					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal_"..i)
+				elseif n == 2 then
+					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Eas_"..i)
 				else
 					t:SetTexture ("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i)
 				end

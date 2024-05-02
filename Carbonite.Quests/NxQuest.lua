@@ -3913,13 +3913,13 @@ function Nx.Quest:ScanBlizzQuestData()
 
 --	Nx.prt ("ScanQ")
 
---	SetCVar ("questPOI", 1)		-- Enable or no POI data returned
+	SetCVar ("questPOI", 1)		-- Enable or no POI data returned
 
 --	self.ScanBlizzChanged = false
 
 	self.ScanBlizzMapId = 1
 	-- Use delay or some quests won't be ready
---	QScanBlizz = C_Timer.After(1, function() Nx.Quest:ScanBlizzQuestDataTimer() end) 
+	QScanBlizz = C_Timer.After(1, function() Nx.Quest:ScanBlizzQuestDataTimer() end) 
 end
 
 function Nx.Quest:IsDaily(checkID)

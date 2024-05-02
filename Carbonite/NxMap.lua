@@ -1951,7 +1951,7 @@ function Nx.Map:MinimapOwnInit()
 
 	mm:SetParent (self.Frm)
 
-	self.MMFrm:SetQuestBlobRingAlpha(1)
+	--self.MMFrm:SetQuestBlobRingAlpha(1)
 	self.MMFrm:SetPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
 	self.MMFrm:SetStaticPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
 	mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)

@@ -926,6 +926,13 @@ Map.MapWorldInfo = {
 		QAchievementId = 4873,
 		QAchievementIdH = 5501,
 	},
+	[224] = {
+		Scale = 13.104166015625,
+		X = -595.41665039063,
+		Y = 2192.9166015625,
+		Overlay = "stranglethornvale",
+		Name = L["Stranglethorn Vale"],
+	},
 	[244] = {
 		Scale = 4.0291665849686,
 		X = -402.08332519531,

@@ -46,5 +46,5 @@ L["If you have HandyNotes installed, allows them on the Carbonite map"] = "Ес�
 L["Handnotes Icon Size"] = "Размер иконки HandyNotes"
 
 -- Keybinds
-L["Carbonite Notes"] = "Carbonite Notes"
-L["NxTOGGLEFAV"] = "show/hide Notes"
+L["Carbonite Notes"] = "Заметки Carbonite"
+L["NxTOGGLEFAV"] = "Показать/Скрыть Заметки"

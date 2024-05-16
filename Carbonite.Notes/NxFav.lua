@@ -1529,6 +1529,9 @@ end
 function Nx.Notes:HandyNotes(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
+		if not C_Map.GetMapInfo(mapId) then
+			return
+		end
 		if C_Map.GetMapInfo(mapId).mapType ~= 3 then
 			return
 		end

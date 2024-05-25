@@ -1,4 +1,4 @@
-## Interface: 40403
+## Interface: 40400
 ## Notes: Wowhead Data dump for GatherMate2
 ## Title: GatherMate2Data - Carbonite Edition
 ## Author: kagaro, Xinhuan, Rythal (repackaging for Carb), IrcDirk (new versions for Carb)
@@ -8,6 +8,7 @@
 ## Dependencies: Carbonite
 ## LoadOnDemand: 1
 
+ArchaeologyData.lua
 MiningData.lua
 HerbalismData.lua
 FishData.lua

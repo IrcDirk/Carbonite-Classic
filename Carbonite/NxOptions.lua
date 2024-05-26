@@ -2595,7 +2595,6 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[49] = not Nx.db.profile.Guide.ShowHerbs[49]
 							end,
 						},
---[[
 						azsharaveil = {
 							order = 52,
 							type = "toggle",
@@ -2674,7 +2673,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowHerbs[55] = not Nx.db.profile.Guide.ShowHerbs[55]
 							end,
 						},
-						foolscap = {
+--[[						foolscap = {
 							order = 58,
 							type = "toggle",
 							width = "full",
@@ -3419,7 +3418,6 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[26] = not Nx.db.profile.Guide.ShowMines[26]
 							end,
 						},
---[[
 						obsid = {
 							order = 29,
 							type = "toggle",
@@ -3498,7 +3496,7 @@ local function guidegatherConfig ()
 								Nx.db.profile.Guide.ShowMines[32] = not Nx.db.profile.Guide.ShowMines[32]
 							end,
 						},
-						ghost = {
+--[[						ghost = {
 							order = 35,
 							type = "toggle",
 							width = "full",

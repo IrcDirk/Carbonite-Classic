@@ -2856,6 +2856,12 @@ Nx.GatherInfo = {
 		{ 435,	"inv_misc_herb_icethorn",L["Icethorn"]},
 		{ 450,	"inv_misc_herb_frostlotus",L["Frost Lotus"]},
 		{ 360,	"inv_misc_herb_11a",L["Firethorn"]},
+		{ 425, "inv_misc_herb_azsharasveil", L["Azshara's Veil"]},
+		{ 425, "inv_misc_herb_cinderbloom",	L["Cinderbloom"]},
+		{ 425, "inv_misc_herb_stormvine", L["Stormvine"]},
+		{ 475, "inv_misc_herb_heartblossom", L["Heartblossom"]},
+		{ 500, "inv_misc_herb_whiptail", L["Whiptail"]},
+		{ 525, "inv_misc_herb_twilightjasmine",	L["Twilight Jasmine"]},
 	},
 	["M"] = {	-- Mine node
 		{ 325,	"inv_ore_adamantium",L["Adamantite Deposit"]},
@@ -2884,6 +2890,12 @@ Nx.GatherInfo = {
 		{ 425,	"inv_ore_saronite_01",L["Saronite Deposit"]},
 		{ 425,	"inv_ore_saronite_01",L["Rich Saronite Deposit"]},
 		{ 450,	"inv_ore_platinum_01",L["Titanium Vein"]},		
+		{ 425,	"item_elementiumore", L["Obsidium Deposit"]},
+		{ 450,	"item_elementiumore", L["Rich Obsidium Deposit"]},
+		{ 475,	"item_pyriumore", L["Elementium Vein"]},
+		{ 500,	"item_pyriumore", L["Rich Elementium Vein"]},
+		{ 525,	"inv_ore_arcanite_01", L["Pyrite Deposit"]},
+		{ 525,	"inv_ore_arcanite_01", L["Rich Pyrite Deposit"]},
 	}
 }
 

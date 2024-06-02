@@ -5474,6 +5474,44 @@ end
 -- Copied from HereBeDragons-Migrate all credit goes to HereBeDragons team
 local SetupMigrationData
 local MapMigrationData, mapFileToIdMap, uiMapIdToIdMap
+
+--- Return the uiMapId from the specified mapAreaId/floor combination
+-- @param mapId mapAreaId to lookup
+-- @param floor floor to lookup (if nil, the first floor will be used)
+-- @return The uiMapId corresponding to this map, if any
+function Nx.Map:GetUIMapIDFromMapAreaId(mapId, floor)
+    if not mapId then return nil end
+    local data = MapMigrationData[mapId]
+    if not data then return nil end
+
+    if not floor then
+        if data[0] then
+            floor = 0
+        elseif data.defaultFloor then
+            floor = data.defaultFloor
+        else
+            for i = 1, 50 do
+                if data[i] then
+                    floor = i
+                    break
+                end
+            end
+            data.defaultFloor = floor
+        end
+    end
+    return data[floor]
+end
+
+--- Return the uiMapId from the specified mapFile/floor combination
+-- @param mapFile mapFile to lookup
+-- @param floor floor to lookup (if nil, the first floor will be used)
+-- @return The uiMapId corresponding to this map, if any
+function Nx.Map:GetUIMapIDFromMapFile(mapFile, floor)
+    if not mapFile then return nil end
+    if not mapFileToIdMap then SetupMigrationData() end
+    return self:GetUIMapIDFromMapAreaId(mapFileToIdMap[mapFile], floor)
+end
+
 function Nx.Map:GetLegacyMapInfo(uiMapId)
     if not uiMapId then return nil end
     if not uiMapIdToIdMap then SetupMigrationData() end
@@ -5483,6 +5521,7 @@ function Nx.Map:GetLegacyMapInfo(uiMapId)
     local m, f = floor(c / 10000), (c % 10000)
     return m, f, MapMigrationData[m].mapFile, MapMigrationData[m]
 end
+
 MapMigrationData = {
     [4] = { mapFile = "Durotar", [0] = 1, [8] = 2, [12] = 5, [19] = 6, [11] = 4, [10] = 3},
     [9] = { mapFile = "Mulgore", [0] = 7, [6] = 8, [7] = 9},
@@ -5930,6 +5969,7 @@ MapMigrationData = {
     [885] = { mapFile = "MogushanPalace", [1] = 453, [2] = 454, [3] = 455},
     [467] = { mapFile = "Zangarmarsh", [0] = 102},
 }
+
 function SetupMigrationData()
     mapFileToIdMap = {}
     for id, t in pairs(MapMigrationData) do

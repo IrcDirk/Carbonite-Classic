@@ -2325,11 +2325,12 @@ Map.ZoneOverlays = {
 		["crimsonexpanse"] = "540,12,462,400",
 		["templeofearth"] = "287,177,355,345",
 	},
-
 	["moltenfront"] = {
 		["moltenfront"] = "0,0,1024,768",		-- Manual
 	},
-
+	["darkmoonfaireisland"] = {
+		["darkmoonfaireisland"] = "0,0,1024,768",
+	},
 }
 
 --------

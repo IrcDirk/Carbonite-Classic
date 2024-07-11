@@ -89,7 +89,7 @@ local defaults = {
 
 Nx.Warehouse = {}
 
-local CurrencyArray = {61,81,241,361,384,385,391,393,394,397,398,399,400,401,402,416,515,614,615,676,677,697,698,738,752,754,766,777,789,810,821,823,824,828,829,910,944,980,994,999,1008,1017,1020,1101,1129,1149,1154,1155,1166,1171,1172,1173,1174,1191,1220,1226,1268,1273,1275,1299,1314,1324,1325,1342,1355,1356,1357,1379,1416,1501,1506,1508,1533}
+local CurrencyArray = {61,81,241,361,384,385,391,393,394,395,396,397,398,399,400,401,402,416,515,614,615,676,677,697,698,738,752,754,766,777,789,810,821,823,824,828,829,910,944,980,994,999,1008,1017,1020,1101,1129,1149,1154,1155,1166,1171,1172,1173,1174,1191,1220,1226,1268,1273,1275,1299,1314,1324,1325,1342,1355,1356,1357,1379,1416,1501,1506,1508,1533}
 
 local warehouseopts
 local function WarehouseOptions()
@@ -788,8 +788,8 @@ function CarboniteWarehouse:OnInitialize()
 	CarboniteWarehouse:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("BANKFRAME_OPENED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("BANKFRAME_CLOSED", "EventHandler")
-	--CarboniteWarehouse:RegisterEvent("GUILDBANKFRAME_OPENED", "EventHandler")
-	--CarboniteWarehouse:RegisterEvent("GUILDBANKFRAME_CLOSED", "EventHandler")
+	CarboniteWarehouse:RegisterEvent("GUILDBANKFRAME_OPENED", "EventHandler")
+	CarboniteWarehouse:RegisterEvent("GUILDBANKFRAME_CLOSED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("ITEM_LOCK_CHANGED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("MAIL_INBOX_UPDATE", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("UNIT_INVENTORY_CHANGED", "EventHandler")
@@ -808,7 +808,7 @@ function CarboniteWarehouse:OnInitialize()
 	CarboniteWarehouse:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("UNIT_SPELLCAST_FAILED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", "EventHandler")
-	--CarboniteWarehouse:RegisterEvent("CURRENCY_DISPLAY_UPDATE", "EventHandler")
+	CarboniteWarehouse:RegisterEvent("CURRENCY_DISPLAY_UPDATE", "EventHandler")
 	GuildBank.RegisterCallback(CarboniteWarehouse,"GuildBankComm_PageUpdate", "OnPageSync")
 	GuildBank.RegisterCallback(CarboniteWarehouse, "GuildBankComm_FundsUpdate", "OnMoneySync")
 	GuildBank.RegisterCallback(CarboniteWarehouse, "GuildBankComm_TabsUpdate", "OnTabSync")
@@ -1882,7 +1882,12 @@ function Nx.Warehouse:Update()
 				list:ItemAdd(cnum)
 				list:ItemSet (2, "|cff00ffff  ------")
 				if ch["Currency"] then
-					if ch["Currency"][823] then
+					if ch["Currency"][395] and ch["Currency"][396] then
+						list:ItemAdd(cnum)
+						list:ItemSet(2, format (L[" Valor: %s%s|r  Justice: %s%s"], hicol, ch["Currency"][396], hicol, ch["Currency"][395]))
+						list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\pvecurrency-valor")
+					end
+--[[					if ch["Currency"][823] then
 						list:ItemAdd(cnum)
 						list:ItemSet(2, format (L[" Apexis Crystals: %s%s"], hicol, ch["Currency"][823]))
 						list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\inv_apexis_draenor")
@@ -1901,10 +1906,21 @@ function Nx.Warehouse:Update()
 						list:ItemAdd(cnum)
 						list:ItemSet(2, format (L[" Order Resources: %s%s"], hicol, ch["Currency"][1220]))
 						list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\inv_orderhall_orderresources")
-					end
+					end --]]
 				else
 					list:ItemAdd(cnum)
 					list:ItemSet(2, format (" " .. L["No Currency Data Saved"]))
+				end
+				list:ItemAdd(cnum)
+				list:ItemSet (2, "|cff00ffff  ------")
+				if ch["Honor"] and ch["Conquest"] then
+					list:ItemAdd (cnum)
+					list:ItemSet (2, format (L[" Honor: %s%s|r  Conquest: %s%s"], hicol, ch["Honor"], hicol, ch["Conquest"]))
+					if (Nx.PlFactionNum == 1) then
+						list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\pvpcurrency-conquest-horde")
+					else
+						list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\pvpcurrency-conquest-alliance")
+					end
 				end
 				list:ItemAdd(cnum)
 				list:ItemSet (2, "|cff00ffff  ------")
@@ -2975,7 +2991,7 @@ function Nx.Warehouse:CaptureItems()
 	local inv = {}
 	ch["WareBags"] = inv
 
-	self:AddBag (KEYRING_CONTAINER, false, inv)
+--	self:AddBag (KEYRING_CONTAINER, false, inv)
 	self:AddBag (BACKPACK_CONTAINER, false, inv)
 
 	for bag = 1, NUM_BAG_SLOTS do
@@ -3022,15 +3038,18 @@ function Nx.Warehouse:ScanRBank()
 end
 
 function Nx.Warehouse:AddBag (bag, isBank, inv)
-
+	
 	local slots = C_Container.GetContainerNumSlots (bag)
-
 	for slot = 1, slots do
-		local tex, stack, locked, quality, _, _, link = GetContainerItemInfo(bag, slot)
-		if not locked then
-			local link = C_Container.GetContainerItemLink (bag, slot)
-			if link then
-				self:AddLink (link, stack, inv)
+		local containerItemInfo = C_Container.GetContainerItemInfo (bag, slot)
+		if containerItemInfo then
+			local count = containerItemInfo.stackCount
+			local locked = containerItemInfo.isLocked
+			if not locked then
+				local link = C_Container.GetContainerItemLink (bag, slot)
+				if link then
+					self:AddLink (link, count, inv)
+				end
 			end
 		end
 	end
@@ -3096,80 +3115,83 @@ function Nx.Warehouse.OnMerchant_show()
 			for bag = 0, NUM_BAG_SLOTS do
 				for slot = 1, C_Container.GetContainerNumSlots(bag) do
 					local sellit = false
-					local tex, stack, locked, quality, _, _, link = GetContainerItemInfo(bag, slot)
-					if not locked and tex then
-						local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
-						if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
-							sellit = true
-						end						
-						if quality == 1 and Nx.wdb.profile.Warehouse.SellWhites and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellWhitesiLVL and lvl < Nx.wdb.profile.Warehouse.SellWhitesiLVLValue then								
+					local itemfetch = C_Container.GetContainerItemInfo(bag, slot)
+					if itemfetch then
+						local tex, stack, locked, quality, link = itemfetch.iconFileID, itemfetch.stackCount, itemfetch.isLocked, itemfetch.quality, itemfetch.hyperlink
+						if not locked and tex then
+							local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
+							if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
 								sellit = true
-							elseif not Nx.wdb.profile.Warehouse.SellWhitesiLVL then
+							end						
+							if quality == 1 and Nx.wdb.profile.Warehouse.SellWhites and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellWhitesiLVL and lvl < Nx.wdb.profile.Warehouse.SellWhitesiLVLValue then								
+									sellit = true
+								elseif not Nx.wdb.profile.Warehouse.SellWhitesiLVL then
+									sellit = true
+								end
+							end
+							if quality == 2 and Nx.wdb.profile.Warehouse.SellGreens and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellGreensBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellGreensBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
+										sellit = true
+									end							
+								end							
+							end
+							if quality == 3 and Nx.wdb.profile.Warehouse.SellBlues and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellBluesBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellBluesBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
+										sellit = true
+									end							
+								end							
+							end				
+							if quality == 4 and Nx.wdb.profile.Warehouse.SellPurps and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellPurpsBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellPurpsBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
+										sellit = true
+									end							
+								end							
+							end						
+							if Nx.wdb.profile.Warehouse.SellList and Nx.wdb.profile.Warehouse.SellingList[name] then
 								sellit = true
 							end
+							if sellit then
+								if not Nx.wdb.profile.Warehouse.SellTesting then
+									C_Container.UseContainerItem(bag,slot)
+								end
+								if Nx.wdb.profile.Warehouse.SellVerbose then
+									local moneyStr = Nx.Util_GetMoneyStr(stack * price)
+									Nx.prt(L["Selling"] ..  " ".. name .. " @ " .. moneyStr)
+								end
+								totalearned = totalearned + (stack * price)			
+							end
 						end
-						if quality == 2 and Nx.wdb.profile.Warehouse.SellGreens and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellGreensBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellGreensBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
-									sellit = true
-								end							
-							end							
-						end
-						if quality == 3 and Nx.wdb.profile.Warehouse.SellBlues and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellBluesBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellBluesBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
-									sellit = true
-								end							
-							end							
-						end				
-						if quality == 4 and Nx.wdb.profile.Warehouse.SellPurps and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellPurpsBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellPurpsBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
-									sellit = true
-								end							
-							end							
-						end						
-						if Nx.wdb.profile.Warehouse.SellList and Nx.wdb.profile.Warehouse.SellingList[name] then
-							sellit = true
-						end
-						if sellit then
-							if not Nx.wdb.profile.Warehouse.SellTesting then
-								C_Container.UseContainerItem(bag,slot)
-							end
-							if Nx.wdb.profile.Warehouse.SellVerbose then
-								local moneyStr = Nx.Util_GetMoneyStr(stack * price)
-								Nx.prt(L["Selling"] ..  " ".. name .. " @ " .. moneyStr)
-							end
-							totalearned = totalearned + (stack * price)			
-						end							
 					end
 				end
 			end			
@@ -3406,7 +3428,7 @@ function Nx.Warehouse:RecordCharacterSkills()
 	-- Scan professions
 
 --	local prof_1, prof_2, archaeology, fishing, cooking, firstaid = GetProfessions()		-- Indices for GetProfessionInfo
-	local proI = {} --{ GetProfessions() }		-- Indices for GetProfessionInfo
+	local proI = { GetProfessions() }		-- Indices for GetProfessionInfo
 
 	for _, i in pairs (proI) do
 
@@ -3592,12 +3614,12 @@ function Nx.Warehouse:RecordCharacterLogin()
 	ch["LXP"] = UnitXP ("player")
 	ch["LXPMax"] = UnitXPMax ("player")
 	ch["LXPRest"] = GetXPExhaustion() or 0
-	--local _, arena = GetCurrencyInfo (390)
-	--local _, honor = GetCurrencyInfo (392)
-	--ch["LArenaPts"] = arena			--V4 gone GetArenaCurrency()
-	--ch["LHonor"] = honor			--V4 gone GetHonorCurrency()
+	local _, arena = GetCurrencyInfo (390)
+	local _, honor = GetCurrencyInfo (1901)
+	ch["Conquest"] = arena			--V4 gone GetArenaCurrency()
+	ch["Honor"] = honor			--V4 gone GetHonorCurrency()
 	Nx.Warehouse:RecordCharacter()
-	--Nx.Warehouse:RecordCurrency()
+	Nx.Warehouse:RecordCurrency()
 end
 
 function Nx.Warehouse:RecordCharacter()

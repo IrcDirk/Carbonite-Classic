@@ -3183,7 +3183,7 @@ function Nx.Warehouse.OnMerchant_show()
 							end
 							if sellit then
 								if not Nx.wdb.profile.Warehouse.SellTesting then
-									UseContainerItem(bag,slot)
+									C_Container.UseContainerItem(bag,slot)
 								end
 								if Nx.wdb.profile.Warehouse.SellVerbose then
 									local moneyStr = Nx.Util_GetMoneyStr(stack * price)

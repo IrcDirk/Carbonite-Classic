@@ -103,7 +103,6 @@ Nx.Map = {}
 Nx.Map.Dock = {}
 Nx.Map.Guide = {}
 Nx.Map.Guide.PlayerTargets = {}
-Nx.Map.RareScannerOverlays = {}
 
 Nx.Travel = {}
 

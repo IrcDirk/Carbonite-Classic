@@ -1521,6 +1521,7 @@ function Nx.Notes:UpdateIcons()
 			end
 		end
 		Nx.Notes:HandyNotes(mapId)
+		Nx.Notes:RareScanner(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end
@@ -1566,7 +1567,7 @@ function Nx.Notes:HandyNotes(mapId)
 					end
 				else
 					texture = iconpath
-				end						
+				end
 				local icon = CreateFrame("Frame", "HandyCarb", UIParent)
 				local tmpFrame = WorldMapFrame:GetCanvas()
 				icon:SetParent(tmpFrame)
@@ -1599,6 +1600,92 @@ function Nx.Notes:HandyNotes(mapId)
 				end
 				map:SetIconTip(handynote,tooltip)
 				safecall(HandyNotes.plugins[pluginName].OnLeave, icon, mapFile and mapFile or mapId, coord)
+			end
+		end
+	end
+end
+
+function Nx.Notes:RareScanner(mapId)
+
+	if not RareScanner then
+		return
+	end
+
+	rspins = {}
+
+	local FROM_ON_SHOW = true
+	WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+
+	for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
+		rspins[#rspins + 1] = pin
+	end
+
+	for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
+		rspins[#rspins + 1] = pin
+	end
+
+	local map = Nx.Map:GetMap (1)
+	local level = nil --"PIN_FRAME_LEVEL_AREA_POI"
+
+	map:InitIconType ("!RSR", "WP", "", 36, 36)
+	map:SetIconTypeChop ("!RSR", true)
+	map:SetIconTypeLevel ("!RSR", 20)
+
+	map:InitIconType ("!RSRC", "WP", "", 36, 36)
+	map:SetIconTypeChop ("!RSRC", true)
+	map:SetIconTypeLevel ("!RSRC", 20)
+
+	for _,rspin in ipairs(rspins) do
+		if rspin.POI then
+			if rspin.POI.mapID == map.MapId then
+				local x = rspin.POI.x / 100
+				local y = rspin.POI.y / 100
+				local texture = rspin.POI.Texture
+				local scale = rspin.startScale
+				local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+				local icon = CreateFrame("Button", "RSCarb", UIParent)
+				local tmpFrame = WorldMapFrame:GetCanvas()
+				icon:SetParent(tmpFrame)
+				icon:ClearAllPoints()
+				icon:SetHeight(scale)
+				icon:SetWidth(scale)
+				icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+				local tooltip = rspin.POI.name
+				local tooltipName = "GameTooltip"
+				local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
+				map:SetIconTip(rsnote,tooltip)
+				map:SetIconUserData(rsnote, rspin)
+			end
+		else
+			if rspin.pin.POI.mapID == map.MapId then
+				local x = rspin.normalizedX * 100
+				local y = rspin.normalizedY * 100
+				if (rspin.normalizedX ~= rspin.pin.normalizedX or rspin.normalizedY ~= rspin.pin.normalizedY) then
+					local texture = rspin.Texture:GetTexture()
+					local colr, colg, colb = rspin.Texture:GetVertexColor()
+					local color = "FFFFFF"
+					if colr and colg and colb then
+						IconColor = CreateColor(colr, colg, colb)
+						color = IconColor:GenerateHexColor()
+					end
+					if not texture then
+						texture = rspin.pin.POI.Texture
+					end
+					local scale = rspin.startScale
+					local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+					local icon = CreateFrame("Button", "RSCarb", UIParent)
+					local tmpFrame = WorldMapFrame:GetCanvas()
+					icon:SetParent(tmpFrame)
+					icon:ClearAllPoints()
+					icon:SetHeight(scale)
+					icon:SetWidth(scale)
+					icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+					local tooltip = rspin.pin.POI.name
+					local tooltipName = "GameTooltip"
+					local rsnote = map:AddIconPt("!RSRC", wx, wy, level, color, texture)
+					map:SetIconTip(rsnote,tooltip)
+					map:SetIconUserData(rsnote, rspin)
+				end
 			end
 		end
 	end

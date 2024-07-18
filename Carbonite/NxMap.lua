@@ -149,6 +149,8 @@ function Nx.Map:Init()
 	self.Maps = {}
 	self.Created = false
 
+	self.RareScannerOverlays = {}
+
 	self:InitFuncs()
 	self:InitTables()
 
@@ -8601,7 +8603,6 @@ function Nx.Map:IconOnMouseDown (button)
 	map.ClickFrm = this
 	map.ClickType = this.NXType
 	map.ClickIcon = this.NXData
-
 	local shift = IsShiftKeyDown()
 
 	if button == "LeftButton" then
@@ -8638,7 +8639,13 @@ function Nx.Map:IconOnMouseDown (button)
 				end
 
 			else
-				map.OnMouseDown (map.Frm, button)
+				if map.ClickIcon.iconType == "!RSR" and RareScanner then
+					local rspin = this.NXData.UData
+					rspin:OnMouseDown(button)
+					Nx.Notes:RareScanner(map.MapId)
+				else
+					map.OnMouseDown (map.Frm, button)
+				end
 			end
 		end
 

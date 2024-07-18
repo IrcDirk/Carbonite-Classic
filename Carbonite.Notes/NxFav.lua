@@ -1659,8 +1659,8 @@ function Nx.Notes:HandyNotes(mapId)
 end
 
 function Nx.Notes:RareScanner(mapId)
+	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
-
 		rspins = {}
 
 		local FROM_ON_SHOW = true
@@ -1673,9 +1673,8 @@ function Nx.Notes:RareScanner(mapId)
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
 			rspins[#rspins + 1] = pin
 		end
-
-		local map = Nx.Map:GetMap (1)
-		local level = nil --"PIN_FRAME_LEVEL_AREA_POI"
+		
+		local level = nil
 
 		map:InitIconType ("!RSR", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
 		map:SetIconTypeChop ("!RSR", true)

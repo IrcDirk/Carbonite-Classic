@@ -8764,9 +8764,11 @@ function Nx.Map:IconOnEnter (motion)
 
 	local map = this.NxMap
 
-	if this.NXData.iconType == "!RSR" and RareScanner then
-		local rspin = this.NXData.UData
-		rspin:OnMouseEnter()
+	if this.NXData then
+		if this.NXData.iconType == "!RSR" and RareScanner then
+			local rspin = this.NXData.UData
+			rspin:OnMouseEnter()
+		end
 	end
 
 --	map.BackgndAlphaTarget = map.BackgndAlphaFull

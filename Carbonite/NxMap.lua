@@ -8764,6 +8764,11 @@ function Nx.Map:IconOnEnter (motion)
 
 	local map = this.NxMap
 
+	if this.NXData.iconType == "!RSR" and RareScanner then
+		local rspin = this.NXData.UData
+		rspin:OnMouseEnter()
+	end
+
 --	map.BackgndAlphaTarget = map.BackgndAlphaFull
 
 	map:BuildPlyrLists()
@@ -8876,6 +8881,13 @@ function Nx.Map:IconOnLeave (motion)
 
 	local this = self			--V4
 	local t = this.NXType or -1
+
+	if this.NXData then
+		if this.NXData.iconType == "!RSR" and RareScanner then
+			local rspin = this.NXData.UData
+			rspin:OnMouseLeave()
+		end
+	end
 
 	if t >= 9000 then					-- Quest
 		Nx.Quest:IconOnLeave (this)

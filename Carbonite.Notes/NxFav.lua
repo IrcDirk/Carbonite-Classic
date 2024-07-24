@@ -79,7 +79,7 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.HandyNotes
 					end,
 					set = function()
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.HandyNotes = not Nx.fdb.profile.Notes.HandyNotes
 						if Nx.fdb.profile.Notes.HandyNotes then
 							Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
@@ -98,7 +98,7 @@ local function notesConfig()
 					order = 3,
 					type = "range",
 					width = "normal",
-					min = 10,					
+					min = 10,
 					max = 60,
 					step = 5,
 					name = L["Handnotes Icon Size"],
@@ -106,7 +106,7 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.HandyNotesSize
 					end,
 					set = function(input,value)
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.HandyNotesSize = value
 						map:ClearIconType("!HANDY")
 						Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
@@ -119,7 +119,7 @@ local function notesConfig()
 					end,
 				},
 				rarescanner = {
-					order = 2,
+					order = 4,
 					type = "toggle",
 					width = "full",
 					name = L["Display RareScanner icons On Map"],
@@ -128,13 +128,12 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.RareScanner
 					end,
 					set = function()
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.RareScanner = not Nx.fdb.profile.Notes.RareScanner
 						if Nx.fdb.profile.Notes.RareScanner then
 							Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
 						else
 							map:ClearIconType("!RSR")
-							map:ClearIconType("!RSRC")
 						end
 					end,
 					disabled = function()
@@ -145,10 +144,10 @@ local function notesConfig()
 					end,
 				},
 				raresize = {
-					order = 3,
+					order = 5,
 					type = "range",
 					width = "normal",
-					min = 10,					
+					min = 10,
 					max = 60,
 					step = 5,
 					name = L["RareScanner Icon Size"],
@@ -156,10 +155,9 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.RareScannerSize
 					end,
 					set = function(input,value)
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.RareScannerSize = value
 						map:ClearIconType("!RSR")
-						map:ClearIconType("!RSRC")
 						Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
@@ -1680,10 +1678,6 @@ function Nx.Notes:RareScanner(mapId)
 		map:SetIconTypeChop ("!RSR", true)
 		map:SetIconTypeLevel ("!RSR", 20)
 
-		map:InitIconType ("!RSRC", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
-		map:SetIconTypeChop ("!RSRC", true)
-		map:SetIconTypeLevel ("!RSRC", 20)
-
 		for _,rspin in ipairs(rspins) do
 			if rspin.POI then
 				if rspin.POI.mapID == map.MapId then
@@ -1731,9 +1725,9 @@ function Nx.Notes:RareScanner(mapId)
 						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 						local tooltip = rspin.pin.POI.name
 						local tooltipName = "GameTooltip"
-						local rsnote = map:AddIconPt("!RSRC", wx, wy, level, color, texture)
+						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
 						map:SetIconTip(rsnote,tooltip)
-						map:SetIconUserData(rsnote, rspin)
+						map:SetIconUserData(rsnote, rspin.pin)
 					end
 				end
 			end

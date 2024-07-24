@@ -27,6 +27,8 @@
 local _G = getfenv(0)
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
+local ExtToolTip = LibStub('LibQTip-1.0RS')
+
 NxMAPOPTS_VERSION	= .30
 
 NxMapOptsDefaults = {
@@ -8770,6 +8772,8 @@ function Nx.Map:IconOnEnter (motion)
 		if this.NXData.iconType == "!RSR" and RareScanner then
 			local rspin = this.NXData.UData
 			rspin:OnMouseEnter()
+			tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
+			tooltip:SmartAnchorTo(self)
 		end
 	end
 

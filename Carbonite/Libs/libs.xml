@@ -25,4 +25,5 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 	<Include file="LibSharedMedia-3.0\lib.xml"/>
 	<Include file="LibCompress-1.0\LibCompress.xml"/>
 	<Include file="LibGuildBankComm-1.0\LibGuildBankComm-1.0.xml"/>
+	<Include file="LibQTip-1.0\lib.xml"/>
 </Ui>

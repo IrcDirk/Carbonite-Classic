@@ -34,7 +34,6 @@ BINDING_HEADER_CarboniteNotes	= "|cffc0c0ff" .. L["Carbonite Notes"] .. "|r"
 BINDING_NAME_NxTOGGLEFAV	= L["NxTOGGLEFAV"]
 
 local addonNotes = {}
-local needQuestUpdate = false
 
 local defaults = {
 	profile = {
@@ -44,8 +43,6 @@ local defaults = {
 			HandyNotesSize = 15,
 			RareScanner = true,
 			RareScannerSize = 32,
-			Questie = false,
-			QuestieSize = 15,
 		},
 		Addons = {
 		},
@@ -137,7 +134,6 @@ local function notesConfig()
 							Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
 						else
 							map:ClearIconType("!RSR")
-							map:ClearIconType("!RSRC")
 						end
 					end,
 					disabled = function()
@@ -162,60 +158,10 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.RareScannerSize = value
 						map:ClearIconType("!RSR")
-						map:ClearIconType("!RSRC")
 						Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
 						if RareScanner then
-							return false
-						end
-						return true
-					end,
-				},
-				questie = {
-					order = 6,
-					type = "toggle",
-					width = "full",
-					name = L["Display Questie icons On Map"],
-					desc = L["If you have Questie installed, disable Carbonite Quest module and enable this to display Questie icons on Carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.Questie
-					end,
-					set = function()
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.Questie = not Nx.fdb.profile.Notes.Questie
-						if Nx.fdb.profile.Notes.Questie then
-							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
-						else
-							map:ClearIconType("!Questie")
-						end
-					end,
-					disabled = function()
-						if Questie then
-							return false
-						end
-						return true
-					end,
-				},
-				questiesize = {
-					order = 7,
-					type = "range",
-					width = "normal",
-					min = 10,
-					max = 60,
-					step = 5,
-					name = L["Questie Icon Size"],
-					get = function()
-						return Nx.fdb.profile.Notes.QuestieSize
-					end,
-					set = function(input,value)
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.QuestieSize = value
-						map:ClearIconType("!Questie")
-						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
-					end,
-					disabled = function()
-						if Questie then
 							return false
 						end
 						return true
@@ -252,29 +198,6 @@ function CarboniteNotes:OnInitialize()
 	Nx.Map.Maps[1].GIconMenu:AddItem (0, L["Add Note"], Nx.Notes.Menu_OnAddNote, Nx.Map.Maps[1])
 	Nx:AddToConfig("Notes Module",notesConfig(),L["Notes Module"])
 	tinsert(Nx.BrokerMenuTemplate,{ text = L["Toggle Notes"], func = function() Nx.Notes:ToggleShow() end })
-
-	if (not Nx.Quest and Questie and Nx.fdb.profile.Notes.Questie) then
-		CarboniteNotes:RegisterEvent ("PLAYER_LOGIN", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("UNIT_QUEST_LOG_CHANGED", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_PROGRESS", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_COMPLETE", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_ACCEPTED", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_REMOVED", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_TURNED_IN", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("QUEST_DETAIL", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("WORLD_STATE_TIMER_START", "OnQuestUpdate")
-		CarboniteNotes:RegisterEvent ("WORLD_STATE_TIMER_STOP", "OnQuestUpdate")
-		local questieStartTimer = C_Timer.NewTimer(3, function(self)
-			if Questie.started then
-				needQuestUpdate = true
-				self:Cancel()
-			end
-		end)
-	end
-end
-
-function CarboniteNotes:OnQuestUpdate (event, ...)
-	needQuestUpdate = true
 end
 
 function Nx.Notes:OnChat_msg_addon(msg, dist, target)
@@ -1591,7 +1514,7 @@ function Nx.Notes:UpdateIcons()
 	local mapId = map.MapId
 	local draw = map.ScaleDraw > .3 and Nx.fdb.profile.Notes.ShowMap
 
-	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() and not needQuestUpdate then
+	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
 		return
 	end
 
@@ -1650,8 +1573,6 @@ function Nx.Notes:UpdateIcons()
 		end
 		Nx.Notes:HandyNotes(mapId)
 		Nx.Notes:RareScanner(mapId)
-		Nx.Notes:Questie(mapId)
-		needQuestUpdate = false
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end
@@ -1757,10 +1678,6 @@ function Nx.Notes:RareScanner(mapId)
 		map:SetIconTypeChop ("!RSR", true)
 		map:SetIconTypeLevel ("!RSR", 20)
 
-		map:InitIconType ("!RSRC", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
-		map:SetIconTypeChop ("!RSRC", true)
-		map:SetIconTypeLevel ("!RSRC", 20)
-
 		for _,rspin in ipairs(rspins) do
 			if rspin.POI then
 				if rspin.POI.mapID == map.MapId then
@@ -1808,9 +1725,9 @@ function Nx.Notes:RareScanner(mapId)
 						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 						local tooltip = rspin.pin.POI.name
 						local tooltipName = "GameTooltip"
-						local rsnote = map:AddIconPt("!RSRC", wx, wy, level, color, texture)
+						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
 						map:SetIconTip(rsnote,tooltip)
-						map:SetIconUserData(rsnote, rspin)
+						map:SetIconUserData(rsnote, rspin.pin)
 					end
 				end
 			end
@@ -1818,66 +1735,6 @@ function Nx.Notes:RareScanner(mapId)
 	end
 end
 
-
-function Nx.Notes:Questie(mapId)
-	local map = Nx.Map:GetMap (1)
-	if (Nx.fdb.profile.Notes.Questie and Questie and not Nx.Quest) then
-		questiepins = {}
-
-		local FROM_ON_SHOW = true
-		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
-
-		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
-			questiepins[#questiepins + 1] = pin
-		end
-
-		local level = nil
-
-		map:InitIconType ("!Questie", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 15, Nx.fdb.profile.Notes.QuestieSize or 15)
-		map:SetIconTypeChop ("!Questie", true)
-		map:SetIconTypeLevel ("!Questie", 20)
-
-		for _,questiepin in ipairs(questiepins) do
-			if questiepin.icon then
-				if questiepin.icon.UiMapID == map.MapId and questiepin.icon.data then
-					local x = questiepin.icon.x
-					local y = questiepin.icon.y
-					if x and y then
-						local texture = questiepin.icon.texture:GetTexture() or questiepin.icon.data.Icon
-						local scale = questiepin.icon.data.IconScale or 1
-						local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-						local icon = CreateFrame("Button", "QuestieCarb", UIParent)
-						local tmpFrame = WorldMapFrame:GetCanvas()
-						icon:SetParent(tmpFrame)
-						icon:ClearAllPoints()
-						icon:SetHeight(scale)
-						icon:SetWidth(scale)
-						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
-						local questienote = map:AddIconPt("!Questie", wx, wy, level, "FFFFFF", texture)
-						local tooltip = ""
-
-						if questiepin.icon.data.ObjectiveData and questiepin.icon.data.QuestData then
-							qLevel = questiepin.icon.data.QuestData.questLevel
-							qName  = questiepin.icon.data.QuestData.name
-							qObjName = questiepin.icon.data.ObjectiveData.Description
-							if questiepin.icon.data.ObjectiveData.Needed then
-								qNeeded = questiepin.icon.data.ObjectiveData.Needed
-								qCollected = questiepin.icon.data.ObjectiveData.Collected
-								tooltip = format("|cFFFFFF00[%s] %s\n  |cFFcbcbcb|cFFEEEEEE%s/%s %s", qLevel, qName, qCollected, qNeeded, qObjName)
-							else
-								tooltip = format("|cFFFFFF00[%s] %s\n  |cFFcbcbcb|cFFEEEEEE%s", qLevel, qName, qObjName)
-							end
-						end
-
-						map:SetIconTip(questienote,tooltip)
-						map:SetIconUserData(questienote, questiepin)
-					end
-				end
-			end
-		end
-		needQuestUpdate = true
-	end
-end
 ---------------------------------------------------------------------------------------
 
 function Nx.Notes:OnButToggleFav (but)

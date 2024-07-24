@@ -49,9 +49,6 @@ L["Display RareScanner icons On Map"] = true
 L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = true
 L["RareScanner Icon Size"] = true
 
-L["If you have Questie installed, disable Carbonite Quest module and enable this to display Questie icons on Carbonite map"] = true
-L["Questie Icon Size"] = true
-
 -- Keybinds
 L["Carbonite Notes"] = "Carbonite Notizen"
 L["NxTOGGLEFAV"] = "Notizen ein/ausblenden"

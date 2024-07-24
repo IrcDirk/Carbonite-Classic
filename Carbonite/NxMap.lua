@@ -3034,8 +3034,10 @@ end
 -- Generic icon goto
 
 function Nx.Map:GMenu_OnGoto()
-	if Nx.Quest.Watch then
-		Nx.Quest.Watch:ClearAutoTarget()
+	if Nx.Quest then
+		if Nx.Quest.Watch then
+			Nx.Quest.Watch:ClearAutoTarget()
+		end
 	end
 	if self.ClickType == 3001 then
 		if Nx.Social then

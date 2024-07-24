@@ -49,9 +49,6 @@ L["Display RareScanner icons On Map"] = "Показывать на карте о
 L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = "Если у вас установлен плагин RareScanner, то включение этого параметра отобразит иконки RareScanner на карте"
 L["RareScanner Icon Size"] = "Размер иконки RareScanner"
 
-L["If you have Questie installed, disable Carbonite Quest module and enable this to display Questie icons on Carbonite map"] = "Если у вас установлен плагин Questie, то вы можете отключить модуль заданий Carbonite и включить данный параметр чтобы отобразить иконки Questie на карте"
-L["Questie Icon Size"] = "Размер иконки Questie"
-
 -- Keybinds
 L["Carbonite Notes"] = "Заметки Carbonite"
 L["NxTOGGLEFAV"] = "Показать/Скрыть Заметки"

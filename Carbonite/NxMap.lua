@@ -8774,6 +8774,7 @@ function Nx.Map:IconOnEnter (motion)
 			rspin:OnMouseEnter()
 			tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
 			tooltip:SmartAnchorTo(self)
+			this.NxTip = nil
 		end
 	end
 
@@ -8894,6 +8895,7 @@ function Nx.Map:IconOnLeave (motion)
 		if this.NXData.iconType == "!RSR" and RareScanner then
 			local rspin = this.NXData.UData
 			rspin:OnMouseLeave()
+			this.NxTip = rspin.POI.name
 		end
 	end
 

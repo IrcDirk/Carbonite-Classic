@@ -1694,6 +1694,8 @@ function Nx.Notes:RareScanner(mapId)
 					icon:SetWidth(scale)
 					icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 					local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
+					local tooltip = rspin.POI.name
+					map:SetIconTip(rsnote,tooltip)
 					map:SetIconUserData(rsnote, rspin)
 				end
 			else
@@ -1721,6 +1723,8 @@ function Nx.Notes:RareScanner(mapId)
 						icon:SetWidth(scale)
 						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
+						local tooltip = rspin.pin.POI.name
+						map:SetIconTip(rsnote,tooltip)
 						map:SetIconUserData(rsnote, rspin.pin)
 					end
 				end

@@ -1681,9 +1681,12 @@ function Nx.Notes:RareScanner(mapId)
 		for _,rspin in ipairs(rspins) do
 			if rspin.POI then
 				if rspin.POI.mapID == map.MapId then
-					local x = rspin.POI.x / 100
-					local y = rspin.POI.y / 100
-					local texture = rspin.POI.Texture
+					local x = rspin.normalizedX * 100
+					local y = rspin.normalizedY * 100
+					local texture = rspin.Texture:GetTexture()
+					if not texture then
+						texture = rspin.pin.POI.Texture
+					end
 					local scale = rspin.startScale
 					local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
 					local icon = CreateFrame("Button", "RSCarb", UIParent)

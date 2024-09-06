@@ -5265,7 +5265,7 @@ Map.MiniMapBlks = {
 		Map.MoltenFrontMapBlks,
 		2725,		-- 2725 to 3531
 		27, 25,
-		Map.MapWorldInfo[338].X + Map.MapInfo[1].X + 3152.92266259766, Map.MapWorldInfo[338].Y + Map.MapInfo[1].Y + -2105.97034960937,
+		Map.MapWorldInfo[338].X + Map.MapInfo[1].X + 2452.92, Map.MapWorldInfo[338].Y + Map.MapInfo[1].Y + -1105.97,
 		"World\\Minimaps\\FirelandsDailies"
 	},
 	[407] = {

@@ -24,6 +24,7 @@ local NotInitializedWins = {}
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
 local HideFramesOnEsc = {}
+local GetMouseFoci = GetMouseFoci or GetMouseFocus
 
 function Nx:UIInit()
 

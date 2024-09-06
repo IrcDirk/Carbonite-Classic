@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: Carbonite Maps - Classic @project-version@
 ## Version: @project-version@
 ## Author: No one

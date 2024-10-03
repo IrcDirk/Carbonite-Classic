@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One

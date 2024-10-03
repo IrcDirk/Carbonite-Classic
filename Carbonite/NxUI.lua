@@ -24,6 +24,7 @@ local NotInitializedWins = {}
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
 local HideFramesOnEsc = {}
+local GetMouseFoci = GetMouseFoci or GetMouseFocus
 
 function Nx:UIInit()
 
@@ -3146,7 +3147,7 @@ function Nx.Window:OnUpdate (elapsed)
 	local x = not win.FullLock and Nx.Util_IsMouseOver (this)
 
 	if x then
-		if GetMouseFocus() == this then
+		if GetMouseFoci() == this then
 
 			local x, y = GetCursorPosition()
 			x = x / this:GetEffectiveScale()

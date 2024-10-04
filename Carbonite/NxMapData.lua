@@ -629,6 +629,7 @@ Map.MapWorldInfo = {
 		Y = 294.79089355469,
 		Overlay = "shattrathcity",
 		Name = L["Shattrath City"],
+		City = true,
 		MMOutside = true,
 	},
 	[1956] = {

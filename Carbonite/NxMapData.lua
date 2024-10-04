@@ -440,6 +440,16 @@ Map.MapWorldInfo = {
 		City = true,
 		MMOutside = true,
 	},
+	[86] = {
+		Scale = 3.47875,
+		X = 701.27080078125,
+		Y = -497.33334960938,
+		Overlay = "orgrimmar",
+		MapBaseName = "orgrimmar1_",
+		Name = L["Orgrimmar"],
+		City = true,
+		MMOutside = true,
+	},
 	[1455] = {
 		Scale = 1.5812501220703,
 		X = 142.71827392578,

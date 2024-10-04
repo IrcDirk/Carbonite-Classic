@@ -143,7 +143,7 @@ Nx.ZoneConnections = {
        "2|0|"..L["Portal to Blasted Lands"].."|1947|48.1|63.1||1419|50.4|81.7", -- from Exodar
 
        -- Horde
-       "4|0|"..L["Portal to Blasted Lands"].."|1454|38.1|85.7||1419|50.4|81.7", -- from Orgrimmar
+       "4|0|"..L["Portal to Blasted Lands"].."|86|44.8|67.8||1419|50.4|81.7", -- from Orgrimmar
        "4|0|"..L["Portal to Blasted Lands"].."|1456|23.2|13.6||1419|50.4|81.7", -- from Thunder Bluff
        "4|0|"..L["Portal to Blasted Lands"].."|1458|85.2|17||1419|50.4|81.7", -- from Undercity
        "4|0|"..L["Portal to Blasted Lands"].."|1954|58.4|21.0||1419|50.4|81.7", -- from Silvermoon

@@ -45,6 +45,10 @@ L["Display Handynotes On Map"] = "Показывать на карте отме�
 L["If you have HandyNotes installed, allows them on the Carbonite map"] = "Если у вас установлен плагин HandyNotes, то включение этого параметра отобразит иконки HandyNotes на карте"
 L["Handnotes Icon Size"] = "Размер иконки HandyNotes"
 
+L["Display RareScanner icons On Map"] = "Показывать на карте отметки плагина RareScanner"
+L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = "Если у вас установлен плагин RareScanner, то включение этого параметра отобразит иконки RareScanner на карте"
+L["RareScanner Icon Size"] = "Размер иконки RareScanner"
+
 -- Keybinds
-L["Carbonite Notes"] = "Carbonite Notes"
-L["NxTOGGLEFAV"] = "show/hide Notes"
+L["Carbonite Notes"] = "Заметки Carbonite"
+L["NxTOGGLEFAV"] = "Показать/Скрыть Заметки"

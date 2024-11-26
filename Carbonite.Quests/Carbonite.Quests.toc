@@ -1,4 +1,4 @@
-## Interface: 11502
+## Interface: 11505
 ## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One

@@ -41,6 +41,10 @@ L["Display Handynotes On Map"] = "地图上显示Handynotes"
 L["If you have HandyNotes installed, allows them on the Carbonite map"] = "允许Handynotes图标显示在Carbonite地图上"
 L["Handnotes Icon Size"] = "Handynotes图标大小"
 
+L["Display RareScanner icons On Map"] = true
+L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = true
+L["RareScanner Icon Size"] = true
+
 -- Keybinds
 L["Carbonite Notes"] = "Carbonite 标记模块"
 L["NxTOGGLEFAV"] = "显示/隐藏标记"

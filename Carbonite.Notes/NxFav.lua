@@ -41,6 +41,8 @@ local defaults = {
 			ShowMap = true,
 			HandyNotes = true,
 			HandyNotesSize = 15,
+			RareScanner = true,
+			RareScannerSize = 32,
 		},
 		Addons = {
 		},
@@ -77,7 +79,7 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.HandyNotes
 					end,
 					set = function()
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.HandyNotes = not Nx.fdb.profile.Notes.HandyNotes
 						if Nx.fdb.profile.Notes.HandyNotes then
 							Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
@@ -96,7 +98,7 @@ local function notesConfig()
 					order = 3,
 					type = "range",
 					width = "normal",
-					min = 10,					
+					min = 10,
 					max = 60,
 					step = 5,
 					name = L["Handnotes Icon Size"],
@@ -104,13 +106,62 @@ local function notesConfig()
 						return Nx.fdb.profile.Notes.HandyNotesSize
 					end,
 					set = function(input,value)
-						local map = Nx.Map:GetMap (1)						
+						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.HandyNotesSize = value
 						map:ClearIconType("!HANDY")
 						Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
 						if HandyNotes then
+							return false
+						end
+						return true
+					end,
+				},
+				rarescanner = {
+					order = 4,
+					type = "toggle",
+					width = "full",
+					name = L["Display RareScanner icons On Map"],
+					desc = L["If you have RareScanner installed, allows it's icons on the Carbonite map"],
+					get = function()
+						return Nx.fdb.profile.Notes.RareScanner
+					end,
+					set = function()
+						local map = Nx.Map:GetMap (1)
+						Nx.fdb.profile.Notes.RareScanner = not Nx.fdb.profile.Notes.RareScanner
+						if Nx.fdb.profile.Notes.RareScanner then
+							Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
+						else
+							map:ClearIconType("!RSR")
+						end
+					end,
+					disabled = function()
+						if RareScanner then
+							return false
+						end
+						return true
+					end,
+				},
+				raresize = {
+					order = 5,
+					type = "range",
+					width = "normal",
+					min = 10,
+					max = 60,
+					step = 5,
+					name = L["RareScanner Icon Size"],
+					get = function()
+						return Nx.fdb.profile.Notes.RareScannerSize
+					end,
+					set = function(input,value)
+						local map = Nx.Map:GetMap (1)
+						Nx.fdb.profile.Notes.RareScannerSize = value
+						map:ClearIconType("!RSR")
+						Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
+					end,
+					disabled = function()
+						if RareScanner then
 							return false
 						end
 						return true
@@ -1521,6 +1572,7 @@ function Nx.Notes:UpdateIcons()
 			end
 		end
 		Nx.Notes:HandyNotes(mapId)
+		Nx.Notes:RareScanner(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end
@@ -1529,6 +1581,9 @@ end
 function Nx.Notes:HandyNotes(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
+		if not C_Map.GetMapInfo(mapId) then
+			return
+		end
 		if C_Map.GetMapInfo(mapId).mapType ~= 3 then
 			return
 		end
@@ -1563,7 +1618,7 @@ function Nx.Notes:HandyNotes(mapId)
 					end
 				else
 					texture = iconpath
-				end						
+				end
 				local icon = CreateFrame("Frame", "HandyCarb", UIParent)
 				local tmpFrame = WorldMapFrame:GetCanvas()
 				icon:SetParent(tmpFrame)
@@ -1596,6 +1651,86 @@ function Nx.Notes:HandyNotes(mapId)
 				end
 				map:SetIconTip(handynote,tooltip)
 				safecall(HandyNotes.plugins[pluginName].OnLeave, icon, mapFile and mapFile or mapId, coord)
+			end
+		end
+	end
+end
+
+function Nx.Notes:RareScanner(mapId)
+	local map = Nx.Map:GetMap (1)
+	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+		rspins = {}
+
+		local FROM_ON_SHOW = true
+		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+
+		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
+			rspins[#rspins + 1] = pin
+		end
+
+		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
+			rspins[#rspins + 1] = pin
+		end
+		
+		local level = nil
+
+		map:InitIconType ("!RSR", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
+		map:SetIconTypeChop ("!RSR", true)
+		map:SetIconTypeLevel ("!RSR", 20)
+
+		for _,rspin in ipairs(rspins) do
+			if rspin.POI then
+				if rspin.POI.mapID == map.MapId then
+					local x = rspin.normalizedX * 100
+					local y = rspin.normalizedY * 100
+					local texture = rspin.Texture:GetTexture()
+					if not texture then
+						texture = rspin.pin.POI.Texture
+					end
+					local scale = rspin.startScale
+					local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+					local icon = CreateFrame("Button", "RSCarb", UIParent)
+					local tmpFrame = WorldMapFrame:GetCanvas()
+					icon:SetParent(tmpFrame)
+					icon:ClearAllPoints()
+					icon:SetHeight(scale)
+					icon:SetWidth(scale)
+					icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+					local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
+					local tooltip = rspin.POI.name
+					map:SetIconTip(rsnote,tooltip)
+					map:SetIconUserData(rsnote, rspin)
+				end
+			else
+				if rspin.pin.POI.mapID == map.MapId then
+					local x = rspin.normalizedX * 100
+					local y = rspin.normalizedY * 100
+					if (rspin.normalizedX ~= rspin.pin.normalizedX or rspin.normalizedY ~= rspin.pin.normalizedY) then
+						local texture = rspin.Texture:GetTexture()
+						local colr, colg, colb = rspin.Texture:GetVertexColor()
+						local color = "FFFFFF"
+						if colr and colg and colb then
+							IconColor = CreateColor(colr, colg, colb)
+							color = IconColor:GenerateHexColor()
+						end
+						if not texture then
+							texture = rspin.pin.POI.Texture
+						end
+						local scale = rspin.startScale
+						local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+						local icon = CreateFrame("Button", "RSCarb", UIParent)
+						local tmpFrame = WorldMapFrame:GetCanvas()
+						icon:SetParent(tmpFrame)
+						icon:ClearAllPoints()
+						icon:SetHeight(scale)
+						icon:SetWidth(scale)
+						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
+						local tooltip = rspin.pin.POI.name
+						map:SetIconTip(rsnote,tooltip)
+						map:SetIconUserData(rsnote, rspin.pin)
+					end
+				end
 			end
 		end
 	end

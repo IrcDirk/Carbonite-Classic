@@ -44,6 +44,11 @@ L["Reset old notes data"] = "Alte Notizdaten zur\195\188cksetzen"
 L["Display Handynotes On Map"] = "HandyNotes auf der Karte anzeigen"
 L["If you have HandyNotes installed, allows them on the Carbonite map"] = "Falls das Addon HandyNotes installiert ist, werden sie Auf der Carbonite Karte angezeigt"
 L["Handnotes Icon Size"] = "HandyNotes Symbolgr\195\182\195\159e"
+
+L["Display RareScanner icons On Map"] = true
+L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = true
+L["RareScanner Icon Size"] = true
+
 -- Keybinds
 L["Carbonite Notes"] = "Carbonite Notizen"
 L["NxTOGGLEFAV"] = "Notizen ein/ausblenden"

@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40402
 ## Notes: Wowhead Data dump for GatherMate2
 ## Title: Carbonite GatherMate2Data - Classic @project-version@
 ## Author: kagaro, Xinhuan, Rythal (repackaging for Carb), IrcDirk (new versions for Carb)

@@ -2874,7 +2874,7 @@ Nx.GatherInfo = {
 		{ 255,	"inv_ore_thorium_02",L["Rich Thorium Vein"]},
 		{ 75,	"inv_stone_16",L["Silver Vein"]},
 		{ 305,	"inv_misc_stonetablet_01",L["Small Obsidian Chunk"]},
-		{ 230,	"inv_ore_thorium_02",L["Small Thorium Vein"]},
+		{ 245,	"inv_ore_thorium_02",L["Small Thorium Vein"]},
 		{ 65,	"inv_ore_tin_01",L["Tin Vein"]},
 		{ 230,	"inv_ore_truesilver_01",L["Truesilver Deposit"]},
 		{ 350,	"inv_ore_cobalt",L["Cobalt Deposit"]},

@@ -744,7 +744,7 @@ function Nx.Map:Create (index)
 	menu:AddItem (0, L["Clear Goto"], self.Menu_OnClearGoto, m)
 	menu:AddItem (0, L["Save Map Scale"], self.Menu_OnScaleSave, m)
 	menu:AddItem (0, L["Restore Map Scale"], self.Menu_OnScaleRestore, m) 	
-    menu:AddItem (0, "", nil, self)
+	menu:AddItem (0, "", nil, self)
 	m.MenuIPlyrFollow = menu:AddItem (0, L["Follow You"], self.Menu_OnPlyrFollow, m)
 
 	local item = menu:AddItem (0, L["Select Cities Last"], self.SetLevelWorldHotspots, m)
@@ -1209,12 +1209,12 @@ function Nx.Map:Create (index)
 	m.Arch = arch
 	m.Arch:SetParent(m.TextScFrm:GetScrollChild())
 	m.Arch:Hide()
-	--m.Arch:SetSize(WorldMapButton:GetSize())
+	m.Arch:SetSize(1002, 668)
 	m.Arch:SetFillAlpha(255 * m.ArchAlpha)
-	m.Arch:SetBorderAlpha(255 * m.ArchAlpha )
+	m.Arch:SetBorderAlpha(255 * m.ArchAlpha)
 	m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
 	m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
-	m.Arch:SetBorderScalar( 0.15 )
+	m.Arch:SetBorderScalar(0.15)
 
 	Nx.Map.RMapId = 9000		-- Safe default
 	Nx.Map.UpdateMapID = 9000
@@ -1591,13 +1591,15 @@ function Nx.Map:UpdateWorldMap()
 	if not InCombatLockdown() then
 		self.Arch:DrawNone();
 		if Nx.db.char.Map.ShowArchBlobs then
-			for i = 1, ArchaeologyMapUpdateAll(Nx.Map:GetCurrentMapAreaID()) do
-				self.Arch:DrawBlob(ArcheologyGetVisibleBlobID(i), true)
+			local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
+			for i, digSite in ipairs(digSites) do
+				self.Arch:DrawBlob(digSite.poiBlobID, true)
 			end
 			self:ClipZoneFrm( self.Cont, self.Zone, self.Arch, 1 )
 			self.Arch:SetFrameLevel(self.Level)
 			self.Arch:SetFillAlpha(255 * self.ArchAlpha)
-			self.Arch:SetBorderAlpha( 255 * self.ArchAlpha )
+			self.Arch:SetBorderAlpha(255 * self.ArchAlpha)
+			self.Arch:SetMapID(Nx.Map:GetCurrentMapAreaID())
 			self.Arch:Show()
 		else
 			self.Arch:Hide()

@@ -349,7 +349,7 @@ L["When Enabled, Attempts to emulate tomtom's features (requires reload)"] = "К
 
 -- Configuration Headers
 L["General"] = "Основные"
-L["Battlegrounds"] = "Поля Бтивы"
+L["Battlegrounds"] = "Поля Битвы"
 L["Fonts"] = "Шрифты"
 L["Guide & Gather"] = "Путеводитель и Добыча"
 L["Maps"] = "Карты"

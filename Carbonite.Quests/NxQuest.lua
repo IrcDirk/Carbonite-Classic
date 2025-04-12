@@ -10442,17 +10442,18 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
 		local cur = self.QIds[qId]
 		if cur then
 			if not cur.Complete then
-				--[[QMap.QuestWin:DrawNone();
+				QMap.QuestWin:DrawNone();
 				if Nx.db.char.Map.ShowQuestBlobs and Nx.Quests[-qId] then
 					QMap.QuestWin:DrawBlob(qId,true)
 					QMap:ClipZoneFrm( QMap.Cont, QMap.Zone, QMap.QuestWin, 1 )
 					QMap.QuestWin:SetFrameLevel(QMap.Level)
 					QMap.QuestWin:SetFillAlpha(255 * QMap.QuestAlpha)
 					QMap.QuestWin:SetBorderAlpha( 255 * QMap.QuestAlpha )
+					QMap.QuestWin:SetMapID(QMap.Zone)
 					QMap.QuestWin:Show()
 				else
 					QMap.QuestWin:Hide()
-				end]]--
+				end
 			end
 		end
 	end
@@ -10531,9 +10532,9 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
 						end
 						self.Map:ClearTargets()
 						if not InCombatLockdown() then
-							--[[local QMap = NxMap1.NxMap
+							local QMap = NxMap1.NxMap
 							QMap.QuestWin:DrawNone();
-							QMap.QuestWin:Hide()]]--
+							QMap.QuestWin:Hide()
 						end
 					end
 				end

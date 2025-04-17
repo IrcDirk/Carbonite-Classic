@@ -1198,7 +1198,7 @@ function Nx.Map:Create (index)
 	m.QuestWin = questwin
 	m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
 	m.QuestWin:Hide()
-	--m.QuestWin:SetSize(WorldMapButton:GetSize())
+	m.QuestWin:SetSize(1002, 668)
 	m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
 	m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
 	m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])

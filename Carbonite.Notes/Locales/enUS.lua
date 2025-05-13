@@ -48,7 +48,7 @@ L["RareScanner Icon Size"] = true
 L["Display Questie quest objective icons On Map"] = true
 L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"] = true
 L["Display icons for Available quests from Questie on Carbonite Map"] = true
-L["If you have Questie installed, allows it's icons for available quests on the Carbonite map"] = true
+L["If you have Questie installed, allows its icons for available quests on the Carbonite map"] = true
 L["Questie Icon Size"] = true
 
 -- Keybinds

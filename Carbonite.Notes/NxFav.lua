@@ -126,7 +126,7 @@ local function notesConfig()
 					type = "toggle",
 					width = "full",
 					name = L["Display RareScanner icons On Map"],
-					desc = L["If you have RareScanner installed, allows it's icons on the Carbonite map"],
+					desc = L["If you have RareScanner installed, allows its icons on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.RareScanner
 					end,
@@ -200,7 +200,7 @@ local function notesConfig()
 					type = "toggle",
 					width = "full",
 					name = L["Display icons for Available quests from Questie on Carbonite Map"],
-					desc = L["If you have Questie installed, allows it's icons for available quests on the Carbonite map"],
+					desc = L["If you have Questie installed, allows its icons for available quests on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.QuestieSE
 					end,

@@ -174,7 +174,7 @@ local function notesConfig()
 					order = 6,
 					type = "toggle",
 					width = "full",
-					name = L["Display Questie quest objective icons On Map"],
+					name = L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"],
 					desc = L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.Questie

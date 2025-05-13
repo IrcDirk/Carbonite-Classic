@@ -46,7 +46,7 @@ L["If you have HandyNotes installed, allows them on the Carbonite map"] = true
 L["Handnotes Icon Size"] = true
 
 L["Display RareScanner icons On Map"] = true
-L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = true
+L["If you have RareScanner installed, allows its icons on the Carbonite map"] = true
 L["RareScanner Icon Size"] = true
 
 -- Keybinds

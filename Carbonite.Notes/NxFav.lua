@@ -43,6 +43,9 @@ local defaults = {
 			HandyNotesSize = 15,
 			RareScanner = true,
 			RareScannerSize = 32,
+			Questie = false,
+			QuestieSE = false,
+			QuestieSize = 32,
 		},
 		Addons = {
 		},
@@ -123,7 +126,7 @@ local function notesConfig()
 					type = "toggle",
 					width = "full",
 					name = L["Display RareScanner icons On Map"],
-					desc = L["If you have RareScanner installed, allows it's icons on the Carbonite map"],
+					desc = L["If you have RareScanner installed, allows its icons on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.RareScanner
 					end,
@@ -167,6 +170,79 @@ local function notesConfig()
 						return true
 					end,
 				},
+				questie = {
+					order = 6,
+					type = "toggle",
+					width = "full",
+					name = L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"],
+					desc = L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"],
+					get = function()
+						return Nx.fdb.profile.Notes.Questie
+					end,
+					set = function()
+						local map = Nx.Map:GetMap (1)
+						Nx.fdb.profile.Notes.Questie = not Nx.fdb.profile.Notes.Questie
+						if Nx.fdb.profile.Notes.Questie then
+							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+						else
+							map:ClearIconType("!QUE")
+						end
+					end,
+					disabled = function()
+						if Questie then
+							return false
+						end
+						return true
+					end,
+				},
+				questieSE = {
+					order = 7,
+					type = "toggle",
+					width = "full",
+					name = L["Display icons for Available quests from Questie on Carbonite Map"],
+					desc = L["If you have Questie installed, allows its icons for available quests on the Carbonite map"],
+					get = function()
+						return Nx.fdb.profile.Notes.QuestieSE
+					end,
+					set = function()
+						local map = Nx.Map:GetMap (1)
+						Nx.fdb.profile.Notes.QuestieSE = not Nx.fdb.profile.Notes.QuestieSE
+						if Nx.fdb.profile.Notes.Questie then
+							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+						end
+					end,
+					disabled = function()
+						if Questie then
+							return false
+						end
+						return true
+					end,
+				},
+				questiesize = {
+					order = 8,
+					type = "range",
+					width = "normal",
+					min = 10,
+					max = 60,
+					step = 5,
+					name = L["Questie Icon Size"],
+					get = function()
+						return Nx.fdb.profile.Notes.QuestieSize
+					end,
+					set = function(input,value)
+						local map = Nx.Map:GetMap (1)
+						Nx.fdb.profile.Notes.QuestieSize = value
+						map:ClearIconType("!QUE")
+						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+					end,
+					disabled = function()
+						if Questie then
+							return false
+						end
+						return true
+					end,
+				},
+
 			},
 		}
 	end
@@ -1573,6 +1649,7 @@ function Nx.Notes:UpdateIcons()
 		end
 		Nx.Notes:HandyNotes(mapId)
 		Nx.Notes:RareScanner(mapId)
+		Nx.Notes:Questie(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end
@@ -1735,6 +1812,55 @@ function Nx.Notes:RareScanner(mapId)
 		end
 	end
 end
+
+
+function Nx.Notes:Questie(mapId)
+	local map = Nx.Map:GetMap (1)
+	if (Nx.fdb.profile.Notes.Questie and Questie) then
+		questiePins = {}
+
+		local FROM_ON_SHOW = true
+		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+
+		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
+			questiePins[#questiePins + 1] = pin
+		end
+		
+		local level = nil
+
+		map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
+		map:SetIconTypeChop ("!QUE", true)
+		map:SetIconTypeLevel ("!QUE", 20)
+
+		for _,questiePin in ipairs(questiePins) do
+			if questiePin.icon then
+				if questiePin.icon.UiMapID == map.MapId then
+					if questiePin.icon.data then
+						if questiePin.icon.data.QuestData then
+							if ((Nx.fdb.profile.Notes.QuestieSE and questiePin.icon.data.Type == "available") or (questiePin.icon.data.Type == "monster" or questiePin.icon.data.Type == "item")) then
+								local x = questiePin.normalizedX * 100
+								local y = questiePin.normalizedY * 100
+								local texture = questiePin.icon.texture:GetTexture()
+								local scale = questiePin.startScale
+								local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+								local icon = CreateFrame("Button", "QuestieCarb", UIParent)
+								local tmpFrame = WorldMapFrame:GetCanvas()
+								icon:SetParent(tmpFrame)
+								icon:ClearAllPoints()
+								icon:SetHeight(scale)
+								icon:SetWidth(scale)
+								icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+								local qnote = map:AddIconPt("!QUE", wx, wy, level, "FFFFFF", texture)
+								map:SetIconUserData(qnote, questiePin)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 
 ---------------------------------------------------------------------------------------
 

@@ -8726,6 +8726,43 @@ function Nx.Map:IconOnEnter (motion)
 			tooltip:SmartAnchorTo(self)
 			this.NxTip = nil
 		end
+
+		if this.NXData.iconType == "!QUE" and Questie then
+			local qpin = this.NXData.UData
+			qpin:OnMouseEnter()
+			local QuestieTooltips = QuestieLoader and QuestieLoader._modules["QuestieTooltips"]
+			local TooltipText = ""
+			if QuestieTooltips then
+				if qpin.icon.data.Type == "available" then
+					local TooltipKeys = QuestieTooltips.lookupKeysByQuestId[qpin.icon.data.Id]
+					if TooltipKeys then
+						for _, TooltipKey in ipairs(TooltipKeys) do
+							local TooltipLines = QuestieTooltips.GetTooltip(TooltipKey)
+							for _, TooltipData in pairs(QuestieTooltips.lookupByKey[TooltipKey]) do
+								if TooltipData.name == qpin.icon.data.Name then
+									TooltipText = format("|cff00ff00%s", TooltipData.name)
+									if TooltipLines then
+										TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
+									end
+								end
+							end
+						end
+					end
+				else
+					if  qpin.icon.data.ObjectiveTargetId then
+						TooltipLines = QuestieTooltips.GetTooltip("m_" .. qpin.icon.data.ObjectiveTargetId)
+						if TooltipLines then 
+							if TooltipText == "" then
+								TooltipText = table.concat(TooltipLines, "\n")
+							else
+								TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
+							end
+						end
+					end
+				end
+				this.NxTip = TooltipText
+			end
+		end
 	end
 
 --	map.BackgndAlphaTarget = map.BackgndAlphaFull
@@ -8803,6 +8840,10 @@ function Nx.Map:IconOnLeave (motion)
 			local rspin = this.NXData.UData
 			rspin:OnMouseLeave()
 			this.NxTip = rspin.POI.name
+		end
+		if this.NXData.iconType == "!QUE" and Questie then
+			local qpin = this.NXData.UData
+			qpin:OnMouseLeave()
 		end
 	end
 

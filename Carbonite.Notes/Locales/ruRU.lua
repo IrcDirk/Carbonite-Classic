@@ -46,14 +46,13 @@ L["If you have HandyNotes installed, allows them on the Carbonite map"] = "Вк�
 L["Handnotes Icon Size"] = "Размер иконки HandyNotes"
 
 L["Display RareScanner icons On Map"] = "Показывать на карте отметки плагина RareScanner"
-L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = "Включить отображение иконок RareScanner на карте Carbonite (Требуется плагин RareScanner)"
+L["If you have RareScanner installed, allows its icons on the Carbonite map"] = "Включить отображение иконок RareScanner на карте Carbonite (Требуется плагин RareScanner)"
 L["RareScanner Icon Size"] = "Размер иконки RareScanner"
 
-
-L["Display Questie quest objective icons On Map"] = "Показывать на карте отметки плагина Questie"
+L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"] = "Показывать на карте отметки плагина Questie (Внимание: может вызвать лаги и потерю фпс)"
 L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"] = "Включить отображение иконок Questie для текущих заданий на карте Carbonite (требуется плагин Questie)"
 L["Display icons for Available quests from Questie on Carbonite Map"] = "Показывать на карте иконки Questie для доступных вам заданий"
-L["If you have Questie installed, allows it's icons for available quests on the Carbonite map"] =  "Включить отображение иконок Questie для доступных для вас, но не взятых заданий на карте Carbonite (требуется плагин Questie)"
+L["If you have Questie installed, allows its icons for available quests on the Carbonite map"] =  "Включить отображение иконок Questie для доступных для вас, но не взятых заданий на карте Carbonite (требуется плагин Questie)"
 L["Questie Icon Size"] = "Размер иконки Questie"
 
 -- Keybinds

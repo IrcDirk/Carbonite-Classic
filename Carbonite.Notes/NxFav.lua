@@ -1655,7 +1655,6 @@ function Nx.Notes:UpdateIcons()
 		end
 		Nx.Notes:HandyNotes(mapId)
 		Nx.Notes:RareScanner(mapId)
-		Nx.Notes:Questie(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end

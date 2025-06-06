@@ -126,7 +126,7 @@ local function notesConfig()
 					type = "toggle",
 					width = "full",
 					name = L["Display RareScanner icons On Map"],
-					desc = L["If you have RareScanner installed, allows its icons on the Carbonite map"],
+					desc = L["If you have RareScanner installed, allows it's icons on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.RareScanner
 					end,
@@ -174,7 +174,7 @@ local function notesConfig()
 					order = 6,
 					type = "toggle",
 					width = "full",
-					name = L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"],
+					name = L["Display Questie quest objective icons On Map"],
 					desc = L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.Questie
@@ -200,7 +200,7 @@ local function notesConfig()
 					type = "toggle",
 					width = "full",
 					name = L["Display icons for Available quests from Questie on Carbonite Map"],
-					desc = L["If you have Questie installed, allows its icons for available quests on the Carbonite map"],
+					desc = L["If you have Questie installed, allows it's icons for available quests on the Carbonite map"],
 					get = function()
 						return Nx.fdb.profile.Notes.QuestieSE
 					end,
@@ -223,8 +223,8 @@ local function notesConfig()
 					type = "range",
 					width = "normal",
 					min = 10,
-					max = 60,
-					step = 5,
+					max = 40,
+					step = 1,
 					name = L["Questie Icon Size"],
 					get = function()
 						return Nx.fdb.profile.Notes.QuestieSize
@@ -233,6 +233,7 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.QuestieSize = value
 						map:ClearIconType("!QUE")
+						Nx.Notes.PrevPins = 0
 						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
@@ -302,6 +303,7 @@ function Nx.Notes:Init()
 
 
 	self.Folders = Nx.GetFav()
+	self.PrevPins = 0
 	self.NoteIcons = {
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",
@@ -1590,6 +1592,10 @@ function Nx.Notes:UpdateIcons()
 	local mapId = map.MapId
 	local draw = map.ScaleDraw > .3 and Nx.fdb.profile.Notes.ShowMap
 
+	if (Nx.fdb.profile.Notes.Questie and Questie) then
+		Nx.Notes:Questie(mapId)
+	end
+
 	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
 		return
 	end
@@ -1816,17 +1822,29 @@ end
 
 function Nx.Notes:Questie(mapId)
 	local map = Nx.Map:GetMap (1)
+
 	if (Nx.fdb.profile.Notes.Questie and Questie) then
 		questiePins = {}
 
-		local FROM_ON_SHOW = true
-		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+		if self.PrevPins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
+			return
+		end
 
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
 			questiePins[#questiePins + 1] = pin
 		end
+
+		self.PrevPins = #questiePins
 		
 		local level = nil
+		local startZone = 0
+
+		winfo = map.MapWorldInfo[mapId]
+		if winfo then
+			if winfo.StartZone == true and winfo.MId then
+				startZone = winfo.MId
+			end
+		end
 
 		map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
 		map:SetIconTypeChop ("!QUE", true)
@@ -1834,7 +1852,7 @@ function Nx.Notes:Questie(mapId)
 
 		for _,questiePin in ipairs(questiePins) do
 			if questiePin.icon then
-				if questiePin.icon.UiMapID == map.MapId then
+				if questiePin.icon.UiMapID == map.MapId or questiePin.icon.UiMapID == startZone then
 					if questiePin.icon.data then
 						if questiePin.icon.data.QuestData then
 							if ((Nx.fdb.profile.Notes.QuestieSE and questiePin.icon.data.Type == "available") or (questiePin.icon.data.Type == "monster" or questiePin.icon.data.Type == "item")) then

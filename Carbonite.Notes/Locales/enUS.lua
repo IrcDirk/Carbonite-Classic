@@ -42,8 +42,14 @@ L["If you have HandyNotes installed, allows them on the Carbonite map"] = true
 L["Handnotes Icon Size"] = true
 
 L["Display RareScanner icons On Map"] = true
-L["If you have RareScanner installed, allows it's icons on the Carbonite map"] = true
+L["If you have RareScanner installed, allows its icons on the Carbonite map"] = true
 L["RareScanner Icon Size"] = true
+
+L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"] = true
+L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"] = true
+L["Display icons for Available quests from Questie on Carbonite Map"] = true
+L["If you have Questie installed, allows its icons for available quests on the Carbonite map"] = true
+L["Questie Icon Size"] = true
 
 -- Keybinds
 L["Carbonite Notes"] = "Carbonite Notes"

@@ -1836,14 +1836,6 @@ function Nx.Notes:Questie(mapId)
 		self.PrevPins = #questiePins
 		
 		local level = nil
-		local startZone = 0
-
-		winfo = map.MapWorldInfo[mapId]
-		if winfo then
-			if winfo.StartZone == true and winfo.MId then
-				startZone = winfo.MId
-			end
-		end
 
 		map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
 		map:SetIconTypeChop ("!QUE", true)
@@ -1851,7 +1843,7 @@ function Nx.Notes:Questie(mapId)
 
 		for _,questiePin in ipairs(questiePins) do
 			if questiePin.icon then
-				if questiePin.icon.UiMapID == map.MapId or questiePin.icon.UiMapID == startZone then
+				if questiePin.icon.UiMapID == map.MapId
 					if questiePin.icon.data then
 						if questiePin.icon.data.QuestData then
 							if ((Nx.fdb.profile.Notes.QuestieSE and questiePin.icon.data.Type == "available") or (questiePin.icon.data.Type == "monster" or questiePin.icon.data.Type == "item")) then

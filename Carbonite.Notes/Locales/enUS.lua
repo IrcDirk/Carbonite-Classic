@@ -46,7 +46,7 @@ L["If you have RareScanner installed, allows it's icons on the Carbonite map"] =
 L["RareScanner Icon Size"] = true
 
 L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"] = true
-L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"]
+L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"] = true
 L["Display icons for Available quests from Questie on Carbonite Map"] = true
 L["If you have Questie installed, allows its icons for available quests on the Carbonite map"] = true
 L["Questie Icon Size"] = true

@@ -4549,9 +4549,9 @@ function Nx.Quest:Capture (curi, objNum)
 	local cur = self.CurQ[curi]
 	local id = cur.QId
 
---	if Nx.db.profile.Debug.DebugMap and (not objNum or objNum < 0) then	-- Start or end
---		Nx.prt ("Quest Capture %s", id or "nil")
---	end
+	if Nx.db.profile.Debug.DebugMap and (not objNum or objNum < 0) then	-- Start or end
+		Nx.prt ("Quest Capture %s", id or "nil")
+	end
 
 	if not id then
 		return

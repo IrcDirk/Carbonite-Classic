@@ -37,7 +37,7 @@ function Nx.Travel:Init()
 	end
 	tr[99] = {}
 	self.Travel = tr
-
+	     	
 	self:Add (L["Flight Master"])
 
 --	if Nx:GetUnitClass() == "DRUID" then
@@ -411,11 +411,13 @@ function Nx.Travel:MakePath (tracking, srcMapId, srcX, srcY, dstMapId, dstX, dst
 
 	if riding >= 225 then
 		if cont1 == 1 or cont1 == 2 or cont1 == 5 then
-			self.FlyingMount = GetSpellInfo (self.AzerothFlyName)
+			self.FlyingMount = C_Spell.GetSpellInfo(self.AzerothFlyName)
 		elseif cont1 == 3 then
 			self.FlyingMount = true
 		elseif cont1 == 4 then
-			self.FlyingMount = GetSpellInfo(self.WrathFlyName)
+			self.FlyingMount = C_Spell.GetSpellInfo(self.WrathFlyName)
+		elseif cont1 == 6 then
+			self.FlyingMount = C_Spell.GetSpellInfo(self.PandariaFlyName)
 		end
 	end
 

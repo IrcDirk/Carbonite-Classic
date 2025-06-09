@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- NxMap - Map code
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 ---------------------------------------------------------------------------------------
@@ -257,8 +257,6 @@ function Nx.Map:SetMapByID(zone)
 		end
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
-		if zone == 12 then zone = 1414 end
-		if zone == 13 then zone = 1415 end
 		WorldMapFrame:SetMapID(zone) 
 	end
 end
@@ -266,17 +264,7 @@ end
 
 function Nx.Map:GetMapInfo(mapId)
 	if mapId and mapId ~= 0 then
-		if mapId == 12 then mapId = 1414 end
-		if mapId == 13 then mapId = 1415 end
 		local mapInfo = C_Map.GetMapInfo(mapId)
-		if mapInfo.mapType == 2 then
-			if mapInfo.mapID == 1414 then mapInfo.mapID = 12 end
-			if mapInfo.mapID == 1415 then mapInfo.mapID = 13 end
-        	end
-		if mapInfo.mapType == 3 then
-			if mapInfo.parentMapID == 1414 then mapInfo.parentMapID = 12 end
-			if mapInfo.parentMapID == 1415 then mapInfo.parentMapID = 13 end
-        	end
 		return mapInfo
 	else
 		return nil
@@ -1732,6 +1720,11 @@ function Nx.Map:InitFrames()
 			1,1,1,0,
 			1,1,1,0,
 			1,1,1,0
+		},
+		{
+			1,1,1,1,
+			1,1,1,1,
+			1,1,1,1
 		}
 	}
 
@@ -4327,9 +4320,6 @@ function Nx.Map:UpdateWorld()
 		return
 	end
 
-	if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
-	if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
-	
 	local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
 	
 	for i = 1, numtiles do
@@ -4372,7 +4362,7 @@ function Nx.Map:Update (elapsed)
 	local mapId = Nx.Map:GetCurrentMapAreaID()
 	self.Cont, self.Zone = self:IdToContZone (mapId)
 
-	Nx.InSanctuary = GetZonePVPInfo() == "sanctuary"
+	Nx.InSanctuary = C_PvP.GetZonePVPInfo() == "sanctuary"
 
 	local doSetCurZone
 	local mapChange
@@ -4574,8 +4564,6 @@ function Nx.Map:Update (elapsed)
 		plZX = plZX * 100
 		plZY = plZY * 100
 		PLMapID = MapUtil.GetDisplayableMapForPlayer()
-		if PLMapID == 1414 then PLMapID = 12 end
-		if PLMapID == 1415 then PLMapID = 13 end
 
 		local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
 
@@ -5358,8 +5346,6 @@ function Nx.Map:ScanContinents()
 		local mapId = Nx.Map.MapZones[0][cont]
 		
 		local mapId2 = mapId
-		if mapId2 == 12 then mapId2 = 1414 end
-		if mapId2 == 13 then mapId2 = 1415 end
 		
 		local name, description, txIndex, pX, pY
 		local txX1, txX2, txY1, txY2
@@ -8807,7 +8793,7 @@ function Nx.Map:IconOnEnter (motion)
 				else
 					if  qpin.icon.data.ObjectiveTargetId then
 						TooltipLines = QuestieTooltips.GetTooltip("m_" .. qpin.icon.data.ObjectiveTargetId)
-						if TooltipLines then
+						if TooltipLines then 
 							if TooltipText == "" then
 								TooltipText = table.concat(TooltipLines, "\n")
 							else
@@ -8940,12 +8926,10 @@ function Nx.Map:IconOnLeave (motion)
 			rspin:OnMouseLeave()
 			this.NxTip = rspin.POI.name
 		end
-
 		if this.NXData.iconType == "!QUE" and Questie then
 			local qpin = this.NXData.UData
 			qpin:OnMouseLeave()
 		end
-
 	end
 
 	if t >= 9000 then					-- Quest
@@ -9223,12 +9207,13 @@ function Nx.Map:InitTables()
 	--V403
 
 	Nx.Map.MapZones = {
-		[0] = {12,13,1945,113,948,0,-1},
-		[1] = {1411,1412,1413,1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451,1452,1454,86,1456,1457,1943,1947,1950,198,199,249,327,338},
-		[2] = {1417,1418,1419,1420,1421,1422,1423,1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437,1453,1455,1458,1941,1942,1954,1957,124,179,201,202,204,205,203,210,217,218,224,241,244,245},
-		[3] = {1944,1946,1948,1949,1951,1952,1953,1955},
+		[0] = {12,13,1467,113,948,424,0,-1},
+		[1] = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,85,86,88,89,97,103,106,198,199,249,327,338,460,461,462,463,468},
+		[2] = {14,15,17,18,21,22,23,25,26,27,32,36,37,42,47,48,49,50,51,52,56,84,87,90,94,95,110,122,124,179,201,202,204,205,203,210,217,218,224,241,244,245,425,427,465,467,469},
+		[3] = {100,102,104,105,107,108,109,111},
 		[4] = {114,115,116,117,118,119,120,121,123,125,127,170},
 		[5] = {174,194,207,276,407},
+		[6] = {371,376,378,379,388,390,418,422,433,504,507,554},
 		[90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
 		[100] = {},
 	}
@@ -9255,7 +9240,7 @@ function Nx.Map:InitTables()
 	end]]--
 
 	-- Support maps with multiple level
-	self.ContCnt = 5
+	self.ContCnt = 6
 
 --	continentNums = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 90 }
 	for k, v in pairs (worldInfo) do
@@ -9661,8 +9646,6 @@ function Nx.Map:GetCurrentMapAreaID()
 
 	local _, instanceType = GetInstanceInfo() 
 	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
-	if mapID == 1414 then mapID = 12 end
-	if mapID == 1415 then mapID = 13 end
 	return mapID
 end
 
@@ -9780,8 +9763,6 @@ function Nx.Map:GotoCurrentZone()
 	else
 		self:SetToCurrentZone()
 		local mapId = MapUtil.GetDisplayableMapForPlayer()
-		if mapId == 1414 then mapId = 12 end
-		if mapId == 1415 then mapId = 13 end
 		self:CenterMap (mapId)
 	end
 end

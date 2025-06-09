@@ -8,6 +8,7 @@
 	<Include file="Auctioneer.lua" />
 	<Include file="Banker.lua" />
 	<Include file="Barber.lua" />
+	<Include file="BattlePetTrainer.lua" />
 	<Include file="BlacksmithingTrainer.lua" />
 	<Include file="CookingTrainer.lua" />
 	<Include file="DeathKnightTrainer.lua" />
@@ -28,6 +29,8 @@
 	<Include file="MageTrainer.lua" />
 	<Include file="Mailbox.lua" />
 	<Include file="MiningTrainer.lua" />
+	<Include file="MonkTrainer.lua" />
+	<Include file="Moonwell.lua" />
 	<Include file="PaladinTrainer.lua" />
 	<Include file="PriestTrainer.lua" />
 	<Include file="RidingTrainer.lua" />

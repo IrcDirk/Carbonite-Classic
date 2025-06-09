@@ -210,7 +210,7 @@ function Nx.Com:OnEvent (event)
 --		Nx.prt ("Com PLAYER_LOGIN")
 
 		if IsInGuild() then
-			GuildRoster()
+			C_GuildInfo.GuildRoster()
 		end
 		--ShowFriends()
 		Nx.Com.Initialized = true

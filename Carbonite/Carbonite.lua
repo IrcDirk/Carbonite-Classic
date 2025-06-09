@@ -28,7 +28,7 @@ NXTITLEFULL = L["Carbonite"]
 Nx.VERMAJOR			= 113
 Nx.VERMINOR			= .0				-- Not 0 is a test version
 Nx.BUILD			= "436eed1"
-if Nx.BUILD:find("Format:%h", 1, true) then Nx.BUILD = string.sub("515", 0, 7) end
+if Nx.BUILD:find("Format:%h", 1, true) then Nx.BUILD = string.sub("@project-revision@", 0, 7) end
 if Nx.BUILD:find("project-revision", 1, true) then Nx.BUILD = "0" end
 
 Nx.VERSION			= Nx.VERMAJOR + Nx.VERMINOR / 100

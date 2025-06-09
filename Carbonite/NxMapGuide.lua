@@ -31,6 +31,7 @@ Nx.GuideAbr = {
 	["O"] = L["Outland"],
 	["N"] = L["Northrend"],
 	["M"] = L["The Maelstrom"],
+	["P"] = L["Pandaria"],
 }
 Nx.GuideInfo = {
 	Name = L["All"],
@@ -76,10 +77,10 @@ Nx.GuideInfo = {
 			T = L["Transmogrifier"],
 			Tx = "INV_Arcane_Orb",
 		},
-		--[[{
+		{
 			T = L["Battle Pet Trainer"],
 			Tx = "INV_Pet_BattlePetTraining",
-		},]]--
+		},
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
@@ -142,11 +143,11 @@ Nx.GuideInfo = {
 			T = L["Warrior Trainer"],
 			Tx = "INV_Sword_27",
 		},
-		--[[{
+		{
 			T = L["Monk Trainer"],
 			Tx = "Class_Monk",
 		},
-		{
+		--[[{
 			T = L["Demon Hunter Trainer"],
 			Tx = "ClassIcon_DemonHunter",
 		},]]--
@@ -312,11 +313,11 @@ Nx.GuideInfo = {
 			Name = "@M",
 			Inst = 5
 		},
-		--[[{
+		{
 			Name = "@P",
 			Inst = 6
 		},
-		{
+		--[[{
 			Name = "@D",
 			Inst = 7
 		},
@@ -364,11 +365,11 @@ Nx.GuideInfo = {
 			Name = "@M",
 			Map = 5
 		},
-		--[[{
+		{
 			Name = "@P",
 			Map = 6
 		},
-		{
+		--[[{
 			Name = "@D",
 			Map = 7
 		},
@@ -640,7 +641,7 @@ function Nx.Map.Guide:OnListEventDo (list, eventName, sel, val2, click)
 			if IsControlKeyDown() then
 				DressUpItemLink (format ("item:%d", id))
 			else
-				local name, link = GetItemInfo (id)
+				local name, link = C_Item.GetItemInfo (id)
 				SetItemRef (format ("item:%d", id), link)
 			end
 		else
@@ -1136,7 +1137,7 @@ function Nx.Map.Guide:UpdateList (list, pathI, listSide)
 			if type (folder) == "number" then
 				local id = folder
 				Nx.Item:Load (id)
-				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = C_Item.GetItemInfo (id)
 				local show = true
 				if filterStr ~= "" then
 					local lstr = strlower (format ("%s", name))
@@ -2049,7 +2050,7 @@ function Nx.Map.Guide:UpdateVisitedVendors()
 			local n = 1
 			while n <= #links do
 				local id = Nx.Split ("^", links[n])
-				local name = GetItemInfo (id)
+				local name = C_Item.GetItemInfo (id)
 				if not name then
 					if Nx.Item:Load (id) then
 						tremove (links, n)
@@ -2061,7 +2062,7 @@ function Nx.Map.Guide:UpdateVisitedVendors()
 			end
 			for _, item in ipairs (links) do
 				local id, price = Nx.Split ("^", item)
-				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = C_Item.GetItemInfo (id)
 				name = name or format ("%s", id)
 				local itemF = uniqueItems[id]
 				if itemF then
@@ -3065,7 +3066,7 @@ function Nx.Map.Guide:ItemsAddItem (folder, id)
 	local im = max (iMin, 0)
 	item.Column2 = format ("L%2d i%3d", im, iLvl)
 	item.Column3 = format ("%s", srcStr)
-	local _, iLink, iRarity, lvl, minLvl, iType, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+	local _, iLink, iRarity, lvl, minLvl, iType, subType, stackCount, equipLoc, tx = C_Item.GetItemInfo (id)
 	item.Link = iLink
 	item.Tx = tx and gsub (tx, "Interface\\Icons\\", "") or "INV_Misc_QuestionMark"
 	local typ, slot = Nx.Split ("^", self.ItemTypeNames[strbyte (info) - 35])

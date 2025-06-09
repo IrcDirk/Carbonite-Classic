@@ -12027,6 +12027,7 @@ local Units2Quests={
 	[80006] = '11409,3',
 	[185333] = '65593,1',
 	[185334] = '65593,2',
+	}
 	return Units2Quests
 end
 

@@ -1843,7 +1843,7 @@ function Nx.Notes:Questie(mapId)
 
 		for _,questiePin in ipairs(questiePins) do
 			if questiePin.icon then
-				if questiePin.icon.UiMapID == map.MapId
+				if questiePin.icon.UiMapID == map.MapId then
 					if questiePin.icon.data then
 						if questiePin.icon.data.QuestData then
 							if ((Nx.fdb.profile.Notes.QuestieSE and questiePin.icon.data.Type == "available") or (questiePin.icon.data.Type == "monster" or questiePin.icon.data.Type == "item")) then

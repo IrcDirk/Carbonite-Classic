@@ -4078,7 +4078,7 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
 							quest["Quest"] = format ("[[%s|%s|%s|0|0|0]]",title,fac,level)
 						end
 						if needEnd or bit.band (patch, 1) then
-							if not quest["End"] then --or (bit.band(patch,1) and mapId == MapUtil.GetDisplayableMapForPlayer()) then
+							if not quest["End"] then --or (bit.band(patch,1) and mapId == MapUtil.GetDisplayableMapForPlayer()) then --disable this check as it's logic fails when there's no objectives defined in QuestDB for QuestID
 								quest["End"] = format ("|%s|32|%f|%f", mapId, x, y)
 							end
 							patch = bit.bor (patch, 1)		-- Flag as a patched quest

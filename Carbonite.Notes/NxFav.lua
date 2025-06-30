@@ -223,8 +223,8 @@ local function notesConfig()
 					type = "range",
 					width = "normal",
 					min = 10,
-					max = 60,
-					step = 5,
+					max = 40,
+					step = 1,
 					name = L["Questie Icon Size"],
 					get = function()
 						return Nx.fdb.profile.Notes.QuestieSize
@@ -233,6 +233,7 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.QuestieSize = value
 						map:ClearIconType("!QUE")
+						Nx.Notes.PrevPins = 0
 						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
@@ -302,6 +303,7 @@ function Nx.Notes:Init()
 
 
 	self.Folders = Nx.GetFav()
+	self.PrevPins = 0
 	self.NoteIcons = {
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",
@@ -1590,6 +1592,10 @@ function Nx.Notes:UpdateIcons()
 	local mapId = map.MapId
 	local draw = map.ScaleDraw > .3 and Nx.fdb.profile.Notes.ShowMap
 
+	if (Nx.fdb.profile.Notes.Questie and Questie) then
+		Nx.Notes:Questie(mapId)
+	end
+
 	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
 		return
 	end
@@ -1649,7 +1655,6 @@ function Nx.Notes:UpdateIcons()
 		end
 		Nx.Notes:HandyNotes(mapId)
 		Nx.Notes:RareScanner(mapId)
-		Nx.Notes:Questie(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end
@@ -1816,15 +1821,19 @@ end
 
 function Nx.Notes:Questie(mapId)
 	local map = Nx.Map:GetMap (1)
+
 	if (Nx.fdb.profile.Notes.Questie and Questie) then
 		questiePins = {}
 
-		local FROM_ON_SHOW = true
-		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+		if self.PrevPins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
+			return
+		end
 
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
 			questiePins[#questiePins + 1] = pin
 		end
+
+		self.PrevPins = #questiePins
 		
 		local level = nil
 

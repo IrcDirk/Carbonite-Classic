@@ -8774,7 +8774,7 @@ function Nx.Map:IconOnEnter (motion)
 			local QuestieTooltips = QuestieLoader and QuestieLoader._modules["QuestieTooltips"]
 			local TooltipText = ""
 			if QuestieTooltips then
-				if qpin.icon.data.Type == "available" then
+				if qpin.icon and qpin.icon.data.Type == "available" then
 					local TooltipKeys = QuestieTooltips.lookupKeysByQuestId[qpin.icon.data.Id]
 					if TooltipKeys then
 						for _, TooltipKey in ipairs(TooltipKeys) do
@@ -8786,12 +8786,11 @@ function Nx.Map:IconOnEnter (motion)
 										TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
 									end
 								end
-
 							end
 						end
 					end
 				else
-					if  qpin.icon.data.ObjectiveTargetId then
+					if qpin.icon and qpin.icon.data.ObjectiveTargetId then
 						TooltipLines = QuestieTooltips.GetTooltip("m_" .. qpin.icon.data.ObjectiveTargetId)
 						if TooltipLines then 
 							if TooltipText == "" then

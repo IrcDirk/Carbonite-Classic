@@ -730,7 +730,7 @@ function Nx.slashCommand (txt)
 		local id = format ("Hitem:%s", a1)
 		GameTooltip:SetOwner (UIParent, "ANCHOR_LEFT", 0, 0)
 		GameTooltip:SetHyperlink (id)
-		local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+		local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = C_Item.GetItemInfo (id)
 		Nx.prt ("Item: %s %s", name or "nil", iLink or "")
 
 	elseif cmd == "kill" then
@@ -3290,7 +3290,7 @@ end
 
 function Nx.Item:Load (id)
 	if not self.Asked[id] then			-- Ask once
-		local name, link = GetItemInfo (id)
+		local name, link = C_Item.GetItemInfo (id)
 		if name then			
 			self.Asked[id] = name
 		end

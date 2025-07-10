@@ -875,6 +875,14 @@ function CarboniteWarehouse:OnInitialize()
 	                Nx.Warehouse.onAuctionHouseUpdate(link, count)
 	end)
 
+	hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
+			local name, link = C_Item.GetItemInfo(itemID)
+			if not link or not count then
+				return
+			end
+			Nx.Warehouse.onAuctionHouseUpdate(link, count)
+	end)
+
 	hooksecurefunc("CancelAuction", function(index)
 			local link = GetAuctionItemLink("owner", index)
 			local _, _, count = GetAuctionItemInfo("owner", index)

@@ -73,6 +73,7 @@ L["Name"] = true
 L["Info"] = true
 L["Info2"] = true
 L["Info3"] = true
+L["Back "] = true
 
 -- Menus
 L["Delete"] = "L\195\182schen"
@@ -89,3 +90,10 @@ L["Portal to"] = "Portal zu"
 L["Boat to"] = "Schiff nach"
 L["Zeppelin to"] = "Zeppelin nach"
 L["Tram to"] = "Untergrundbahn nach" -- es gibt bisher nur die Zwergenuntergrundbahn
+
+-- Instance types
+L["Dungeon"] = true
+L["Raid"] = true
+L["Scenario"] = true
+L["Solo"] = true
+L["Mythic Dungeon"] = true

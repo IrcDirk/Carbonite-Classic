@@ -72,6 +72,7 @@ L["Name"] = "Название"
 L["Info"] = "Инфо"
 L["Info2"] = "Инфо2"
 L["Info3"] = "Инфо3"
+L["Back "] = "Назад"
 
 -- Menus
 L["Delete"] = "Удалить"
@@ -88,3 +89,10 @@ L["Portal to"] = "Портал"
 L["Boat to"] = "Корабль"
 L["Zeppelin to"] = "Дирижабль"
 L["Tram to"] = "Поезд"
+
+-- Instance types
+L["Dungeon"] = "Подземелье"
+L["Raid"] = "Рейд"
+L["Scenario"] = "Сценарий"
+L["Solo"] = "Соло"
+L["Mythic Dungeon"] = "Эпическое подземелье"

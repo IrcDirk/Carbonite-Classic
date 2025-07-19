@@ -72,6 +72,7 @@ L["Name"] = true
 L["Info"] = true
 L["Info2"] = true
 L["Info3"] = true
+L["Back "] = true
 
 -- Menus
 L["Delete"] = "刪除"
@@ -88,3 +89,10 @@ L["Portal to"] = "傳送門"
 L["Boat to"] = "船隻"
 L["Zeppelin to"] = "飛艇"
 L["Tram to"] = "地鐵"
+
+-- Instance types
+L["Dungeon"] = true
+L["Raid"] = true
+L["Scenario"] = true
+L["Solo"] = true
+L["Mythic Dungeon"] = true

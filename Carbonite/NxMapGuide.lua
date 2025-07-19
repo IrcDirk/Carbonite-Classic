@@ -342,7 +342,7 @@ Nx.GuideInfo = {
 		Name = L["Zone"],
 		Tx = "INV_Misc_Map_01",
 		{
-			Name = "All",
+			Name = L["All"],
 			Map = 0
 		},
 		{

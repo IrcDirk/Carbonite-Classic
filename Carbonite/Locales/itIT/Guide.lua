@@ -68,6 +68,7 @@ L["Altar Of Shadows"] = "Altare delle Ombre"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = true
 L["Moonwell"] = "Pozzo Lunare"
+L["Back "] = true
 
 -- Menus
 L["Delete"] = "Cancella"
@@ -84,3 +85,10 @@ L["Portal to"] = "Portale per"
 L["Boat to"] = "Nave per"
 L["Zeppelin to"] = "Zeppelin per"
 L["Tram to"] = "Tram per"
+
+-- Instance types
+L["Dungeon"] = true
+L["Raid"] = true
+L["Scenario"] = true
+L["Solo"] = true
+L["Mythic Dungeon"] = true

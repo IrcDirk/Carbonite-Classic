@@ -68,6 +68,7 @@ L["Altar Of Shadows"] = "黑暗祭坛"
 L["Lightforged Beacon"] = "光铸道标"
 L["Mana Loom"] = "魔法织布机"
 L["Moonwell"] = "月亮井"
+L["Back "] = true
 
 -- Menus
 L["Delete"] = "删除"
@@ -84,3 +85,10 @@ L["Portal to"] = "传送门："
 L["Boat to"] = "渡船："
 L["Zeppelin to"] = "飞艇："
 L["Tram to"] = "地铁："
+
+-- Instance types
+L["Dungeon"] = true
+L["Raid"] = true
+L["Scenario"] = true
+L["Solo"] = true
+L["Mythic Dungeon"] = true

@@ -342,7 +342,7 @@ Nx.GuideInfo = {
 		Name = L["Zone"],
 		Tx = "INV_Misc_Map_01",
 		{
-			Name = "All",
+			Name = L["All"],
 			Map = 0
 		},
 		{
@@ -443,7 +443,7 @@ function Nx.Map.Guide:Create (map)
 	win:Show (false)
 	tinsert (UISpecialFrames, win.Frm:GetName())
 
-	local but = Nx.Button:Create (win.Frm, "Txt64", "Back ", nil, 0, 0, "TOPLEFT", 100, 24, self.But_OnBack, g)
+	local but = Nx.Button:Create (win.Frm, "Txt64", L["Back "], nil, 0, 0, "TOPLEFT", 100, 24, self.But_OnBack, g)
 	win:Attach (but.Frm, 1.01, 1.01+44, -10020, -10001)
 
 	Nx.List:SetCreateFont ("Font.Medium", 28)
@@ -813,21 +813,21 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
                 local portalN = {
-			[1419] = "Spell_Arcane_TeleportStonard",
-			[1944] = "Spell_Arcane_TeleportStonard",
-                        [1438] = "Spell_Arcane_TeleportDarnassus",
-			[1457] = "Spell_Arcane_TeleportDarnassus",
-			[1947] = "Spell_Arcane_TeleportExodar",
-			[1455] = "Spell_Arcane_TeleportIronForge",
-			[1957] = "Achievement_Zone_IsleOfQuelDanas",
-			[1454] = "Spell_Arcane_TeleportOrgrimmar",
-			[1954] = "Spell_Arcane_TeleportSilvermoon",
-			[1453] = "Spell_Arcane_TeleportStormWind",
-			[1456] = "Spell_Arcane_TeleportThunderBluff",
-			[1458] = "Spell_Arcane_TeleportUnderCity",
-			[1955] = "Spell_Arcane_TeleportShattrath",
+			[17] = "Spell_Arcane_TeleportStonard",
+			[100] = "Spell_Arcane_TeleportStonard",
+                        [57] = "Spell_Arcane_TeleportDarnassus",
+			[89] = "Spell_Arcane_TeleportDarnassus",
+			[103] = "Spell_Arcane_TeleportExodar",
+			[87] = "Spell_Arcane_TeleportIronForge",
+			[122] = "Achievement_Zone_IsleOfQuelDanas",
+			[85] = "Spell_Arcane_TeleportOrgrimmar",
+			[110] = "Spell_Arcane_TeleportSilvermoon",
+			[84] = "Spell_Arcane_TeleportStormWind",
+			[88] = "Spell_Arcane_TeleportThunderBluff",
+			[90] = "Spell_Arcane_TeleportUnderCity",
+			[111] = "Spell_Arcane_TeleportShattrath",
 			[125]  = "Spell_Arcane_TeleportDalaran",
-			[1446] = "Achievement_Zone_Tanaris_01",
+			[71] = "Achievement_Zone_Tanaris_01",
 			[244]  = "Spell_Arcane_TeleportTolBarad",
                 }
 		for i, str in ipairs (Nx.ZoneConnections) do
@@ -939,20 +939,20 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 						end
 						local f = {}
 						local numPlyrStr = numPlyr
-						if tonumber (numPlyr) == 40 then
-							numPlyrStr = "Raid"
+						if tonumber (numPlyr) == 40 or tonumber (numPlyr) == 1025 or tonumber (numPlyr) == 10 or tonumber (numPlyr) == 20 or tonumber (numPlyr) == 25 then
+							numPlyrStr = L["Raid"]
 						end
 						if tonumber (numPlyr) == 50 then
-							numPlyrStr = "Mythic Dungeon"
+							numPlyrStr = L["Mythic Dungeon"]
 						end
 						if tonumber (numPlyr) == 1 then
-							numPlyrStr = "Solo"
+							numPlyrStr = L["Solo"]
 						end
 						if tonumber (numPlyr) == 3 then
-							numPlyrStr = "Scenario"
+							numPlyrStr = L["Scenario"]
 						end
 						if tonumber (numPlyr) == 5 then
-							numPlyrStr = "Dungeon"
+							numPlyrStr = L["Dungeon"]
 						end
 						local plStr = ""
 						if (numPlyrStr) then

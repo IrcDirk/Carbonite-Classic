@@ -68,10 +68,11 @@ L["Altar Of Shadows"] = "어둠의 제단"
 L["Lightforged Beacon"] = true
 L["Mana Loom"] = "마나 베틀"
 L["Moonwell"] = "달샘"
-L["Name"] = true
-L["Info"] = true
-L["Info2"] = true
-L["Info3"] = true
+L["Name"] = "이름"
+L["Info"] = "정보"
+L["Info2"] = "정보2"
+L["Info3"] = "정보3"
+L["Back "] = true
 
 -- Menus
 L["Delete"] = "삭제"
@@ -89,7 +90,9 @@ L["Boat to"] = "항구: "
 L["Zeppelin to"] = "비행선: "
 L["Tram to"] = "지하철: "
 
-L["Name"] = "이름"		-- Is this one used?
-L["Info"] = "정보"		-- Is this one used?
-L["Info2"] = "정보2"		-- Is this one used?
-L["Info3"] = "정보3"		-- Is this one used?
+-- Instance types
+L["Dungeon"] = true
+L["Raid"] = true
+L["Scenario"] = true
+L["Solo"] = true
+L["Mythic Dungeon"] = true

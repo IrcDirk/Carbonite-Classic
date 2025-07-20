@@ -2404,15 +2404,23 @@ end
 function Nx.Warehouse:FindCharsWithItem (link, specific)
 
 --	local tm = GetTime()
-
 	local s1, s2, link = strfind (link, "item:(%d+)")
---  assert (s1)
-
---	Nx.prt ("Find Link %s", link)
-
 	local str
 	local charCnt = 0
 	local totalCnt = 0
+	local petCnt = 0
+
+	local isPet, _, _, petID = C_PetJournal.GetPetInfoByItemID(link)
+
+	if isPet then
+		local ownedPets = C_PetJournal.GetOwnedPetIDs()
+		for _, ownedPetGUID in ipairs(ownedPets) do
+			local ownedPetID = select(11, C_PetJournal.GetPetInfoByPetID(ownedPetGUID))
+			if ownedPetID == petID then
+				petCnt = petCnt + 1
+			end
+		end
+	end
 
 	for cnum, rc in ipairs (Nx.RealmChars) do
 
@@ -2545,6 +2553,28 @@ function Nx.Warehouse:FindCharsWithItem (link, specific)
 				end
 			end
 		end
+	end
+
+	if petCnt > 0 then
+		cname = UnitName("player")
+		local sp = format ("%s %d", cname, petCnt)
+		sp = format (L["%s (%s Pets)"], sp, petCnt)
+		if specific == "tooltip" then
+			sp = format ("|cFFFFFF00%s#",cname)
+			sp = format (L["%s|cFFFF0000[|cFF00FF00Pets:%d|cFFFF0000]"], sp, petCnt)
+		end
+		if not str then
+			str = sp
+		else
+			if specific ~= "tooltip" then
+				
+				str = format ("%s\n%s", str, sp)
+			else
+				str = format("%s#%s",str,sp)
+			end
+		end
+		totalCnt = totalCnt + 1
+		charCnt = charCnt + 1
 	end
 
 --	Nx.prt ("FindCharsWithItem %f secs", GetTime() - tm)
@@ -2717,6 +2747,7 @@ function Nx.Warehouse:TooltipProcess()
 		if Nx.wdb.profile.Warehouse.TooltipIgnore and Nx.wdb.profile.Warehouse.IgnoreList[name] then
 			return
 		end
+
 		local titleStr = format (L["|cffffffffW%sarehouse:"], Nx.TXTBLUE)
 		local textName = "GameTooltipTextLeft"
 		for n = 2, tip:NumLines() do

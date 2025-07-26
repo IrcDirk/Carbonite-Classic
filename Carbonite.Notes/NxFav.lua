@@ -134,6 +134,7 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.RareScanner = not Nx.fdb.profile.Notes.RareScanner
 						if Nx.fdb.profile.Notes.RareScanner then
+							Nx.Notes.PrevRSPins = 0
 							Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
 						else
 							map:ClearIconType("!RSR")
@@ -183,6 +184,7 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.Questie = not Nx.fdb.profile.Notes.Questie
 						if Nx.fdb.profile.Notes.Questie then
+							Nx.Notes.PrevQuestiePins = 0
 							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
 						else
 							map:ClearIconType("!QUE")
@@ -233,7 +235,7 @@ local function notesConfig()
 						local map = Nx.Map:GetMap (1)
 						Nx.fdb.profile.Notes.QuestieSize = value
 						map:ClearIconType("!QUE")
-						Nx.Notes.PrevPins = 0
+						Nx.Notes.PrevQuestiePins = 0
 						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
 					end,
 					disabled = function()
@@ -303,7 +305,8 @@ function Nx.Notes:Init()
 
 
 	self.Folders = Nx.GetFav()
-	self.PrevPins = 0
+	self.PrevQuestiePins = 0
+	self.PrevRSPins = 0
 	self.NoteIcons = {
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
 	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",
@@ -1741,18 +1744,17 @@ end
 function Nx.Notes:RareScanner(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
-		rspins = {}
+		local rspins = {}
 
-		local FROM_ON_SHOW = true
-		WorldMapFrame:RefreshAll(FROM_ON_SHOW)
+		if self.PrevRSPins == WorldMapFrame:GetNumActivePinsByTemplate("RSEntityPinTemplate") then
+			return
+		end
 
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
 			rspins[#rspins + 1] = pin
 		end
 
-		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
-			rspins[#rspins + 1] = pin
-		end
+		self.PrevRSPins = #rspins
 		
 		local level = nil
 
@@ -1825,7 +1827,7 @@ function Nx.Notes:Questie(mapId)
 	if (Nx.fdb.profile.Notes.Questie and Questie) then
 		questiePins = {}
 
-		if self.PrevPins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
+		if self.PrevQuestiePins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
 			return
 		end
 
@@ -1833,7 +1835,7 @@ function Nx.Notes:Questie(mapId)
 			questiePins[#questiePins + 1] = pin
 		end
 
-		self.PrevPins = #questiePins
+		self.PrevQuestiePins = #questiePins
 		
 		local level = nil
 

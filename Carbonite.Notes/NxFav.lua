@@ -1825,7 +1825,7 @@ function Nx.Notes:Questie(mapId)
 	local map = Nx.Map:GetMap (1)
 
 	if (Nx.fdb.profile.Notes.Questie and Questie) then
-		questiePins = {}
+		local questiePins = {}
 
 		if self.PrevQuestiePins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
 			return

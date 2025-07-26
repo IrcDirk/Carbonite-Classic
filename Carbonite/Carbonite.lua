@@ -2862,6 +2862,12 @@ Nx.GatherInfo = {
 		{ 475, "inv_misc_herb_heartblossom", L["Heartblossom"]},
 		{ 500, "inv_misc_herb_whiptail", L["Whiptail"]},
 		{ 525, "inv_misc_herb_twilightjasmine",	L["Twilight Jasmine"]},
+		{ 600,	"inv_misc_herb_foolscap",L["Fool's Cap"]},
+		{ 550,	"inv_misc_herb_goldenlotus",L["Golden Lotus"]},
+		{ 500,	"inv_misc_herb_jadetealeaf",L["Green Tea Leaf"]},
+		{ 525,	"inv_misc_herb_rainpoppy",L["Rain Poppy"]},
+		{ 575,	"inv_misc_herb_shaherb",L["Sha-Touched Herb"]},
+		{ 545,	"inv_misc_herb_silkweed",L["Silkweed"]},
 	},
 	["M"] = {	-- Mine node
 		{ 325,	"inv_ore_adamantium",L["Adamantite Deposit"]},
@@ -2896,6 +2902,12 @@ Nx.GatherInfo = {
 		{ 500,	"item_pyriumore", L["Rich Elementium Vein"]},
 		{ 525,	"inv_ore_arcanite_01", L["Pyrite Deposit"]},
 		{ 525,	"inv_ore_arcanite_01", L["Rich Pyrite Deposit"]},
+		{ 515,	"inv_ore_ghostiron",L["Ghost Iron Deposit"]},
+		{ 550,	"inv_ore_ghostiron",L["Rich Ghost Iron Deposit"]},
+		{ 550,	"inv_ore_manticyte",L["Kyparite Deposit"]},
+		{ 575,	"inv_ore_manticyte",L["Rich Kyparite Deposit"]},
+		{ 600,	"inv_ore_trilliumwhite",L["Trillium Vein"]},
+		{ 600,	"inv_ore_trilliumWhite",L["Rich Trillium Vein"]},
 	}
 }
 

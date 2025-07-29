@@ -4033,7 +4033,7 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
 	end
 	
 
-	local mapId = C_QuestLog.GetMapForQuestPOIs()
+	local mapId = Nx.Map:GetCurrentMapId() --C_QuestLog.GetMapForQuestPOIs()  -- try old way as POI's messing up with quest objective data when bliz map shows quests from neighbor map thus causing pathing issues
 	if not mapId then
 		return
 	end
@@ -8010,7 +8010,6 @@ function Nx.Quest:UpdateIcons (map)
 						local oname = cur and cur[n] or objName
 
 						if typ == 32 then  -- Points
---							Nx.prt ("%s, pt %s", objName, strsub (obj, loc + 1))
 							local cnt = 1
 							local sz = navscale
 
@@ -11654,6 +11653,10 @@ end
 
 function Nx.Quest:NullQuest (qId)
 	Nx.Quest.CurCharacter.Q[qId] = ""
+	
+	if Nx.Quest.Tracking[qId] then
+		Nx.Quest.Tracking[qId] = nil
+	end
 end
 
 function Nx.Quest:GetQuestID (loc)

@@ -7862,7 +7862,7 @@ function Nx.Quest:UpdateIcons (map)
 
 					f.NXType = 9000
 					f.NXData = cur
-					local qname = Nx.TXTBLUE .. "Quest: " .. cur.Title
+					local qname = Nx.TXTBLUE .. L["Quest: "] .. cur.Title
 					f.NxTip = format (L["%s\nEnd: %s (%.1f %.1f)"], qname, endName, x, y)
 					if cur.PartyNames then
 						f.NxTip = f.NxTip .. "\n" .. cur.PartyNames

@@ -636,7 +636,7 @@ function Nx.ModQuests:Data7()
 		["End"] = "16574|100|32|54.23|37.9"
 	},
 	[9406] = {
-		["Quest"] = "The Mag'har|2|62|60|9438|0|0",
+		["Quest"] = "The Mag'har|2|62|60|0|0|0",
 		["Start"] = "16845|100|32|31.9|27.7",
 		["End"] = "3230|100|32|55.0|35.9"
 	},
@@ -9181,7 +9181,7 @@ function Nx.ModQuests:Data7()
 		["End"] = "18063|107|32|26.0|60.6"
 	},
 	[10172] = {
-		["Quest"] = "There Is No Hope|2|68|66|10175|0|0",
+		["Quest"] = "There Is No Hope|2|68|66|0|0|0",
 		["Start"] = "18063|107|32|26.0|60.6",
 		["End"] = "18141|107|32|56.6|34.2",
 		["Objectives"] = 	{
@@ -9664,7 +9664,7 @@ function Nx.ModQuests:Data7()
 		["End"] = "19367|100|32|49.1|74.8"
 	},
 	[10214] = {
-		["Quest"] = "When This Mine's a-Rockin'|0|61|58|10100|0|0",
+		["Quest"] = "When This Mine's a-Rockin'|0|61|58|0|0|0",
 		["End"] = "16915|100|32|51.3|30.5",
 		["Objectives"] = 	{
 			[1] = 		{
@@ -11585,11 +11585,11 @@ function Nx.ModQuests:Data7()
 		}
 	},
 	[10386] = {
-		["Quest"] = "The Fel Reaver Slayer|2|61|58|10089|0|0",
+		["Quest"] = "The Fel Reaver Slayer|2|61|58|0|0|0",
 		["End"] = "16576|100|32|65.03|44.25"
 	},
 	[10387] = {
-		["Quest"] = "The Fel Reaver Slayer|2|61|58|10089|0|0",
+		["Quest"] = "The Fel Reaver Slayer|2|61|58|0|0|0",
 		["End"] = "16576|100|32|65.03|44.25"
 	},
 	[10388] = {
@@ -21075,7 +21075,7 @@ function Nx.ModQuests:Data7()
 		["End"] = "23858|95|32|70.52|68.27"
 	},
 	[11165] = {
-		["Quest"] = "A Troll Among Trolls|0|70|70|11195|0|0",
+		["Quest"] = "A Troll Among Trolls|0|70|70|0|0|0",
 		["Start"] = "23761|95|32|71.0|68.92",
 		["End"] = "23897|333|32|-1.0|-1.0"
 	},
@@ -21731,17 +21731,17 @@ function Nx.ModQuests:Data7()
 		}
 	},
 	[11481] = {
-		["Quest"] = "Crisis at the Sunwell|0|70|70|11488|0|0",
+		["Quest"] = "Crisis at the Sunwell|0|70|70|29682|0|0",
 		["Start"] = "18537|111|32|30.6|34.4",
 		["End"] = "24967|122|32|47.4|30.4"
 	},
 	[11482] = {
-		["Quest"] = "Duty Calls|0|70|70|11488|0|0",
+		["Quest"] = "Duty Calls|0|70|70|29684|0|0",
 		["Start"] = "18594|111|32|54.6|80.8",
 		["End"] = "24967|122|32|47.4|30.4"
 	},
 	[11490] = {
-		["Quest"] = "The Scryer's Scryer|0|70|70|11492|0|0"
+		["Quest"] = "The Scryer's Scryer|0|70|70|29685|0|0"
 	},
 	[11496] = {
 		["Quest"] = "The Sanctum Wards|1|70|70|0|0|0",
@@ -24247,9 +24247,6 @@ function Nx.ModQuests:Data7()
 	[29682] = {
 		["Quest"] = "Magisters' Terrace|0|70|70|0|0|0",
 		["Start"] = "24967|122|32|47.4|30.4"
-	},
-	[29683] = {
-		["Quest"] = "The Scryer's Scryer|0|70|70|11492|0|0"
 	},
 	[29684] = {
 		["Quest"] = "Severed Communications|0|70|70|11490|0|0"

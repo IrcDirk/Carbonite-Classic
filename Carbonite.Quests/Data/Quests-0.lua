@@ -413,7 +413,7 @@ function Nx.ModQuests:Data0()
 		}
 	},
 	[6088] = {
-		["Quest"] = "Taming the Beast|2|0|10|6089|0|0",
+		["Quest"] = "Taming the Beast|2|0|10|0|0|0",
 		["Start"] = "3065|7|32|47.8|55.6",
 		["End"] = "3065|7|32|47.8|55.6",
 		["Objectives"] = 	{
@@ -3762,23 +3762,13 @@ function Nx.ModQuests:Data0()
 		["Start"] = "16788|41|32|56.4|92.0"
 	},
 	[9529] = {
-		["Quest"] = "The Stone|2|0|10|9619|0|0",
+		["Quest"] = "The Stone|2|0|10|0|0|0",
 		["Start"] = "16647|110|32|74.4|47.2",
 		["End"] = "181698|94|32|45.41|95.22"
-	},
-	[9617] = {
-		["Quest"] = "Seek the Farstriders|2|0|10|9484|0|0",
-		["Start"] = "16271|94|32|48.0|46.0",
-		["End"] = "15399|94|32|60.3|62.8"
 	},
 	[9679] = {
 		["Quest"] = "<NYI>Return to Knight-Lord Bloodvalor|0|0|12|9679|0|0",
 		["End"] = "17717|110|32|89.3|35.2"
-	},
-	[9681] = {
-		["Quest"] = "A Study in Power|2|0|12|9684|0|0",
-		["Start"] = "17718|110|32|89.3|35.2",
-		["End"] = "17718|110|32|89.3|35.2"
 	},
 	[9712] = {
 		["Quest"] = "The Thalassian Warhorse|2|0|40|0|0|0",
@@ -3804,7 +3794,7 @@ function Nx.ModQuests:Data0()
 		}
 	},
 	[10529] = {
-		["Quest"] = "The Hunter's Path|2|0|10|9484|0|0",
+		["Quest"] = "The Hunter's Path|2|0|10|0|0|0",
 		["End"] = "15399|94|32|60.3|62.8"
 	},
 	[10591] = {
@@ -3816,12 +3806,12 @@ function Nx.ModQuests:Data0()
 		["End"] = "16647|110|32|74.4|47.2"
 	},
 	[10789] = {
-		["Quest"] = "Return to Carendin Halgar|2|0|10|1473|0|0",
+		["Quest"] = "Return to Carendin Halgar|2|0|10|0|0|0",
 		["Start"] = "5875|85|32|48.2|45.3",
 		["End"] = "5675|18|32|65.86|70.57"
 	},
 	[10790] = {
-		["Quest"] = "Return to Gan'rul Bloodeye|2|0|10|1501|0|0",
+		["Quest"] = "Return to Gan'rul Bloodeye|2|0|10|0|0|0",
 		["Start"] = "5675|18|32|65.86|70.57",
 		["End"] = "5875|85|32|48.2|45.3"
 	},
@@ -5406,7 +5396,7 @@ function Nx.ModQuests:Data0()
 		["End"] = "27489|1|32|45.76|4.93"
 	},
 	[12318] = {
-		["Quest"] = "Save Brewfest!|0|0|75|12062|0|0",
+		["Quest"] = "Save Brewfest!|0|0|75|0|0|0",
 		["Start"] = "28329|1|32|47.89|26.91"
 	},
 	[12331] = {
@@ -15553,10 +15543,13 @@ function Nx.ModQuests:Data0()
 		["Quest"] = "What Comes to Pass|0|0|85|0|0|0"
 	},
 	[30645] = {
-		["Quest"] = "The Might of Three|0|0|85|0|0|0"
+		["Quest"] = "The Might of Three|0|0|85|0|0|0",
+		["Start"] = "58468|390|32|56.6|43.6",
+		["End"] = "59906|390|32|74.2|41.8"
 	},
 	[30646] = {
-		["Quest"] = "The Final Power|0|0|85|0|0|0"
+		["Quest"] = "The Final Power|0|0|85|0|0|0",
+		["End"] = "58465|390|32|56.6|43.6"
 	},
 	[30654] = {
 		["Quest"] = "The Guo-Lai Halls|0|0|85|0|0|0"

@@ -60,7 +60,7 @@ function Nx.ModQuests:Data6()
 		["End"] = "8395|76|32|28.0|50.0"
 	},
 	[3506] = {
-		["Quest"] = "Betrayed|2|56|44|3507|0|0",
+		["Quest"] = "Betrayed|2|56|44|0|0|0",
 		["Start"] = "151286|181|32|59.5|31.3",
 		["End"] = "8576|76|32|26.8|76.9",
 		["Objectives"] = 	{
@@ -68,6 +68,11 @@ function Nx.ModQuests:Data6()
 				"|76|32|59.03|30.65|9.62|9.62"
 			}
 		}
+	},
+	[3508] = {
+		["Quest"] = "Breaking the Ward|0|58|45|0|0|0",
+		["Start"] = "7783|17|32|62.3|26.0",
+		["End"] = "7783|17|32|62.3|26.0"
 	},
 	[3517] = {
 		["Quest"] = "Stealing Knowledge|2|52|45|0|0|0",
@@ -211,7 +216,7 @@ function Nx.ModQuests:Data6()
 		}
 	},
 	[3625] = {
-		["Quest"] = "Enchanted Azsharite Fel Weaponry|0|58|45|3626|0|0",
+		["Quest"] = "Enchanted Azsharite Fel Weaponry|0|58|45|0|0|0",
 		["Start"] = "7802|224|32|50.6|20.4",
 		["End"] = "7802|224|32|50.6|20.4",
 		["Objectives"] = 	{
@@ -1610,12 +1615,12 @@ function Nx.ModQuests:Data6()
 		}
 	},
 	[4493] = {
-		["Quest"] = "March of the Silithid|1|53|50|4496|0|0",
+		["Quest"] = "March of the Silithid|1|53|50|0|0|0",
 		["Start"] = "7740|89|32|42.0|85.8",
 		["End"] = "5594|71|32|50.85|27.96"
 	},
 	[4494] = {
-		["Quest"] = "March of the Silithid|2|53|50|4496|0|0",
+		["Quest"] = "March of the Silithid|2|53|50|0|0|0",
 		["Start"] = "7010|85|32|56.4|46.6",
 		["End"] = "5594|71|32|50.85|27.96"
 	},
@@ -8346,7 +8351,7 @@ function Nx.ModQuests:Data6()
 		["End"] = "15174|81|32|55.4|36.6"
 	},
 	[8314] = {
-		["Quest"] = "Unraveling the Mystery|0|56|54|8315|0|0",
+		["Quest"] = "Unraveling the Mystery|0|56|54|0|0|0",
 		["Start"] = "15170|81|32|46.4|79.1",
 		["End"] = "15183|81|32|49.7|37.5"
 	},
@@ -8533,7 +8538,7 @@ function Nx.ModQuests:Data6()
 		}
 	},
 	[8351] = {
-		["Quest"] = "Bor Wishes to Speak|0|56|54|8352|0|0",
+		["Quest"] = "Bor Wishes to Speak|0|56|54|0|0|0",
 		["Start"] = "15282|81|32|52.0|38.2",
 		["End"] = "15306|81|32|48.6|37.8"
 	},
@@ -15238,11 +15243,6 @@ function Nx.ModQuests:Data6()
 				"|81|35|54.5|63|5.01|3.34"
 			}
 		}
-	},
-	[9601] = {
-		["Quest"] = "To The Bulwark|2|52|50|10590|0|0",
-		["Start"] = "20406|18|32|60.12|84.27",
-		["End"] = "17099|18|32|83.2|71.2"
 	},
 	[9635] = {
 		["Quest"] = "The Zapthrottle Mote Extractor!|2|60|58|0|0|0",
@@ -25124,11 +25124,11 @@ function Nx.ModQuests:Data6()
 		["End"] = "5393|17|32|60.0|13.4"
 	},
 	[28890] = {
-		["Quest"] = "Wasteland|0|56|54|28891|0|0",
+		["Quest"] = "Wasteland|0|56|54|0|0|0",
 		["End"] = "13220|69|32|82.82|87.01"
 	},
 	[28893] = {
-		["Quest"] = "Umber, Archivist|0|57|54|28894|0|0",
+		["Quest"] = "Umber, Archivist|0|57|54|0|0|0",
 		["End"] = "11939|80|32|44.88|35.6"
 	},
 	[28896] = {
@@ -25136,11 +25136,11 @@ function Nx.ModQuests:Data6()
 		["End"] = "15183|81|32|49.7|37.5"
 	},
 	[28897] = {
-		["Quest"] = "Baristolth's Plan|0|57|54|28898|0|0",
+		["Quest"] = "Baristolth's Plan|0|57|54|0|0|0",
 		["End"] = "15180|69|32|66.57|95.79"
 	},
 	[28899] = {
-		["Quest"] = "Riding in Plain Sight|0|57|54|28900|0|0",
+		["Quest"] = "Riding in Plain Sight|0|57|54|0|0|0",
 		["End"] = "15180|69|32|66.57|95.79"
 	}
 }        return ModQuests

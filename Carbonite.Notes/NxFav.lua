@@ -1599,6 +1599,10 @@ function Nx.Notes:UpdateIcons()
 		Nx.Notes:Questie(mapId)
 	end
 
+	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+		Nx.Notes:RareScanner(mapId)
+	end
+
 	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
 		return
 	end
@@ -1657,7 +1661,6 @@ function Nx.Notes:UpdateIcons()
 			end
 		end
 		Nx.Notes:HandyNotes(mapId)
-		Nx.Notes:RareScanner(mapId)
 		--WorldMap_HijackTooltip(map.Frm)
 		GameTooltip:Hide()		
 	end

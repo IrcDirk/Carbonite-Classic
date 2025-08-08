@@ -358,7 +358,7 @@ function Nx.ModQuests:Data1()
 		["End"] = "278|37|32|79.5|68.7"
 	},
 	[60] = {
-		["Quest"] = "Kobold Candles|1|7|3|61|0|0",
+		["Quest"] = "Kobold Candles|1|7|3|0|0|0",
 		["Start"] = "253|37|32|43.3|65.7",
 		["End"] = "253|37|32|43.3|65.7",
 		["Objectives"] = 	{
@@ -390,7 +390,7 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[71] = {
-		["Quest"] = "Report to Thomas|1|10|7|39|0|0",
+		["Quest"] = "Report to Thomas|1|10|7|59|0|0",
 		["Start"] = "56|37|32|79.8|55.5",
 		["End"] = "261|37|32|74.0|72.2"
 	},
@@ -596,7 +596,7 @@ function Nx.ModQuests:Data1()
 		["End"] = "46612|291|32|-1.0|-1.0"
 	},
 	[218] = {
-		["Quest"] = "Ice and Fire|1|5|1|282|0|0",
+		["Quest"] = "Ice and Fire|1|5|1|24490|0|0",
 		["Start"] = "786|427|32|42.7|62.2",
 		["End"] = "786|427|32|42.7|62.2",
 		["Objectives"] = 	{
@@ -1332,6 +1332,11 @@ function Nx.ModQuests:Data1()
 		["Quest"] = "<UNUSED>|0|4|1|0|0|0",
 		["End"] = "3052|7|32|46.76|60.22"
 	},
+	[775] = {
+		["Quest"] = "Journey into Thunder Bluff|2|10|8|0|0|0",
+		["Start"] = "2994|7|32|61.4|21.0",
+		["End"] = "3057|7|32|42.51|28.65"
+	},
 	[798] = {
 		["Quest"] = "<UNUSED>|0|1|1|0|0|0",
 		["End"] = "3149|50|32|37.29|52.12"
@@ -1417,12 +1422,12 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[840] = {
-		["Quest"] = "Conscript of the Horde|2|10|10|842|0|0",
+		["Quest"] = "Conscript of the Horde|2|10|10|871|0|0",
 		["Start"] = "3336|1|32|50.8|43.5",
 		["End"] = "3337|10|32|67.7|39.4"
 	},
 	[861] = {
-		["Quest"] = "The Hunter's Way|2|10|8|860|0|0",
+		["Quest"] = "The Hunter's Way|2|10|8|0|0|0",
 		["Start"] = "3052|7|32|46.76|60.22",
 		["End"] = "3052|7|32|46.76|60.22",
 		["Objectives"] = 	{
@@ -1706,7 +1711,7 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[2518] = {
-		["Quest"] = "Tears of the Moon|1|10|5|2520|0|0",
+		["Quest"] = "Tears of the Moon|1|10|5|0|0|0",
 		["Start"] = "7313|89|32|36.4|86.0",
 		["End"] = "7313|89|32|36.4|86.0",
 		["Objectives"] = 	{
@@ -4546,7 +4551,7 @@ function Nx.ModQuests:Data1()
 		["End"] = "21044|104|32|53.82|22.19"
 	},
 	[10779] = {
-		["Quest"] = "The Hunter's Path|1|10|10|9591|0|0",
+		["Quest"] = "The Hunter's Path|1|10|10|0|0|0",
 		["End"] = "17614|97|32|24.2|54.4"
 	},
 	[10999] = {
@@ -6465,7 +6470,7 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[14439] = {
-		["Quest"] = "Journey into Thunder Bluff|0|10|3|776|0|0",
+		["Quest"] = "Journey into Thunder Bluff|0|10|3|0|0|0",
 		["End"] = "36648|88|32|60.3|51.7"
 	},
 	[14445] = {
@@ -8948,10 +8953,6 @@ function Nx.ModQuests:Data1()
 		["Quest"] = "Forsaken Duties|2|8|5|0|0|0",
 		["Start"] = "1499|18|32|60.9|50.4",
 		["End"] = "1495|18|32|65.4|60.2"
-	},
-	[24984] = {
-		["Quest"] = "The Prodigal Lich|0|8|5|24985|0|0",
-		["End"] = "1497|18|32|68.2|41.92"
 	},
 	[24986] = {
 		["Quest"] = "The Prodigal Lich Returns|0|9|5|24987|0|0",
@@ -13105,6 +13106,16 @@ function Nx.ModQuests:Data1()
 	[30818] = {
 		["Quest"] = "A New Fate|0|10|0|0|0|0"
 	},
+	[30988] = {
+		["Quest"] = "The Alliance Way|1|10|8|30989|0|0",
+		["Start"] = "29611|84|32|85.8|31.7",
+		["End"] = "61796|84|32|82.59|28.07"
+	},
+	[30989] = {
+		["Quest"] = "An Old Pit Fighter|1|10|8|0|0|0",
+		["Start"] = "61796|84|32|82.59|28.07",
+		["End"] = "29611|84|32|85.8|31.7"
+	},
 	[31135] = {
 		["Quest"] = "The Future of Gnomeregan|1|1|1|0|0|0",
 		["Start"] = "42396|469|32|39.5|38.4",
@@ -13113,6 +13124,11 @@ function Nx.ModQuests:Data1()
 	[31137] = {
 		["Quest"] = "Meet the High Tinker|1|2|2|0|0|0",
 		["End"] = "42317|469|32|38.8|32.7"
+	},
+	[31138] = {
+		["Quest"] = "The Arts of a Monk|1|3|1|0|0|0",
+		["Start"] = "63238|469|32|40.1|35.6",
+		["End"] = "63238|469|32|40.1|35.6"
 	},
 	[31139] = {
 		["Quest"] = "Beating Them Back!|1|3|1|31140|0|0",
@@ -13151,7 +13167,7 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[31140] = {
-		["Quest"] = "Lions for Lambs|1|3|1|31143|0|0",
+		["Quest"] = "Lions for Lambs|1|3|1|31141|0|0",
 		["Start"] = "197|425|32|33.5|53.1",
 		["End"] = "197|425|32|33.5|53.1",
 		["Objectives"] = 	{
@@ -13191,8 +13207,13 @@ function Nx.ModQuests:Data1()
 		}
 	},
 	[31141] = {
-		["Quest"] = "Calligraphed Letter|1|3|2|0|0|0",
+		["Quest"] = "Calligraphed Letter|1|3|2|31142|0|0",
 		["Start"] = "197|425|32|33.5|53.1",
+		["End"] = "63258|425|32|41.25|52.13"
+	},
+	[31142] = {
+		["Quest"] = "Palm of the Tiger|1|3|2|31143|0|0",
+		["Start"] = "63258|425|32|41.25|52.13",
 		["End"] = "63258|425|32|41.25|52.13"
 	},
 	[31143] = {
@@ -13231,6 +13252,21 @@ function Nx.ModQuests:Data1()
 	[31150] = {
 		["Quest"] = "Elegant Rune|0|3|2|31151|0|0",
 		["Start"] = "37087|427|32|60.6|21.1"
+	},
+	[31151] = {
+		["Quest"] = "Kick, Punch, It's All in the Mind|1|2|2|0|0|0",
+		["Start"] = "63285|427|32|63.23|22.27",
+		["End"] = "63285|427|32|63.23|22.27"
+	},
+	[31156] = {
+		["Quest"] = "Calligraphed Parchment|2|3|2|0|0|0",
+		["Start"] = "3143|461|32|44.9|66.4",
+		["End"] = "63296|461|32|42.08|68.73"
+	},
+	[31157] = {
+		["Quest"] = "Tiger Palm|2|3|2|0|0|0",
+		["Start"] = "63296|461|32|42.08|68.73",
+		["End"] = "63296|461|32|42.08|68.73"
 	},
 	[31158] = {
 		["Quest"] = "The Basics: Hitting Things|2|2|1|31160|0|0",
@@ -13316,11 +13352,36 @@ function Nx.ModQuests:Data1()
 	[31163] = {
 		["Quest"] = "More Than Expected|2|3|1|0|0|0"
 	},
-	[31172] = {
-		["Quest"] = "Monk Training|0|3|2|0|0|0"
+	[31165] = {
+		["Quest"] = "Calligraphed Note|2|3|2|31166|0|0",
+		["Start"] = "44927|462|32|34.0|54.0",
+		["End"] = "63327|462|32|27.97|28.34"
+	},
+	[31166] = {
+		["Quest"] = "Tiger Palm|2|3|2|0|0|0",
+		["Start"] = "63327|462|32|27.97|28.34",
+		["End"] = "63327|462|32|27.97|28.34"
+	},
+	[31168] = {
+		["Quest"] = "Calligraphed Sigil|1|3|2|31169|0|0",
+		["Start"] = "2077|460|32|45.9|72.9",
+		["End"] = "63331|460|32|46.6|56.63"
+	},
+	[31169] = {
+		["Quest"] = "The Art of the Monk|1|3|2|28723|0|0",
+		["Start"] = "63331|460|32|46.6|56.63",
+		["End"] = "63331|460|32|46.6|56.63"
+	},
+	[31173] = {
+		["Quest"] = "The Tiger Palm|1|3|2|0|0|0",
+		["Start"] = "63335|468|32|50.46|48.7",
+		["End"] = "63335|468|32|50.46|48.7"
 	},
 	[31939] = {
 		["Quest"] = "Test|0|1|1|0|0|0"
+	},
+	[32125] = {
+		["Quest"] = "Don't Try So Hard|2|4|1|0|0|0"
 	},
 	[32444] = {
 		["Quest"] = "FLAG - Earned Brawler Title (Weekly)|0|1|0|0|0|0"

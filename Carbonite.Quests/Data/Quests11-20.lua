@@ -381,7 +381,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[869] = {
-		["Quest"] = "To Track a Thief|2|15|13|3281|0|0",
+		["Quest"] = "To Track a Thief|2|15|13|14067|0|0",
 		["Start"] = "3464|10|32|66.8|72.6",
 		["End"] = "3464|10|32|66.8|72.6",
 		["Objectives"] = 	{
@@ -523,7 +523,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[887] = {
-		["Quest"] = "Southsea Freebooters|0|16|14|890|0|0",
+		["Quest"] = "Southsea Freebooters|0|16|14|0|0|0",
 		["Start"] = "3453|10|32|69.5|72.9",
 		["End"] = "3453|10|32|69.5|72.9",
 		["Objectives"] = 	{
@@ -664,7 +664,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[905] = {
-		["Quest"] = "Into the Raptor's Den|2|14|10|3261|0|0",
+		["Quest"] = "Into the Raptor's Den|2|14|10|13991|0|0",
 		["Start"] = "3338|10|32|50.0|59.9",
 		["End"] = "3338|10|32|50.0|59.9",
 		["Objectives"] = 	{
@@ -772,7 +772,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[2039] = {
-		["Quest"] = "Find Bingles|1|15|12|2038|0|0",
+		["Quest"] = "Find Bingles|1|15|12|0|0|0",
 		["Start"] = "6569|87|32|69.4|50.6",
 		["End"] = "6577|48|32|81.6|64.7"
 	},
@@ -803,15 +803,15 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[5665] = {
-		["Quest"] = "<UNUSED>|1|15|15|5664|0|0",
+		["Quest"] = "<UNUSED>|1|15|15|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5666] = {
-		["Quest"] = "<UNUSED>|1|15|15|5664|0|0",
+		["Quest"] = "<UNUSED>|1|15|15|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5667] = {
-		["Quest"] = "<UNUSED>|1|15|15|5664|0|0",
+		["Quest"] = "<UNUSED>|1|15|15|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5668] = {
@@ -3088,7 +3088,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[9599] = {
-		["Quest"] = "<UNUSED>|1|12|12|9600|0|0",
+		["Quest"] = "<UNUSED>|1|12|12|0|0|0",
 		["End"] = "17509|103|32|38.4|82.2"
 	},
 	[9620] = {
@@ -3197,7 +3197,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[9632] = {
-		["Quest"] = "Newfound Allies|1|15|15|9633|0|0",
+		["Quest"] = "Newfound Allies|1|15|15|0|0|0",
 		["Start"] = "17424|106|32|54.6|53.9",
 		["End"] = "17614|97|32|24.2|54.4"
 	},
@@ -4537,7 +4537,7 @@ function Nx.ModQuests:Data2()
 		}
 	},
 	[10372] = {
-		["Quest"] = "A Discreet Inquiry|2|16|16|9491|0|0",
+		["Quest"] = "A Discreet Inquiry|2|16|16|0|0|0",
 		["Start"] = "16684|110|32|79.4|52.0",
 		["End"] = "16268|95|32|47.2|34.3"
 	},

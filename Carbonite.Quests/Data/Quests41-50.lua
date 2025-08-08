@@ -98,7 +98,7 @@ function Nx.ModQuests:Data5()
 		}
 	},
 	[2199] = {
-		["Quest"] = "Lore for a Price|1|41|37|2200|0|0",
+		["Quest"] = "Lore for a Price|1|41|37|0|0|0",
 		["Start"] = "6826|27|32|64.08|19.81",
 		["End"] = "6826|27|32|64.08|19.81",
 		["Objectives"] = 	{
@@ -142,17 +142,17 @@ function Nx.ModQuests:Data5()
 		}
 	},
 	[2963] = {
-		["Quest"] = "Portents of Uldum|1|50|45|2946|0|0",
+		["Quest"] = "Portents of Uldum|1|50|45|0|0|0",
 		["Start"] = "24473|116|32|40.5|98.72",
 		["End"] = "2916|27|32|70.73|21.13"
 	},
 	[2965] = {
-		["Quest"] = "Portents of Uldum|2|50|45|2966|0|0",
+		["Quest"] = "Portents of Uldum|2|50|45|0|0|0",
 		["Start"] = "3978|7|32|37.55|27.73",
 		["End"] = "5770|7|32|45.45|24.8"
 	},
 	[2992] = {
-		["Quest"] = "The Divination|0|47|40|2993|0|0",
+		["Quest"] = "The Divination|0|47|40|0|0|0",
 		["Start"] = "8022|17|32|67.0|19.4",
 		["End"] = "8022|17|32|67.0|19.4",
 		["Objectives"] = 	{
@@ -431,11 +431,6 @@ function Nx.ModQuests:Data5()
 	[3516] = {
 		["Quest"] = "<UNUSED>|0|42|45|0|0|0",
 		["End"] = "8586|76|32|42.4|23.6"
-	},
-	[3642] = {
-		["Quest"] = "The Pledge of Secrecy|2|47|30|3643|0|0",
-		["Start"] = "7406|210|32|43.0|72.0",
-		["End"] = "7406|210|32|43.0|72.0"
 	},
 	[3721] = {
 		["Quest"] = "An OOX of Your Own|0|50|40|0|0|0",

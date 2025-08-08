@@ -431,12 +431,12 @@ function Nx.ModQuests:Data3()
 		}
 	},
 	[270] = {
-		["Quest"] = "The Doomed Fleet|1|29|20|321|0|0",
+		["Quest"] = "The Doomed Fleet|1|29|20|0|0|0",
 		["Start"] = "1212|84|32|39.3|27.9",
 		["End"] = "1217|56|32|10.58|60.59"
 	},
 	[325] = {
-		["Quest"] = "Armed and Ready|1|29|20|55|0|0",
+		["Quest"] = "Armed and Ready|1|29|20|0|0|0",
 		["Start"] = "1416|84|32|59.7|33.8"
 	},
 	[335] = {
@@ -496,12 +496,12 @@ function Nx.ModQuests:Data3()
 		["End"] = "3678|279|32|-1.0|-1.0"
 	},
 	[1431] = {
-		["Quest"] = "Alliance Relations|2|30|30|48|0|0",
+		["Quest"] = "Alliance Relations|2|30|30|1432|0|0",
 		["Start"] = "5639|85|32|49.8|47.8",
 		["End"] = "5640|85|32|22.4|52.8"
 	},
 	[1432] = {
-		["Quest"] = "Alliance Relations|2|30|30|49|0|0",
+		["Quest"] = "Alliance Relations|2|30|30|1433|0|0",
 		["Start"] = "5640|85|32|22.4|52.8",
 		["End"] = "5641|66|32|52.6|54.2"
 	},
@@ -516,17 +516,17 @@ function Nx.ModQuests:Data3()
 		["End"] = "5638|66|32|66.2|9.6"
 	},
 	[1454] = {
-		["Quest"] = "The Karnitol Shipwreck|1|30|27|87|0|0",
+		["Quest"] = "The Karnitol Shipwreck|1|30|27|1455|0|0",
 		["Start"] = "5638|66|32|66.2|9.6",
 		["End"] = "35251|65|32|21.9|98.26"
 	},
 	[1455] = {
-		["Quest"] = "The Karnitol Shipwreck|1|30|27|88|0|0",
+		["Quest"] = "The Karnitol Shipwreck|1|30|27|1456|0|0",
 		["Start"] = "35251|65|32|21.9|98.26",
 		["End"] = "5638|66|32|66.2|9.6"
 	},
 	[1456] = {
-		["Quest"] = "The Karnitol Shipwreck|1|30|27|89|0|0",
+		["Quest"] = "The Karnitol Shipwreck|1|30|27|0|0|0",
 		["Start"] = "5638|66|32|66.2|9.6",
 		["End"] = "5638|66|32|66.2|9.6",
 		["Objectives"] = 	{
@@ -682,15 +682,15 @@ function Nx.ModQuests:Data3()
 		["End"] = "175085|226|32|-1.0|-1.0"
 	},
 	[5682] = {
-		["Quest"] = "<UNUSED>|1|25|25|5681|0|0",
+		["Quest"] = "<UNUSED>|1|25|25|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5683] = {
-		["Quest"] = "<UNUSED>|1|25|25|5681|0|0",
+		["Quest"] = "<UNUSED>|1|25|25|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5684] = {
-		["Quest"] = "<UNUSED>|1|25|25|5681|0|0",
+		["Quest"] = "<UNUSED>|1|25|25|0|0|0",
 		["End"] = "11401|89|32|40.0|80.0"
 	},
 	[5685] = {

@@ -24538,7 +24538,7 @@ function Nx.ModQuests:Data8()
 		["End"] = "26917|115|32|59.8|54.7"
 	},
 	[13374] = {
-		["Quest"] = "Amped for Revolt!|0|80|77|13376|0|0",
+		["Quest"] = "Amped for Revolt!|0|80|77|0|0|0",
 		["End"] = "32430|118|32|54.0|36.9",
 		["Objectives"] = 	{
 			[1] = 		{
@@ -24575,11 +24575,11 @@ function Nx.ModQuests:Data8()
 		["End"] = "26917|115|32|59.8|54.7"
 	},
 	[13378] = {
-		["Quest"] = "Chief Engineer Copperclaw|0|80|77|13373|0|0",
+		["Quest"] = "Chief Engineer Copperclaw|0|80|77|0|0|0",
 		["End"] = "30825|118|32|64.78|28.41"
 	},
 	[13381] = {
-		["Quest"] = "Watts My Target|0|80|77|13382|0|0",
+		["Quest"] = "Watts My Target|0|80|77|0|0|0",
 		["End"] = "32444|118|32|54.0|42.8",
 		["Objectives"] = 	{
 			[1] = 		{

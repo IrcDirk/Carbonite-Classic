@@ -1756,6 +1756,9 @@ function Nx.Notes:RareScanner(mapId)
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
 			rspins[#rspins + 1] = pin
 		end
+		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
+			rspins[#rspins + 1] = pin
+		end
 
 		self.PrevRSPins = #rspins
 		

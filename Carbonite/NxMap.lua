@@ -8637,6 +8637,7 @@ function Nx.Map:IconOnMouseDown (button)
 						rspin.owningMap = WorldMapFrame
 					end
 					rspin:OnMouseDown(button)
+					Nx.Notes.PrevRSPins = 0
 					Nx.Notes:RareScanner(map.MapId)
 				else
 					map.OnMouseDown (map.Frm, button)

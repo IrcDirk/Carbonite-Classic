@@ -1540,9 +1540,9 @@ function Nx.Map:UpdateWorldMap()
 
 	for factionIndex = 1, GetNumFactions() do
 		local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith,canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
-		if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
-			self.MapWorldInfo[418].Overlay = "krasarang_terrain1"
-		end
+--		if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
+--			self.MapWorldInfo[418].Overlay = "krasarang_terrain1"
+--		end
 	end
 
 	if f then

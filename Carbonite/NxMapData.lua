@@ -1076,7 +1076,7 @@ Map.MapWorldInfo = {
 		Scale = 9.375001953125,
 		X = -589.5833984375,
 		Y = 22.083204650879,
-		Overlay = "krasarang",
+		Overlay = "krasarang_terrain1",
 		Name=L["Krasarang Wilds"],
 	},
 	[422] = {

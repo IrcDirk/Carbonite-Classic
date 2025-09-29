@@ -2568,7 +2568,7 @@ Map.ZoneOverlays = {
 		["wreckoftheskyshark"] = "202,0,210,158",
 	},
 	["dreadwastes"] = {
-		["klaxxivess"] = "458,110,236,204",
+		["klaxxivess"] = "458,110,236,206",
 		["zanvess"] = "162,385,290,283",
 		["brewgarden"] = "351,0,250,218",
 		["dreadwaterlake"] = "437,313,322,211",
@@ -2601,7 +2601,7 @@ Map.ZoneOverlays = {
 	},
 	["krasarang_terrain1"] = {
 		["redwingrefuge"] = "317,63,212,265",
-		["anglersoutpost"] = "545,205,265,194",
+		["anglersoutpost"] = "545,200,347,199", -- fix for blizzard real textures
 		["templeoftheredcrane"] = "300,215,219,259",
 		["dojaniriver"] = "513,3,190,282",
 		["krasarangcove"] = "701,19,295,293",
@@ -2679,6 +2679,7 @@ Map.ZoneOverlays = {
 		["krivess"] = "420,209,255,269",
 		["srivess"] = "92,192,294,283",
 	},
+
 	["thewanderingisle"] = {
 		["thedawningvalley"] = "325,0,677,667",
 		["templeoffivedawns"] = "395,182,607,461",

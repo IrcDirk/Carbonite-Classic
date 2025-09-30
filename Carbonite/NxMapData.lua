@@ -2698,7 +2698,7 @@ Map.ZoneOverlays = {
 		["darkmoonfaireisland"] = "0,0,1024,768",
 	},
 	["thehiddenpass"] = {
-		["thehiddencliffs"] = "443,0,294,220",
+		["thehiddencliffs"] = "433,0,294,220",
 		["theblackmarket"] = "371,175,479,493",
 		["thehiddensteps"] = "412,477,290,191",
 	},

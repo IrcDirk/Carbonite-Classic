@@ -1540,9 +1540,9 @@ function Nx.Map:UpdateWorldMap()
 
 	for factionIndex = 1, GetNumFactions() do
 		local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith,canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
-		if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
-			self.MapWorldInfo[857].Overlay = "krasarang_terrain1"
-		end
+--		if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
+--			self.MapWorldInfo[418].Overlay = "krasarang_terrain1"
+--		end
 	end
 
 	if f then
@@ -5213,7 +5213,7 @@ function Nx.Map:Update (elapsed)
 	end
 	
 	self.Frm:SetAlpha(self.BackgndAlpha)
-	
+
 	-- Debug
 --[[
 	Nx.prt ("Map WPos %s ZPos %s WScale %s", self.GetWorldPosCnt or 0, self.GetZonePosCnt or 0, self.GetWorldZoneScaleCnt or 0)
@@ -8631,7 +8631,7 @@ function Nx.Map:IconOnMouseDown (button)
 				end
 
 			else
-				if map.ClickIcon.iconType == "!RSR" and RareScanner then
+				if map.ClickIcon and map.ClickIcon.iconType == "!RSR" and RareScanner then
 					local rspin = this.NXData.UData
 					if not rspin.owningMap then
 						rspin.owningMap = WorldMapFrame

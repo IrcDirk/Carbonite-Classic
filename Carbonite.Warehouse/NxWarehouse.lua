@@ -2410,6 +2410,10 @@ function Nx.Warehouse:FindCharsWithItem (link, specific)
 	local totalCnt = 0
 	local petCnt = 0
 
+	if not link then
+		return "", 0, 0
+	end
+
 	local isPet, _, _, petID = C_PetJournal.GetPetInfoByItemID(link)
 
 	if isPet then

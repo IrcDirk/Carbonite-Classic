@@ -3712,7 +3712,7 @@ function Nx.Map:OnMouseDown (button)
 				map.Scrolling = true
 				map.ScrollingX = x
 				map.ScrollingY = y
-				map.ScrollingFrm = map.ClickFrm				
+				map.ScrollingFrm = map.ClickFrm
 			end
 		end
 
@@ -3952,7 +3952,7 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 		Nx.Map.MouseOver = false
 	end
 	
-	if Nx.Map:IsInstanceMap(Nx.Map.RMapId) then 												
+	if Nx.Map:IsInstanceMap(Nx.Map.RMapId) then
 		--winx = nil	
 		--Nx.Map.MouseOver = false
 	end
@@ -6762,6 +6762,7 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	end
 	local txFolder = wzone and wzone.Overlay or ""	
 	local overlays = Nx.Map.ZoneOverlays[txFolder]
+
 	local unex
 	if not noUnexplored and (not overlays or not self.ShowUnexplored) then
 		if not (wzone and wzone.Explored) then
@@ -6780,9 +6781,13 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	local bW, bH
 	local txIndex
 	local txPixelW, txFileW, txPixelH, txFileH
+	local path
 
-	local path = "Interface\\Worldmap\\" .. txFolder .. "\\"
-
+	if wzone.Phase then
+		path = "Interface\\Worldmap\\" .. txFolder .. "_phase1\\"
+	else
+		path = "Interface\\Worldmap\\" .. txFolder .. "\\"
+	end
 	local alpha = self.BackgndAlpha
 	local unExAl = self.LOpts.NXUnexploredAlpha
 	local zscale = self:GetWorldZoneScale (mapId) / 10
@@ -6895,6 +6900,9 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 --]]
 					if arTx then
 						f.texture:SetTexture (arTx[txIndex])
+					elseif wzone.Phase then -- Classic MOP phases support as default map textures are for latest phase when Siedge of the Oggrimar came out (5.4)
+						phasetex = format("%s%s_%s", txName, txIndex, wzone.Phase)
+						f.texture:SetTexture (phasetex)
 					else 
 						f.texture:SetTexture (mode and txName or txName .. txIndex)
 					end

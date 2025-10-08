@@ -1050,6 +1050,8 @@ Map.MapWorldInfo = {
 		Y = -389.5833984375,
 		Overlay = "valeofeternalblossoms",
 		Name=L["Vale of Eternal Blossoms"],
+		SubZones = {10000}, -- "miminap subzone as default minimap textures are for 5.4 phase, so this one is from 2864 minimap"
+		Phase = "phase1"
 	},
 	[397] = {
 		BaseMap = 112,
@@ -1078,6 +1080,7 @@ Map.MapWorldInfo = {
 		Y = 22.083204650879,
 		Overlay = "krasarang_terrain1",
 		Name=L["Krasarang Wilds"],
+		SubZones = {10001, 10002} -- "miminap subzones for Alliance/Horde Daily quest bases in Krasarang jungles after 5.5.1"
 	},
 	[422] = {
 		Name=L["Dread Wastes"],
@@ -6198,6 +6201,140 @@ Map.PandariaMapBlks = {
 	[4341] = 646840,
 }
 
+Map.PreSiedgeOfOggriBlks = {
+	[2728] = 6402055,
+	[2729] = 6402127,
+	[2730] = 6402199,
+	[2731] = 6402283,
+	[2828] = 6402068,
+	[2829] = 6402138,
+	[2830] = 6402213,
+	[2831] = 6402295,
+	[2928] = 6402080,
+	[2929] = 6402151,
+	[2930] = 6402224,
+	[2931] = 6402307,
+	[3028] = 6402091,
+	[3029] = 6402163,
+	[3030] = 6402248,
+	[3031] = 6402319,
+	[3128] = 6402103,
+	[3129] = 6402176,
+	[3130] = 6402261,
+	[3131] = 6402328,
+	[3228] = 6402115,
+	[3229] = 6402187,
+	[3230] = 6402273,
+	[3231] = 6402342
+}
+
+Map.AllianceBeachDailyAreaBlks = {
+	[3132] = 659822,
+	[3133] = 659828,
+	[3134] = 659834,
+	[3135] = 659840,
+	[3232] = 659823,
+	[3233] = 659829,
+	[3234] = 659835,
+	[3235] = 659841,
+	[3332] = 659824,
+	[3333] = 659240,
+	[3333] = 659830,
+	[3334] = 659242,
+	[3334] = 659836,
+	[3335] = 659842,
+	[3432] = 659825,
+	[3433] = 659241,
+	[3433] = 659831,
+	[3434] = 659243,
+	[3434] = 659837,
+	[3532] = 659826,
+	[3533] = 659832,
+	[3534] = 659838,
+	[3632] = 659827,
+	[3633] = 659833,
+	[3634] = 659839
+}
+
+Map.HordeBeachDailyAreaBlks = {
+	[2735] = 659244,
+	[2736] = 659246,
+	[2737] = 659248,
+	[2738] = 659250,
+	[2835] = 659245,
+	[2836] = 659247,
+	[2837] = 659249,
+	[2838] = 659251,
+}
+
+
+Map.MoguIslandDailyAreaBlks = {
+	[1815] = 794804,
+	[1816] = 659333,
+	[1817] = 632672,
+	[1818] = 630874,
+	[1819] = 630886,
+	[1820] = 630898,
+	[1821] = 630910,
+	[1822] = 660728,
+	[1915] = 794805,
+	[1916] = 659334,
+	[1917] = 632674,
+	[1918] = 630876,
+	[1919] = 630888,
+	[1920] = 630900,
+	[1921] = 630912,
+	[1922] = 660729,
+	[2015] = 794806,
+	[2016] = 659335,
+	[2017] = 632676,
+	[2018] = 630878,
+	[2019] = 630890,
+	[2020] = 630902,
+	[2021] = 630914,
+	[2022] = 660730,
+	[2115] = 794807,
+	[2116] = 659336,
+	[2117] = 632678,
+	[2118] = 630880,
+	[2119] = 630892,
+	[2120] = 630904,
+	[2121] = 630916,
+	[2122] = 660731,
+	[2215] = 773396,
+	[2216] = 659337,
+	[2217] = 632680,
+	[2218] = 630882,
+	[2219] = 630894,
+	[2220] = 630906,
+	[2221] = 630918,
+	[2222] = 660732,
+	[2315] = 773397,
+	[2316] = 659338,
+	[2317] = 632682,
+	[2318] = 630884,
+	[2319] = 630896,
+	[2320] = 630908,
+	[2321] = 630920,
+	[2322] = 660733,
+	[2415] = 773398,
+	[2416] = 659339,
+	[2417] = 659340,
+	[2418] = 659341,
+	[2419] = 659342,
+	[2420] = 659343,
+	[2421] = 659344,
+	[2422] = 660734,
+	[2515] = 773399,
+	[2516] = 773400,
+	[2517] = 773401,
+	[2518] = 773402,
+	[2519] = 794808,
+	[2520] = 794809,
+	[2521] = 794810,
+	[2522] = 794811
+}
+
 Map.MiniMapBlks = {
 	[1] = {
 		Map.KalMapBlks,
@@ -6289,7 +6426,24 @@ Map.MiniMapBlks = {
 		16, 36,
 		Map.MapWorldInfo[407].X + Map.MapInfo[5].X + -253,Map.MapWorldInfo[407].Y + Map.MapInfo[5].Y + -238,
 		"World\\Minimaps\\DarkmoonFaire"
-	},	
+	},
+	-- SubZones overlaid over original minimap texture blocks
+	[10000] = {
+		Map.PreSiedgeOfOggriBlks,
+		"World\\Minimaps\\2864"
+	},
+	[10001] = {
+		Map.AllianceBeachDailyAreaBlks,
+		"World\\Minimaps\\AllianceBeachDailyArea"
+	},
+	[10002] = {
+		Map.HordeBeachDailyAreaBlks,
+		"World\\Minimaps\\HordeBeachDailyArea"
+	},
+	[10003] = {
+		Map.MoguIslandDailyAreaBlks,
+		"World\\Minimaps\\MoguIslandDailyArea"
+	},
 }
 
 --------
@@ -6321,6 +6475,15 @@ function Nx.Map:GetMiniInfo (mapId)
 	end
 
 	local t = self.MiniMapBlks[id]
+
+	if winfo.SubZones then
+		for _, subzone in ipairs(winfo.SubZones) do
+			subBlks = self.MiniMapBlks[subzone]
+			for txindex, txfileid in pairs(subBlks[1]) do
+				t[1][txindex] = txfileid
+			end
+		end
+	end
 
 	if not t then			-- "Isle of Quel'Danas"??
 		if Nx.db.profile.Debug.DebugMap then

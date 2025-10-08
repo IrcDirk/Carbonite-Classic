@@ -1202,6 +1202,7 @@ Map.MapWorldInfo = {
 		Overlay = "isleofthethunderking",
 		Name = L["Isle of Thunder"],
 		Explored = true,
+		SubZones = {10003} -- Isle of Thunder overlays
 	},
 	[507] = {
 		Scale = 3.575001953125,

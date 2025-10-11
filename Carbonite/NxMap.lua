@@ -6784,7 +6784,7 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	local path
 
 	if wzone.Phase then
-		path = "Interface\\Worldmap\\" .. txFolder .. "_phase1\\"
+		path = "Interface\\Worldmap\\" .. txFolder .. "_" .. wzone.Phase .. "\\"
 	else
 		path = "Interface\\Worldmap\\" .. txFolder .. "\\"
 	end

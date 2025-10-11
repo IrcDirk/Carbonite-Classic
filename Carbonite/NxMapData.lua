@@ -1051,7 +1051,7 @@ Map.MapWorldInfo = {
 		Overlay = "valeofeternalblossoms",
 		Name=L["Vale of Eternal Blossoms"],
 		SubZones = {10000}, -- "miminap subzone as default minimap textures are for 5.4 phase, so this one is from 2864 minimap"
-		Phase = "phase1"
+		Phase = "phase0"
 	},
 	[397] = {
 		BaseMap = 112,
@@ -6202,7 +6202,34 @@ Map.PandariaMapBlks = {
 	[4341] = 646840,
 }
 
-Map.PreSiedgeOfOggriBlks = {
+Map.ValeOfEternalBlossomsPhase0Blks = {
+	[2728] = 6402056,
+	[2729] = 6402132,
+	[2730] = 6402201,
+	[2731] = 6402259,
+	[2828] = 6402067,
+	[2829] = 6402143,
+	[2830] = 6402211,
+	[2831] = 6402271,
+	[2928] = 6402079,
+	[2929] = 6402152,
+	[2930] = 6402223,
+	[2931] = 6402284,
+	[3028] = 6402092,
+	[3029] = 6402164,
+	[3030] = 6402235,
+	[3031] = 6402296,
+	[3128] = 6402104,
+	[3129] = 6402175,
+	[3130] = 6402241,
+	[3131] = 6402310,
+	[3228] = 6402119,
+	[3229] = 6402189,
+	[3230] = 6402247,
+	[3231] = 6402321,
+}
+
+Map.ValeOfEternalBlossomsPhase1Blks = {
 	[2728] = 6402055,
 	[2729] = 6402127,
 	[2730] = 6402199,
@@ -6430,8 +6457,8 @@ Map.MiniMapBlks = {
 	},
 	-- SubZones overlaid over original minimap texture blocks
 	[10000] = {
-		Map.PreSiedgeOfOggriBlks,
-		"World\\Minimaps\\2864"
+		Map.ValeOfEternalBlossomsPhase0Blks,
+		"World\\Minimaps\\2862"
 	},
 	[10001] = {
 		Map.AllianceBeachDailyAreaBlks,

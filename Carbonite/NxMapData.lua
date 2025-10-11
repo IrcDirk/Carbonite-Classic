@@ -6458,7 +6458,7 @@ Map.MiniMapBlks = {
 	-- SubZones overlaid over original minimap texture blocks
 	[10000] = {
 		Map.ValeOfEternalBlossomsPhase0Blks,
-		"World\\Minimaps\\2864"
+		"World\\Minimaps\\2862"
 	},
 	[10001] = {
 		Map.AllianceBeachDailyAreaBlks,

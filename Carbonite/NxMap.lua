@@ -1743,9 +1743,9 @@ function Nx.Map:InitFrames()
 				t:SetAllPoints (cf)
 				cf.texture = t
 
-				if n == 1 then
+				if n == 1 and not Nx.isClassic then
 					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal_"..i)
-				elseif n == 2 then
+				elseif n == 2 and not Nx.isClassic then
 					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Eas_"..i)
 				else
 					t:SetTexture ("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i)

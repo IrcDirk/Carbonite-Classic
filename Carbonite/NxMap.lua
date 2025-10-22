@@ -257,14 +257,32 @@ function Nx.Map:SetMapByID(zone)
 		end
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
+		if not Nx.isMopClassic then
+-			if zone == 12 then zone = 1414 end
+-			if zone == 13 then zone = 1415 end
+		end
 		WorldMapFrame:SetMapID(zone) 
 	end
 end
 
-
 function Nx.Map:GetMapInfo(mapId)
 	if mapId and mapId ~= 0 then
-		local mapInfo = C_Map.GetMapInfo(mapId)
+		local mapInfo
+		if not Nx.isMopClassic then
+			if mapId == 12 then mapId = 1414 end
+			if mapId == 13 then mapId = 1415 end
+			mapInfo = C_Map.GetMapInfo(mapId)
+			if mapInfo.mapType == 2 then
+				if mapInfo.mapID == 1414 then mapInfo.mapID = 12 end
+				if mapInfo.mapID == 1415 then mapInfo.mapID = 13 end
+			end
+			if mapInfo.mapType == 3 then
+				if mapInfo.parentMapID == 1414 then mapInfo.parentMapID = 12 end
+				if mapInfo.parentMapID == 1415 then mapInfo.parentMapID = 13 end
+			end
+		else
+			mapInfo = C_Map.GetMapInfo(mapId)
+		end
 		return mapInfo
 	else
 		return nil
@@ -4295,6 +4313,11 @@ function Nx.Map:UpdateWorld()
 		return
 	end
 
+	if not Nx.isMopClassic then
+		if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
+		if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
+	end
+
 	local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
 	
 	for i = 1, numtiles do
@@ -4539,6 +4562,11 @@ function Nx.Map:Update (elapsed)
 		plZX = plZX * 100
 		plZY = plZY * 100
 		PLMapID = MapUtil.GetDisplayableMapForPlayer()
+
+		if not Nx.isMopClassic then
+			if PLMapID == 1414 then PLMapID = 12 end
+			if PLMapID == 1415 then PLMapID = 13 end
+		end
 
 		local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
 
@@ -9617,6 +9645,10 @@ function Nx.Map:GetCurrentMapAreaID()
 
 	local _, instanceType = GetInstanceInfo() 
 	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
+	if not Nx.isMopClassic then
+		if mapID == 1414 then mapID = 12 end
+		if mapID == 1415 then mapID = 13 end
+	end
 	return mapID
 end
 
@@ -9734,6 +9766,10 @@ function Nx.Map:GotoCurrentZone()
 	else
 		self:SetToCurrentZone()
 		local mapId = MapUtil.GetDisplayableMapForPlayer()
+		if not Nx.isMopClassic then
+			if mapId == 1414 then mapId = 12 end
+			if mapId == 1415 then mapId = 13 end
+		end
 		self:CenterMap (mapId)
 	end
 end

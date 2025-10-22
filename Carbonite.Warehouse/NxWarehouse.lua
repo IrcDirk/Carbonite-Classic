@@ -875,7 +875,7 @@ function CarboniteWarehouse:OnInitialize()
 	                Nx.Warehouse.onAuctionHouseUpdate(link, count)
 	end)
 
-	if Nx.isMopClassic then
+	if Nx.isMoPClassic then
 		hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
 				local name, link = C_Item.GetItemInfo(itemID)
 				if not link or not count then

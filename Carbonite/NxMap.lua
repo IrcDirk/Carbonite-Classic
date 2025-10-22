@@ -8644,12 +8644,14 @@ function Nx.Map:IconOnMouseDown (button)
 			else
 				if map.ClickIcon and map.ClickIcon.iconType == "!RSR" and RareScanner then
 					local rspin = this.NXData.UData
-					if not rspin.owningMap then
-						rspin.owningMap = WorldMapFrame
+					if rspin then
+						if not rspin.owningMap then
+							rspin.owningMap = WorldMapFrame
+						end
+						rspin:OnMouseDown(button)
+						Nx.Notes.PrevRSPins = 0
+						Nx.Notes:RareScanner(map.MapId)
 					end
-					rspin:OnMouseDown(button)
-					Nx.Notes.PrevRSPins = 0
-					Nx.Notes:RareScanner(map.MapId)
 				else
 					map.OnMouseDown (map.Frm, button)
 				end
@@ -8774,10 +8776,12 @@ function Nx.Map:IconOnEnter (motion)
 	if this.NXData then
 		if this.NXData.iconType == "!RSR" and RareScanner then
 			local rspin = this.NXData.UData
-			rspin:OnMouseEnter()
-			tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
-			tooltip:SmartAnchorTo(self)
-			this.NxTip = nil
+			if rspin then
+				rspin:OnMouseEnter()
+				tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
+				tooltip:SmartAnchorTo(self)
+				this.NxTip = nil
+			end
 		end
 
 		if this.NXData.iconType == "!QUE" and Questie then

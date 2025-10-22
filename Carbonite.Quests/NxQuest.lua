@@ -63,6 +63,14 @@ if IsClassic then
 	function GetQuestLogPortraitGiver()
 	  return
 	end
+
+	function GetQuestLogRewardSkillPoints()
+	  return 0
+	end
+
+	function GetQuestLogRewardArtifactXP()
+	  return 0
+	end
 end
 
 CQUEST_TEMPLATE_LOG = { questLog = true, chooseItems = nil, contentWidth = 285,
@@ -8420,7 +8428,9 @@ function Nx.Quest:UpdateQuestDetailsTimer()
 			_G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
 		end
 	end
-	MapQuestInfoRewardsFrame.QuestInfoPlayerTitleFrame:Hide()
+	if not Nx.isClassic then
+		MapQuestInfoRewardsFrame.QuestInfoPlayerTitleFrame:Hide()
+	end
 end
 
 -------------------------------------------------------------------------------

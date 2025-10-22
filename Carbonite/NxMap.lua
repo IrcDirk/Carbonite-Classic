@@ -258,8 +258,8 @@ function Nx.Map:SetMapByID(zone)
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
 		if not Nx.isMopClassic then
--			if zone == 12 then zone = 1414 end
--			if zone == 13 then zone = 1415 end
+			if zone == 12 then zone = 1414 end
+			if zone == 13 then zone = 1415 end
 		end
 		WorldMapFrame:SetMapID(zone) 
 	end

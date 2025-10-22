@@ -16331,271 +16331,136 @@ local ModQuests={
 		Quest = [[Paragons of Power: The Freethinker's Armguards|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Bindings|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8054] = {
 		Quest = [[Paragons of Power: The Freethinker's Belt|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Shawl|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8055] = {
 		Quest = [[Paragons of Power: The Freethinker's Breastplate|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Tabard|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8056] = {
 		Quest = [[Paragons of Power: The Augur's Bracers|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Armsplint|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8057] = {
 		Quest = [[Paragons of Power: The Haruspex's Bracers|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Stanchion|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8058] = {
 		Quest = [[Paragons of Power: The Vindicator's Armguards|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Armsplint|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8059] = {
 		Quest = [[Paragons of Power: The Demoniac's Wraps|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Stanchion|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8060] = {
 		Quest = [[Paragons of Power: The Illusionist's Wraps|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Bindings|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8061] = {
 		Quest = [[Paragons of Power: The Confessor's Wraps|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Stanchion|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8062] = {
 		Quest = [[Paragons of Power: The Predator's Bracers|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Bindings|337|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8063] = {
 		Quest = [[Paragons of Power: The Madcap's Bracers|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Armsplint|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8064] = {
 		Quest = [[Paragons of Power: The Haruspex's Belt|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Sash|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8065] = {
 		Quest = [[Paragons of Power: The Haruspex's Tunic|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Tabard|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8066] = {
 		Quest = [[Paragons of Power: The Predator's Belt|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Shawl|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8067] = {
 		Quest = [[Paragons of Power: The Predator's Mantle|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Aegis|337|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8068] = {
 		Quest = [[Paragons of Power: The Illusionist's Mantle|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Shawl|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8069] = {
 		Quest = [[Paragons of Power: The Illusionist's Robes|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Kossack|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8070] = {
 		Quest = [[Paragons of Power: The Confessor's Bindings|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Sash|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8071] = {
 		Quest = [[Paragons of Power: The Confessor's Mantle|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Aegis|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8072] = {
 		Quest = [[Paragons of Power: The Madcap's Mantle|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Girdle|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8073] = {
 		Quest = [[Paragons of Power: The Madcap's Tunic|0|60|58|0|0|0]],
 		Start = "14905|1434|32|14.08|13.72",
 		End = "14905|1434|32|14.08|13.72",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Aegis|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8074] = {
 		Quest = [[Paragons of Power: The Augur's Belt|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Girdle|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8075] = {
 		Quest = [[Paragons of Power: The Augur's Hauberk|0|60|58|0|0|0]],
 		Start = "14904|1434|32|15.30|16.02",
 		End = "14904|1434|32|15.30|16.02",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Tabard|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8076] = {
 		Quest = [[Paragons of Power: The Demoniac's Mantle|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Sash|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8077] = {
 		Quest = [[Paragons of Power: The Demoniac's Robes|0|60|58|0|0|0]],
 		Start = "14903|1434|32|15.34|16.12",
 		End = "14903|1434|32|15.34|16.12",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Kossack|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8078] = {
 		Quest = [[Paragons of Power: The Vindicator's Belt|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Girdle|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8079] = {
 		Quest = [[Paragons of Power: The Vindicator's Breastplate|0|60|58|0|0|0]],
 		Start = "14902|1434|32|15.31|14.43",
 		End = "14902|1434|32|15.31|14.43",
-		Objectives = {
-			[1] = {
-				"Primal Hakkari Kossack|1434|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[8080] = {
 		Quest = [[Arathi Basin Resources!|0|55|50|0|0|0]],

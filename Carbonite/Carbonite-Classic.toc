@@ -21,7 +21,7 @@ NxCom.lua
 NxHUD.lua
 
 Data\classic\data.xml
-Data\classic\MapData.lua
+Data\classic\NxMapData.lua
 
 NxMap.lua
 

@@ -21,7 +21,7 @@ NxCom.lua
 NxHUD.lua
 
 Data\mop\data.xml
-Data\mop\MapData.lua
+Data\mop\NxMapData.lua
 
 NxMap.lua
 

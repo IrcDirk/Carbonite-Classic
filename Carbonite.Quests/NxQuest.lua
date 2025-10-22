@@ -2291,6 +2291,8 @@ function Nx.Quest:Init()
 
 	if WatchFrame then
 		WatchFrame:Hide()
+	elseif QuestWatchFrame then
+		QuestWatchFrame:Hide()
 	end
 	
 	self.Enabled = Nx.qdb.profile.Quest.Enable
@@ -6926,12 +6928,17 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 	end
 
 --	Nx.prtD ("OnQuestUpdate %s Done", event)
-
---	WatchFrame:Hide()
+	if WatchFrame then
+		WatchFrame:Hide()
+	elseif QuestWatchFrame then
+		QuestWatchFrame:Hide()
+	end
 end
 
 if WatchFrame then
 	hooksecurefunc(WatchFrame, 'Show', function (f) f:Hide() end);
+elseif QuestWatchFrame then
+	hooksecurefunc("QuestWatch_Update", function (...) QuestWatchFrame:Hide(); end);
 end
 
 Nx.Quest.TrackedAchievements = {}

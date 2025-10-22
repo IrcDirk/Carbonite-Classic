@@ -353,7 +353,7 @@ L["Time Left"] = "Verbleibende Zeit"
 
 L["Quest Complete '%s'"] = "Quest Abgeschlossen '%s'"
 L["Load quest data by threshold"] = "Lade Questdaten nach Grenzwert"
-L["Loads all the carbonite quest data between player level - level threshold to 100"] = "Lade alle Carbonite-Questdaten zwischen Spielerlevel - Levelgrenze bis 100"
+L["Loads all the carbonite quest data between player level - level threshold to %s"] = "Lade alle Carbonite-Questdaten zwischen Spielerlevel - Levelgrenze bis %s"
 L["Level Threshold"] = "Levelgrenze"
 L["Levels under player level to load quest data on reload"] = "Level unter dem Spielerlevel zum laden der Questdaten nach dem Neuladen"
 

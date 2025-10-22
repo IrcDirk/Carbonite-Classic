@@ -257,14 +257,32 @@ function Nx.Map:SetMapByID(zone)
 		end
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
+		if not Nx.isMoPClassic then
+			if zone == 12 then zone = 1414 end
+			if zone == 13 then zone = 1415 end
+		end
 		WorldMapFrame:SetMapID(zone) 
 	end
 end
 
-
 function Nx.Map:GetMapInfo(mapId)
 	if mapId and mapId ~= 0 then
-		local mapInfo = C_Map.GetMapInfo(mapId)
+		local mapInfo
+		if not Nx.isMoPClassic then
+			if mapId == 12 then mapId = 1414 end
+			if mapId == 13 then mapId = 1415 end
+			mapInfo = C_Map.GetMapInfo(mapId)
+			if mapInfo.mapType == 2 then
+				if mapInfo.mapID == 1414 then mapInfo.mapID = 12 end
+				if mapInfo.mapID == 1415 then mapInfo.mapID = 13 end
+			end
+			if mapInfo.mapType == 3 then
+				if mapInfo.parentMapID == 1414 then mapInfo.parentMapID = 12 end
+				if mapInfo.parentMapID == 1415 then mapInfo.parentMapID = 13 end
+			end
+		else
+			mapInfo = C_Map.GetMapInfo(mapId)
+		end
 		return mapInfo
 	else
 		return nil
@@ -1182,27 +1200,29 @@ function Nx.Map:Create (index)
 		m:AddIconRect ("TestZR", i, 5, i+1, 6, "00ff0080")
 	end
 --]]
-	local questwin = CreateFrame("QuestPOIFrame")
-	m.QuestWin = questwin
-	m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
-	m.QuestWin:Hide()
-	m.QuestWin:SetSize(1002, 668)
-	m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
-	m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
-	m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])
-	m.QuestWin:SetBorderTexture([[Interface\WorldMap\UI-QuestBlob-Outside]])
-	m.QuestWin:SetBorderScalar(0.15)
+	if Nx.BlobsAvailable then
+		local questwin = CreateFrame("QuestPOIFrame")
+		m.QuestWin = questwin
+		m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
+		m.QuestWin:Hide()
+		m.QuestWin:SetSize(1002, 668)
+		m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
+		m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
+		m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])
+		m.QuestWin:SetBorderTexture([[Interface\WorldMap\UI-QuestBlob-Outside]])
+		m.QuestWin:SetBorderScalar(0.15)
 
-	local arch = CreateFrame("ArchaeologyDigSiteFrame")
-	m.Arch = arch
-	m.Arch:SetParent(m.TextScFrm:GetScrollChild())
-	m.Arch:Hide()
-	m.Arch:SetSize(1002, 668)
-	m.Arch:SetFillAlpha(255 * m.ArchAlpha)
-	m.Arch:SetBorderAlpha(255 * m.ArchAlpha)
-	m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
-	m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
-	m.Arch:SetBorderScalar(0.15)
+		local arch = CreateFrame("ArchaeologyDigSiteFrame")
+		m.Arch = arch
+		m.Arch:SetParent(m.TextScFrm:GetScrollChild())
+		m.Arch:Hide()
+		m.Arch:SetSize(1002, 668)
+		m.Arch:SetFillAlpha(255 * m.ArchAlpha)
+		m.Arch:SetBorderAlpha(255 * m.ArchAlpha)
+		m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
+		m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
+		m.Arch:SetBorderScalar(0.15)
+	end
 
 	Nx.Map.RMapId = 9000		-- Safe default
 	Nx.Map.UpdateMapID = 9000
@@ -1576,7 +1596,7 @@ function Nx.Map:UpdateWorldMap()
 			v:SetScale (.001)
 		end
 	end
-	if not InCombatLockdown() then
+	if not InCombatLockdown() and Nx.BlobsAvailable then
 		self.Arch:DrawNone();
 		if Nx.db.char.Map.ShowArchBlobs then
 			local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
@@ -1695,38 +1715,7 @@ function Nx.Map:InitFrames()
 
 	-- Init continent frames
 
-	Nx.ContBlks = {
-		{
-			0,1,1,0,
-			0,1,1,0,
-			0,1,1,0
-		},
-		{
-			0,1,1,0,
-			0,1,1,0,
-			0,1,1,0
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		},
-		{
-			1,1,1,0,
-			1,1,1,0,
-			1,1,1,0
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		}
-	}
+	Nx.ContBlks = self.ContBlks
 
 	self.ContFrms = {}
 
@@ -1754,9 +1743,9 @@ function Nx.Map:InitFrames()
 				t:SetAllPoints (cf)
 				cf.texture = t
 
-				if n == 1 then
+				if n == 1 and not Nx.isClassic then
 					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal_"..i)
-				elseif n == 2 then
+				elseif n == 2 and not Nx.isClassic then
 					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Eas_"..i)
 				else
 					t:SetTexture ("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i)
@@ -3624,17 +3613,21 @@ function Nx.Map:OnEvent (event, ...)
 		if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
 			map.Win.Frm:Hide()
 		end
-		map.Arch:Hide()
-		map.QuestWin:Hide()
-		map.Arch:SetParent(nil)
-		map.QuestWin:SetParent(nil)
-		map.Arch:ClearAllPoints()
-		map.QuestWin:ClearAllPoints()
+		if Nx.BlobsAvailable then
+			map.Arch:Hide()
+			map.QuestWin:Hide()
+			map.Arch:SetParent(nil)
+			map.QuestWin:SetParent(nil)
+			map.Arch:ClearAllPoints()
+			map.QuestWin:ClearAllPoints()
+		end
 	elseif event == "PLAYER_REGEN_ENABLED" then
-		map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
-		map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
-		map.Arch:Show()
-		map.QuestWin:Hide()
+		if Nx.BlobsAvailable then
+			map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
+			map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
+			map.Arch:Show()
+			map.QuestWin:Hide()
+		end
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		-- DETECT EXIT INSTANCE
 		if Nx.Map.NInstMapId then 
@@ -4320,6 +4313,11 @@ function Nx.Map:UpdateWorld()
 		return
 	end
 
+	if not Nx.isMoPClassic then
+		if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
+		if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
+	end
+
 	local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
 	
 	for i = 1, numtiles do
@@ -4564,6 +4562,11 @@ function Nx.Map:Update (elapsed)
 		plZX = plZX * 100
 		plZY = plZY * 100
 		PLMapID = MapUtil.GetDisplayableMapForPlayer()
+
+		if not Nx.isMoPClassic then
+			if PLMapID == 1414 then PLMapID = 12 end
+			if PLMapID == 1415 then PLMapID = 13 end
+		end
 
 		local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
 
@@ -8641,12 +8644,14 @@ function Nx.Map:IconOnMouseDown (button)
 			else
 				if map.ClickIcon and map.ClickIcon.iconType == "!RSR" and RareScanner then
 					local rspin = this.NXData.UData
-					if not rspin.owningMap then
-						rspin.owningMap = WorldMapFrame
+					if rspin then
+						if not rspin.owningMap then
+							rspin.owningMap = WorldMapFrame
+						end
+						rspin:OnMouseDown(button)
+						Nx.Notes.PrevRSPins = 0
+						Nx.Notes:RareScanner(map.MapId)
 					end
-					rspin:OnMouseDown(button)
-					Nx.Notes.PrevRSPins = 0
-					Nx.Notes:RareScanner(map.MapId)
 				else
 					map.OnMouseDown (map.Frm, button)
 				end
@@ -8771,10 +8776,12 @@ function Nx.Map:IconOnEnter (motion)
 	if this.NXData then
 		if this.NXData.iconType == "!RSR" and RareScanner then
 			local rspin = this.NXData.UData
-			rspin:OnMouseEnter()
-			tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
-			tooltip:SmartAnchorTo(self)
-			this.NxTip = nil
+			if rspin then
+				rspin:OnMouseEnter()
+				tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
+				tooltip:SmartAnchorTo(self)
+				this.NxTip = nil
+			end
 		end
 
 		if this.NXData.iconType == "!QUE" and Questie then
@@ -9214,18 +9221,6 @@ function Nx.Map:InitTables()
 
 	--V403
 
-	Nx.Map.MapZones = {
-		[0] = {12,13,1467,113,948,424,0,-1},
-		[1] = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,85,86,88,89,97,103,106,198,199,249,327,338,460,461,462,463,468},
-		[2] = {14,15,17,18,21,22,23,25,26,27,32,36,37,42,47,48,49,50,51,52,56,84,87,90,94,95,110,122,124,179,201,202,204,205,203,210,217,218,224,241,244,245,425,427,465,467,469},
-		[3] = {100,102,104,105,107,108,109,111},
-		[4] = {114,115,116,117,118,119,120,121,123,125,127,170},
-		[5] = {174,194,207,276,407},
-		[6] = {371,376,378,379,388,390,418,422,433,504,507,554},
-		[90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
-		[100] = {},
-	}
-
 	for mi, mapName in pairs (Nx.Map.MapZones[2]) do
 		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
 			if mapName == mapName2 and mi ~= mi2 then			-- Duplicate name? (Gilneas, Ruins of Gilneas (EU))
@@ -9235,7 +9230,9 @@ function Nx.Map:InitTables()
 			end
 		end
 	end
-	self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
+	if not Nx.isClassic then
+		self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
+	end
 
 	--[[for mi, mapName in pairs (Nx.Map.MapZones[2]) do
 		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
@@ -9247,8 +9244,6 @@ function Nx.Map:InitTables()
 		end
 	end]]--
 
-	-- Support maps with multiple level
-	self.ContCnt = 6
 
 --	continentNums = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 90 }
 	for k, v in pairs (worldInfo) do
@@ -9654,6 +9649,10 @@ function Nx.Map:GetCurrentMapAreaID()
 
 	local _, instanceType = GetInstanceInfo() 
 	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
+	if not Nx.isMoPClassic then
+		if mapID == 1414 then mapID = 12 end
+		if mapID == 1415 then mapID = 13 end
+	end
 	return mapID
 end
 
@@ -9771,6 +9770,10 @@ function Nx.Map:GotoCurrentZone()
 	else
 		self:SetToCurrentZone()
 		local mapId = MapUtil.GetDisplayableMapForPlayer()
+		if not Nx.isMoPClassic then
+			if mapId == 1414 then mapId = 12 end
+			if mapId == 1415 then mapId = 13 end
+		end
 		self:CenterMap (mapId)
 	end
 end

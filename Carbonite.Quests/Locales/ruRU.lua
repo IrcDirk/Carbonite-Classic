@@ -353,7 +353,7 @@ L["Time Left"] = "Осталось времени"
 
 L["Quest Complete '%s'"] = "Задание завершено '%s'"
 L["Load quest data by threshold"] = "Порог загрузки заданий"
-L["Loads all the carbonite quest data between player level - level threshold to 70"] = "Загрузка всех заданий от уровня игрока до указанного порога"
+L["Loads all the carbonite quest data between player level - level threshold to %s"] = "Загрузка всех заданий от уровня игрока до указанного порога в %s"
 L["Level Threshold"] = "Порог уровней"
 L["Levels above player level to load quest data on reload"] = "Уровней для загрузки заданий выше уровня игрока при перезагрузке"
 

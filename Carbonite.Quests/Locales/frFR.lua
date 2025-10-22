@@ -352,7 +352,7 @@ L["Time Left"] = true
 
 L["Quest Complete '%s'"] = "Qu\195\170te Termin\195\169e '%s'"
 L["Load quest data by threshold"] = "Charger donn\195\169e de Qu\195\170te par seuil de niveau"
-L["Loads all the carbonite quest data between player level - level threshold to 100"] = "Charger toutes les donn\195\169es Carbonite pour les Qu\195\170tes au milieu du niveau du joueur - Seuil de niveau \195\160 100"
+L["Loads all the carbonite quest data between player level - level threshold to %s"] = "Charger toutes les donn\195\169es Carbonite pour les Qu\195\170tes au milieu du niveau du joueur - Seuil de niveau \195\160 %s"
 L["Level Threshold"] = "Seuil de niveau"
 L["Levels under player level to load quest data on reload"] = "Niveaux sous le niveau du joueur \195\168 charger pour les donn\195\169es de Qu\195\170te au rechargement"
 

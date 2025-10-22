@@ -4875,11 +4875,6 @@ local ModQuests={
 	[4362] = {
 		Quest = [[The Fate of the Kingdom|1|59|50|4363|0|0]],
 		Start = "2784|1455|32|39.09|56.20",
-		Objectives = {
-			[1] = {
-				"Emperor Dagran Thaurissan|1427|32|0|0|5.01|3.34"
-			},
-		},
 	},
 	[4363] = {
 		Quest = [[The Princess's Surprise|1|59|50|0|0|0]],

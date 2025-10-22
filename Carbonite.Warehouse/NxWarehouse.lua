@@ -875,13 +875,15 @@ function CarboniteWarehouse:OnInitialize()
 	                Nx.Warehouse.onAuctionHouseUpdate(link, count)
 	end)
 
-	hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
-			local name, link = C_Item.GetItemInfo(itemID)
-			if not link or not count then
-				return
-			end
-			Nx.Warehouse.onAuctionHouseUpdate(link, count)
-	end)
+	if Nx.isMopClassic then
+		hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
+				local name, link = C_Item.GetItemInfo(itemID)
+				if not link or not count then
+					return
+				end
+				Nx.Warehouse.onAuctionHouseUpdate(link, count)
+		end)
+	end
 
 	hooksecurefunc("CancelAuction", function(index)
 			local link = GetAuctionItemLink("owner", index)
@@ -1833,7 +1835,7 @@ function Nx.Warehouse:Update()
 						list:ItemSet (2, format (L[" Durability: %s%d%%, lowest %d%%"], col, ch["DurPercent"], ch["DurLowPercent"]))
 					end
 
-					if lvl < MAX_PLAYER_LEVEL then
+					if lvl < Nx.MaxPlayerLevel then
 						local rest = ch["LXPRest"] / ch["LXPMax"] * 100		-- Sometimes over 150%?
 						local xp = ch["XP"] - ch["LXP"]
 						list:ItemAdd (cnum)
@@ -1870,7 +1872,7 @@ function Nx.Warehouse:Update()
 					end
 				end
 
-				if lvl < MAX_PLAYER_LEVEL then
+				if lvl < Nx.MaxPlayerLevel then
 					if ch["XP"] then
 
 						local rest = ch["LXPRest"] / ch["LXPMax"] * 100

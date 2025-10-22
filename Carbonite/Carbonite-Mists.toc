@@ -1,0 +1,32 @@
+## Interface: 50501
+## Title: Carbonite Maps - Classic @project-version@
+## Version: @project-version@
+## Author: No one
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: CarbData
+## SavedVariablesPerCharacter: CarbMigr
+## X-Curse-Project-ID: 342147
+## X-WoWI-ID: 25328
+
+Libs\libs.xml
+Locales\Locales.xml
+Taintless.xml
+Carbonite.lua
+
+NxUI.lua
+NxOptions.lua
+NxCom.lua
+NxHUD.lua
+
+Data\mop\data.xml
+Data\mop\MapData.lua
+
+NxMap.lua
+
+Data\mop\NxMapGuide.lua
+
+NxTravel.lua
+
+Carbonite.xml

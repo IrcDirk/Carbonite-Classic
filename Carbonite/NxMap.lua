@@ -1182,27 +1182,29 @@ function Nx.Map:Create (index)
 		m:AddIconRect ("TestZR", i, 5, i+1, 6, "00ff0080")
 	end
 --]]
-	local questwin = CreateFrame("QuestPOIFrame")
-	m.QuestWin = questwin
-	m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
-	m.QuestWin:Hide()
-	m.QuestWin:SetSize(1002, 668)
-	m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
-	m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
-	m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])
-	m.QuestWin:SetBorderTexture([[Interface\WorldMap\UI-QuestBlob-Outside]])
-	m.QuestWin:SetBorderScalar(0.15)
+	if Nx.BlobsAvailable then
+		local questwin = CreateFrame("QuestPOIFrame")
+		m.QuestWin = questwin
+		m.QuestWin:SetParent(m.TextScFrm:GetScrollChild())
+		m.QuestWin:Hide()
+		m.QuestWin:SetSize(1002, 668)
+		m.QuestWin:SetFillAlpha(255 * m.QuestAlpha)
+		m.QuestWin:SetBorderAlpha(255 * m.QuestAlpha)
+		m.QuestWin:SetFillTexture([[Interface\WorldMap\UI-QuestBlob-Inside]])
+		m.QuestWin:SetBorderTexture([[Interface\WorldMap\UI-QuestBlob-Outside]])
+		m.QuestWin:SetBorderScalar(0.15)
 
-	local arch = CreateFrame("ArchaeologyDigSiteFrame")
-	m.Arch = arch
-	m.Arch:SetParent(m.TextScFrm:GetScrollChild())
-	m.Arch:Hide()
-	m.Arch:SetSize(1002, 668)
-	m.Arch:SetFillAlpha(255 * m.ArchAlpha)
-	m.Arch:SetBorderAlpha(255 * m.ArchAlpha)
-	m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
-	m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
-	m.Arch:SetBorderScalar(0.15)
+		local arch = CreateFrame("ArchaeologyDigSiteFrame")
+		m.Arch = arch
+		m.Arch:SetParent(m.TextScFrm:GetScrollChild())
+		m.Arch:Hide()
+		m.Arch:SetSize(1002, 668)
+		m.Arch:SetFillAlpha(255 * m.ArchAlpha)
+		m.Arch:SetBorderAlpha(255 * m.ArchAlpha)
+		m.Arch:SetFillTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Inside]] )
+		m.Arch:SetBorderTexture( [[Interface\WorldMap\UI-ArchaeologyBlob-Outside]] )
+		m.Arch:SetBorderScalar(0.15)
+	end
 
 	Nx.Map.RMapId = 9000		-- Safe default
 	Nx.Map.UpdateMapID = 9000
@@ -1576,7 +1578,7 @@ function Nx.Map:UpdateWorldMap()
 			v:SetScale (.001)
 		end
 	end
-	if not InCombatLockdown() then
+	if not InCombatLockdown() and Nx.BlobsAvailable then
 		self.Arch:DrawNone();
 		if Nx.db.char.Map.ShowArchBlobs then
 			local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
@@ -1695,38 +1697,7 @@ function Nx.Map:InitFrames()
 
 	-- Init continent frames
 
-	Nx.ContBlks = {
-		{
-			0,1,1,0,
-			0,1,1,0,
-			0,1,1,0
-		},
-		{
-			0,1,1,0,
-			0,1,1,0,
-			0,1,1,0
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		},
-		{
-			1,1,1,0,
-			1,1,1,0,
-			1,1,1,0
-		},
-		{
-			1,1,1,1,
-			1,1,1,1,
-			1,1,1,1
-		}
-	}
+	Nx.ContBlks = self.ContBlks
 
 	self.ContFrms = {}
 
@@ -3624,17 +3595,21 @@ function Nx.Map:OnEvent (event, ...)
 		if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
 			map.Win.Frm:Hide()
 		end
-		map.Arch:Hide()
-		map.QuestWin:Hide()
-		map.Arch:SetParent(nil)
-		map.QuestWin:SetParent(nil)
-		map.Arch:ClearAllPoints()
-		map.QuestWin:ClearAllPoints()
+		if Nx.BlobsAvailable then
+			map.Arch:Hide()
+			map.QuestWin:Hide()
+			map.Arch:SetParent(nil)
+			map.QuestWin:SetParent(nil)
+			map.Arch:ClearAllPoints()
+			map.QuestWin:ClearAllPoints()
+		end
 	elseif event == "PLAYER_REGEN_ENABLED" then
-		map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
-		map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
-		map.Arch:Show()
-		map.QuestWin:Hide()
+		if Nx.BlobsAvailable then
+			map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
+			map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
+			map.Arch:Show()
+			map.QuestWin:Hide()
+		end
 	elseif event == "ZONE_CHANGED_NEW_AREA" then
 		-- DETECT EXIT INSTANCE
 		if Nx.Map.NInstMapId then 
@@ -9214,18 +9189,6 @@ function Nx.Map:InitTables()
 
 	--V403
 
-	Nx.Map.MapZones = {
-		[0] = {12,13,1467,113,948,424,0,-1},
-		[1] = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,85,86,88,89,97,103,106,198,199,249,327,338,460,461,462,463,468},
-		[2] = {14,15,17,18,21,22,23,25,26,27,32,36,37,42,47,48,49,50,51,52,56,84,87,90,94,95,110,122,124,179,201,202,204,205,203,210,217,218,224,241,244,245,425,427,465,467,469},
-		[3] = {100,102,104,105,107,108,109,111},
-		[4] = {114,115,116,117,118,119,120,121,123,125,127,170},
-		[5] = {174,194,207,276,407},
-		[6] = {371,376,378,379,388,390,418,422,433,504,507,554},
-		[90] = {91,92,93,112,128,169,206,275,397,417,423,519,623},		 
-		[100] = {},
-	}
-
 	for mi, mapName in pairs (Nx.Map.MapZones[2]) do
 		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
 			if mapName == mapName2 and mi ~= mi2 then			-- Duplicate name? (Gilneas, Ruins of Gilneas (EU))
@@ -9235,7 +9198,9 @@ function Nx.Map:InitTables()
 			end
 		end
 	end
-	self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
+	if not Nx.isClassic then
+		self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
+	end
 
 	--[[for mi, mapName in pairs (Nx.Map.MapZones[2]) do
 		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
@@ -9247,8 +9212,6 @@ function Nx.Map:InitTables()
 		end
 	end]]--
 
-	-- Support maps with multiple level
-	self.ContCnt = 6
 
 --	continentNums = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 90 }
 	for k, v in pairs (worldInfo) do

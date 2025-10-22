@@ -352,7 +352,7 @@ L["Time Left"] = "剩余时间"
 
 L["Quest Complete '%s'"] = "任务完成 '%s'"
 L["Load quest data by threshold"] = "按玩家等级区间载入任务数据"
-L["Loads all the carbonite quest data between player level - level threshold to 100"] = "载入玩家当前等级至100级的任务数据"
+L["Loads all the carbonite quest data between player level - level threshold to %s"] = "载入玩家当前等级至100级的任务数据  %s"
 L["Level Threshold"] = "等级阈值"
 L["Levels under player level to load quest data on reload"] = "重载后将会加载的低于玩家等级的任务数据"
 

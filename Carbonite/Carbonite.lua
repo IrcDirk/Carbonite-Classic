@@ -28,7 +28,7 @@ NXTITLEFULL = L["Carbonite"]
 Nx.VERMAJOR			= 113
 Nx.VERMINOR			= .0				-- Not 0 is a test version
 Nx.BUILD			= "436eed1"
-if Nx.BUILD:find("Format:%h", 1, true) then Nx.BUILD = string.sub("@project-revision@", 0, 7) end
+if Nx.BUILD:find("Format:%h", 1, true) then Nx.BUILD = string.sub("581", 0, 7) end
 if Nx.BUILD:find("project-revision", 1, true) then Nx.BUILD = "0" end
 
 Nx.VERSION			= Nx.VERMAJOR + Nx.VERMINOR / 100
@@ -61,6 +61,14 @@ BINDING_NAME_NxMAPTOGHERB	= L["NxMAPTOGHERB"]
 BINDING_NAME_NxMAPTOGMINE	= L["NxMAPTOGMINE"]
 BINDING_NAME_NxTOGGLEGUIDE	= L["NxTOGGLEGUIDE"]
 BINDING_NAME_NxMAPSKIPTARGET	= L["NxMAPSKIPTARGET"]
+
+Nx.isClassic      = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+Nx.isTBCClassic   = (WOW_PROJECT_ID == WOW_PROJECT_TBC_CLASSIC)
+Nx.isWotlkClassic = (WOW_PROJECT_ID == WOW_PROJECT_WOTLK_CLASSIC)
+Nx.isCataClassic  = (WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC)
+Nx.isMoPClassic   = (WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC)
+Nx.BlobsAvailable = select(4, GetBuildInfo()) > 39999
+Nx.MaxPlayerLevel = GetMaxLevelForExpansionLevel(LE_EXPANSION_LEVEL_CURRENT)
 
 Nx.Tick = 0
 

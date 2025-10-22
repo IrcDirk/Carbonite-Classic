@@ -103,7 +103,7 @@ local defaults = {
 			HCheckCompleted = false,
 			maxLoadLevel = false,
 			LevelsToLoad = 10,
-			MapQuestGiversHighLevel = 90,
+			MapQuestGiversHighLevel = Nx.MaxPlayerLevel,
 			MapQuestGiversLowLevel = 1,
 			MapShowWatchAreas = true,
 			MapWatchAreaAlpha = "1|1|1|.4",
@@ -147,12 +147,12 @@ local defaults = {
 			Load4 = true,	-- 31 - 40
 			Load5 = true,	-- 41 - 50
 			Load6 = true,	-- 51 - 60
-			Load7 = true,	-- 61 - 70
-			Load8 = true,	-- 71 - 80
-			Load9 = true,	-- 81 - 85
-			Load10 = true,	-- 86 - 90
-			Load11 = true,	-- 91 - 100
-			Load12 = true,  -- 101 - 110
+			Load7 = (Nx.MaxPlayerLevel > 60),   -- 61 - 70
+			Load8 = (Nx.MaxPlayerLevel > 70),   -- 71 - 80
+			Load9 = (Nx.MaxPlayerLevel > 80),   -- 81 - 85
+			Load10 = (Nx.MaxPlayerLevel > 85),  -- 86 - 90
+			Load11 = (Nx.MaxPlayerLevel > 90), -- 91 - 100
+			Load12 = (Nx.MaxPlayerLevel > 100), -- 101 - 110
 			ScrollIMG = true,
 		},
 		QuestWatch = {
@@ -1708,7 +1708,7 @@ local function QuestOptions ()
 							type = "toggle",
 							width = "full",
 							name = L["Load quest data by threshold"],
-							desc = L["Loads all the carbonite quest data between player level - level threshold to 90"],
+							desc = format(L["Loads all the carbonite quest data between player level - level threshold to %s"], Nx.MaxPlayerLevel),
 							get = function()
 								return Nx.qdb.profile.Quest.maxLoadLevel
 							end,
@@ -1723,7 +1723,7 @@ local function QuestOptions ()
 							name = L["Level Threshold"],
 							desc = L["Levels above player level to load quest data on reload"],
 							min = 1,
-							max = 90,
+							max = Nx.MaxPlayerLevel,
 							step = 1,
 							bigStep = 1,
 							get = function()
@@ -1920,6 +1920,18 @@ local function QuestOptions ()
 		}
 	end
 	Nx.Opts:AddToProfileMenu(L["Quest"],3,Nx.qdb)
+	if Nx.MaxPlayerLevel < 90 then
+		questoptions.args.database.args.q10 = nil
+	end
+	if Nx.MaxPlayerLevel < 85 then
+		questoptions.args.database.args.q9 = nil
+	end
+	if Nx.MaxPlayerLevel < 80 then
+		questoptions.args.database.args.q8 = nil
+	end
+	if Nx.MaxPlayerLevel < 70 then
+		questoptions.args.database.args.q7 = nil
+	end
 	return questoptions
 end
 
@@ -2234,7 +2246,7 @@ function Nx.Quest:OptsReset()
 
 	local qopts = Nx.Quest:GetQuestOpts()
 
-	Nx.qdb.profile.Quest.MapQuestGiversHighLevel = 90
+	Nx.qdb.profile.Quest.MapQuestGiversHighLevel = Nx.MaxPlayerLevel
 	
 	qopts.NXShowHeaders = true
 	qopts.NXSortWatchMode = 1
@@ -2276,8 +2288,10 @@ end
 ---------------------------------------------------------------------------------------
 
 function Nx.Quest:Init()
-	
-	WatchFrame:Hide()
+
+	if WatchFrame then
+		WatchFrame:Hide()
+	end
 	
 	self.Enabled = Nx.qdb.profile.Quest.Enable
 	if not self.Enabled then
@@ -3120,37 +3134,45 @@ function Nx.Quest:LoadQuestDB()
 	else
 		Nx.ModQuests:Clear6()
 	end
-	if Nx.qdb.profile.Quest.Load7 then
-		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load7(); numQLoad = numQLoad - 1; end)
-		timeDelay = timeDelay + 1
-		numQLoad = numQLoad + 1
-		maxQLoad = maxQLoad + 1
-	else
-		Nx.ModQuests:Clear7()
+	if Nx.MaxPlayerLevel > 60 then
+		if Nx.qdb.profile.Quest.Load7 then
+			C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load7(); numQLoad = numQLoad - 1; end)
+			timeDelay = timeDelay + 1
+			numQLoad = numQLoad + 1
+			maxQLoad = maxQLoad + 1
+		else
+			Nx.ModQuests:Clear7()
+		end
 	end
-	if Nx.qdb.profile.Quest.Load8 then
-		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load8(); numQLoad = numQLoad - 1; end)
-		timeDelay = timeDelay + 1
-		numQLoad = numQLoad + 1
-		maxQLoad = maxQLoad + 1
-	else
-		Nx.ModQuests:Clear8()
+	if Nx.MaxPlayerLevel > 70 then
+		if Nx.qdb.profile.Quest.Load8 then
+			C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load8(); numQLoad = numQLoad - 1; end)
+			timeDelay = timeDelay + 1
+			numQLoad = numQLoad + 1
+			maxQLoad = maxQLoad + 1
+		else
+			Nx.ModQuests:Clear8()
+		end
 	end
-	if Nx.qdb.profile.Quest.Load9 then
-		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
-		timeDelay = timeDelay + 1
-		numQLoad = numQLoad + 1
-		maxQLoad = maxQLoad + 1
-	else
-		Nx.ModQuests:Clear9()
+	if Nx.MaxPlayerLevel > 80 then
+		if Nx.qdb.profile.Quest.Load9 then
+			C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
+			timeDelay = timeDelay + 1
+			numQLoad = numQLoad + 1
+			maxQLoad = maxQLoad + 1
+		else
+			Nx.ModQuests:Clear9()
+		end
 	end
-	if Nx.qdb.profile.Quest.Load10 then
-		C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load10(); numQLoad = numQLoad - 1; end)
-		timeDelay = timeDelay + 1
-		numQLoad = numQLoad + 1
-		maxQLoad = maxQLoad + 1
-	else
-		Nx.ModQuests:Clear10()
+	if Nx.MaxPlayerLevel > 85 then
+		if Nx.qdb.profile.Quest.Load10 then
+			C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load10(); numQLoad = numQLoad - 1; end)
+			timeDelay = timeDelay + 1
+			numQLoad = numQLoad + 1
+			maxQLoad = maxQLoad + 1
+		else
+			Nx.ModQuests:Clear10()
+		end
 	end
 	C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 	
@@ -6908,9 +6930,9 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
 --	WatchFrame:Hide()
 end
 
---hooksecurefunc("QuestWatch_Update", function (...) WatchFrame:Hide(); end);
---hooksecurefunc("WatchFrame_Update", function (...) hooksecurefunc(WatchFrame, 'Hide', fixedSetPoint) pcall(WatchFrame:Hide(), nil); end);
-hooksecurefunc(WatchFrame, 'Show', function (f) f:Hide() end);
+if WatchFrame then
+	hooksecurefunc(WatchFrame, 'Show', function (f) f:Hide() end);
+end
 
 Nx.Quest.TrackedAchievements = {}
 function CarboniteQuest:OnTrackedAchievementsUpdate (event, ...)
@@ -7242,7 +7264,7 @@ function Nx.Quest.List:Update()
 		local mapId = Map:GetCurrentMapId()
 
 		local minLevel = UnitLevel ("player") - GetQuestGreenRange()
-		local maxLevel = showHighLevel and MAX_PLAYER_LEVEL or UnitLevel ("player") + 6
+		local maxLevel = showHighLevel and Nx.MaxPlayerLevel or UnitLevel ("player") + 6
 
 		-- Divider
 
@@ -7370,7 +7392,7 @@ function Nx.Quest.List:Update()
 		local mapId = Map:GetCurrentMapId()
 
 		local minLevel = UnitLevel ("player") - GetQuestGreenRange()
-		local maxLevel = showHighLevel and 90 or UnitLevel ("player") + 6
+		local maxLevel = showHighLevel and Nx.MaxPlayerLevel or UnitLevel ("player") + 6
 
 		-- Divider
 
@@ -7623,7 +7645,7 @@ function Nx.Quest.List:Update()
 		list:ItemSet (2, format ("|cffc0c0c0--- %s (%d) ---", str, dbTitleNum), dbTitleIndex)
 
 		local low = max (1, showLowLevel and 1 or minLevel)
-		local high = min (MAX_PLAYER_LEVEL, maxLevel)
+		local high = min (Nx.MaxPlayerLevel, maxLevel)
 		list:ItemSet (2, format (L["|cffc0c0c0--- Levels %d to %d ---"], low, high), dbTitleIndex + 1)
 	end
 
@@ -10469,7 +10491,7 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
 	if not InCombatLockdown() then
 		local cur = self.QIds[qId]
 		if cur then
-			if not cur.Complete then
+			if not cur.Complete and Nx.isMopClassic then
 				QMap.QuestWin:DrawNone();
 				if Nx.db.char.Map.ShowQuestBlobs and Nx.Quests[-qId] then
 					QMap.QuestWin:DrawBlob(qId,true)

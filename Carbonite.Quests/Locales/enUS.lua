@@ -348,7 +348,7 @@ L["Time Left"] = true
 
 L["Quest Complete '%s'"] = true
 L["Load quest data by threshold"] = true
-L["Loads all the carbonite quest data between player level - level threshold to 100"] = true
+L["Loads all the carbonite quest data between player level - level threshold to %s"] = true
 L["Level Threshold"] = true
 L["Levels under player level to load quest data on reload"] = true
 

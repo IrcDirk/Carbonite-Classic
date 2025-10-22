@@ -257,7 +257,7 @@ function Nx.Map:SetMapByID(zone)
 		end
 	end]]--
 	if not WorldMapFrame:IsShown() and WorldMapFrame.ScrollContainer.zoomLevels then 
-		if not Nx.isMopClassic then
+		if not Nx.isMoPClassic then
 			if zone == 12 then zone = 1414 end
 			if zone == 13 then zone = 1415 end
 		end
@@ -268,7 +268,7 @@ end
 function Nx.Map:GetMapInfo(mapId)
 	if mapId and mapId ~= 0 then
 		local mapInfo
-		if not Nx.isMopClassic then
+		if not Nx.isMoPClassic then
 			if mapId == 12 then mapId = 1414 end
 			if mapId == 13 then mapId = 1415 end
 			mapInfo = C_Map.GetMapInfo(mapId)
@@ -4313,7 +4313,7 @@ function Nx.Map:UpdateWorld()
 		return
 	end
 
-	if not Nx.isMopClassic then
+	if not Nx.isMoPClassic then
 		if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
 		if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
 	end
@@ -4563,7 +4563,7 @@ function Nx.Map:Update (elapsed)
 		plZY = plZY * 100
 		PLMapID = MapUtil.GetDisplayableMapForPlayer()
 
-		if not Nx.isMopClassic then
+		if not Nx.isMoPClassic then
 			if PLMapID == 1414 then PLMapID = 12 end
 			if PLMapID == 1415 then PLMapID = 13 end
 		end
@@ -9645,7 +9645,7 @@ function Nx.Map:GetCurrentMapAreaID()
 
 	local _, instanceType = GetInstanceInfo() 
 	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
-	if not Nx.isMopClassic then
+	if not Nx.isMoPClassic then
 		if mapID == 1414 then mapID = 12 end
 		if mapID == 1415 then mapID = 13 end
 	end
@@ -9766,7 +9766,7 @@ function Nx.Map:GotoCurrentZone()
 	else
 		self:SetToCurrentZone()
 		local mapId = MapUtil.GetDisplayableMapForPlayer()
-		if not Nx.isMopClassic then
+		if not Nx.isMoPClassic then
 			if mapId == 1414 then mapId = 12 end
 			if mapId == 1415 then mapId = 13 end
 		end

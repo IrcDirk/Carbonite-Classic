@@ -1,4 +1,4 @@
-## Interface: 50500
+## Interface: 50501, 11508
 ## Title: Carbonite Maps - Classic
 ## Version: @project-version@
 ## Notes: Released Under GPL

@@ -299,6 +299,7 @@ Nx.Zones = {
     [554] = L["Timeless Isle"] .. "|90|90|2|6||",
     [556] = L["Siege of Orgrimmar"] .. "|90|90|3|5|390|73.9|42.2|1025",
     [571] = L["Celestial Tournament"] .. "|90|90|3|5|554|25|25|3",
+    [2104] = L["Wintergrasp"] .. "|0|0|3|4||",
 }
 
 

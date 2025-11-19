@@ -134,6 +134,11 @@ NXMapOptsMapsDefault = 	{
 		NXInstanceMaps = true,
 		NXWorldShow = false,
 	},
+	[2104] = {	-- Wintergrasp
+		NXPlyrFollow = true,
+		NXInstanceMaps = true,
+		NXWorldShow = false,
+	},
 }
 
 --------
@@ -659,6 +664,7 @@ function Nx.Map:Create (index)
 	win:InitLayoutData ("206", -.0001, -.4, -.19, -.3, 1)
 	win:InitLayoutData ("92", -.0001, -.4, -.19, -.3, 1)
 	win:InitLayoutData ("623", -.0001, -.4, -.19, -.3, 1)
+	win:InitLayoutData ("2104", -.0001, -.4, -.19, -.3, 1)
 
 	win:SetUser (m, self.OnWin)
 	win.UserUpdateFade = m.WinUpdateFade
@@ -4833,10 +4839,20 @@ function Nx.Map:Update (elapsed)
 		end
 	end
 
-	-- Battlefield Vehicles
+	-- map BG Flags
 
-	local vtex = _G["VECHICLE_DRAW_INFO"]
-	
+	if GetNumBattlefieldFlagPositions() > 0 then
+		for fpn = 1, GetNumBattlefieldFlagPositions() do
+			local fpX, fpY, flagIcon = GetBattlefieldFlagPosition(fpn)
+			local ficon = self:GetIcon(3)
+			fpX = fpX * 100
+			fpY = fpY * 100
+			fpX, fpY = self:GetWorldPos (self.MapId, fpX, fpY)
+			self:ClipFrameWChop(ficon, fpX, fpY, 32 * self.ScaleDraw, 32 * self.ScaleDraw)
+			ficon.texture:SetTexture("Interface\\WorldStateFrame\\" .. flagIcon)
+		end
+	end
+
 	-- POI's (Points of interest)
 
 	local oldLev = self.Level
@@ -4849,22 +4865,33 @@ function Nx.Map:Update (elapsed)
 	local type, name, description, txIndex, pX, pY, atlasIcon
 	local txX1, txX2, txY1, txY2
 	
-	--local poiNum = 0 --GetNumMapLandmarks()
 	if not IsAltKeyDown() then
-		--for i = 1, poiNum do
 		local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
 		local pPOIs = {}--C_PetInfo.GetPetTamersForMap(rid)
 		local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
-		
-		local zPOIs = Nx.ArrayConcat(tPOIs, pPOIs, dPOIs)
+		local aPOIs = {}
+		local awinfo = Map.MapWorldInfo[rid]
+		if not awinfo.City then
+			for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
+				aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
+			end
+		end
+		local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
+
+		local zPOIs = Nx.ArrayConcat(tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
 		
 		for i, zPOI in ipairs(zPOIs) do
-			-- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (n)
 			local type = zPOI._type
 			local name = zPOI.name
 			local txIndex = zPOI.textureIndex
-			local pX = zPOI.position.x
-			local pY = zPOI.position.y
+			local pX, pY
+			if zPOI.position then
+				pX = zPOI.position.x
+				pY = zPOI.position.y
+			else
+				pX = zPOI.x
+				pY = zPOI.y
+			end 
 			local atlasIcon = zPOI.atlasName
 			local desc = zPOI.description
 			local faction = zPOI.faction
@@ -5025,7 +5052,8 @@ function Nx.Map:Update (elapsed)
 						end
 						f.texture:SetAtlas(atlasIcon)
 					else
-						self:ClipFrameZ (f, pX, pY, 16, 16, 0)
+						pX, pY = self:GetWorldPos(self.MapId, pX, pY)
+						self:ClipFrameWChop(f, pX, pY, 16 * self.ScaleDraw, 16 * self.ScaleDraw)
 						if atlasIcon then
 							f.texture:SetAtlas(atlasIcon)
 						else
@@ -9221,31 +9249,10 @@ function Nx.Map:InitTables()
 
 	--V403
 
-	for mi, mapName in pairs (Nx.Map.MapZones[2]) do
-		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
-			if mapName == mapName2 and mi ~= mi2 then			-- Duplicate name? (Gilneas, Ruins of Gilneas (EU))
-				Nx.Map.MapZones[2][mi2] = mapName .. "2"			-- Hack it!
---				Nx.prt ("Dup zone name %s", mapName)
-				break
-			end
-		end
-	end
 	if not Nx.isClassic then
 		self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
 	end
 
-	--[[for mi, mapName in pairs (Nx.Map.MapZones[2]) do
-		for mi2, mapName2 in pairs (Nx.Map.MapZones[2]) do
-			if mapName == mapName2 and mi ~= mi2 then			-- Duplicate name? (Gilneas, Ruins of Gilneas (EU))
-				Nx.Map.MapZones[2][mi2] = mapName .. "2"			-- Hack it!
---				Nx.prt ("Dup zone name %s", mapName)
-				break
-			end
-		end
-	end]]--
-
-
---	continentNums = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 90 }
 	for k, v in pairs (worldInfo) do
 		local winfo = worldInfo[k]
 		if Nx.PlFactionNum == 0 and winfo.QAchievementIdA then
@@ -10820,17 +10827,16 @@ function Nx.Map.Dock:MinimapOwnInit()
 
 			local reg = { f:GetRegions() }
 			for k, v in ipairs (reg) do
-
-				if v:IsObjectType ("Texture") then
-					v:SetSnapToPixelGrid(false)
-					v:SetTexelSnappingBias(0)
-					local tname = v:GetTexture()
-					if tname and texnames[tname] then
---					if tname and strfind (tname, "CT") then
---						Nx.prt ("Tex %s", tname)
-
-						found[f] = 1
-						break
+				if v and v.GetObjectType then
+					local okType, objType = pcall(v.GetObjectType, v)
+					if okType and objType == "Texture" then
+						v:SetSnapToPixelGrid(false)
+						v:SetTexelSnappingBias(0)
+						local tname = v:GetTexture()
+						if tname and texnames[tname] then
+							found[f] = 1
+							break
+						end
 					end
 				end
 			end

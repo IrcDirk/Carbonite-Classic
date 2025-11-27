@@ -623,15 +623,20 @@ function Nx.Map:Create (index)
 	m.Data = {}
 	m.IconFrms = {}
 	m.IconFrms.Next = 1
+	m.IconFrms.Used = 0
 	m.IconNIFrms = {}					-- Non interactive
 	m.IconNIFrms.Next = 1
+	m.IconNIFrms.Used = 0
 	m.IconStaticFrms = {}
 	m.IconStaticFrms.Next = 1
+	m.IconStaticFrms.Used = 0
 	m.IconWQFrms = {}
 	m.IconWQFrms.Next = 1
+	m.IconWQFrms.Used = 0
 	
 	m.TextFStrs = {}
 	m.TextFStrs.Next = 1
+	m.TextFStrs.Used = 0
 
 	m.MMGathererUpdateDelay = 1
 
@@ -1236,6 +1241,9 @@ function Nx.Map:Create (index)
 	m:SwitchOptions (-1, true)
 
 	m:UpdateAll()
+	
+	-- Pre-allocate icon frames to avoid lag during gameplay
+	m:PreAllocateIcons(300)
 
 	m.Guide = Map.Guide:Create (m)
 
@@ -1716,6 +1724,8 @@ function Nx.Map:InitFrames()
 
 		local t = tf:CreateTexture()
 		t:SetAllPoints (tf)
+		t:SetSnapToPixelGrid(false)
+		t:SetTexelSnappingBias(0)
 		tf.texture = t
 	end
 
@@ -3878,6 +3888,28 @@ end
 --------
 -- Update event handler
 local ttl = 0
+
+-- Table pools to avoid garbage collection (reused every frame)
+local POI_Pool = {
+	pPOIs = {},
+	aPOIs = {},
+	zPOIs = {},
+}
+
+-- Per-frame cached values (set at start of Update)
+local FrameCache = {
+	time = 0,
+	isInstance = false,
+	isBG = false,
+	mapId = 0,
+	dungeonLevel = 0,
+}
+
+-- Helper function to check if icon is visible at current dungeon level
+local function IsVisibleAtLevel(iconLevel, dungeonLevel)
+	return (not iconLevel and dungeonLevel == 0) or (iconLevel and iconLevel == dungeonLevel)
+end
+
 function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 
 	ttl = ttl + elapsed
@@ -3916,7 +3948,10 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 	
 	local Nx = Nx
 
-	local profileTime = GetTime()
+	-- Cache time once per frame (used throughout update)
+	local frameTime = GetTime()
+	FrameCache.time = frameTime
+	local profileTime = frameTime
 
 	local map = this.NxMap
 	local gopts = map.GOpts
@@ -3924,7 +3959,13 @@ function Nx.Map.OnUpdate (this, elapsed)	--V4 this
 	map.Tick = map.Tick + 1
 
 	map.EffScale = this:GetEffectiveScale()
-	map.Size1 = Nx.db.profile.Map.LineThick * .75 / map.EffScale
+	
+	-- Cache frequently accessed database values
+	local dbProfile = Nx.db.profile
+	local dbChar = Nx.db.char
+	local mapSettings = dbProfile.Map
+	
+	map.Size1 = mapSettings.LineThick * .75 / map.EffScale
 
 	Nx.Map:UpdateOptions (map.MapIndex)
 
@@ -4328,8 +4369,7 @@ function Nx.Map:UpdateWorld()
 	
 	for i = 1, numtiles do
 		self.TileFrms[i].texture:SetTexture (texturesIDs[i])
-		self.TileFrms[i].texture:SetSnapToPixelGrid(false)
-		self.TileFrms[i].texture:SetTexelSnappingBias(0)
+		-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
 	end
 end
 
@@ -4391,6 +4431,13 @@ function Nx.Map:Update (elapsed)
 	local rid = self.MapId
 	Nx.Map.UpdateMapID = rid
 	local inBG = self:IsBattleGroundMap (rid)
+	
+	-- Cache instance/BG checks for use throughout the frame
+	local isInstance = self:IsInstanceMap(rid)
+	FrameCache.isInstance = isInstance
+	FrameCache.isBG = inBG
+	FrameCache.mapId = rid
+	FrameCache.dungeonLevel = Nx.Map.DungeonLevel
 	
 	if Nx.InBG and Nx.InBG ~= rid then	-- Left or changed BG?
 
@@ -4662,7 +4709,9 @@ function Nx.Map:Update (elapsed)
 					local dtx
 					local dty
 					local cX, cY
-					if C_Map.GetBestMapForUnit("player") then
+					
+					-- Only check corpse if player is actually dead
+					if UnitIsDeadOrGhost("player") and C_Map.GetBestMapForUnit("player") then
 						local CorpseInfo = C_DeathInfo.GetCorpseMapPosition(C_Map.GetBestMapForUnit("player"))
 						if CorpseInfo then
 							cX = CorpseInfo.x or 0
@@ -4696,38 +4745,48 @@ function Nx.Map:Update (elapsed)
 					end
 
 					if midX then
-
 						local mX = (midX + self.PlyrX) * .5
 						local mY = (midY + self.PlyrY) * .5						
 						local dx = abs (midX - self.PlyrX)						
-						local dy = abs (midY - self.PlyrY)						
---						Nx.prt ("Map scale target %f %f", dx, dy)
-						if dx == 0 then
-							dx = 0.1 
-						end
-						if dy == 0 then
-							dy = 0.1
-						end
-						dx = self.MapW / dx
-						dy = self.MapH / dy
-						local scale = min (dx, dy) * .5
---						Nx.prt ("Map scales %f %f", dx, dy)
+						local dy = abs (midY - self.PlyrY)
+						
+						-- Minimum distance threshold to prevent extreme scaling
+						-- When player is very close to target, don't auto-scale
+						local MIN_DISTANCE = 10  -- Minimum world units before auto-scale kicks in
+						
+						if dx < MIN_DISTANCE and dy < MIN_DISTANCE then
+							-- Player is very close to target, just follow without scaling
+							self:Move (plX, plY, nil, 30)
+						else
+							-- Ensure minimum distance to prevent division by tiny numbers
+							dx = max(dx, MIN_DISTANCE)
+							dy = max(dy, MIN_DISTANCE)
+							
+							local scaleX = self.MapW / dx
+							local scaleY = self.MapH / dy
+							local scale = min (scaleX, scaleY) * .5
 
---						Nx.prt ("Map scale target %f %f", dtx, dty)
-						if dtx == 0 then
-							dtx = 0.1
-						end
-						if dty == 0 then
-							dty = 0.1
-						end
-						dx = self.MapW / dtx
-						dy = self.MapH / dty
-						scale = min (min (dx, dy), scale)	-- Smaller of target rect of player to target center
+							-- Target rectangle scaling
+							if dtx and dty then
+								dtx = max(dtx, 1)
+								dty = max(dty, 1)
+								local targetScaleX = self.MapW / dtx
+								local targetScaleY = self.MapH / dty
+								scale = min (min (targetScaleX, targetScaleY), scale)
+							end
 
-						local scmax = self.InstanceId and 800 or self.LOpts.NXAutoScaleMax
-
-						scale = max (min (scale, scmax), self.LOpts.NXAutoScaleMin)
-						self:Move (mX, mY, scale, 30)
+							local scmax = self.InstanceId and 800 or self.LOpts.NXAutoScaleMax
+							local scmin = self.LOpts.NXAutoScaleMin
+							
+							-- Sanity check: don't change scale drastically in one frame
+							local currentScale = self.Scale or 1
+							local maxScaleChange = currentScale * 2  -- Max 2x change per update
+							scale = max(min(scale, maxScaleChange), currentScale / 2)
+							
+							-- Apply final min/max limits
+							scale = max (min (scale, scmax), scmin)
+							self:Move (mX, mY, scale, 30)
+						end
 					end
 				end
 
@@ -4867,9 +4926,12 @@ function Nx.Map:Update (elapsed)
 	
 	if not IsAltKeyDown() then
 		local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
-		local pPOIs = {}--C_PetInfo.GetPetTamersForMap(rid)
+		-- Reuse pooled tables instead of creating new ones every frame
+		local pPOIs = POI_Pool.pPOIs
+		wipe(pPOIs)
 		local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
-		local aPOIs = {}
+		local aPOIs = POI_Pool.aPOIs
+		wipe(aPOIs)
 		local awinfo = Map.MapWorldInfo[rid]
 		if not awinfo.City then
 			for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
@@ -4878,7 +4940,9 @@ function Nx.Map:Update (elapsed)
 		end
 		local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
 
-		local zPOIs = Nx.ArrayConcat(tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
+		-- Use pooled table for concatenation
+		local zPOIs = POI_Pool.zPOIs
+		Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
 		
 		for i, zPOI in ipairs(zPOIs) do
 			local type = zPOI._type
@@ -6620,6 +6684,84 @@ function Nx.Map:AddOldMap (newMapId)
 end
 
 --------
+-- Caches for overlay optimization (avoid per-frame allocations and API calls)
+local OverlayCache = {
+	layerInfo = {},           -- [mapId] = layerInfo table
+	exploredTextures = {},    -- [mapId] = explored lookup table
+	parsedOverlays = {},      -- [txFolder] = pre-parsed overlay data
+	lastExploredCheck = {},   -- [mapId] = GetTime() of last exploration check
+}
+
+-- Pre-parse overlay string data once (avoids Nx.Split every frame)
+local function GetParsedOverlay(txFolder, txName, whxyStr)
+	local cacheKey = txFolder .. txName
+	local cached = OverlayCache.parsedOverlays[cacheKey]
+	if cached then
+		return cached
+	end
+	
+	local oX, oY, txW, txH, mode = Nx.Split(",", whxyStr)
+	local arTx
+	if string.find(txName, ",") then
+		arTx = {Nx.Split(",", txName)}
+	elseif tonumber(txName) then
+		arTx = {txName}
+	end
+	
+	cached = {
+		oX = tonumber(oX),
+		oY = tonumber(oY),
+		txW = tonumber(txW),
+		txH = tonumber(txH),
+		mode = mode,
+		arTx = arTx,
+		whxyKey = oX..","..oY..","..txW..","..txH,
+	}
+	OverlayCache.parsedOverlays[cacheKey] = cached
+	return cached
+end
+
+-- Get cached layer info (avoids API calls every frame)
+local function GetCachedLayerInfo(mapId)
+	local cached = OverlayCache.layerInfo[mapId]
+	if cached then
+		return cached
+	end
+	
+	local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex()
+	local layers = C_Map.GetMapArtLayers(mapId)
+	if layers and layers[layerIndex] then
+		cached = layers[layerIndex]
+		OverlayCache.layerInfo[mapId] = cached
+	end
+	return cached
+end
+
+-- Get cached explored textures (only refresh every 2 seconds)
+local function GetCachedExploredTextures(mapId, forceRefresh)
+	local now = GetTime()
+	local lastCheck = OverlayCache.lastExploredCheck[mapId] or 0
+	
+	-- Only refresh exploration data every 2 seconds (exploration doesn't change often)
+	if not forceRefresh and (now - lastCheck) < 2 and OverlayCache.exploredTextures[mapId] then
+		return OverlayCache.exploredTextures[mapId]
+	end
+	
+	local exploredWHXY = {}
+	local explored = C_MapExplorationInfo.GetExploredMapTextures(mapId)
+	if explored then
+		for i, ex in ipairs(explored) do
+			local key = ex.offsetX..","..ex.offsetY..","..ex.textureWidth..","..ex.textureHeight
+			exploredWHXY[key] = true
+		end
+	end
+	
+	OverlayCache.exploredTextures[mapId] = exploredWHXY
+	OverlayCache.lastExploredCheck[mapId] = now
+	return exploredWHXY
+end
+
+--------
 -- Update the zones
 
 function Nx.Map:UpdateZones()
@@ -6644,8 +6786,16 @@ function Nx.Map:UpdateZones()
 --		if freeOrScale and self.MapIdOld and self.MapIdOld ~= mapId then
 --			self:UpdateOverlay (id, .8, true)
 --		end
+		-- LOD optimization: when very zoomed out, limit overlay updates
+		local scale = self.ScaleDraw
+		local maxOverlays = scale < 0.1 and 3 or (scale < 0.2 and 6 or #self.MapsDrawnOrder)
+		local overlayCount = 0
+		
 		for n, id in ipairs (self.MapsDrawnOrder) do
-			self:UpdateOverlay (id, .8, true)
+			overlayCount = overlayCount + 1
+			if overlayCount <= maxOverlays then
+				self:UpdateOverlay (id, .8, true)
+			end
 		end
 		if winfo.City then
 --			Nx.prt ("city %s", self.Level)
@@ -6799,8 +6949,6 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 		if not (wzone and wzone.Explored) then
 			unex = true
 		end
-		--overlays = self.CurOverlays
-		--txFolder = self.CurOverlaysTexFolder
 	end
 	if self:IsBattleGroundMap(Nx.Map.UpdateMapID) then
 		return
@@ -6812,8 +6960,9 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	local bW, bH
 	local txIndex
 	local txPixelW, txFileW, txPixelH, txFileH
-	local path
 
+	-- Cache path construction (only changes with mapId/phase)
+	local path
 	if wzone.Phase then
 		path = "Interface\\Worldmap\\" .. txFolder .. "_" .. wzone.Phase .. "\\"
 	else
@@ -6823,136 +6972,117 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
 	local unExAl = self.LOpts.NXUnexploredAlpha
 	local zscale = self:GetWorldZoneScale (mapId) / 10
 
-	local exploredWHXY = {}
-	local explored = C_MapExplorationInfo.GetExploredMapTextures(mapId)
-	if explored and unex then
-		for i, ex in ipairs(explored) do
-			local key = ex.offsetX..","..ex.offsetY..","..ex.textureWidth..","..ex.textureHeight;
-			exploredWHXY[key] = true
-		end
-	end	
+	-- Use cached explored textures (refreshes every 2 seconds instead of every frame)
+	local exploredWHXY = unex and GetCachedExploredTextures(mapId) or {}
 	
-	local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
-	local layers = C_Map.GetMapArtLayers(mapId);
-	local layerInfo = layers[layerIndex];
-	local TILE_SIZE_WIDTH = layerInfo.tileWidth;
-	local TILE_SIZE_HEIGHT = layerInfo.tileHeight;
-	--Nx.prt ("%s TW TH: %s %s", mapId, TILE_SIZE_WIDTH, TILE_SIZE_HEIGHT)
+	-- Use cached layer info (avoids API calls every frame)
+	local layerInfo = GetCachedLayerInfo(mapId)
+	if not layerInfo then
+		return
+	end
+	local TILE_SIZE_WIDTH = layerInfo.tileWidth
+	local TILE_SIZE_HEIGHT = layerInfo.tileHeight
+	local layerWidth = layerInfo.layerWidth
+	local layerHeight = layerInfo.layerHeight
 	
-	for txName, whxyStr in pairs (overlays) do		
-		local lev = 0
-		local brt = bright
-		oName = txName
-		txName = path .. txName
-
-		local arTx
-		if string.find(oName, ",") then
-			arTx = {Nx.Split (",", oName)}
-		end
-		if tonumber(oName) then
-		    arTx = {oName}	   
+	-- LOD: Skip very small overlays when zoomed out (they're not visible anyway)
+	local scale = self.ScaleDraw
+	local minVisibleSize = scale < 0.15 and 128 or (scale < 0.3 and 64 or 0)
+	
+	for oName, whxyStr in pairs (overlays) do
+		-- Skip dynamic overlays
+		if oName == "dynamic" then
+			return
 		end
 		
-		local oX, oY, txW, txH, mode = Nx.Split (",", whxyStr)
-		if (oName == "dynamic") then
-			return --txName, txW, txH, oX, oY = GetMapOverlayInfo(1)
-		end
-
-		local whxyKey = oX..","..oY..","..txW..","..txH
-		if exploredWHXY[whxyKey] then
-			oX = oX - 10000
-		end
+		-- Use pre-parsed overlay data (avoids Nx.Split every frame)
+		local parsed = GetParsedOverlay(txFolder, oName, whxyStr)
+		local oX, oY = parsed.oX, parsed.oY
+		local txW, txH = parsed.txW, parsed.txH
+		local mode = parsed.mode
+		local arTx = parsed.arTx
+		local whxyKey = parsed.whxyKey
 		
-		txW = tonumber (txW)
-		txH = tonumber (txH)
-		oX = tonumber (oX)
-		oY = tonumber (oY)
-		
-		if unex then		-- Dimming unexplored?
-			if oX < 0 then
-				oX = oX + 10000	-- Fix explored x
-			else
-				brt = unExAl		-- Dim
-				lev = 1
+		-- LOD: Skip small overlays when zoomed out
+		if txW < minVisibleSize and txH < minVisibleSize then
+			-- Skip this overlay, too small to see
+		else
+			local lev = 0
+			local brt = bright
+			local txName = path .. oName
+			
+			if exploredWHXY[whxyKey] then
+				oX = oX - 10000
 			end
-		end
-
---		if self.Debug then
---			Nx.prt ("%d %f %f", i, oX, oY)
---		end
-
-		bW = ceil (txW / TILE_SIZE_WIDTH)
-		bH = ceil (txH / TILE_SIZE_HEIGHT)
-		txIndex = 1
-
-		for bY = 0, bH - 1 do
-
-			if bY < bH - 1 then
-				txPixelH = TILE_SIZE_HEIGHT
-				txFileH = TILE_SIZE_HEIGHT
-			else
-				txPixelH = mod (txH, TILE_SIZE_HEIGHT)
-				if txPixelH == 0 then
-					txPixelH = TILE_SIZE_HEIGHT
-				end
-				txFileH = 16
-				while txFileH < txPixelH do
-					txFileH = txFileH * 2
-				end
-			end
-
-			for bX = 0, bW - 1 do
-
-				if bX < bW - 1 then
-					txPixelW = TILE_SIZE_WIDTH
-					txFileW = TILE_SIZE_WIDTH
+			
+			if unex then		-- Dimming unexplored?
+				if oX < 0 then
+					oX = oX + 10000	-- Fix explored x
 				else
-					txPixelW = mod (txW, TILE_SIZE_WIDTH)
-					if txPixelW == 0 then
-						txPixelW = TILE_SIZE_WIDTH
-					end
-					txFileW = 16
-					while txFileW < txPixelW do
-						txFileW = txFileW * 2
-					end
+					brt = unExAl		-- Dim
+					lev = 1
 				end
-
-				local f = self:GetIconNI (lev)
-
-				local wx, wy = self:GetWorldPos (mapId, (oX + bX * TILE_SIZE_WIDTH) / layerInfo.layerWidth * 100, (oY + bY * TILE_SIZE_HEIGHT) / layerInfo.layerHeight * 100)
-
-				if self:ClipFrameTL (f, wx, wy, txFileW * zscale, txFileH * zscale) then
-
-					f.texture:SetColorTexture (1, 0, 0, 0) -- fix for background green overlays
---[[
-					if IsAltKeyDown() then		-- DEBUG!
-						alpha = .2
-					end
---]]
-					if arTx then
-						f.texture:SetTexture (arTx[txIndex])
-					elseif wzone.Phase then -- Classic MOP phases support as default map textures are for latest phase when Siedge of the Oggrimar came out (5.4)
-						phasetex = format("%s%s_%s", txName, txIndex, wzone.Phase)
-						f.texture:SetTexture (phasetex)
-					else 
-						f.texture:SetTexture (mode and txName or txName .. txIndex)
-					end
-					f.texture:SetVertexColor (brt, brt, brt, alpha)					
---					if IsControlKeyDown() then
---						Nx.prt ("Overlay %s, %s, %s %s", txName, txIndex, oX, oY)
---					end
-
---[[ -- Map cap
-					if bright < 1 then
-						f.texture:SetVertexColor (1, 1, 1, 1)
---						SetDesaturation (f.texture, 1)
-					end
---]]
-				end
-
-				txIndex = txIndex + 1
 			end
-		end
+
+			bW = ceil (txW / TILE_SIZE_WIDTH)
+			bH = ceil (txH / TILE_SIZE_HEIGHT)
+			txIndex = 1
+
+			for bY = 0, bH - 1 do
+
+				if bY < bH - 1 then
+					txPixelH = TILE_SIZE_HEIGHT
+					txFileH = TILE_SIZE_HEIGHT
+				else
+					txPixelH = mod (txH, TILE_SIZE_HEIGHT)
+					if txPixelH == 0 then
+						txPixelH = TILE_SIZE_HEIGHT
+					end
+					txFileH = 16
+					while txFileH < txPixelH do
+						txFileH = txFileH * 2
+					end
+				end
+
+				for bX = 0, bW - 1 do
+
+					if bX < bW - 1 then
+						txPixelW = TILE_SIZE_WIDTH
+						txFileW = TILE_SIZE_WIDTH
+					else
+						txPixelW = mod (txW, TILE_SIZE_WIDTH)
+						if txPixelW == 0 then
+							txPixelW = TILE_SIZE_WIDTH
+						end
+						txFileW = 16
+						while txFileW < txPixelW do
+							txFileW = txFileW * 2
+						end
+					end
+
+					local f = self:GetIconNI (lev)
+
+					local wx, wy = self:GetWorldPos (mapId, (oX + bX * TILE_SIZE_WIDTH) / layerWidth * 100, (oY + bY * TILE_SIZE_HEIGHT) / layerHeight * 100)
+
+					if self:ClipFrameTL (f, wx, wy, txFileW * zscale, txFileH * zscale) then
+
+						f.texture:SetColorTexture (1, 0, 0, 0) -- fix for background green overlays
+
+						if arTx then
+							f.texture:SetTexture (arTx[txIndex])
+						elseif wzone.Phase then -- Classic MOP phases support
+							local phasetex = format("%s%s_%s", txName, txIndex, wzone.Phase)
+							f.texture:SetTexture (phasetex)
+						else 
+							f.texture:SetTexture (mode and txName or txName .. txIndex)
+						end
+						f.texture:SetVertexColor (brt, brt, brt, alpha)
+					end
+
+					txIndex = txIndex + 1
+				end
+			end
+		end -- end LOD size check
 	end
 
 	self.Level = self.Level + 2	
@@ -7322,8 +7452,7 @@ function Nx.Map:ClipFrameW (frm, bx, by, w, h, dir)
 --		Nx.prt (" T2 "..t2x.." "..t2y)
 	end
 	
-	frm.texture:SetSnapToPixelGrid(false)
-	frm.texture:SetTexelSnappingBias(0)
+	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias moved to icon creation for performance
 	
 	frm:Show()
 
@@ -7409,8 +7538,7 @@ function Nx.Map:ClipFrameWChop (frm, bx, by, w, h)
 
 	frm.texture:SetTexCoord (texX1 * .9 + .05, texX2 * .9 + .05, texY1 * .9 + .05, texY2 * .9 + .05)
 	
-	frm.texture:SetSnapToPixelGrid(false)
-	frm.texture:SetTexelSnappingBias(0)
+	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
 	
 	frm:Show()
 
@@ -7579,8 +7707,7 @@ function Nx.Map:ClipFrameTL (frm, bx, by, w, h)
 
 	frm.texture:SetTexCoord (Nx.Util_NanToZero(texX1), Nx.Util_NanToZero(texX2), Nx.Util_NanToZero(texY1), Nx.Util_NanToZero(texY2))
 	
-	frm.texture:SetSnapToPixelGrid(false)
-	frm.texture:SetTexelSnappingBias(0)
+	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
 	
 	frm:Show()
 
@@ -7671,8 +7798,7 @@ function Nx.Map:ClipFrameMF (frm, bx, by, w, h, dir)
 	end
 	frm:SetFrameLevel(50)
 	
-	frm.texture:SetSnapToPixelGrid(false)
-	frm.texture:SetTexelSnappingBias(0)
+	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
 	
 	frm:Show()
 
@@ -8128,24 +8254,30 @@ function Nx.Map:UpdateIcons (drawNonGuide)
 			if v.DrawMode == "ZP" then		-- Zone point				
 				local scale = self.IconScale
 				local w = v.W * scale
-				local h = v.H * scale				
-				for n = 1, v.Num do											
-					if (not v[n].Level and Nx.Map.DungeonLevel == 0) or (v[n].Level and v[n].Level == Nx.Map.DungeonLevel) then						
-						local icon = v[n]
-						local f = self:GetIconStatic (v.Lvl)
-						if self:ClipFrameZ (f, icon.X, icon.Y, w, h, 0) then							
+				local h = v.H * scale
+				-- Cache values outside loop for performance
+				local mapDungeonLevel = Nx.Map.DungeonLevel
+				local vLvl = v.Lvl
+				local vTex = v.Tex
+				
+				for n = 1, v.Num do
+					local vn = v[n]
+					if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then						
+						local icon = vn
+						local f = self:GetIconStatic(vLvl)
+						if self:ClipFrameZ(f, icon.X, icon.Y, w, h, 0) then							
 							f.NxTip = icon.Tip							
-	--						assert (icon.Tex or v.Tex or icon.Color)
 
-							if icon.Tex then
-								f.texture:SetTexture (icon.Tex)
+							local iconTex = icon.Tex
+							if iconTex then
+								f.texture:SetTexture(iconTex)
 								if icon.Color then
-									f.texture:SetVertexColor (c2rgb (icon.Color))
+									f.texture:SetVertexColor(c2rgb(icon.Color))
 								end
-							elseif v.Tex then
-								f.texture:SetTexture (v.Tex)
+							elseif vTex then
+								f.texture:SetTexture(vTex)
 							else
-								f.texture:SetColorTexture (c2rgb (icon.Color))
+								f.texture:SetColorTexture(c2rgb(icon.Color))
 							end
 							if icon.TX1 then
 								f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
@@ -8159,6 +8291,19 @@ function Nx.Map:UpdateIcons (drawNonGuide)
 				local scale = self.IconScale * v.Scale * wpScale
 				local w = max (v.W * scale, wpMin)
 				local h = max (v.H * scale, wpMin)
+
+				-- Pre-calculate visible bounds for quick culling (huge performance win for many icons)
+				local scaleDraw = self.ScaleDraw
+				local clipW = self.MapW
+				local clipH = self.MapH
+				local mapPosX = self.MapPosXDraw
+				local mapPosY = self.MapPosYDraw
+				-- Calculate world-space bounds of visible area with some margin
+				local margin = (w > h and w or h) / scaleDraw
+				local visMinX = mapPosX - clipW * 0.5 / scaleDraw - margin
+				local visMaxX = mapPosX + clipW * 0.5 / scaleDraw + margin
+				local visMinY = mapPosY - clipH * 0.5 / scaleDraw - margin
+				local visMaxY = mapPosY + clipH * 0.5 / scaleDraw + margin
 
 				local curMapId = Nx.Map:GetCurrentMapAreaID()
 				if self.Win:IsSizeMax() then
@@ -8177,92 +8322,124 @@ function Nx.Map:UpdateIcons (drawNonGuide)
 				if v.AlphaNear then
 
 					local aNear = v.AlphaNear * (abs (GetTime() % .7 - .35) / .7 + .5)	-- 50% to 100% pulse
+					-- Cache values outside loop for performance
+					local mapDungeonLevel = Nx.Map.DungeonLevel
+					local vLvl = v.Lvl
+					local vTex = v.Tex
+					local vAlpha = v.Alpha
+					local plyrX = self.PlyrX
+					local plyrY = self.PlyrY
 
 					for n = 1, v.Num do
-						if (not v[n].Level and Nx.Map.DungeonLevel == 0) or (v[n].Level and v[n].Level == Nx.Map.DungeonLevel) then
-							local icon = v[n]
-							local f = self:GetIconStatic (v.Lvl)							
+						local vn = v[n]
+						-- Quick visibility cull before allocating frame
+						local iconX, iconY = vn.X, vn.Y
+						if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
+						if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then
+							local icon = vn
+							local f = self:GetIconStatic(vLvl)							
 							if self:ClipFrameByMapType (f, icon.X, icon.Y, w, h, 0) then								
 								f.NxTip = icon.Tip								
 								f.NXType = 3000
 								f.NXData = icon
-								if icon.Tex then
-									local pos = string.find(icon.Tex, "atlas:")
-									if pos then
-										local whichatlas = string.sub (icon.Tex,7)										
-										f.texture:SetAtlas(whichatlas)
+								local iconTex = icon.Tex
+								if iconTex then
+									-- Cache atlas lookup on first use
+									if icon._isAtlas == nil then
+										icon._isAtlas = string.find(iconTex, "atlas:") and true or false
+										if icon._isAtlas then
+											icon._atlasName = string.sub(iconTex, 7)
+										end
+									end
+									if icon._isAtlas then
+										f.texture:SetAtlas(icon._atlasName)
 									else
-										f.texture:SetTexture (icon.Tex)
+										f.texture:SetTexture(iconTex)
 									end
 									if icon.Color then
-										f.texture:SetVertexColor (c2rgb (icon.Color))
+										f.texture:SetVertexColor(c2rgb(icon.Color))
 									end
-								elseif v.Tex then
-									f.texture:SetTexture (v.Tex)
+								elseif vTex then
+									f.texture:SetTexture(vTex)
 								else
-									f.texture:SetColorTexture (c2rgb (icon.Color))
+									f.texture:SetColorTexture(c2rgb(icon.Color))
 								end
-								local a = v.Alpha
-								local dist = (icon.X - self.PlyrX) ^ 2 + (icon.Y - self.PlyrY) ^ 2
+								local a = vAlpha
+								local dist = (icon.X - plyrX) ^ 2 + (icon.Y - plyrY) ^ 2
 								if dist < 306 then	-- 80 yards * 4.575 ^ 2
 									a = aNear
-	--								Nx.prt ("fade %s %s", dist ^ .5, a)
 								end
-								f.texture:SetVertexColor (1, 1, 1, a)
+								f.texture:SetVertexColor(1, 1, 1, a)
 							end
 						end
+						end -- visibility cull
 					end
 				else
+					-- Cache these values outside the loop for performance
+					local _h = 3 * (668 / 768)
+					local currentDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+					local _dungeonLevel = currentDungeonLevel > 0 and currentDungeonLevel - 1 or 0
+					local isInstanceMap = Nx.Map:IsInstanceMap(Nx.Map.RMapId)
+					local calcOffY = isInstanceMap and not self.CurOpts.NXInstanceMaps
+					local offY = calcOffY and (_h * _dungeonLevel) or 0
+					local mapDungeonLevel = Nx.Map.DungeonLevel
+					local vLvl = v.Lvl
+					local vTex = v.Tex
+					local vAlpha = v.Alpha
+					local frameLevelBase = self.Level + (vLvl or 0)
+					
 					for n = 1, v.Num do	
-						local offY = nil
-						local Level = v[n].Level						
-						local _h = 3 * (668 / 768)
-						local _dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel() > 0 and Nx.Map:GetCurrentMapDungeonLevel() -1 or 0
-						--Level = Nx.Map.DungeonLevel
-						if Nx.Map:IsInstanceMap(Nx.Map.RMapId) and not self.CurOpts.NXInstanceMaps then
-							offY = _h * _dungeonLevel
-						end						
-						if (not Level and Nx.Map.DungeonLevel == 0) or (Level and Level == Nx.Map.DungeonLevel) then												
-							local icon = v[n]
-							local f = self:GetIconStatic(v.Lvl)
-							f:ClearAllPoints()
-							local actuallyIcon = false
-							if type(icon.Tex) == "table" then
-								actuallyIcon = true
-								f = icon.Tex
+						local vn = v[n]
+						-- Quick visibility cull before allocating frame
+						local iconX, iconY = vn.X, vn.Y
+						if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
+						local Level = vn.Level						
+						if (not Level and mapDungeonLevel == 0) or (Level and Level == mapDungeonLevel) then												
+							local icon = vn
+							local iconTex = icon.Tex
+							local actuallyIcon = type(iconTex) == "table"
+							local f
+							if actuallyIcon then
+								f = iconTex
+							else
+								f = self:GetIconStatic(vLvl)
 							end
-							if self:ClipFrameByMapType (f, icon.X, icon.Y + (offY or 0), w, h, 0) then
+							if self:ClipFrameByMapType (f, iconX, iconY + offY, w, h, 0) then
 								f.NxTip = icon.Tip																
 								f.NXType = 3000
 								f.NXData = icon
 								if actuallyIcon then
-									f:SetFrameLevel(self.Level + (v.Lvl or 0))
-								elseif icon.Tex then
-									local pos = string.find(icon.Tex, "atlas:")
-									if pos then
-										local whichatlas = string.sub (icon.Tex,7)											
-										f.texture:SetAtlas(whichatlas)
+									f:SetFrameLevel(frameLevelBase)
+								elseif iconTex then
+									-- Cache atlas lookup on first use
+									if icon._isAtlas == nil then
+										icon._isAtlas = string.find(iconTex, "atlas:") and true or false
+										if icon._isAtlas then
+											icon._atlasName = string.sub(iconTex, 7)
+										end
+									end
+									if icon._isAtlas then
+										f.texture:SetAtlas(icon._atlasName)
 									else
-										f.texture:SetTexture (icon.Tex)
+										f.texture:SetTexture(iconTex)
 									end																	
 									if icon.Color then
-										f.texture:SetVertexColor (c2rgb (icon.Color))
+										f.texture:SetVertexColor(c2rgb(icon.Color))
 									end
-								elseif v.Tex then
-									f.texture:SetTexture (v.Tex)
+								elseif vTex then
+									f.texture:SetTexture(vTex)
 								else
-									f.texture:SetColorTexture (c2rgb (icon.Color))
+									f.texture:SetColorTexture(c2rgb(icon.Color))
 								end
-								if v.Alpha and not actuallyIcon then
-									f.texture:SetVertexColor (1, 1, 1, v.Alpha)
+								if vAlpha and not actuallyIcon then
+									f.texture:SetVertexColor(1, 1, 1, vAlpha)
 								end
 								if icon.TX1 then
 									f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
 								end
-								f.texture:SetSnapToPixelGrid(false)
-								f.texture:SetTexelSnappingBias(0)
 							end
 						end
+						end -- visibility cull
 					end
 				end
 			elseif v.DrawMode == "ZR" then	-- Zone rectangle
@@ -8392,6 +8569,8 @@ function Nx.Map:GetIcon (levelAdd)
 		local t = f:CreateTexture()
 		f.texture = t
 		t:SetAllPoints (f)
+		t:SetSnapToPixelGrid(false)
+		t:SetTexelSnappingBias(0)
 	end
 
 	f:SetFrameLevel (self.Level + (levelAdd or 0))
@@ -8491,35 +8670,32 @@ function Nx.Map:GetIconWQ (levelAdd)
 		f.TimeLowFrame.Texture:SetAllPoints(f.TimeLowFrame);
 		f.TimeLowFrame.Texture:SetAtlas("worldquest-icon-clock");
 		
-		--f:SetNormalTexture(nil)
-		--f:SetPushedTexture(nil)
-		--f:SetHighlightTexture(nil)
+		-- Set size and texture properties once on creation
+		f:SetWidth(32);
+		f:SetHeight(32);
+		f.Texture:SetWidth(28);
+		f.Texture:SetHeight(28);
+		f.Texture:SetPoint("CENTER", 0, 0);
+		f.Texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
+		f.Texture:SetSnapToPixelGrid(false)
+		f.Texture:SetTexelSnappingBias(0)
+		
+		-- Set scripts only once on creation (not every frame)
+		f:SetScript ("OnEnter", function (self) 
+			TaskPOI_OnEnter(self) 
+			GameTooltip:SetFrameStrata("TOOLTIP");
+			GameTooltip.ItemTooltip.Tooltip:SetClampedToScreen(false)
+		end)
+		f:SetScript ("OnLeave", TaskPOI_OnLeave)
 	end
 	
-	f:SetWidth(32);
-	f:SetHeight(32);
-	f.Texture:SetWidth(28);
-	f.Texture:SetHeight(28);
-	f.Texture:SetPoint("CENTER", 0, 0);
-	f.Texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
-	if f.HighlightTexture then
+	-- Only update highlight texture if it exists (rare case)
+	if f.HighlightTexture and not f.HighlightTextureSet then
 		f.HighlightTexture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
 		f.HighlightTexture:SetSnapToPixelGrid(false)
 		f.HighlightTexture:SetTexelSnappingBias(0)
+		f.HighlightTextureSet = true
 	end
-	
-	f.Texture:SetSnapToPixelGrid(false)
-	f.Texture:SetTexelSnappingBias(0)
-	
-	--[[f:SetScript ("OnMouseDown", self.IconOnMouseDown)
-	f:SetScript ("OnMouseUp", self.IconOnMouseUp)]]--
-	f:SetScript ("OnEnter", function (self) 
-		TaskPOI_OnEnter(self) 
-		GameTooltip:SetFrameStrata("TOOLTIP");
-		GameTooltip.ItemTooltip.Tooltip:SetClampedToScreen(false)
-	end)
-	f:SetScript ("OnLeave", TaskPOI_OnLeave)
-	--f:SetScript ("OnHide", self.IconOnLeave)]]--
 
 	f:SetFrameLevel (self.Level + (levelAdd or 0))
 	
@@ -8558,6 +8734,8 @@ function Nx.Map:GetIconNI (levelAdd)
 		local t = f:CreateTexture()
 		f.texture = t
 		t:SetAllPoints (f)
+		t:SetSnapToPixelGrid(false)
+		t:SetTexelSnappingBias(0)
 	end
 
 	local add = levelAdd or 0
@@ -8602,6 +8780,8 @@ function Nx.Map:GetIconStatic (levelAdd)
 		local t = f:CreateTexture()
 		f.texture = t
 		t:SetAllPoints (f)
+		t:SetSnapToPixelGrid(false)
+		t:SetTexelSnappingBias(0)
 	end
 
 	local add = levelAdd or 0
@@ -8618,6 +8798,75 @@ function Nx.Map:GetIconStatic (levelAdd)
 	frms.Next = pos + 1
 
 	return f
+end
+
+------
+-- Pre-allocate icon frames to avoid runtime frame creation lag
+-- Call this during initialization or loading screens
+-- count: number of each icon type to pre-create (default 200)
+
+function Nx.Map:PreAllocateIcons (count)
+	count = count or 200
+	
+	-- Pre-allocate regular icons
+	local frms = self.IconFrms
+	for i = 1, count do
+		if not frms[i] then
+			local f = CreateFrame ("Frame", "NxIcon"..i, self.Frm)
+			frms[i] = f
+			f.NxMap = self
+			f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+			f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+			f:SetScript ("OnEnter", self.IconOnEnter)
+			f:SetScript ("OnLeave", self.IconOnLeave)
+			f:SetScript ("OnHide", self.IconOnLeave)
+			f:EnableMouse (true)
+			local t = f:CreateTexture()
+			f.texture = t
+			t:SetAllPoints (f)
+			t:SetSnapToPixelGrid(false)
+			t:SetTexelSnappingBias(0)
+			f:Hide()
+		end
+	end
+	
+	-- Pre-allocate non-interactive icons
+	frms = self.IconNIFrms
+	for i = 1, count do
+		if not frms[i] then
+			local f = CreateFrame ("Frame", "NxIconNI"..i, self.Frm)
+			frms[i] = f
+			f.NxMap = self
+			local t = f:CreateTexture()
+			f.texture = t
+			t:SetAllPoints (f)
+			t:SetSnapToPixelGrid(false)
+			t:SetTexelSnappingBias(0)
+			f:Hide()
+		end
+	end
+	
+	-- Pre-allocate static icons
+	frms = self.IconStaticFrms
+	for i = 1, count do
+		if not frms[i] then
+			local f = CreateFrame ("Frame", "NxIconS"..i, self.Frm)
+			frms[i] = f
+			f.NxMap = self
+			f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+			f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+			f:SetScript ("OnEnter", self.IconOnEnter)
+			f:SetScript ("OnLeave", self.IconOnLeave)
+			f:SetScript ("OnHide", self.IconOnLeave)
+			f:EnableMouse (true)
+			local t = f:CreateTexture()
+			f.texture = t
+			t:SetAllPoints (f)
+			t:SetSnapToPixelGrid(false)
+			t:SetTexelSnappingBias(0)
+			f:Hide()
+		end
+	end
 end
 
 --------
@@ -9850,13 +10099,33 @@ end
 --------
 -- Get a cont zone from the map id
 
+-- Cache for IdToContZone lookups
+local ContZoneCache = {}
+
 function Nx.Map:IdToContZone (mapId)
 	local info = self.MapWorldInfo[mapId]
-	if not info then
-		Nx.prtD("IdToCont Err " .. mapId)
-		return 90, 0
+	if info then
+		return info.Cont or 90, info.Zone or 0
 	end
-	return info.Cont or 90, info.Zone or 0
+	
+	-- Check cache first
+	if ContZoneCache[mapId] then
+		return ContZoneCache[mapId][1], ContZoneCache[mapId][2]
+	end
+	
+	-- Try to get parent map info for cities/sub-zones (cache result)
+	local mapInfo = C_Map.GetMapInfo(mapId)
+	if mapInfo and mapInfo.parentMapID then
+		info = self.MapWorldInfo[mapInfo.parentMapID]
+		if info then
+			ContZoneCache[mapId] = {info.Cont or 90, mapInfo.parentMapID}
+			return info.Cont or 90, mapInfo.parentMapID
+		end
+	end
+	
+	-- Cache the failure too
+	ContZoneCache[mapId] = {90, 0}
+	return 90, 0
 end
 
 --------
@@ -9933,10 +10202,19 @@ function Nx.Map:IsBattleGroundMap (mapId)
 	end
 end
 
+-- Cache for micro dungeon checks
+local MicroDungeonCache = {}
+
 function Nx.Map:IsMicroDungeon(mapId)
-	local mapType = C_Map.GetMapInfo(mapId)
-	if mapType == 5 then return true end
-	return false
+	if MicroDungeonCache[mapId] ~= nil then
+		return MicroDungeonCache[mapId]
+	end
+	
+	local mapInfo = C_Map.GetMapInfo(mapId)
+	-- mapType 5 = Enum.UIMapType.Micro (Micro Dungeon)
+	local isMicro = mapInfo and mapInfo.mapType == 5
+	MicroDungeonCache[mapId] = isMicro or false
+	return isMicro or false
 end
 
 function Nx.Map:IsScenario(mapId)
@@ -9995,7 +10273,11 @@ function Nx.Map:GetWorldZoneInfo (cont, zone)
 	end
 	local winfo = self.MapWorldInfo[zone]
 	if not winfo then
-		return
+		-- Use cached parent lookup (populated by GetWorldZone)
+		winfo = ParentMapCache[zone]
+		if not winfo or not next(winfo) then
+			return name, 0, 0, 1002, 668  -- Return defaults instead of nil
+		end
 	end
 	if not winfo.X then
 		return name, 0, 0, 1002, 668
@@ -10012,15 +10294,39 @@ function Nx.Map:GetWorldZoneInfo (cont, zone)
 end
 
 --------
+-- Cache for parent map lookups (avoid C_Map.GetMapInfo every frame)
+local ParentMapCache = {}
+
+--------
 -- Get world zone from map id
 -- (id)
 
 function Nx.Map:GetWorldZone (mapId)
 	if self.MapWorldInfo[mapId] then
 		return self.MapWorldInfo[mapId]
-	else
-		return {}
 	end
+	
+	-- Check cache first
+	if ParentMapCache[mapId] ~= nil then
+		return ParentMapCache[mapId]
+	end
+	
+	-- Try to get parent map info for cities/sub-zones (cache result)
+	local mapInfo = C_Map.GetMapInfo(mapId)
+	if mapInfo and mapInfo.parentMapID then
+		local parentInfo = self.MapWorldInfo[mapInfo.parentMapID]
+		if parentInfo then
+			local isCityType = mapInfo.mapType == Enum.UIMapType.Zone or mapInfo.mapType == Enum.UIMapType.Orphan
+			if isCityType and parentInfo.City then
+				ParentMapCache[mapId] = parentInfo
+				return parentInfo
+			end
+		end
+	end
+	
+	-- Cache empty result too (so we don't keep looking it up)
+	ParentMapCache[mapId] = {}
+	return {}
 end
 
 --------

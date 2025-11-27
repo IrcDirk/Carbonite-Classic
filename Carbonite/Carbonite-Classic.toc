@@ -25,7 +25,7 @@ Data\classic\NxMapData.lua
 
 NxMap.lua
 
-Data\classic\NxMapGuide.lua
+Data\Shared\NxMapGuide.lua
 
 NxTravel.lua
 

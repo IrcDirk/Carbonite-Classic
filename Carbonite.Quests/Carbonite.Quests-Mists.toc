@@ -9,7 +9,7 @@
 ## RequiredDeps: Carbonite
 
 Locales\locales.xml
-Data\mop\QuestCats.lua
+Data\Shared\QuestCats.lua
 Data\mop\QuestNPC.lua
 Data\mop\QuestData.xml
 NxQuest.lua

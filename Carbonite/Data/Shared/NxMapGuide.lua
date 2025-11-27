@@ -22,13 +22,77 @@
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
--- Tables
+-- Version Compatibility Layer
+-------------------------------------------------------------------------------
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
+-- Version detection (Nx.isMoPClassic is defined in Carbonite.lua)
+local isMoP = Nx.isMoPClassic or false
+local isClassic = not isMoP
+
+-- API Compatibility: Classic uses GetItemInfo, MoP uses GetItemInfoCompat
+local GetItemInfoCompat
+if C_Item and GetItemInfoCompat then
+	GetItemInfoCompat = GetItemInfoCompat
+else
+	GetItemInfoCompat = GetItemInfo
+end
+
+-- Version-specific zone IDs for portal icons
+-- Classic uses new map IDs (1400+), MoP uses old IDs
+local PortalZoneIDs
+if isClassic then
+	PortalZoneIDs = {
+		BlastedLands = 1419,
+		BlastedLands2 = 1944,
+		Darnassus = 1457,
+		Teldrassil = 1438,
+		Exodar = 1947,
+		Ironforge = 1455,
+		IsleOfQuelDanas = 1957,
+		Orgrimmar = 1454,
+		Silvermoon = 1954,
+		Stormwind = 1453,
+		ThunderBluff = 1456,
+		Undercity = 1458,
+		Shattrath = 1955,
+		Tanaris = 1446,
+	}
+else
+	PortalZoneIDs = {
+		BlastedLands = 17,
+		BlastedLands2 = 100,
+		Darnassus = 89,
+		Teldrassil = 57,
+		Exodar = 103,
+		Ironforge = 87,
+		IsleOfQuelDanas = 122,
+		Orgrimmar = 85,
+		Silvermoon = 110,
+		Stormwind = 84,
+		ThunderBluff = 88,
+		Undercity = 90,
+		Shattrath = 111,
+		Tanaris = 71,
+		TolBarad = 244,
+	}
+end
+
+-------------------------------------------------------------------------------
+-- Tables
+-------------------------------------------------------------------------------
+
+-- Continent abbreviations - Classic only has 2 continents
 Nx.GuideAbr = {
 	["K"] = L["Kalimdor"],
 	["E"] = L["Eastern Kingdoms"],
 }
+if isMoP then
+	Nx.GuideAbr["O"] = L["Outland"]
+	Nx.GuideAbr["N"] = L["Northrend"]
+	Nx.GuideAbr["M"] = L["The Maelstrom"]
+	Nx.GuideAbr["P"] = L["Pandaria"]
+end
 Nx.GuideInfo = {
 	Name = L["All"],
 	Tx = "INV_Misc_Map02",
@@ -42,10 +106,10 @@ Nx.GuideInfo = {
 		T = L["Stable Master"],
 		Tx = "Ability_Hunter_BeastTaming",
 	},
-	--[[{
+	{
 		T = L["Flight Master"],
 		Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
-	},]]--
+	},
 	--[[{
 		T = L["Lightforged Beacon"],
 		Tx = "INV_Alchemy_AstralAlchemistStone",
@@ -65,7 +129,7 @@ Nx.GuideInfo = {
 			T = L["Innkeeper"],
 			Tx = "Spell_Shadow_Twilight",
 		},
-		--[[{
+		{
 			T = L["Void Storage"],
 			Tx = "spell_nature_astralrecalgroup",
 		},
@@ -80,7 +144,7 @@ Nx.GuideInfo = {
 		{
 			T = L["Barber"],
 			Tx = "INV_Misc_Comb_02",
-		},]]--
+		},
 		{
 			T = L["Mailbox"],
 			Tx = "INV_Letter_15",
@@ -99,10 +163,10 @@ Nx.GuideInfo = {
 		Name = L["Class Trainer"],
 		T = "^C",
 		Tx = "INV_Misc_Book_10",
-		--[[{
+		{
 			T = L["Death Knight Trainer"],
 			Tx = "Spell_Deathknight_ClassIcon",
-		},]]--
+		},
 		{
 			T = L["Druid Trainer"],
 			Tx = "Ability_Druid_Maul",
@@ -139,11 +203,11 @@ Nx.GuideInfo = {
 			T = L["Warrior Trainer"],
 			Tx = "INV_Sword_27",
 		},
-		--[[{
+		{
 			T = L["Monk Trainer"],
 			Tx = "Class_Monk",
 		},
-		{
+		--[[{
 			T = L["Demon Hunter Trainer"],
 			Tx = "ClassIcon_DemonHunter",
 		},]]--
@@ -159,12 +223,12 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Alchemy",
 		},
-		--[[{
+		{
 			Pre = L["Archaeology"],
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "trade_archaeology",
-		},]]--
+		},
 		{
 			Pre = L["Blacksmithing"],
 			Name = L["Trainer"],
@@ -189,7 +253,7 @@ Nx.GuideInfo = {
 			T = "^P",
 			Tx = "Trade_Herbalism",
 		},
-		--[[{
+		{
 			Pre = L["Inscription"],
 			Name = L["Trainer"],
 			T = "^P",
@@ -200,7 +264,7 @@ Nx.GuideInfo = {
 			Name = L["Trainer"],
 			T = "^P",
 			Tx = "INV_Misc_Gem_02",
-		},]]--
+		},
 		{
 			Pre = L["Leatherworking"],
 			Name = L["Trainer"],
@@ -243,12 +307,12 @@ Nx.GuideInfo = {
 			T = "^S",
 			Tx = "Trade_Fishing",
 		},
-		--[[{
+		{
 			Pre = L["Flying"],
 			Name = L["Trainer"],
 			T = "^S",
 			Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-		},]]--
+		},
 		{
 			Pre = L["Riding"],
 			Name = L["Trainer"],
@@ -297,7 +361,7 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Inst = 2
 		},
-		--[[{{
+		{
 			Name = "@O",
 			Inst = 3
 		},
@@ -305,7 +369,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Inst = 4
 		},
-		
+		{
 			Name = "@M",
 			Inst = 5
 		},
@@ -313,7 +377,7 @@ Nx.GuideInfo = {
 			Name = "@P",
 			Inst = 6
 		},
-		{
+		--[[{
 			Name = "@D",
 			Inst = 7
 		},
@@ -338,7 +402,7 @@ Nx.GuideInfo = {
 		Name = L["Zone"],
 		Tx = "INV_Misc_Map_01",
 		{
-			Name = "All",
+			Name = L["All"],
 			Map = 0
 		},
 		{
@@ -349,7 +413,6 @@ Nx.GuideInfo = {
 			Name = "@E",
 			Map = 2
 		},
-		--[[{
 		{
 			Name = "@O",
 			Map = 3
@@ -358,7 +421,7 @@ Nx.GuideInfo = {
 			Name = "@N",
 			Map = 4
 		},
-		
+		{
 			Name = "@M",
 			Map = 5
 		},
@@ -366,7 +429,7 @@ Nx.GuideInfo = {
 			Name = "@P",
 			Map = 6
 		},
-		{
+		--[[{
 			Name = "@D",
 			Map = 7
 		},
@@ -440,7 +503,7 @@ function Nx.Map.Guide:Create (map)
 	win:Show (false)
 	tinsert (UISpecialFrames, win.Frm:GetName())
 
-	local but = Nx.Button:Create (win.Frm, "Txt64", "Back ", nil, 0, 0, "TOPLEFT", 100, 24, self.But_OnBack, g)
+	local but = Nx.Button:Create (win.Frm, "Txt64", L["Back "], nil, 0, 0, "TOPLEFT", 100, 24, self.But_OnBack, g)
 	win:Attach (but.Frm, 1.01, 1.01+44, -10020, -10001)
 
 	Nx.List:SetCreateFont ("Font.Medium", 28)
@@ -638,7 +701,7 @@ function Nx.Map.Guide:OnListEventDo (list, eventName, sel, val2, click)
 			if IsControlKeyDown() then
 				DressUpItemLink (format ("item:%d", id))
 			else
-				local name, link = GetItemInfo (id)
+				local name, link = GetItemInfoCompat (id)
 				SetItemRef (format ("item:%d", id), link)
 			end
 		else
@@ -809,24 +872,27 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 			--["Shattrath City"] = "Spell_Arcane_TeleportShattrath",
 			--["The Jade Forest"] = "Spell_Arcane_TeleportShattrath",
 		}
+                -- Version-specific zone IDs for portal icons
                 local portalN = {
-			[1419] = "Spell_Arcane_TeleportStonard",
-			[1944] = "Spell_Arcane_TeleportStonard",
-                        [1438] = "Spell_Arcane_TeleportDarnassus",
-			[1457] = "Spell_Arcane_TeleportDarnassus",
-			[1947] = "Spell_Arcane_TeleportExodar",
-			[1455] = "Spell_Arcane_TeleportIronForge",
-			[1957] = "Achievement_Zone_IsleOfQuelDanas",
-			[1454] = "Spell_Arcane_TeleportOrgrimmar",
-			[1954] = "Spell_Arcane_TeleportSilvermoon",
-			[1453] = "Spell_Arcane_TeleportStormWind",
-			[1456] = "Spell_Arcane_TeleportThunderBluff",
-			[1458] = "Spell_Arcane_TeleportUnderCity",
-			[1955] = "Spell_Arcane_TeleportShattrath",
-			[125]  = "Spell_Arcane_TeleportDalaran",
-			[1446] = "Achievement_Zone_Tanaris_01",
-			
+			[PortalZoneIDs.BlastedLands] = "Spell_Arcane_TeleportStonard",
+			[PortalZoneIDs.BlastedLands2] = "Spell_Arcane_TeleportStonard",
+			[PortalZoneIDs.Teldrassil] = "Spell_Arcane_TeleportDarnassus",
+			[PortalZoneIDs.Darnassus] = "Spell_Arcane_TeleportDarnassus",
+			[PortalZoneIDs.Exodar] = "Spell_Arcane_TeleportExodar",
+			[PortalZoneIDs.Ironforge] = "Spell_Arcane_TeleportIronForge",
+			[PortalZoneIDs.IsleOfQuelDanas] = "Achievement_Zone_IsleOfQuelDanas",
+			[PortalZoneIDs.Orgrimmar] = "Spell_Arcane_TeleportOrgrimmar",
+			[PortalZoneIDs.Silvermoon] = "Spell_Arcane_TeleportSilvermoon",
+			[PortalZoneIDs.Stormwind] = "Spell_Arcane_TeleportStormWind",
+			[PortalZoneIDs.ThunderBluff] = "Spell_Arcane_TeleportThunderBluff",
+			[PortalZoneIDs.Undercity] = "Spell_Arcane_TeleportUnderCity",
+			[PortalZoneIDs.Shattrath] = "Spell_Arcane_TeleportShattrath",
+			[PortalZoneIDs.Tanaris] = "Achievement_Zone_Tanaris_01",
                 }
+                if isMoP then
+			portalN[125] = "Spell_Arcane_TeleportDalaran"
+			portalN[PortalZoneIDs.TolBarad] = "Spell_Arcane_TeleportTolBarad"
+                end
 		for i, str in ipairs (Nx.ZoneConnections) do
 			local flags, conTime, name1, mapId1, x1, y1, level1, name2, mapId2, x2, y2, level2 = Nx.Map:ConnectionUnpack (str)
 			if conTime ~= 1 then
@@ -936,20 +1002,20 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
 						end
 						local f = {}
 						local numPlyrStr = numPlyr
-						if tonumber (numPlyr) == 40 then
-							numPlyrStr = "Raid"
+						if tonumber (numPlyr) == 40 or tonumber (numPlyr) == 1025 or tonumber (numPlyr) == 10 or tonumber (numPlyr) == 20 or tonumber (numPlyr) == 25 then
+							numPlyrStr = L["Raid"]
 						end
 						if tonumber (numPlyr) == 50 then
-							numPlyrStr = "Mythic Dungeon"
+							numPlyrStr = L["Mythic Dungeon"]
 						end
 						if tonumber (numPlyr) == 1 then
-							numPlyrStr = "Solo"
+							numPlyrStr = L["Solo"]
 						end
 						if tonumber (numPlyr) == 3 then
-							numPlyrStr = "Scenario"
+							numPlyrStr = L["Scenario"]
 						end
 						if tonumber (numPlyr) == 5 then
-							numPlyrStr = "Dungeon"
+							numPlyrStr = L["Dungeon"]
 						end
 						local plStr = ""
 						if (numPlyrStr) then
@@ -1134,7 +1200,7 @@ function Nx.Map.Guide:UpdateList (list, pathI, listSide)
 			if type (folder) == "number" then
 				local id = folder
 				Nx.Item:Load (id)
-				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfoCompat (id)
 				local show = true
 				if filterStr ~= "" then
 					local lstr = strlower (format ("%s", name))
@@ -1259,7 +1325,7 @@ function Nx.Map.Guide:UpdateMapIcons()
 			local tx = "Interface\\Icons\\" .. (folder.Tx or "")
 		end
 		
-		if mode == 36 then
+			if mode == 36 then
 			local typ = strsub (showType, 2, 2)
 			local longType
 			if typ == "H" then
@@ -1276,16 +1342,29 @@ function Nx.Map.Guide:UpdateMapIcons()
 				local nodeT = zoneT[fid]
 				if nodeT then
 					local iconType = fid == "Art" and "!G" or "!Ga"
+					
+					-- Cache these OUTSIDE the loop (don't change per node!)
+					local name, tex, skill = Nx:GetGather (typ, fid)
+					local texPath = "Interface\\Icons\\" .. tex
+					local tipText = skill > 0 and (name .. " [" .. L["Skill"] .. ": " .. skill .. "]") or name
+					local dungeonLevel = Nx.Map.DungeonLevel
+					
+					-- Visibility culling bounds
+					local clipW = map.MapW / map.ScaleDraw
+					local clipH = map.MapH / map.ScaleDraw
+					local mapX, mapY = map.MapPosXDraw, map.MapPosYDraw
+					local minX, maxX = mapX - clipW, mapX + clipW
+					local minY, maxY = mapY - clipH, mapY + clipH
+					
 					for k, node in pairs (nodeT) do
 						local x, y, level = Nx:GatherUnpack (node)
-						local name, tex, skill = Nx:GetGather (typ, fid)
-						local wx, wy = Map:GetWorldPos (mapId, x, y)
-						if level == Nx.Map.DungeonLevel then
-							icon = map:AddIconPt (iconType, wx, wy, level, nil, "Interface\\Icons\\"..tex, level)
-							if skill > 0 then
-								name = name .. " [" .. L["Skill"] .. ": " .. skill .. "]"
+						if level == dungeonLevel then
+							local wx, wy = Map:GetWorldPos (mapId, x, y)
+							-- Visibility culling - skip off-screen nodes
+							if wx >= minX and wx <= maxX and wy >= minY and wy <= maxY then
+								icon = map:AddIconPt (iconType, wx, wy, level, nil, texPath, level)
+								map:SetIconTip (icon, tipText)
 							end
-							map:SetIconTip (icon, name)
 						end
 					end
 				end
@@ -2047,7 +2126,7 @@ function Nx.Map.Guide:UpdateVisitedVendors()
 			local n = 1
 			while n <= #links do
 				local id = Nx.Split ("^", links[n])
-				local name = GetItemInfo (id)
+				local name = GetItemInfoCompat (id)
 				if not name then
 					if Nx.Item:Load (id) then
 						tremove (links, n)
@@ -2059,7 +2138,7 @@ function Nx.Map.Guide:UpdateVisitedVendors()
 			end
 			for _, item in ipairs (links) do
 				local id, price = Nx.Split ("^", item)
-				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+				local name, iLink, iRarity, lvl, minLvl, type, subType, stackCount, equipLoc, tx = GetItemInfoCompat (id)
 				name = name or format ("%s", id)
 				local itemF = uniqueItems[id]
 				if itemF then
@@ -3063,7 +3142,7 @@ function Nx.Map.Guide:ItemsAddItem (folder, id)
 	local im = max (iMin, 0)
 	item.Column2 = format ("L%2d i%3d", im, iLvl)
 	item.Column3 = format ("%s", srcStr)
-	local _, iLink, iRarity, lvl, minLvl, iType, subType, stackCount, equipLoc, tx = GetItemInfo (id)
+	local _, iLink, iRarity, lvl, minLvl, iType, subType, stackCount, equipLoc, tx = GetItemInfoCompat (id)
 	item.Link = iLink
 	item.Tx = tx and gsub (tx, "Interface\\Icons\\", "") or "INV_Misc_QuestionMark"
 	local typ, slot = Nx.Split ("^", self.ItemTypeNames[strbyte (info) - 35])

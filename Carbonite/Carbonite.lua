@@ -3078,14 +3078,23 @@ end
 
 --------
 
+-- Optimized: avoid creating tables with Nx.Split
 function Nx:GatherUnpack (item)
-	local x,y, level = Nx.Split ("|", item)
-	if not level then
+	-- Use string.find instead of Split to avoid table creation
+	local p1 = string.find(item, "|", 1, true)
+	if not p1 then
+		return tonumber(item), 0, 0
+	end
+	local p2 = string.find(item, "|", p1 + 1, true)
+	local x = tonumber(string.sub(item, 1, p1 - 1))
+	local y, level
+	if p2 then
+		y = tonumber(string.sub(item, p1 + 1, p2 - 1))
+		level = tonumber(string.sub(item, p2 + 1)) or 0
+	else
+		y = tonumber(string.sub(item, p1 + 1))
 		level = 0
 	end
-	x = tonumber (x)
-	y = tonumber (y)	
-	level = tonumber(level)
 	return x, y, level
 end
 
@@ -3257,47 +3266,141 @@ function Nx:GatherNodeToCarb (id)
 	return gatherIDs[id]
 end
 
+-- Batched import state
+Nx.GatherImportState = nil
+
 function Nx:GatherImportCarb (nodeType)
+	-- Prevent multiple imports at once
+	if Nx.GatherImportState then
+		Nx.prt("Import already in progress, please wait...")
+		return
+	end
+	
 	LoadAddOn("Carbonite.Gathermate2_Data")
+	
+	-- Validate data exists
 	if nodeType == "NXMine" then
 		if not GatherMateData2MineDB then
 			Nx.prt (L["Carbonite.Gathermate2_Data addon is not loaded!"])
 			return
 		end
-	end
-
-	if nodeType == "NXHerb" then
+	elseif nodeType == "NXHerb" then
 		if not GatherMateData2HerbDB then
+			Nx.prt (L["Carbonite.Gathermate2_Data addon is not loaded!"])
+			return
+		end
+	elseif nodeType == "Misc" then
+		if not GatherMateData2FishDB and not GatherMateData2TreasureDB then
 			Nx.prt (L["Carbonite.Gathermate2_Data addon is not loaded!"])
 			return
 		end
 	end
 
+	-- Get source data table(s)
 	local srcT = nil
+	local srcTables = {}
 
 	if nodeType == "NXMine" then
 		srcT = GatherMateData2MineDB
 	elseif nodeType == "NXHerb" then
 		srcT = GatherMateData2HerbDB
+	elseif nodeType == "Misc" then
+		-- Misc includes Fish and Treasure data
+		if GatherMateData2FishDB then
+			srcTables[#srcTables + 1] = {data = GatherMateData2FishDB, subType = "Fish"}
+		end
+		if GatherMateData2TreasureDB then
+			srcTables[#srcTables + 1] = {data = GatherMateData2TreasureDB, subType = "Treasure"}
+		end
 	end
 
-	local cnt = 0
+	-- For single-source types
 	if srcT then
-		for mapId, zoneT in pairs (srcT) do
+		srcTables[1] = {data = srcT, subType = nodeType}
+	end
+	
+	if #srcTables == 0 then
+		Nx.prt("No data to import for " .. nodeType)
+		return
+	end
+	
+	-- Build a flat list of items to import (for chunked processing)
+	local importList = {}
+	for _, srcInfo in ipairs(srcTables) do
+		for mapId, zoneT in pairs(srcInfo.data) do
 			for coords, nodetype in pairs(zoneT) do
-				local nx, ny = Nx:GatherConvert(coords)
-				local nodeId = Nx:GatherNodeToCarb (nodetype)
-				if not nodeId and (nodeType == "NXMine" or nodeType == "NXHerb") then
-					nodeId = nodetype
-				end
-				if nx and ny and nodeId then
-					Nx:Gather (nodeType, nodeId, mapId, nx * 100, ny * 100)
-					cnt = cnt + 1
-				end
+				importList[#importList + 1] = {mapId = mapId, coords = coords, nodetype = nodetype, subType = srcInfo.subType}
 			end
 		end
+	end
+	
+	local totalCount = #importList
+	if totalCount == 0 then
+		Nx.prt("No data to import")
+		return
+	end
+	
+	Nx.prt("Starting import of %d nodes (this may take a moment)...", totalCount)
+	
+	-- Setup batched import state
+	Nx.GatherImportState = {
+		nodeType = nodeType,
+		importList = importList,
+		currentIndex = 1,
+		importedCount = 0,
+		totalCount = totalCount,
+		batchSize = 500,  -- Process 500 nodes per frame
+	}
+	
+	-- Start the batched import timer
+	Nx:ScheduleRepeatingTimer("GatherImportBatch", 0.01)  -- Run every 10ms
+end
 
-		Nx.prt (L["Imported"] .. " %s " .. L["nodes from Carbonite.Gathermate2_Data"], cnt, nodeType)
+function Nx:GatherImportBatch()
+	local state = Nx.GatherImportState
+	if not state then
+		Nx:CancelTimer("GatherImportBatch")
+		return
+	end
+	
+	local nodeType = state.nodeType
+	local importList = state.importList
+	local batchEnd = min(state.currentIndex + state.batchSize - 1, state.totalCount)
+	
+	-- Process a batch
+	for i = state.currentIndex, batchEnd do
+		local item = importList[i]
+		local nx, ny = Nx:GatherConvert(item.coords)
+		local nodeId = Nx:GatherNodeToCarb(item.nodetype)
+		
+		-- For Mine/Herb, use nodetype as fallback; for Misc, always use nodetype
+		if not nodeId then
+			if nodeType == "NXMine" or nodeType == "NXHerb" then
+				nodeId = item.nodetype
+			elseif nodeType == "Misc" then
+				nodeId = item.nodetype
+			end
+		end
+		
+		if nx and ny and nodeId then
+			-- For Misc, store under the "Misc" category
+			local storeType = nodeType
+			Nx:Gather(storeType, nodeId, item.mapId, nx * 100, ny * 100)
+			state.importedCount = state.importedCount + 1
+		end
+	end
+	
+	state.currentIndex = batchEnd + 1
+	
+	-- Check if done
+	if state.currentIndex > state.totalCount then
+		Nx.prt(L["Imported"] .. " %d " .. L["nodes from Carbonite.Gathermate2_Data"], state.importedCount)
+		Nx.GatherImportState = nil
+		Nx:CancelTimer("GatherImportBatch")
+	elseif state.currentIndex % 5000 < state.batchSize then
+		-- Progress update every 5000 nodes
+		local progress = floor(state.currentIndex / state.totalCount * 100)
+		Nx.prt("Import progress: %d%% (%d/%d)", progress, state.currentIndex, state.totalCount)
 	end
 end
 

@@ -1666,21 +1666,49 @@ function Nx.Notes:UpdateIcons()
 	end
 end
 
+-- Tracking for HandyNotes (simple map/level check instead of hash)
+Nx.Notes.HandyNotesLastMapId = nil
+Nx.Notes.HandyNotesLastLevel = nil
+
+-- Reusable temp frame for tooltip extraction (avoids creating frames in loops)
+local handyTempFrame = nil
+local function GetHandyTempFrame()
+	if not handyTempFrame then
+		handyTempFrame = CreateFrame("Frame", "CarbHandyTemp", UIParent)
+	end
+	return handyTempFrame
+end
+
 function Nx.Notes:HandyNotes(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
-		if not C_Map.GetMapInfo(mapId) then
+		local mapInfo = C_Map.GetMapInfo(mapId)
+		if not mapInfo or mapInfo.mapType ~= 3 then
 			return
 		end
-		if C_Map.GetMapInfo(mapId).mapType ~= 3 then
-			return
+		
+		local lvl = Nx.Map:GetCurrentMapDungeonLevel()
+		
+		-- Quick check: if map and level haven't changed, skip entirely
+		local cacheKey = mapId .. "_" .. lvl
+		if self.HandyNotesLastMapId == mapId and self.HandyNotesLastLevel == lvl then
+			return -- Same map and level, skip
 		end
+		
+		-- Map/level changed - clear and rebuild
+		map:ClearIconType("!HANDY")
+		self.HandyNotesLastMapId = mapId
+		self.HandyNotesLastLevel = lvl
+		
 		map:InitIconType ("!HANDY", "WP", "", Nx.fdb.profile.Notes.HandyNotesSize or 15, Nx.fdb.profile.Notes.HandyNotesSize or 15)
 		map:SetIconTypeChop ("!HANDY", true)
 		map:SetIconTypeLevel ("!HANDY", 20)
-		--local mapFile, textureHeight, textureWidth, isMicroDungeon, microDungeonMapName = GetMapInfo()
-		local lvl = Nx.Map:GetCurrentMapDungeonLevel()
-		--if isMicroDungeon then mapFile = microDungeonMapName end
+		
+		-- Reuse temp frame instead of creating new ones
+		local tempIcon = GetHandyTempFrame()
+		local tmpFrame = WorldMapFrame:GetCanvas()
+		tempIcon:SetParent(tmpFrame)
+		
 		for pluginName, pluginHandler in pairs(HandyNotes.plugins) do
 			HandyNotes:UpdateWorldMapPlugin(pluginName)
 			local pluginNodes, mapFile
@@ -1707,14 +1735,14 @@ function Nx.Notes:HandyNotes(mapId)
 				else
 					texture = iconpath
 				end
-				local icon = CreateFrame("Frame", "HandyCarb", UIParent)
-				local tmpFrame = WorldMapFrame:GetCanvas()
-				icon:SetParent(tmpFrame)
-				icon:ClearAllPoints()
-				icon:SetHeight(scale)
-				icon:SetWidth(scale)
-				icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
-				safecall(HandyNotes.plugins[pluginName].OnEnter, icon, mapFile and mapFile or mapId, coord)
+				
+				-- Reuse temp frame for tooltip extraction
+				tempIcon:ClearAllPoints()
+				tempIcon:SetHeight(scale or 15)
+				tempIcon:SetWidth(scale or 15)
+				tempIcon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+				safecall(HandyNotes.plugins[pluginName].OnEnter, tempIcon, mapFile and mapFile or mapId, coord)
+				
 				local tooltip = ""
 				local tooltipName = "GameTooltip"
 				local handynote
@@ -1738,28 +1766,48 @@ function Nx.Notes:HandyNotes(mapId)
 					end
 				end
 				map:SetIconTip(handynote,tooltip)
-				safecall(HandyNotes.plugins[pluginName].OnLeave, icon, mapFile and mapFile or mapId, coord)
+				safecall(HandyNotes.plugins[pluginName].OnLeave, tempIcon, mapFile and mapFile or mapId, coord)
 			end
 		end
 	end
 end
 
+-- Tracking for RareScanner dirty detection
+Nx.Notes.RSCache = Nx.Notes.RSCache or {}
+Nx.Notes.RSLastMapId = nil
+
 function Nx.Notes:RareScanner(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+		-- Collect all pins and build a hash of their positions/data
 		local rspins = {}
-
-		if self.PrevRSPins == WorldMapFrame:GetNumActivePinsByTemplate("RSEntityPinTemplate") then
-			return
-		end
-
+		local currentHash = 0
+		
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
 			rspins[#rspins + 1] = pin
+			-- Hash includes position and mapID to detect any changes
+			if pin.POI then
+				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.POI.mapID or 0)
+			end
 		end
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
 			rspins[#rspins + 1] = pin
+			-- Hash overlay pins too
+			if pin.pin and pin.pin.POI then
+				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.pin.POI.mapID or 0)
+			end
 		end
-
+		
+		-- Check if data actually changed (count + positions + map)
+		local cacheKey = mapId .. "_RS"
+		if self.RSCache[cacheKey] == currentHash and self.RSLastMapId == mapId and self.PrevRSPins == #rspins then
+			return -- No changes, skip update
+		end
+		
+		-- Data changed - clear old icons and rebuild
+		map:ClearIconType("!RSR")
+		self.RSCache[cacheKey] = currentHash
+		self.RSLastMapId = mapId
 		self.PrevRSPins = #rspins
 		
 		local level = nil
@@ -1775,23 +1823,15 @@ function Nx.Notes:RareScanner(mapId)
 					local y = rspin.normalizedY * 100
 					local texture = rspin.Texture:GetTexture()
 					if not texture then
-						texture = rspin.pin.POI.Texture
+						texture = rspin.pin and rspin.pin.POI and rspin.pin.POI.Texture
 					end
-					local scale = rspin.startScale
 					local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-					local icon = CreateFrame("Button", "RSCarb", UIParent)
-					local tmpFrame = WorldMapFrame:GetCanvas()
-					icon:SetParent(tmpFrame)
-					icon:ClearAllPoints()
-					icon:SetHeight(scale)
-					icon:SetWidth(scale)
-					icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 					local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
 					local tooltip = rspin.POI.name
 					map:SetIconTip(rsnote,tooltip)
 					map:SetIconUserData(rsnote, rspin)
 				end
-			else
+			elseif rspin.pin and rspin.pin.POI then
 				if rspin.pin.POI.mapID == map.MapId then
 					local x = rspin.normalizedX * 100
 					local y = rspin.normalizedY * 100
@@ -1800,21 +1840,13 @@ function Nx.Notes:RareScanner(mapId)
 						local colr, colg, colb = rspin.Texture:GetVertexColor()
 						local color = "FFFFFF"
 						if colr and colg and colb then
-							IconColor = CreateColor(colr, colg, colb)
+							local IconColor = CreateColor(colr, colg, colb)
 							color = IconColor:GenerateHexColor()
 						end
 						if not texture then
 							texture = rspin.pin.POI.Texture
 						end
-						local scale = rspin.startScale
 						local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-						local icon = CreateFrame("Button", "RSCarb", UIParent)
-						local tmpFrame = WorldMapFrame:GetCanvas()
-						icon:SetParent(tmpFrame)
-						icon:ClearAllPoints()
-						icon:SetHeight(scale)
-						icon:SetWidth(scale)
-						icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
 						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
 						local tooltip = rspin.pin.POI.name
 						map:SetIconTip(rsnote,tooltip)
@@ -1827,51 +1859,65 @@ function Nx.Notes:RareScanner(mapId)
 end
 
 
+-- Tracking for Questie dirty detection
+Nx.Notes.QuestieCache = Nx.Notes.QuestieCache or {}
+Nx.Notes.QuestieLastMapId = nil
+
 function Nx.Notes:Questie(mapId)
 	local map = Nx.Map:GetMap (1)
 
 	if (Nx.fdb.profile.Notes.Questie and Questie) then
-		local questiePins = {}
-
-		if self.PrevQuestiePins == WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"].activeObjectCount then
+		-- Check if pin pool exists
+		local pinPool = WorldMapFrame.pinPools and WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"]
+		if not pinPool then
 			return
 		end
-
+		
+		-- Collect pins and build hash of positions/data
+		local questiePins = {}
+		local currentHash = 0
+		
 		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
 			questiePins[#questiePins + 1] = pin
+			-- Hash includes position, mapID, and quest data ID to detect any changes
+			if pin.icon and pin.icon.data then
+				local questId = pin.icon.data.QuestData and pin.icon.data.QuestData.Id or 0
+				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + questId
+			end
 		end
-
+		
+		-- Check if data actually changed (count + positions + quest data + map)
+		local cacheKey = mapId .. "_QUE"
+		if self.QuestieCache[cacheKey] == currentHash and self.QuestieLastMapId == mapId and self.PrevQuestiePins == #questiePins then
+			return -- No changes, skip update
+		end
+		
+		-- Data changed - clear old icons and rebuild
+		map:ClearIconType("!QUE")
+		self.QuestieCache[cacheKey] = currentHash
+		self.QuestieLastMapId = mapId
 		self.PrevQuestiePins = #questiePins
 		
 		local level = nil
+		
+		-- Cache settings lookup
+		local showAvailable = Nx.fdb.profile.Notes.QuestieSE
 
 		map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
 		map:SetIconTypeChop ("!QUE", true)
 		map:SetIconTypeLevel ("!QUE", 20)
 
 		for _,questiePin in ipairs(questiePins) do
-			if questiePin.icon then
-				if questiePin.icon.UiMapID == map.MapId then
-					if questiePin.icon.data then
-						if questiePin.icon.data.QuestData then
-							if ((Nx.fdb.profile.Notes.QuestieSE and questiePin.icon.data.Type == "available") or (questiePin.icon.data.Type == "monster" or questiePin.icon.data.Type == "item")) then
-								local x = questiePin.normalizedX * 100
-								local y = questiePin.normalizedY * 100
-								local texture = questiePin.icon.texture:GetTexture()
-								local scale = questiePin.startScale
-								local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-								local icon = CreateFrame("Button", "QuestieCarb", UIParent)
-								local tmpFrame = WorldMapFrame:GetCanvas()
-								icon:SetParent(tmpFrame)
-								icon:ClearAllPoints()
-								icon:SetHeight(scale)
-								icon:SetWidth(scale)
-								icon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
-								local qnote = map:AddIconPt("!QUE", wx, wy, level, "FFFFFF", texture)
-								map:SetIconUserData(qnote, questiePin)
-							end
-						end
-					end
+			local icon = questiePin.icon
+			if icon and icon.UiMapID == map.MapId and icon.data and icon.data.QuestData then
+				local dataType = icon.data.Type
+				if (showAvailable and dataType == "available") or dataType == "monster" or dataType == "item" then
+					local x = questiePin.normalizedX * 100
+					local y = questiePin.normalizedY * 100
+					local texture = icon.texture and icon.texture:GetTexture()
+					local wx, wy = Nx.Map:GetWorldPos(mapId, x, y)
+					local qnote = map:AddIconPt("!QUE", wx, wy, level, "FFFFFF", texture)
+					map:SetIconUserData(qnote, questiePin)
 				end
 			end
 		end

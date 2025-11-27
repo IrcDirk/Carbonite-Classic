@@ -85,6 +85,23 @@ function Nx.ArrayConcat(...)
 	return t
 end
 
+-- Optimized version that reuses an existing table (avoids garbage collection)
+function Nx.ArrayConcatReuse(reuse, ...) 
+	wipe(reuse)
+	for n = 1, select("#", ...) do
+		local arg = select(n, ...)
+		if type(arg) == "table" then
+			for _, v in ipairs(arg) do
+				v._type = n
+				reuse[#reuse + 1] = v
+			end
+		else
+			reuse[#reuse + 1] = arg
+		end
+	end
+	return reuse
+end
+
 ---------------------------------------------------------------------------------------
 
 function Nx.IsFriend(name)
@@ -551,23 +568,30 @@ end
 ---------------------------------------------------------------------------------------
 
 function Nx.Util_IsMouseOver (frm)
-
-	local x, y = GetCursorPosition()
-	x = x / frm:GetEffectiveScale()
+	-- Safety check: frame must exist and be shown
+	if not frm or not frm:IsShown() then
+		return nil
+	end
 
 	local left = frm:GetLeft()
 	local right = frm:GetRight()
+	local top = frm:GetTop()
+	local bottom = frm:GetBottom()
+	
+	-- Safety check: frame bounds must be valid (can be nil if frame not positioned)
+	if not left or not right or not top or not bottom then
+		return nil
+	end
 
-	if x >= left and x <= right then
+	local x, y = GetCursorPosition()
+	local scale = frm:GetEffectiveScale()
+	if scale == 0 then scale = 1 end  -- Avoid division by zero
+	
+	x = x / scale
+	y = y / scale
 
-		y = y / frm:GetEffectiveScale()
-
-		local top = frm:GetTop()
-		local bottom = frm:GetBottom()
-
-		if y >= bottom and y <= top then
-			return x - left, y - bottom
-		end
+	if x >= left and x <= right and y >= bottom and y <= top then
+		return x - left, y - bottom
 	end
 end
 
@@ -578,21 +602,30 @@ end
 ---------------------------------------------------------------------------------------
 
 function Nx.Util_GetMouseClampedXY (frm)
-
-	local x, y = GetCursorPosition()
-	x = x / frm:GetEffectiveScale()
+	-- Safety check: frame must exist
+	if not frm then
+		return 0, 0
+	end
 
 	local left = frm:GetLeft()
 	local right = frm:GetRight()
+	local top = frm:GetTop()
+	local bottom = frm:GetBottom()
+	
+	-- Safety check: frame bounds must be valid
+	if not left or not right or not top or not bottom then
+		return 0, 0
+	end
+
+	local x, y = GetCursorPosition()
+	local scale = frm:GetEffectiveScale()
+	if scale == 0 then scale = 1 end
+	
+	x = x / scale
+	y = y / scale
 
 	x = max (x, left)
 	x = min (x, right)
-
-	y = y / frm:GetEffectiveScale()
-
-	local top = frm:GetTop()
-	local bottom = frm:GetBottom()
-
 	y = max (y, bottom)
 	y = min (y, top)
 
@@ -606,17 +639,36 @@ end
 ---------------------------------------------------------------------------------------
 
 function Nx.Util_SnapToScreen (frm)
+	-- Safety check
+	if not frm then
+		return
+	end
 
 	local sw = GetScreenWidth()
 	local sh = GetScreenHeight()
 
 	local atPt, relTo, relPt, x, y = frm:GetPoint()
+	if not x or not y then
+		return
+	end
 
 	local sc = frm:GetScale()
-	local l = frm:GetLeft() * sc		-- Scale does not matter for left or bottom
-	local r = frm:GetRight() * sc
-	local t = frm:GetTop() * sc
-	local b = frm:GetBottom() * sc
+	if not sc or sc == 0 then sc = 1 end
+	
+	local l = frm:GetLeft()
+	local r = frm:GetRight()
+	local t = frm:GetTop()
+	local b = frm:GetBottom()
+	
+	-- Safety check: frame bounds must be valid
+	if not l or not r or not t or not b then
+		return
+	end
+	
+	l = l * sc
+	r = r * sc
+	t = t * sc
+	b = b * sc
 
 	local dist = 4
 
@@ -628,20 +680,16 @@ function Nx.Util_SnapToScreen (frm)
 		x = x - (r - sw) / sc
 	end
 
-	if MultiBarLeft:IsVisible() then
-
+	if MultiBarLeft and MultiBarLeft:IsVisible() then
 		local ml = MultiBarLeft:GetLeft()
-
-		if abs (r - ml) < dist then
+		if ml and abs (r - ml) < dist then
 			x = x - (r - ml) / sc
 		end
 	end
 
-	if MultiBarRight:IsVisible() then
-
+	if MultiBarRight and MultiBarRight:IsVisible() then
 		local ml = MultiBarRight:GetLeft()
-
-		if abs (r - ml) < dist then
+		if ml and abs (r - ml) < dist then
 			x = x - (r - ml) / sc
 		end
 	end

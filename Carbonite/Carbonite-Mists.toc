@@ -25,7 +25,7 @@ Data\mop\NxMapData.lua
 
 NxMap.lua
 
-Data\mop\NxMapGuide.lua
+Data\Shared\NxMapGuide.lua
 
 NxTravel.lua
 

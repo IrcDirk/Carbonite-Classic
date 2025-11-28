@@ -25,6 +25,83 @@
 
 local _G = getfenv(0)
 
+-------------------------------------------------------------------------------
+-- LOCAL FUNCTION REFERENCES (Performance optimization)
+-- Caching global functions as locals for faster access in hot paths
+-------------------------------------------------------------------------------
+
+-- Bit operations (bit library is always available in WoW)
+local bit_band = bit.band
+local bit_lshift = bit.lshift
+local bit_rshift = bit.rshift
+
+-- Math functions
+local floor = math.floor
+local max = math.max
+local min = math.min
+local abs = math.abs
+
+-- String functions
+local strfind = strfind or string.find
+local strsub = strsub or string.sub
+local strlower = strlower or string.lower
+local strbyte = strbyte or string.byte
+local strmatch = strmatch or string.match
+local format = format or string.format
+local gsub = gsub or string.gsub
+
+-- Table functions
+local tinsert = tinsert or table.insert
+local tremove = tremove or table.remove
+local sort = sort or table.sort
+local wipe = wipe or table.wipe
+
+-- WoW API functions used frequently
+local GetTime = GetTime
+local UnitLevel = UnitLevel
+local GetNumQuestLogEntries = GetNumQuestLogEntries
+local GetQuestLogTitle = GetQuestLogTitle
+local GetQuestLogLeaderBoard = GetQuestLogLeaderBoard
+local GetNumQuestLeaderBoards = GetNumQuestLeaderBoards
+local SelectQuestLogEntry = SelectQuestLogEntry
+local GetQuestLogSelection = GetQuestLogSelection
+local GetQuestLogQuestText = GetQuestLogQuestText
+local GetQuestTagInfo = GetQuestTagInfo
+local GetQuestLogPushable = GetQuestLogPushable
+local GetQuestLogIsAutoComplete = GetQuestLogIsAutoComplete
+local GetQuestLogTimeLeft = GetQuestLogTimeLeft
+local GetQuestLogSpecialItemInfo = GetQuestLogSpecialItemInfo
+local GetQuestDifficultyColor = GetQuestDifficultyColor
+local GetQuestObjectiveInfo = GetQuestObjectiveInfo
+local IsUnitOnQuest = IsUnitOnQuest
+local UnitName = UnitName
+local UnitGUID = UnitGUID
+local InCombatLockdown = InCombatLockdown
+local GetDailyQuestsCompleted = GetDailyQuestsCompleted
+local GetQuestResetTime = GetQuestResetTime
+
+-------------------------------------------------------------------------------
+-- COLOR UTILITY FUNCTIONS (Performance optimization)
+-- Cache frequently used color format strings
+-------------------------------------------------------------------------------
+
+-- Cache for difficulty color strings (avoids repeated format calls)
+local difficultyColorCache = {}
+
+-- Get cached difficulty color string for a level
+-- @param level: Quest level
+-- @return: Color escape sequence string like "|cffRRGGBB"
+local function GetCachedDifficultyColorStr(level)
+    local cached = difficultyColorCache[level]
+    if cached then
+        return cached
+    end
+    local color = GetQuestDifficultyColor(level)
+    cached = format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+    difficultyColorCache[level] = cached
+    return cached
+end
+
 -- Create the AceAddon for the Quest module
 CarboniteQuest = LibStub("AceAddon-3.0"):NewAddon("Carbonite.Quest", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Quest", true)
@@ -3875,7 +3952,7 @@ function Nx.Quest:RecordQuestsLog()
                         end
 
                         if obj and not done then
-                            mask = mask + bit.lshift (1, n)
+                            mask = mask + bit_lshift (1, n)
                         end
                     end
                 end
@@ -3949,7 +4026,7 @@ function Nx.Quest:RecordQuestsLog()
                         cur[n + 400] = cur[n + 400] .. " " .. desc
 
                         if not done then
-                            mask = mask + bit.lshift (1, n)
+                            mask = mask + bit_lshift (1, n)
                         end
                     end
 
@@ -4000,7 +4077,7 @@ function Nx.Quest:RecordQuestsLog()
                         cur[n + 400] = cur.PartyNames
 
                         if not cur[n + 100] then
-                            mask = mask + bit.lshift (1, n)
+                            mask = mask + bit_lshift (1, n)
                         end
                     end
 
@@ -4206,8 +4283,8 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
                         if not quest["Quest"] then
                             quest["Quest"] = format ("[[%s|%s|%s|0|0|0]]",title,fac,level)
                         end
-                        if needEnd or bit.band (patch, 1) then
-                            if not quest["End"] then --or (bit.band(patch,1) and mapId == MapUtil.GetDisplayableMapForPlayer()) then --disable this check as it's logic fails when there's no objectives defined in QuestDB for QuestID
+                        if needEnd or bit_band (patch, 1) then
+                            if not quest["End"] then --or (bit_band(patch,1) and mapId == MapUtil.GetDisplayableMapForPlayer()) then --disable this check as it's logic fails when there's no objectives defined in QuestDB for QuestID
                                 quest["End"] = format ("|%s|32|%f|%f", mapId, x, y)
                             end
                             patch = bit.bor (patch, 1)        -- Flag as a patched quest
@@ -5526,8 +5603,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
 
                 local i, cur = self:FindCur (qTitle)
                 if cur then
-                    local color = self:GetDifficultyColor (cur.Level)
-                    color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                    local color = GetCachedDifficultyColorStr(cur.Level)
                     fstr:SetText (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
                 end
 
@@ -5556,8 +5632,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
                     objn = tonumber(objn)
                     local i, cur = self:FindCur (id)
                     if cur then
-                        local color = self:GetDifficultyColor (cur.Level)
-                        color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                        local color = GetCachedDifficultyColorStr(cur.Level)
                         tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
                         tipAddSuccess = true
                         if cur[objn] then
@@ -5600,8 +5675,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
                     end
 
                     if s1 then
-                        local color = self:GetDifficultyColor (cur.Level)
-                        color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                        local color = GetCachedDifficultyColorStr(cur.Level)
 
                         tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
 
@@ -6003,7 +6077,7 @@ function Nx.Quest.List:UpdateMenu()
         local i = self.List:ItemGetData()
         if i then
 
-            local qi = bit.band (i, 0xff)
+            local qi = bit_band (i, 0xff)
             if qi > 0 then
                 local i, cur = Nx.Quest:FindCurByIndex (qi)
                 if cur then
@@ -6202,8 +6276,8 @@ function Nx.Quest.List:Select (qId, qI)
         local i = list:ItemGetData (n)
         if i then
 
-            local qi = bit.band (i, 0xff)
-            local qid = bit.rshift (i, 16)
+            local qi = bit_band (i, 0xff)
+            local qid = bit_rshift (i, 16)
 
             if qi == qI and qid == qId then
 
@@ -6224,21 +6298,21 @@ function Nx.Quest.List:GetCurSelected()
     local i = self.List:ItemGetData()
     if i then
 
-        local qi = bit.band (i, 0xff)
-        local qid = bit.rshift (i, 16)
+        local qi = bit_band (i, 0xff)
+        local qid = bit_rshift (i, 16)
         if qid > 0 or qi > 0 then
             local _, cur = Nx.Quest:FindCur (qid, qi)
             return cur
         end
 --[[
-        local qi = bit.band (i, 0xff)
+        local qi = bit_band (i, 0xff)
         if qi > 0 then
 
             local i, cur = Nx.Quest:FindCurByIndex (qi)
             return cur
         else
 
-            local qid = bit.rshift (i, 16)
+            local qid = bit_rshift (i, 16)
             local i, cur = Nx.Quest:FindCur (qid)
             return cur
         end
@@ -6338,13 +6412,13 @@ function Nx.Quest.List:Menu_OnGoto (item)
     local i = self.List:ItemGetData()
     if i then
 
-        local qIndex = bit.band (i, 0xff)
+        local qIndex = bit_band (i, 0xff)
 
         if qIndex > 0 then
             Nx.prt (L["Already have the quest!"])
 
         else
-            local qId = bit.rshift (i, 16)
+            local qId = bit_rshift (i, 16)
             Nx.Quest:Goto (qId)
 
             self:Update()
@@ -6415,7 +6489,7 @@ function Nx.Quest.List:Menu_OnCompleted (item)
     local i = self.List:ItemGetData()
     if i then
 
-        local qId = bit.rshift (i, 16)
+        local qId = bit_rshift (i, 16)
         local qStatus, qTime = Nx.Quest:GetQuest (qId)
 
         if qStatus == "C" then
@@ -6483,7 +6557,7 @@ function Nx.Quest.List:Menu_OnSendQInfo (item)
     local i = self.List:ItemGetData()
     if i then
 
-        local qi = bit.band (i, 0xff)
+        local qi = bit_band (i, 0xff)
         self:SendQuestInfo (qi)
     end
 end
@@ -6564,7 +6638,7 @@ function Nx.Quest.List:Menu_OnShare (item)
     local i = self.List:ItemGetData()
     if i then
 
-        local qi = bit.band (i, 0xff)
+        local qi = bit_band (i, 0xff)
         if qi > 0 then
             if GetNumSubgroupMembers() > 0 then
                 QuestLogPushQuest()
@@ -6580,8 +6654,8 @@ function Nx.Quest.List:Menu_OnAbandon (item)
     local i = self.List:ItemGetData()
     if i then
 
-        local qIndex = bit.band (i, 0xff)
-        local qId = bit.rshift (i, 16)
+        local qIndex = bit_band (i, 0xff)
+        local qId = bit_rshift (i, 16)
         Nx.Quest:Abandon (qIndex, qId)
 
 --        self:Update()    -- Dialog gets closed!
@@ -6625,8 +6699,8 @@ function Nx.Quest.List:OnListEvent (eventName, sel, val2, click)
     local itemData = self.List:ItemGetData (sel) or 0
     local hdrCur = self.List:ItemGetDataEx (sel, 1)
 
-    local qIndex = bit.band (itemData, 0xff)
-    local qId = bit.rshift (itemData, 16)
+    local qIndex = bit_band (itemData, 0xff)
+    local qId = bit_rshift (itemData, 16)
 
     local shift = IsShiftKeyDown() or eventName == "mid"
 
@@ -6649,8 +6723,8 @@ function Nx.Quest.List:OnListEvent (eventName, sel, val2, click)
                         break
                     end
 
-                    local qIndex = bit.band (itemData, 0xff)
-                    local qId = bit.rshift (itemData, 16)
+                    local qIndex = bit_band (itemData, 0xff)
+                    local qId = bit_rshift (itemData, 16)
 
                     local i, cur, id = Quest:FindCur (qId, qIndex)
 
@@ -6705,7 +6779,7 @@ function Nx.Quest.List:OnListEvent (eventName, sel, val2, click)
         if qId > 0 then
 
             -- 0 is quest name line
-            local qObj = bit.band (bit.rshift (itemData, 8), 0xff)
+            local qObj = bit_band (bit_rshift (itemData, 8), 0xff)
 
             local mapId = Map:GetCurrentMapId()
             Quest:TrackOnMap (qId, qObj, qIndex > 0, shift)
@@ -6736,7 +6810,7 @@ function Nx.Quest.List:OnListEvent (eventName, sel, val2, click)
 
         else
             -- 0 is quest name line
-            local qObj = bit.band (bit.rshift (itemData, 8), 0xff)
+            local qObj = bit_band (bit_rshift (itemData, 8), 0xff)
 
             if self.TabSelected == 1 then
 
@@ -6749,7 +6823,7 @@ function Nx.Quest.List:OnListEvent (eventName, sel, val2, click)
                 if qObj == 0 then
                     Quest.Tracking[qId] = bit.bxor (tbits, 1)
                 else
-                    Quest.Tracking[qId] = bit.bxor (tbits, bit.lshift (1, qObj))
+                    Quest.Tracking[qId] = bit.bxor (tbits, bit_lshift (1, qObj))
                 end
 
                 self:Update()
@@ -6801,13 +6875,13 @@ function Nx.Quest.List:ToggleWatch (qId, qIndex, qObj, shift)
                 local tbits = Quest.Tracking[qId] or 0
 
                 if qObj == 0 then
-                    if bit.band (tbits, 1) > 0 then
+                    if bit_band (tbits, 1) > 0 then
                         Quest.Tracking[qId] = nil
                     else
                         Quest.Tracking[qId] = 0xffffffff        -- Track all
                     end
                 else
-                    Quest.Tracking[qId] = bit.bxor (tbits, bit.lshift (1, qObj))
+                    Quest.Tracking[qId] = bit.bxor (tbits, bit_lshift (1, qObj))
                 end
 
                 self:Update()
@@ -7214,8 +7288,7 @@ function Nx.Quest.List:Update()
                     lvlStr = format ("|cffd0d0d0%2d", level)
                 end
 
-                local color = Quest:GetDifficultyColor (level)
-                color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                local color = GetCachedDifficultyColorStr(level)
 
                 local nameStr = format ("%s %s%s", lvlStr, color, title)
 
@@ -7277,7 +7350,7 @@ function Nx.Quest.List:Update()
                     local butOn
 
                     local trkStr = " "
-                    if bit.band (trackMode, 1) > 0 then
+                    if bit_band(trackMode, 1) > 0 then
                         trkStr = "*"
                         butOn = true
                     end
@@ -7343,7 +7416,7 @@ function Nx.Quest.List:Update()
                                 list:ItemSetButton ("QuestWatch", false)
                             end
 
-                            if bit.band (trackMode, bit.lshift (1, ln)) > 0 then
+                            if bit_band (trackMode, bit_lshift (1, ln)) > 0 then
                                 list:ItemSetButton (qLocColors[ln][5], true)
                             end
                             list:ItemSet (1, trkStr)
@@ -7464,8 +7537,7 @@ function Nx.Quest.List:Update()
                         haveStr = "|cffe0e0e0+ "
                     end
 
-                    local color = Quest:GetDifficultyColor (lvl)
-                    color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                    local color = GetCachedDifficultyColorStr(lvl)
 
                     t.Desc = format ("%s %s%s%s", lvlStr, haveStr, color, title)
                     t.Col4 = format ("%s %s", date ("|cff9f9fcf%m/%d %H:%M:%S", qTime), dailyName)
@@ -7670,8 +7742,7 @@ function Nx.Quest.List:Update()
                         haveStr = "|cffe0e0e0+ "
                     end
 
-                    local color = Quest:GetDifficultyColor (lvl)
-                    color = format ("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+                    local color = GetCachedDifficultyColorStr(lvl)
 
                     local str = format ("%s %s%s%s", lvlStr, haveStr, color, title)
 
@@ -7695,7 +7766,7 @@ function Nx.Quest.List:Update()
                         list:ItemSet (4, sMapName)
 
                         list:ItemSetButton ("QuestWatch", false)
-                        if bit.band (trackMode, 1) > 0 then
+                        if bit_band (trackMode, 1) > 0 then
                             list:ItemSetButton ("QuestWatch", true)
                         end
                         list:ItemSetButtonTip (questTip)
@@ -7706,7 +7777,7 @@ function Nx.Quest.List:Update()
                         list:ItemSet (4, eMapName)
 
                         list:ItemSetButton ("QuestWatch", false)
-                        if bit.band (trackMode, 0x10000) > 0 then
+                        if bit_band (trackMode, 0x10000) > 0 then
                             list:ItemSetButton ("QuestWatch", true)
                         end
                         list:ItemSetButtonTip (questTip)
@@ -7735,7 +7806,7 @@ function Nx.Quest.List:Update()
                             list:ItemSet (4, Map:IdToName (zone))
                         end
 
-                        if bit.band (trackMode, bit.lshift (1, n)) > 0 then
+                        if bit_band (trackMode, bit_lshift (1, n)) > 0 then
                             list:ItemSetButton (qLocColors[n][5], true)
                         end
 
@@ -7841,7 +7912,7 @@ function Nx.Quest.List:Update()
 --        Nx.prt ("%s %s", i, data)
 
         if data > 0 then
-            Nx.Quest:SelectBlizz (bit.band (data, 0xff))
+            Nx.Quest:SelectBlizz (bit_band (data, 0xff))
             NxQuestD:Show()
 
             Quest:UpdateQuestDetails()
@@ -8047,7 +8118,7 @@ function Nx.Quest:UpdateIcons (map)
         local mask = showOnMap and cur and cur.TrackMask or trackMode
         local showEnd
 
-        if bit.band (mask, 1) > 0 then
+        if bit_band (mask, 1) > 0 then
 
             if not (cur and (cur.QI > 0 or cur.Party)) then
 
@@ -8070,7 +8141,7 @@ function Nx.Quest:UpdateIcons (map)
             end
         end
 
-        if showEnd or bit.band (mask, 0x10000) > 0 then
+        if showEnd or bit_band (mask, 0x10000) > 0 then
 
             local obj = quest["End"] or quest["Start"]
 
@@ -8107,7 +8178,7 @@ function Nx.Quest:UpdateIcons (map)
                 local qStatus = Nx.Quest:GetQuest (cur.QId)
                 drawArea = showWatchAreas and qStatus == "W"
             end
---            local drawArea = bit.band (trackMode, 0x10000) == 0
+--            local drawArea = bit_band (trackMode, 0x10000) == 0
 
             for n = 1, 15 do
 
@@ -8129,7 +8200,7 @@ function Nx.Quest:UpdateIcons (map)
 --                        Nx.prt ("Nxzone error %s %s", objName, objZone)
                         break
                     end
-                    if bit.band (mask, bit.lshift (1, n)) > 0 then
+                    if bit_band (mask, bit_lshift (1, n)) > 0 then
                         local colI = n
 
                         if colorPerQ then
@@ -8175,7 +8246,7 @@ function Nx.Quest:UpdateIcons (map)
 --                            Nx.prt ("%s, spans %s", objName, strsub (obj, loc))
 
                             local hover = Quest.IconHoverCur == cur and Quest.IconHoverObjI == n
-                            local tracking = bit.band (trackMode, bit.lshift (1, n)) > 0
+                            local tracking = bit_band (trackMode, bit_lshift (1, n)) > 0
 
                             local tip = format (L["%s\nObj: %s"], qname, oname)
                             if cur and cur[n + 400] then
@@ -8217,7 +8288,7 @@ function Nx.Quest:UpdateIcons (map)
                             end
 
                             if not cur or drawArea or hover
-                                    or (bit.band (trackMode, bit.lshift (1, n)) > 0 and tonumber(trkA) > .05) then
+                                    or (bit_band (trackMode, bit_lshift (1, n)) > 0 and tonumber(trkA) > .05) then
 
                                 local ssub = strsub
 
@@ -8997,7 +9068,7 @@ function Nx.Quest.Watch:Open()
     menu:AddItem (0, L["FindGroup"], function(self)
         local data = self.List:ItemGetData()
         if data then
-            local qId = bit.rshift (data, 16)
+            local qId = bit_rshift (data, 16)
             if qId > 0 then
                 local activityID, categoryID, filters, questName = LFGListUtil_GetQuestCategoryData(qId)
                 if not activityID then
@@ -9267,6 +9338,79 @@ function Nx.Quest.Watch:OnTimer (item)
 end
 
 -------------------------------------------------------------------------------
+-- Update watch list helper functions (moved outside for performance)
+-------------------------------------------------------------------------------
+
+-- Emissary click handler (static function to avoid recreation)
+local function WatchList_EmmFunc(id)
+    local qId = bit_rshift(id, 16)
+    local bId = bit_band(id, 0xff)
+    --WorldMapFrame.overlayFrames[3].SetSelectedBountyIndex(bId)
+end
+
+-- Add objectives to tooltip (static function)
+local function WatchList_AddObjectives(questID, numObjectives)
+    for objectiveIndex = 1, numObjectives do
+        local objectiveText, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false)
+        if objectiveText and #objectiveText > 0 then
+            local color = finished and GRAY_FONT_COLOR or HIGHLIGHT_FONT_COLOR
+            GameTooltip:AddLine(QUEST_DASH .. objectiveText, color.r, color.g, color.b, true)
+        end
+    end
+end
+
+-- Scan tooltip for bounty info (static function)
+local function WatchList_ScanTip(bounty)
+    local tipVisible = GameTooltip:IsShown()
+    local tipText = ""
+    local questIndex = GetQuestLogIndexByID(bounty.questID)
+    local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(questIndex)
+
+    if title and not tipVisible then
+        GameTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+        GameTooltip.ItemTooltip:Hide()
+
+        GameTooltip:SetText(title, HIGHLIGHT_FONT_COLOR:GetRGB())
+        WorldMap_AddQuestTimeToTooltip(bounty.questID)
+
+        local _, questDescription = GetQuestLogQuestText(questIndex)
+        GameTooltip:AddLine(questDescription, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
+
+        WatchList_AddObjectives(bounty.questID, bounty.numObjectives)
+
+        if bounty.turninRequirementText then
+            GameTooltip:AddLine(bounty.turninRequirementText, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true)
+        end
+
+        GameTooltip_AddQuestRewardsToTooltip(GameTooltip, bounty.questID, TOOLTIP_QUEST_REWARDS_STYLE_EMISSARY_REWARD)
+
+        local numLines = GameTooltip:NumLines()
+        for i = 1, numLines do
+            local lineText = _G["GameTooltipTextLeft"..i]:GetText()
+            if i == 2 or i == 3 or strfind(lineText, "Rewards") then
+                tipText = tipText .. format("|cff%02x%02x%02x%s", NORMAL_FONT_COLOR.r * 255, NORMAL_FONT_COLOR.g * 255, NORMAL_FONT_COLOR.b * 255, lineText) .. "|r\n"
+            else
+                if i == numLines then
+                    local money = GetQuestLogRewardMoney(bounty.questID)
+                    if money > 0 then
+                        tipText = tipText .. GetCoinTextureString(money)
+                    end
+                end
+                tipText = tipText .. lineText .. "\n"
+            end
+        end
+        for i = 1, GameTooltipTooltip:NumLines() do
+            local tipTexture = GameTooltip.ItemTooltip.Icon:GetTexture()
+            local r, g, b = _G["GameTooltipTooltipTextLeft"..i]:GetTextColor()
+            tipText = tipText .. ((i == 1 and tipTexture) and "|T"..tipTexture..":33|t " or "\n") .. format("|cff%02x%02x%02x%s", r * 255, g * 255, b * 255, _G["GameTooltipTooltipTextLeft"..i]:GetText()) .. "|r\n"
+        end
+    end
+    if not tipVisible then GameTooltip:Hide() end
+
+    return tipText
+end
+
+-------------------------------------------------------------------------------
 -- Update watch list
 -------------------------------------------------------------------------------
 
@@ -9278,27 +9422,37 @@ function Nx.Quest.Watch:UpdateList()
     local Map = Nx.Map
     local map = Map:GetMap(1)
     local qopts = Nx.Quest:GetQuestOpts()
+    
+    -- Cache quest options (accessed once at start)
     local hideBfAEmmissaries = qopts["NXWHideBfAEmmissaries"]
     local hideLegionEmmissaries = qopts["NXWHideLegionEmmissaries"]
     local hideUnfinished = qopts["NXWHideUnfinished"]
     local hideGroup = qopts["NXWHideGroup"]
     local hideNotInZone = qopts["NXWHideNotInZone"]
     local hideNotInCont = qopts["NXWHideNotInCont"]
-    local hideDist = qopts["NXWHideDist"] >= 19900 and 99999 or qopts["NXWHideDist"]
-    local hideDist = hideDist / 4.575        -- Convert to world units
+    local rawHideDist = qopts["NXWHideDist"]
+    local hideDist = (rawHideDist >= 19900 and 99999 or rawHideDist) / 4.575  -- Convert to world units
     local priDist = qopts.NXWPriDist
 
     local gopts = self.GOpts
 
-    local fixedSize = Nx.qdb.profile.QuestWatch.FixedSize
-    local showDist = Nx.qdb.profile.QuestWatch.ShowDist
-    local showPerColor = Nx.qdb.profile.QuestWatch.ShowPerColor
-    local hideDoneObj = Nx.qdb.profile.QuestWatch.HideDoneObj
+    -- Cache profile settings (avoid repeated deep lookups)
+    local qwProfile = Nx.qdb.profile.QuestWatch
+    local fixedSize = qwProfile.FixedSize
+    local showDist = qwProfile.ShowDist
+    local showPerColor = qwProfile.ShowPerColor
+    local hideDoneObj = qwProfile.HideDoneObj
+    local itemScale = qwProfile.ItemScale
+    local itemAlpha = qwProfile.ItemAlpha
+    local oMaxLen = qwProfile.OMaxLen
+    local hideBlizz = qwProfile.HideBlizz
 
-    local compColor = Nx.Quest.Cols["compColor"]
-    local incompColor = Nx.Quest.Cols["incompColor"]
-    local oCompColor = Nx.Quest.Cols["oCompColor"]
-    local oIncompColor = Nx.Quest.Cols["oIncompColor"]
+    -- Cache color settings
+    local Cols = Quest.Cols
+    local compColor = Cols["compColor"]
+    local incompColor = Cols["incompColor"]
+    local oCompColor = Cols["oCompColor"]
+    local oIncompColor = Cols["oIncompColor"]
 
     -- List
 
@@ -9347,85 +9501,20 @@ function Nx.Quest.Watch:UpdateList()
 
         if self.ButATarget:GetPressed() then
             if disti then
-                local cur = curq[bit.band (disti, 0xff)]
+                local cur = curq[bit_band (disti, 0xff)]
                 Quest:CalcAutoTrack (cur)
             end
         end
 
         -- Remember closest quest for com
 
-        self.ClosestCur = disti and curq[bit.band (disti, 0xff)]
+        self.ClosestCur = disti and curq[bit_band(disti, 0xff)]
 
         --
 
-        -- Emmissaries
-        local emmFunc = function(id)
-            qId = bit.rshift(id, 16)
-            bId = bit.band(id, 0xff)
-            --WorldMapFrame.overlayFrames[3].SetSelectedBountyIndex(bId)
-        end
-
+        -- Emmissaries (using static helper functions defined above UpdateList)
         local emmBfA_Sel = nil --WorldMapFrame.overlayFrames[3].selectedBountyIndex
         local emmLegion_Sel = nil --WorldMapFrame.overlayFrames[3].selectedBountyIndex
-
-        local function AddObjectives(questID, numObjectives)
-            for objectiveIndex = 1, numObjectives do
-                local objectiveText, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false);
-                if objectiveText and #objectiveText > 0 then
-                    local color = finished and GRAY_FONT_COLOR or HIGHLIGHT_FONT_COLOR;
-                    GameTooltip:AddLine(QUEST_DASH .. objectiveText, color.r, color.g, color.b, true);
-                end
-            end
-        end
-
-        local function ScanTip(bounty)
-            local tipVisible = GameTooltip:IsShown()
-
-            local tipText = ""
-            local questIndex = GetQuestLogIndexByID(bounty.questID);
-            local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(questIndex);
-
-            if title and not tipVisible then
-                GameTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-                GameTooltip.ItemTooltip:Hide();
-
-                GameTooltip:SetText(title, HIGHLIGHT_FONT_COLOR:GetRGB());
-                WorldMap_AddQuestTimeToTooltip(bounty.questID);
-
-                local _, questDescription = GetQuestLogQuestText(questIndex);
-                GameTooltip:AddLine(questDescription, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
-
-                AddObjectives(bounty.questID, bounty.numObjectives);
-
-                if bounty.turninRequirementText then
-                    GameTooltip:AddLine(bounty.turninRequirementText, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true);
-                end
-
-                GameTooltip_AddQuestRewardsToTooltip(GameTooltip, bounty.questID, TOOLTIP_QUEST_REWARDS_STYLE_EMISSARY_REWARD);
-
-                for i=1,GameTooltip:NumLines() do
-                  if i == 2 or i == 3 or string.find(_G["GameTooltipTextLeft"..i]:GetText(), "Rewards") then
-                    tipText = tipText .. format ("|cff%02x%02x%02x%s", NORMAL_FONT_COLOR.r * 255, NORMAL_FONT_COLOR.g * 255, NORMAL_FONT_COLOR.b * 255, _G["GameTooltipTextLeft"..i]:GetText()) .. "|r\n"
-                  else
-                    if i == GameTooltip:NumLines() then
-                        local money = GetQuestLogRewardMoney(bounty.questID)
-                        if ( money > 0 ) then
-                            tipText = tipText .. GetCoinTextureString(money)
-                        end
-                    end
-                    tipText = tipText .. _G["GameTooltipTextLeft"..i]:GetText() .. "\n"
-                  end
-                end
-                for i=1,GameTooltipTooltip:NumLines() do
-                  local tipTexture = GameTooltip.ItemTooltip.Icon:GetTexture()
-                  local r, g, b = _G["GameTooltipTooltipTextLeft"..i]:GetTextColor()
-                  tipText = tipText .. ((i == 1 and tipTexture) and "|T"..tipTexture..":33|t " or "\n") .. format ("|cff%02x%02x%02x%s", r * 255, g * 255, b * 255, _G["GameTooltipTooltipTextLeft"..i]:GetText()) .. "|r\n"
-                end
-            end
-            if not tipVisible then GameTooltip:Hide() end
-
-            return tipText
-        end
 
         -- BfA
         if not hideBfAEmmissaries and #emmBfA > 0 then
@@ -9438,9 +9527,9 @@ function Nx.Quest.Watch:UpdateList()
                     list:ItemAdd(bounty.questID * 0x10000 + bountyIndex)
                     list:ItemSetOffset (16, -1)
                     list:ItemSet(2,"|cffcccccc" .. objectiveText)
-                    list:ItemSetButtonTip(ScanTip(bounty))
-                    list:ItemSetButton("QuestWatchEmissaryTip", emmBfA_Sel == (bountyIndex) and true or false)
-                    list:ItemSetFunc(emmFunc, bounty.questID * 0x10000 + bountyIndex)
+                    list:ItemSetButtonTip(WatchList_ScanTip(bounty))
+                    list:ItemSetButton("QuestWatchEmissaryTip", emmBfA_Sel == bountyIndex)
+                    list:ItemSetFunc(WatchList_EmmFunc, bounty.questID * 0x10000 + bountyIndex)
                 end
             end
 
@@ -9462,9 +9551,9 @@ function Nx.Quest.Watch:UpdateList()
                     list:ItemAdd(bounty.questID * 0x10000 + bountyIndex)
                     list:ItemSetOffset (16, -1)
                     list:ItemSet(2,"|cffcccccc" .. objectiveText)
-                    list:ItemSetButtonTip(ScanTip(bounty))
-                    list:ItemSetButton("QuestWatchEmissaryTip",emmLegion_Sel == (bountyIndex) and true or false)
-                    list:ItemSetFunc(emmFunc, bounty.questID * 0x10000 + bountyIndex)
+                    list:ItemSetButtonTip(WatchList_ScanTip(bounty))
+                    list:ItemSetButton("QuestWatchEmissaryTip", emmLegion_Sel == bountyIndex)
+                    list:ItemSetFunc(WatchList_EmmFunc, bounty.questID * 0x10000 + bountyIndex)
                 end
             end
 
@@ -9474,8 +9563,8 @@ function Nx.Quest.Watch:UpdateList()
 
         if not self.Win:IsSizeMin() and self.Win:IsVisible() then
             self.FlashColor = (self.FlashColor + 1) % 2
-            list:SetItemFrameScaleAlpha (Nx.qdb.profile.QuestWatch.ItemScale, Nx.Util_str2a (Nx.qdb.profile.QuestWatch.ItemAlpha))
-            if Nx.qdb.profile.QuestWatch.HideBlizz and not InCombatLockdown() then
+            list:SetItemFrameScaleAlpha (itemScale, Nx.Util_str2a (itemAlpha))
+            if hideBlizz and not InCombatLockdown() then
                 --ObjectiveTrackerFrame:Hide()        -- Hide Blizzard's
             end
             if Nx.Quest.AltView then
@@ -9759,7 +9848,7 @@ function Nx.Quest.Watch:UpdateList()
 
                 for _, distn in ipairs (watched) do
 
-                    local n = bit.band (distn, 0xff)
+                    local n = bit_band (distn, 0xff)
 
                     local cur = curq[n]
                     local qId = cur.QId
@@ -9779,7 +9868,7 @@ function Nx.Quest.Watch:UpdateList()
                             elseif isComplete or lbNum == 0 then
                                 local butType = "QuestWatch"
                                 local pressed = false
-                                if bit.band (trackMode, 1) > 0 then
+                                if bit_band (trackMode, 1) > 0 then
                                     pressed = true
                                 end
                                 if Quest:IsTargeted (qId, 0) then
@@ -9808,8 +9897,8 @@ function Nx.Quest.Watch:UpdateList()
                             local color = isComplete and compColor or incompColor
                             local lvlStr = ""
                             if level > 0 then
-                                local col = Quest:GetDifficultyColor (level)
-                                lvlStr = format ("|cff%02x%02x%02x%2d%s ", col.r * 255, col.g * 255, col.b * 255, level, cur.TagShort)
+                                local colStr = GetCachedDifficultyColorStr(level)
+                                lvlStr = format ("%s%2d%s ", colStr, level, cur.TagShort)
                             end
                             local nameStr = format ("%s%s%s", lvlStr, color, cur.Title)
                             if cur.NewTime and time() < cur.NewTime + 60 then
@@ -9912,7 +10001,7 @@ function Nx.Quest.Watch:UpdateList()
                                         end
     --                                    Nx.prt ("watch %s %s %s", qId, zone or "nil", butType or "nil")
                                         if not done and butType then
-                                            if bit.band (trackMode, bit.lshift (1, ln)) > 0 then
+                                            if bit_band (trackMode, bit_lshift (1, ln)) > 0 then
                                                 list:ItemSetButton (butType, true)
                                             else
                                                 list:ItemSetButton (butType, nil)
@@ -10036,7 +10125,7 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
     if eventName == "menu" and self.RMenu then
         local data = self.List:ItemGetData (val1)
         if data then
-            local qId = bit.rshift (data, 16)
+            local qId = bit_rshift (data, 16)
             if qId and qId > 0 then
                 self.RMenu:Open()
             end
@@ -10051,8 +10140,8 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
 
         local data = self.List:ItemGetData (val1)
         if data then
-            local qIndex = bit.band (data, 0xff)
-            local qId = bit.rshift (data, 16)
+            local qIndex = bit_band (data, 0xff)
+            local qId = bit_rshift (data, 16)
             local typ = but:GetType()
             if typ.CustomTip or typ.EmissaryTip then
                 local func = self.List:ItemGetFunc(data)
@@ -10088,7 +10177,7 @@ function Nx.Quest.Watch:OnListEvent (eventName, val1, val2, click, but)
 
                                 for n = cur.LBCnt, 1, -1 do
 
-                                    data = bit.band (data, 0xffff00ff) + n * 0x100
+                                    data = bit_band (data, 0xffff00ff) + n * 0x100
 
 --                                    Nx.prtVar ("", data)
                                     self:Set (data, val2, not IsShiftKeyDown())
@@ -10148,8 +10237,8 @@ function Nx.Quest.Watch:Set (data, on, track)
 
     local Quest = Nx.Quest
 
-    local qIndex = bit.band (data, 0xff)
-    local qId = bit.rshift (data, 16)
+    local qIndex = bit_band (data, 0xff)
+    local qId = bit_rshift (data, 16)
 
     if qId > 0 then
 
@@ -10172,7 +10261,7 @@ function Nx.Quest.Watch:Set (data, on, track)
         self:ClearAutoTarget (true)
 
         -- 0 is quest name line
-        local qObj = bit.band (bit.rshift (data, 8), 0xff)
+        local qObj = bit_band (bit_rshift (data, 8), 0xff)
 
         local tbits = Quest.Tracking[qId] or 0
 
@@ -10200,9 +10289,9 @@ function Nx.Quest.Watch:Set (data, on, track)
         else
 
             if on == false then
-                Quest.Tracking[qId] = bit.band (tbits, bit.bnot (bit.lshift (1, qObj)))
+                Quest.Tracking[qId] = bit_band (tbits, bit.bnot (bit_lshift (1, qObj)))
             else
-                Quest.Tracking[qId] = bit.bor (tbits, bit.lshift (1, qObj))
+                Quest.Tracking[qId] = bit.bor (tbits, bit_lshift (1, qObj))
             end
         end
 
@@ -10260,8 +10349,8 @@ function Nx.Quest.Watch:ClearCompleted (qIdMatch)
         local i = list:ItemGetData (ln)
         if i then
 
-            local qIndex = bit.band (i, 0xff)
-            local qId = bit.rshift (i, 16)
+            local qIndex = bit_band (i, 0xff)
+            local qId = bit_rshift (i, 16)
 
             if qId > 0 and (not qIdMatch or qIdMatch == qId) then
 
@@ -10269,14 +10358,14 @@ function Nx.Quest.Watch:ClearCompleted (qIdMatch)
                 if cur then
 
                     local qComplete = cur.CompleteMerge    -- Remember for objectives
-                    local qObj = bit.band (bit.rshift (i, 8), 0xff)
+                    local qObj = bit_band (bit_rshift (i, 8), 0xff)
 
 --                    Nx.prt ("Data #%d Id %d Obj %d C=%s", qIndex, qId, qObj, tostring (cur.CompleteMerge))
 
                     local tbits = Quest.Tracking[qId] or 0
 
                     if tbits > 0 then
-                        local objmask = bit.lshift (1, qObj)
+                        local objmask = bit_lshift (1, qObj)
 
                         if qObj == 0 then
                             if qComplete then
@@ -10306,11 +10395,11 @@ function Nx.Quest.Watch:ClearCompleted (qIdMatch)
 
                             if done then
 
-                                local on = bit.band (tbits, objmask)
+                                local on = bit_band (tbits, objmask)
 
                                 if on > 0 then
                                     -- Turn off
-                                    Quest.Tracking[qId] = bit.band (tbits, bit.bnot (objmask))
+                                    Quest.Tracking[qId] = bit_band (tbits, bit.bnot (objmask))
                                     Quest:TrackOnMap (qId, qObj, qIndex > 0)
                                 end
                             end
@@ -10471,7 +10560,7 @@ function Nx.Quest:CalcAutoTrack (cur)
         local closeI = cur.CloseObjI
         if closeI and closeI >= 0 then
 
-            Quest.Tracking[cur.QId] = cur.TrackMask            -- bit.lshift (1, closeI)
+            Quest.Tracking[cur.QId] = cur.TrackMask            -- bit_lshift (1, closeI)
             Quest:TrackOnMap (cur.QId, closeI, cur.QI > 0 or cur.Party, true, true)
         end
 
@@ -10482,8 +10571,8 @@ function Nx.Quest:CalcAutoTrack (cur)
                 break
             end
 
-            local obit = bit.lshift (1, objn)
-            if bit.band (cur.TrackMask, obit) > 0 then
+            local obit = bit_lshift (1, objn)
+            if bit_band (cur.TrackMask, obit) > 0 then
 
                 if Quest:GetObjectiveType (obj) == 1 then
 
@@ -10574,7 +10663,7 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
             return
         end
 --]]
-        local track = bit.band (tbits, bit.lshift (1, qObj))
+        local track = bit_band (tbits, bit_lshift (1, qObj))
 
         local questObj
         local name, zone, loc
@@ -10948,7 +11037,7 @@ function Nx.Quest:CalcDistances (n1, n2)
                     break
                 end
 
-                if bit.band (cur.TrackMask, bit.lshift (1, qObj)) > 0 then
+                if bit_band (cur.TrackMask, bit_lshift (1, qObj)) > 0 then
 
                     local _, zone, loc
 
@@ -11212,7 +11301,7 @@ function Nx.Quest:Hash (title, level)
         h2 = h2 + strbyte (str, strLen)
     end
 
-    return bit.band (h1, 0xff) + bit.band (h2, 0xff) * 0x100 + bit.band (h3, 0xff) * 0x10000
+    return bit_band (h1, 0xff) + bit_band (h2, 0xff) * 0x100 + bit_band (h3, 0xff) * 0x10000
 end
 --]]
 
@@ -11417,13 +11506,13 @@ function Nx.Quest:DecodeComRcv (info, msg)
 
     local targetStr = ""
 
-    if bit.band (flgs, 2) == 0 then
+    if bit_band (flgs, 2) == 0 then
         targetStr = "*"
     end
 
     local str = format ("\n|r%s%d |cffcfcf0f%s", targetStr, lvl, name)
 
-    if bit.band (flgs, 1) > 0 then
+    if bit_band (flgs, 1) > 0 then
         str = str .. L[" (Complete)"]
     end
 
@@ -11591,7 +11680,7 @@ function Nx.Quest:OnPartyMsg (plName, msg)
                 local q = pl[qId] or {}
                 pl[qId] = q
 
-                q.Complete = bit.band (flgs, 1) == 1 and 1 or nil
+                q.Complete = bit_band (flgs, 1) == 1 and 1 or nil
 
     --            Nx.prt ("%s: %s %x %s", plName, qId, flgs, oCnt)
 

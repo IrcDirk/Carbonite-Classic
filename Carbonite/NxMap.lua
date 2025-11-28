@@ -1876,7 +1876,10 @@ function Nx.Map:UpdateWorldMap()
     end
     if not InCombatLockdown() and Nx.BlobsAvailable then
         self.Arch:DrawNone();
-        if Nx.db.char.Map.ShowArchBlobs then
+        -- Hide arch blobs during zoom animation to prevent position/scale mismatch
+        if self.StepTime ~= 0 or self.Scrolling then
+            self.Arch:Hide()
+        elseif Nx.db.char.Map.ShowArchBlobs then
             local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
             for i, digSite in ipairs(digSites) do
                 self.Arch:DrawBlob(digSite.poiBlobID, true)

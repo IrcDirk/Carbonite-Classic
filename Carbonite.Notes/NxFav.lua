@@ -100,179 +100,179 @@ local function notesConfig()
                         Nx.fdb.profile.Notes.ShowMap = not Nx.fdb.profile.Notes.ShowMap
                     end,
                 },
-				handy = {
-					order = 2,
-					type = "toggle",
-					width = "full",
-					name = L["Display Handynotes On Map"],
-					desc = L["If you have HandyNotes installed, allows them on the Carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.HandyNotes
-					end,
-					set = function()
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.HandyNotes = not Nx.fdb.profile.Notes.HandyNotes
-						if Nx.fdb.profile.Notes.HandyNotes then
-							Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
-						else
-							map:ClearIconType("!HANDY")
-						end
-					end,
-					disabled = function()
-						if HandyNotes then
-							return false
-						end
-						return true
-					end,
-				},
-				handysize = {
-					order = 3,
-					type = "range",
-					width = "normal",
-					min = 10,
-					max = 60,
-					step = 5,
-					name = L["Handnotes Icon Size"],
-					get = function()
-						return Nx.fdb.profile.Notes.HandyNotesSize
-					end,
-					set = function(input,value)
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.HandyNotesSize = value
-						map:ClearIconType("!HANDY")
-						Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
-					end,
-					disabled = function()
-						if HandyNotes then
-							return false
-						end
-						return true
-					end,
-				},
-				rarescanner = {
-					order = 4,
-					type = "toggle",
-					width = "full",
-					name = L["Display RareScanner icons On Map"],
-					desc = L["If you have RareScanner installed, allows its icons on the Carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.RareScanner
-					end,
-					set = function()
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.RareScanner = not Nx.fdb.profile.Notes.RareScanner
-						if Nx.fdb.profile.Notes.RareScanner then
-							Nx.Notes.PrevRSPins = 0
-							Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
-						else
-							map:ClearIconType("!RSR")
-						end
-					end,
-					disabled = function()
-						if RareScanner then
-							return false
-						end
-						return true
-					end,
-				},
-				raresize = {
-					order = 5,
-					type = "range",
-					width = "normal",
-					min = 10,
-					max = 60,
-					step = 5,
-					name = L["RareScanner Icon Size"],
-					get = function()
-						return Nx.fdb.profile.Notes.RareScannerSize
-					end,
-					set = function(input,value)
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.RareScannerSize = value
-						map:ClearIconType("!RSR")
-						Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
-					end,
-					disabled = function()
-						if RareScanner then
-							return false
-						end
-						return true
-					end,
-				},
-				questie = {
-					order = 6,
-					type = "toggle",
-					width = "full",
-					name = L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"],
-					desc = L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.Questie
-					end,
-					set = function()
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.Questie = not Nx.fdb.profile.Notes.Questie
-						if Nx.fdb.profile.Notes.Questie then
-							Nx.Notes.PrevQuestiePins = 0
-							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
-						else
-							map:ClearIconType("!QUE")
-						end
-					end,
-					disabled = function()
-						if Questie then
-							return false
-						end
-						return true
-					end,
-				},
-				questieSE = {
-					order = 7,
-					type = "toggle",
-					width = "full",
-					name = L["Display icons for Available quests from Questie on Carbonite Map"],
-					desc = L["If you have Questie installed, allows its icons for available quests on the Carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.QuestieSE
-					end,
-					set = function()
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.QuestieSE = not Nx.fdb.profile.Notes.QuestieSE
-						if Nx.fdb.profile.Notes.Questie then
-							Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
-						end
-					end,
-					disabled = function()
-						if Questie then
-							return false
-						end
-						return true
-					end,
-				},
-				questiesize = {
-					order = 8,
-					type = "range",
-					width = "normal",
-					min = 10,
-					max = 40,
-					step = 1,
-					name = L["Questie Icon Size"],
-					get = function()
-						return Nx.fdb.profile.Notes.QuestieSize
-					end,
-					set = function(input,value)
-						local map = Nx.Map:GetMap (1)
-						Nx.fdb.profile.Notes.QuestieSize = value
-						map:ClearIconType("!QUE")
-						Nx.Notes.PrevQuestiePins = 0
-						Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
-					end,
-					disabled = function()
-						if Questie then
-							return false
-						end
-						return true
-					end,
-				},
+                handy = {
+                    order = 2,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Display Handynotes On Map"],
+                    desc = L["If you have HandyNotes installed, allows them on the Carbonite map"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.HandyNotes
+                    end,
+                    set = function()
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.HandyNotes = not Nx.fdb.profile.Notes.HandyNotes
+                        if Nx.fdb.profile.Notes.HandyNotes then
+                            Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
+                        else
+                            map:ClearIconType("!HANDY")
+                        end
+                    end,
+                    disabled = function()
+                        if HandyNotes then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                handysize = {
+                    order = 3,
+                    type = "range",
+                    width = "normal",
+                    min = 10,
+                    max = 60,
+                    step = 5,
+                    name = L["Handnotes Icon Size"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.HandyNotesSize
+                    end,
+                    set = function(input,value)
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.HandyNotesSize = value
+                        map:ClearIconType("!HANDY")
+                        Nx.Notes:HandyNotes(Nx.Map:GetCurrentMapAreaID())
+                    end,
+                    disabled = function()
+                        if HandyNotes then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                rarescanner = {
+                    order = 4,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Display RareScanner icons On Map"],
+                    desc = L["If you have RareScanner installed, allows its icons on the Carbonite map"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.RareScanner
+                    end,
+                    set = function()
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.RareScanner = not Nx.fdb.profile.Notes.RareScanner
+                        if Nx.fdb.profile.Notes.RareScanner then
+                            Nx.Notes.PrevRSPins = 0
+                            Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
+                        else
+                            map:ClearIconType("!RSR")
+                        end
+                    end,
+                    disabled = function()
+                        if RareScanner then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                raresize = {
+                    order = 5,
+                    type = "range",
+                    width = "normal",
+                    min = 10,
+                    max = 60,
+                    step = 5,
+                    name = L["RareScanner Icon Size"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.RareScannerSize
+                    end,
+                    set = function(input,value)
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.RareScannerSize = value
+                        map:ClearIconType("!RSR")
+                        Nx.Notes:RareScanner(Nx.Map:GetCurrentMapAreaID())
+                    end,
+                    disabled = function()
+                        if RareScanner then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                questie = {
+                    order = 6,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Display Questie quest objective icons On Map (Beware: might cause lags and fps loss)"],
+                    desc = L["If you have Questie installed, allows its icons for quest objectives on the Carbonite map"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.Questie
+                    end,
+                    set = function()
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.Questie = not Nx.fdb.profile.Notes.Questie
+                        if Nx.fdb.profile.Notes.Questie then
+                            Nx.Notes.PrevQuestiePins = 0
+                            Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+                        else
+                            map:ClearIconType("!QUE")
+                        end
+                    end,
+                    disabled = function()
+                        if Questie then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                questieSE = {
+                    order = 7,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Display icons for Available quests from Questie on Carbonite Map"],
+                    desc = L["If you have Questie installed, allows its icons for available quests on the Carbonite map"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.QuestieSE
+                    end,
+                    set = function()
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.QuestieSE = not Nx.fdb.profile.Notes.QuestieSE
+                        if Nx.fdb.profile.Notes.Questie then
+                            Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+                        end
+                    end,
+                    disabled = function()
+                        if Questie then
+                            return false
+                        end
+                        return true
+                    end,
+                },
+                questiesize = {
+                    order = 8,
+                    type = "range",
+                    width = "normal",
+                    min = 10,
+                    max = 40,
+                    step = 1,
+                    name = L["Questie Icon Size"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.QuestieSize
+                    end,
+                    set = function(input,value)
+                        local map = Nx.Map:GetMap (1)
+                        Nx.fdb.profile.Notes.QuestieSize = value
+                        map:ClearIconType("!QUE")
+                        Nx.Notes.PrevQuestiePins = 0
+                        Nx.Notes:Questie(Nx.Map:GetCurrentMapAreaID())
+                    end,
+                    disabled = function()
+                        if Questie then
+                            return false
+                        end
+                        return true
+                    end,
+                },
 
             },
         }
@@ -490,85 +490,85 @@ end
 --
 function Nx.Notes:Create()
 
-	self.Side = 1
+    self.Side = 1
 
-	-- Create Window
+    -- Create Window
 
-	local win = Nx.Window:Create ("NxFav", 240, nil, nil, 1)
-	self.Win = win
-	win.Frm.NxInst = self
+    local win = Nx.Window:Create ("NxFav", 240, nil, nil, 1)
+    self.Win = win
+    win.Frm.NxInst = self
 
-	win:CreateButtons (true, true)
-	win:SetTitleLineH (18)
-	win:SetTitleXOff (220)
+    win:CreateButtons (true, true)
+    win:SetTitleLineH (18)
+    win:SetTitleXOff (220)
 
-	win:InitLayoutData (nil, -.23, -.25, -.54, -.5)
-	win.Frm:SetToplevel (true)
+    win:InitLayoutData (nil, -.23, -.25, -.54, -.5)
+    win.Frm:SetToplevel (true)
 
-	win:Show (false)
+    win:Show (false)
 
-	tinsert (UISpecialFrames, win.Frm:GetName())
+    tinsert (UISpecialFrames, win.Frm:GetName())
 
-	-- Buttons
+    -- Buttons
 
-	local bw, bh = win:GetBorderSize()
+    local bw, bh = win:GetBorderSize()
 
-	local but = Nx.Button:Create (win.Frm, "Txt64B", L["Record"], nil, bw + 1, -bh, "TOPLEFT", 44, 20, self.But_OnRecord, self)
-	self.RecBut = but
+    local but = Nx.Button:Create (win.Frm, "Txt64B", L["Record"], nil, bw + 1, -bh, "TOPLEFT", 44, 20, self.But_OnRecord, self)
+    self.RecBut = but
 
-	local but = Nx.Button:Create (win.Frm, "Txt64", L["Up"], nil, bw + 48, -bh, "TOPLEFT", 40, 20, self.But_OnUp, self)
-	local but = Nx.Button:Create (but.Frm, "Txt64", L["Down"], nil, 42, 0, "TOPLEFT", 40, 20, self.But_OnDown, self)
-	Nx.Button:Create (but.Frm, "Txt64", L["Delete Item"], nil, 54, 0, "TOPLEFT", 72, 20, self.But_OnItemDel, self)
+    local but = Nx.Button:Create (win.Frm, "Txt64", L["Up"], nil, bw + 48, -bh, "TOPLEFT", 40, 20, self.But_OnUp, self)
+    local but = Nx.Button:Create (but.Frm, "Txt64", L["Down"], nil, 42, 0, "TOPLEFT", 40, 20, self.But_OnDown, self)
+    Nx.Button:Create (but.Frm, "Txt64", L["Delete Item"], nil, 54, 0, "TOPLEFT", 72, 20, self.But_OnItemDel, self)
 
-	-- Folder List
+    -- Folder List
 
-	Nx.List:SetCreateFont ("Font.Medium", 16)
+    Nx.List:SetCreateFont ("Font.Medium", 16)
 
-	local list = Nx.List:Create ("FavF", 0, 0, 1, 1, win.Frm)
-	self.List = list
+    local list = Nx.List:Create ("FavF", 0, 0, 1, 1, win.Frm)
+    self.List = list
 
-	list:SetUser (self, self.OnListEvent)
+    list:SetUser (self, self.OnListEvent)
 
-	list:SetLineHeight (4)
+    list:SetLineHeight (4)
 
-	list:ColumnAdd ("", 1, 20)
-	list:ColumnAdd (L["Name"], 2, 900)
+    list:ColumnAdd ("", 1, 20)
+    list:ColumnAdd (L["Name"], 2, 900)
 
-	win:Attach (list.Frm, 0, .3, 0, 1)
+    win:Attach (list.Frm, 0, .3, 0, 1)
 
-	-- Item List
+    -- Item List
 
-	Nx.List:SetCreateFont ("Font.Medium", 16)
+    Nx.List:SetCreateFont ("Font.Medium", 16)
 
-	local list = Nx.List:Create ("FavI", 0, 0, 1, 1, win.Frm)
-	self.ItemList = list
+    local list = Nx.List:Create ("FavI", 0, 0, 1, 1, win.Frm)
+    self.ItemList = list
 
-	list:SetUser (self, self.OnItemListEvent)
+    list:SetUser (self, self.OnItemListEvent)
 
-	list:SetLineHeight (2)
+    list:SetLineHeight (2)
 
-	list:ColumnAdd ("", 1, 17)
-	list:ColumnAdd (L["Type"], 2, 90)
-	list:ColumnAdd (L["Value"], 3, 250)
-	list:ColumnAdd (L["Location"], 4, 900)
+    list:ColumnAdd ("", 1, 17)
+    list:ColumnAdd (L["Type"], 2, 90)
+    list:ColumnAdd (L["Value"], 3, 250)
+    list:ColumnAdd (L["Location"], 4, 900)
 
-	win:Attach (list.Frm, .3, 1, 0, 1)			-- 18, 1 with editbox
+    win:Attach (list.Frm, .3, 1, 0, 1)            -- 18, 1 with editbox
 
-	-- Filter Edit Box
+    -- Filter Edit Box
 
---	self.EditBox = Nx.EditBox:Create (win.Frm, self, self.OnEditBox, 30)
+--    self.EditBox = Nx.EditBox:Create (win.Frm, self, self.OnEditBox, 30)
 
---	win:Attach (self.EditBox.Frm, .3, 1, 0, 18)
+--    win:Attach (self.EditBox.Frm, .3, 1, 0, 18)
 
-	--
+    --
 
-	self:CreateMenu()
+    self:CreateMenu()
 
-	--
-	
-	self:Update()
+    --
 
-	self.List:FullUpdate()
+    self:Update()
+
+    self.List:FullUpdate()
 end
 
 -------------------------------------------------------------------------------
@@ -586,83 +586,83 @@ end
 --
 function Nx.Notes:SetRecord(on)
 
-	local but = self.RecBut
+    local but = self.RecBut
 
-	if on then
-		if self.CurFav then
-			self.Recording = self.CurFav
-			self.RecAlphaAnim = 1000
-			self.FavRec = Nx:ScheduleRepeatingTimer(self.RecordAnimTimer,0.1,self)
-			but:SetPressed (true)
-		else
-			Nx.prt (L["Select a favorite before recording"])
-			but:SetPressed (false)
-		end
-	else
-		Nx:CancelTimer(self.FavRec)
-		self.Recording = nil
-		but:SetAlpha (1)
-		but:SetPressed (false)
-	end
+    if on then
+        if self.CurFav then
+            self.Recording = self.CurFav
+            self.RecAlphaAnim = 1000
+            self.FavRec = Nx:ScheduleRepeatingTimer(self.RecordAnimTimer,0.1,self)
+            but:SetPressed (true)
+        else
+            Nx.prt (L["Select a favorite before recording"])
+            but:SetPressed (false)
+        end
+    else
+        Nx:CancelTimer(self.FavRec)
+        self.Recording = nil
+        but:SetAlpha (1)
+        but:SetPressed (false)
+    end
 end
 
 function Nx.Notes:RecordAnimTimer()
 
-	if self.Recording then
-		local a = (self.RecAlphaAnim - 35) % 1000
-		self.RecAlphaAnim = a
-		self.RecBut:SetAlpha (abs (a - 500) / 1000 + .5)
-	end
+    if self.Recording then
+        local a = (self.RecAlphaAnim - 35) % 1000
+        self.RecAlphaAnim = a
+        self.RecBut:SetAlpha (abs (a - 500) / 1000 + .5)
+    end
 end
 
 function Nx.Notes:But_OnUp()
-	self:MoveCur (true)
+    self:MoveCur (true)
 end
 
 function Nx.Notes:But_OnDown()
-	self:MoveCur()
+    self:MoveCur()
 end
 
 function Nx.Notes:MoveCur (low)
 
-	if self.Side == 1 then
+    if self.Side == 1 then
 
-		local item = self.CurFavOrFolder
-		if item then
+        local item = self.CurFavOrFolder
+        if item then
 
-			local parent = self:GetParent (item)
+            local parent = self:GetParent (item)
 
-			Nx.Util_TMoveItem (parent, item, low)
+            Nx.Util_TMoveItem (parent, item, low)
 
-			local i = self:FindListI (item)
-			if i > 0 then
-				self.List:Select (i + 1)		-- Add one for "Root" entry
-			end
-		end
-	else
-		local fav = self.CurFav
-		if fav and self.CurItemI then
-			local i = Nx.Util_TMoveI (fav, self.CurItemI, low)
-			if i then
-				self.CurItemI = i
-				self.ItemList:Select (i)
-			end
-		end
-	end
+            local i = self:FindListI (item)
+            if i > 0 then
+                self.List:Select (i + 1)        -- Add one for "Root" entry
+            end
+        end
+    else
+        local fav = self.CurFav
+        if fav and self.CurItemI then
+            local i = Nx.Util_TMoveI (fav, self.CurItemI, low)
+            if i then
+                self.CurItemI = i
+                self.ItemList:Select (i)
+            end
+        end
+    end
 
-	self:Update()
+    self:Update()
 end
 
 function Nx.Notes:But_OnItemDel()
 
-	local fav = self.CurFav
-	if fav and self.CurItemI then
-		if fav[self.CurItemI] then
-			tremove (fav, self.CurItemI)
-		end
-	end
+    local fav = self.CurFav
+    if fav and self.CurItemI then
+        if fav[self.CurItemI] then
+            tremove (fav, self.CurItemI)
+        end
+    end
 
-	self:Update()
+    self:Update()
 end
 
 -------------------------------------------------------------------------------
@@ -675,227 +675,227 @@ end
 --
 function Nx.Notes:CreateMenu()
 
-	local menu = Nx.Menu:Create (self.List.Frm, 250)
-	self.Menu = menu
+    local menu = Nx.Menu:Create (self.List.Frm, 250)
+    self.Menu = menu
 
-	menu:AddItem (0, L["Add Folder"], self.Menu_OnAddFolder, self)
-	menu:AddItem (0, L["Add Favorite"], self.Menu_OnAddFavorite, self)
-	menu:AddItem (0, "")
-	menu:AddItem (0, L["Rename"], self.Menu_OnRename, self)
-	menu:AddItem (0, L["Cut"], self.Menu_OnCut, self)
-	menu:AddItem (0, L["Copy"], self.Menu_OnCopy, self)
-	menu:AddItem (0, L["Paste"], self.Menu_OnPaste, self)
+    menu:AddItem (0, L["Add Folder"], self.Menu_OnAddFolder, self)
+    menu:AddItem (0, L["Add Favorite"], self.Menu_OnAddFavorite, self)
+    menu:AddItem (0, "")
+    menu:AddItem (0, L["Rename"], self.Menu_OnRename, self)
+    menu:AddItem (0, L["Cut"], self.Menu_OnCut, self)
+    menu:AddItem (0, L["Copy"], self.Menu_OnCopy, self)
+    menu:AddItem (0, L["Paste"], self.Menu_OnPaste, self)
 
-	local function func()
-		Nx.Opts:Open ("Favorites")
-	end
+    local function func()
+        Nx.Opts:Open ("Favorites")
+    end
 
-	menu:AddItem (0, "")
-	menu:AddItem (0, L["Options"] .. "...", func)
+    menu:AddItem (0, "")
+    menu:AddItem (0, L["Options"] .. "...", func)
 
-	local menu = Nx.Menu:Create (self.List.Frm, 250)
-	self.ItemMenu = menu
+    local menu = Nx.Menu:Create (self.List.Frm, 250)
+    self.ItemMenu = menu
 
-	menu:AddItem (0, L["Add Comment"], self.IMenu_OnAddComment, self)
-	menu:AddItem (0, "")
-	menu:AddItem (0, L["Rename"], self.IMenu_OnRename, self)
-	menu:AddItem (0, L["Cut"], self.IMenu_OnCut, self)
-	menu:AddItem (0, L["Copy"], self.IMenu_OnCopy, self)
-	menu:AddItem (0, L["Paste"], self.IMenu_OnPaste, self)
+    menu:AddItem (0, L["Add Comment"], self.IMenu_OnAddComment, self)
+    menu:AddItem (0, "")
+    menu:AddItem (0, L["Rename"], self.IMenu_OnRename, self)
+    menu:AddItem (0, L["Cut"], self.IMenu_OnCut, self)
+    menu:AddItem (0, L["Copy"], self.IMenu_OnCopy, self)
+    menu:AddItem (0, L["Paste"], self.IMenu_OnPaste, self)
 
-	menu:AddItem (0, "")
-	menu:AddItem (0, L["Set Icon"], self.IMenu_OnSetIcon, self)
+    menu:AddItem (0, "")
+    menu:AddItem (0, L["Set Icon"], self.IMenu_OnSetIcon, self)
 end
 
 function Nx.Notes:Menu_OnAddFolder (item)
 
-	local function func (str, self)
-		self:AddFolder (str, self.CurFolder)
-		self:Update()
-	end
+    local function func (str, self)
+        self:AddFolder (str, self.CurFolder)
+        self:Update()
+    end
 
-	Nx:ShowEditBox (L["Name"], "", self, func)
+    Nx:ShowEditBox (L["Name"], "", self, func)
 end
 
 function Nx.Notes:Menu_OnAddFavorite (item)
 
-	local function func (str, self)
-		self:AddFavorite (str, self.CurFolder)
-		self:Update()
-	end
+    local function func (str, self)
+        self:AddFavorite (str, self.CurFolder)
+        self:Update()
+    end
 
-	Nx:ShowEditBox (L["Name"], "", self, func)
+    Nx:ShowEditBox (L["Name"], "", self, func)
 end
 
 function Nx.Notes:Menu_OnRename (item)
 
-	local function func (str, self)
-		if self.CurFavOrFolder then
-			self.CurFavOrFolder["Name"] = str
-			self:Update()
-		end
-	end
+    local function func (str, self)
+        if self.CurFavOrFolder then
+            self.CurFavOrFolder["Name"] = str
+            self:Update()
+        end
+    end
 
-	if self.CurFavOrFolder then
-		local name = self.CurFavOrFolder["Name"]
-		Nx:ShowEditBox (L["Name"], name, self, func)
-	end
+    if self.CurFavOrFolder then
+        local name = self.CurFavOrFolder["Name"]
+        Nx:ShowEditBox (L["Name"], name, self, func)
+    end
 end
 
 function Nx.Notes:Menu_OnCut()
 
-	local item = self.CurFavOrFolder
-	if item then
+    local item = self.CurFavOrFolder
+    if item then
 
-		local parent = self:GetParent (item)
+        local parent = self:GetParent (item)
 
-		for i, it in ipairs (parent) do
-			if it == item then
-				tremove (parent, i)
-				self.CopyBuf = item
-				self:Update()
-			end
-		end
+        for i, it in ipairs (parent) do
+            if it == item then
+                tremove (parent, i)
+                self.CopyBuf = item
+                self:Update()
+            end
+        end
 
-		self:SelectCur()
-	end
+        self:SelectCur()
+    end
 end
 
 function Nx.Notes:Menu_OnCopy()
 
-	local item = self.CurFavOrFolder
-	if item then
-		self.CopyBuf = Nx.Util_TCopyRecurse (item)
-	end
+    local item = self.CurFavOrFolder
+    if item then
+        self.CopyBuf = Nx.Util_TCopyRecurse (item)
+    end
 end
 
 function Nx.Notes:Menu_OnPaste()
 
-	if not self.CopyBuf then
-		Nx.prt (L["Nothing to paste"])
-		return
-	end
+    if not self.CopyBuf then
+        Nx.prt (L["Nothing to paste"])
+        return
+    end
 
-	if type (self.CopyBuf) ~= "table" then
-		Nx.prt (L["Can't paste that on the left side"])
-		return
-	end
+    if type (self.CopyBuf) ~= "table" then
+        Nx.prt (L["Can't paste that on the left side"])
+        return
+    end
 
-	local new = Nx.Util_TCopyRecurse (self.CopyBuf)
-	local item = self.CurFav
+    local new = Nx.Util_TCopyRecurse (self.CopyBuf)
+    local item = self.CurFav
 
-	if item then
-		local parent = self:GetParent (item)
-		local i = Nx.Util_TFindItemI (parent, item)
-		tinsert (parent, i, new)
-	else
-		tinsert (self.CurFolder, 1, new)
-	end
+    if item then
+        local parent = self:GetParent (item)
+        local i = Nx.Util_TFindItemI (parent, item)
+        tinsert (parent, i, new)
+    else
+        tinsert (self.CurFolder, 1, new)
+    end
 
-	self:Update()
-	self:SelectCur()
+    self:Update()
+    self:SelectCur()
 end
 
 ---------------------------------------------------------------------------------------
 
 function Nx.Notes:IMenu_OnAddComment()
 
-	local function func (str, self)
-		local s = self:CreateItem ("", 0, str)
-		self:AddItem (self.CurFav, self.CurItemI, s)
-	end
+    local function func (str, self)
+        local s = self:CreateItem ("", 0, str)
+        self:AddItem (self.CurFav, self.CurItemI, s)
+    end
 
-	Nx:ShowEditBox (L["Name"], "", self, func)
+    Nx:ShowEditBox (L["Name"], "", self, func)
 end
 
 function Nx.Notes:IMenu_OnRename()
 
-	local function func (str, self)
-		if self.CurFavOrFolder then
-			self:SetItemName (self.CurItemI, str)
-			self:Update()
-		end
-	end
+    local function func (str, self)
+        if self.CurFavOrFolder then
+            self:SetItemName (self.CurItemI, str)
+            self:Update()
+        end
+    end
 
-	local typ, name = self:GetItemTypeName (self.CurItemI)
-	Nx:ShowEditBox (L["Name"], name, self, func)
+    local typ, name = self:GetItemTypeName (self.CurItemI)
+    Nx:ShowEditBox (L["Name"], name, self, func)
 end
 
 function Nx.Notes:IMenu_OnCut()
-	local fav = self.CurFav
-	if fav and self.CurItemI then
+    local fav = self.CurFav
+    if fav and self.CurItemI then
 
-		if fav[self.CurItemI] then
-			self.CopyBuf = fav[self.CurItemI]
-			tremove (fav, self.CurItemI)
-		end
-	end
+        if fav[self.CurItemI] then
+            self.CopyBuf = fav[self.CurItemI]
+            tremove (fav, self.CurItemI)
+        end
+    end
 
-	self:Update()
+    self:Update()
 end
 
 function Nx.Notes:IMenu_OnCopy()
-	local fav = self.CurFav
-	if fav then
-		self.CopyBuf = fav[self.CurItemI]
-	end
+    local fav = self.CurFav
+    if fav then
+        self.CopyBuf = fav[self.CurItemI]
+    end
 end
 
 function Nx.Notes:IMenu_OnPaste()
 
-	if not self.CopyBuf then
-		Nx.prt (L["Nothing to paste"])
-		return
-	end
+    if not self.CopyBuf then
+        Nx.prt (L["Nothing to paste"])
+        return
+    end
 
-	if type (self.CopyBuf) ~= "string" then
-		Nx.prt (L["Can't paste that on the right side"])
-		return
-	end
+    if type (self.CopyBuf) ~= "string" then
+        Nx.prt (L["Can't paste that on the right side"])
+        return
+    end
 
-	local fav = self.CurFav
-	if fav then
-		local i = min (self.CurItemI, #fav) + 1
-		tinsert (fav, i, self.CopyBuf)
-	end
+    local fav = self.CurFav
+    if fav then
+        local i = min (self.CurItemI, #fav) + 1
+        tinsert (fav, i, self.CopyBuf)
+    end
 
-	self:Update()
+    self:Update()
 end
 
 function Nx.Notes:IMenu_OnSetIcon()
 
-	Nx.DropDown:Start (self, self.SetIconAccept)
+    Nx.DropDown:Start (self, self.SetIconAccept)
 
-	for i, name in ipairs (self.NoteIcons) do
+    for i, name in ipairs (self.NoteIcons) do
 
-		local iconStr = self:GetIconInline (i)
-		local s = format ("%s", iconStr)
+        local iconStr = self:GetIconInline (i)
+        local s = format ("%s", iconStr)
 
-		Nx.DropDown:Add (s, false)
-	end
+        Nx.DropDown:Add (s, false)
+    end
 
-	Nx.DropDown:Show (self.Win.Frm)
+    Nx.DropDown:Show (self.Win.Frm)
 end
 
 function Nx.Notes:SetIconAccept (name, sel)
 
-	local fav = self.CurFav
-	local index = self.CurItemI
+    local fav = self.CurFav
+    local index = self.CurItemI
 
-	if fav and index then
+    if fav and index then
 
-		local item = fav[index]
-		local typ, flags, name, data = self:ParseItem (item)
+        local item = fav[index]
+        local typ, flags, name, data = self:ParseItem (item)
 
-		flags = strbyte (flags) - 35
+        flags = strbyte (flags) - 35
 
-		if typ == "N" then
-			local icon, id, x, y, level = self:ParseItemNote (data)
-			fav[index] = self:CreateItem ("N", flags, name, sel, id, x, y, level)
+        if typ == "N" then
+            local icon, id, x, y, level = self:ParseItemNote (data)
+            fav[index] = self:CreateItem ("N", flags, name, sel, id, x, y, level)
 
-			self:Update()
-		end
-	end
+            self:Update()
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -914,15 +914,15 @@ end
 --
 function Nx.Notes:ToggleShow()
 
-	if not self.Win then
-		self:Create()
-	end
+    if not self.Win then
+        self:Create()
+    end
 
-	self.Win:Show (not self.Win:IsShown())
+    self.Win:Show (not self.Win:IsShown())
 
-	if self.Win:IsShown() then
-		self:Update()
-	end
+    if self.Win:IsShown() then
+        self:Update()
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -936,9 +936,9 @@ end
 --
 function Nx.Notes:OnEditBox(editbox, message)
 
-	if message == "Changed" then
-		self:Update()
-	end
+    if message == "Changed" then
+        self:Update()
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -954,56 +954,56 @@ end
 --
 function Nx.Notes:OnListEvent(eventName, sel, val2, click)
 
-	-- Nx.prt ("Notes list event "..eventName)
+    -- Nx.prt ("Notes list event "..eventName)
 
-	local data = self.List:ItemGetData (sel)
+    local data = self.List:ItemGetData (sel)
 
-	if not data then
-		self.CurFolder = self.Folders
-		self.CurFav = nil
-	else
-		if data["T"] == "F" then
-			self.CurFolder = data
-			self.CurFav = nil
-		else
-			self.CurFolder = self:GetParent (data)
-			self.CurFav = data
-			self:SelectItems (1)
-		end
-	end
+    if not data then
+        self.CurFolder = self.Folders
+        self.CurFav = nil
+    else
+        if data["T"] == "F" then
+            self.CurFolder = data
+            self.CurFav = nil
+        else
+            self.CurFolder = self:GetParent (data)
+            self.CurFav = data
+            self:SelectItems (1)
+        end
+    end
 
-	self.CurFavOrFolder = data	-- This is nil if root
+    self.CurFavOrFolder = data    -- This is nil if root
 
-	self.Side = 1
+    self.Side = 1
 
-	if eventName == "select" or eventName == "mid" or eventName == "menu" then
+    if eventName == "select" or eventName == "mid" or eventName == "menu" then
 
-		if eventName == "menu" then
-			if type(self.CurFav) == "string" then
-				self.Menu:Show(-1)
-			else
-				self.Menu:Show(1)
-			end
-			self.Menu:Open()
-		end
+        if eventName == "menu" then
+            if type(self.CurFav) == "string" then
+                self.Menu:Show(-1)
+            else
+                self.Menu:Show(1)
+            end
+            self.Menu:Open()
+        end
 
-		self:Update()
+        self:Update()
 
-	elseif eventName == "button" then	-- Button icon
+    elseif eventName == "button" then    -- Button icon
 
-		self.List:Select (sel)
-		if data then
-			if type(data) == "string" then
-				data = addonNotes
-			end
-			if data["Hide"] then
-				data["Hide"] = nil
-			else
-				data["Hide"] = true
-			end
-			self:Update()
-		end
-	end
+        self.List:Select (sel)
+        if data then
+            if type(data) == "string" then
+                data = addonNotes
+            end
+            if data["Hide"] then
+                data["Hide"] = nil
+            else
+                data["Hide"] = true
+            end
+            self:Update()
+        end
+    end
 end
 
 ---
@@ -1015,34 +1015,34 @@ end
 --
 function Nx.Notes:OnItemListEvent(eventName, sel, val2, click)
 
---	Nx.prt ("List event "..eventName)
+--    Nx.prt ("List event "..eventName)
 
-	local list = self.ItemList
+    local list = self.ItemList
 
-	local item = list:ItemGetData (sel)
+    local item = list:ItemGetData (sel)
 
-	self.CurItemI = sel
-	self.Side = 2
+    self.CurItemI = sel
+    self.Side = 2
 
-	if eventName == "select" or eventName == "mid" or eventName == "menu" then
+    if eventName == "select" or eventName == "mid" or eventName == "menu" then
 
-		if eventName == "menu" then
-			self.ItemMenu:Show (self.CurFav and true or -1)
-			if type(self.CurFav) == "string" then
-				self.ItemMenu:Show(-1)
-			end
-			self.ItemMenu:Open()
-		end
+        if eventName == "menu" then
+            self.ItemMenu:Show (self.CurFav and true or -1)
+            if type(self.CurFav) == "string" then
+                self.ItemMenu:Show(-1)
+            end
+            self.ItemMenu:Open()
+        end
 
-	elseif eventName == "button" then	-- Button icon
+    elseif eventName == "button" then    -- Button icon
 
-		local flags = val2 and 1 or 0		-- Pressed
-		self:SetItemFlags (sel, 0xfe, flags)
+        local flags = val2 and 1 or 0        -- Pressed
+        self:SetItemFlags (sel, 0xfe, flags)
 
-	end
+    end
 
-	self:SelectItems (sel)
-	self:Update()
+    self:SelectItems (sel)
+    self:Update()
 end
 
 -------------------------------------------------------------------------------
@@ -1056,162 +1056,162 @@ end
 --
 function Nx.Notes:Update()
 
-	self.Draw = false		-- Force map to update icons
+    self.Draw = false        -- Force map to update icons
 
-	local Nx = Nx
+    local Nx = Nx
 
-	if not self.Win then
-		return
-	end
+    if not self.Win then
+        return
+    end
 
-	-- List
+    -- List
 
-	local list = self.List
+    local list = self.List
 
-	list:Empty()
+    list:Empty()
 
-	list:ItemAdd()
-	list:ItemSet (2, "|cff808080Root")
+    list:ItemAdd()
+    list:ItemSet (2, "|cff808080Root")
 
-	self.FavCnt = 0
+    self.FavCnt = 0
 
-	self:UpdateFolder (self.Folders, 1)
-	self:AddonFolders(1)
-	list:Update()
-	-- Right side list
+    self:UpdateFolder (self.Folders, 1)
+    self:AddonFolders(1)
+    list:Update()
+    -- Right side list
 
-	self:UpdateItems()
+    self:UpdateItems()
 
-	-- Title
+    -- Title
 
-	self.Win:SetTitle (format (L["Notes"] .. ": %s", self.FavCnt))
+    self.Win:SetTitle (format (L["Notes"] .. ": %s", self.FavCnt))
 end
 
 function Nx.Notes:AddonFolders(level)
-	local list = self.List
-	local hide = addonNotes.Hide
-	list:ItemAdd("addons")
-	list:ItemSet(2,"  " .. L["Note Addons"])
-	list:ItemSetButton ("QuestHdr", hide)
-	if not hide then
-		for a,b in pairs(addonNotes) do
-			if a ~= "Hide" then
-				local space = strrep ("  ", level+1)
-				list:ItemAdd(a)
-				list:ItemSet(2, format ("%s|cffdfdfdf%s",space,a))
-			end
-		end
-	end
+    local list = self.List
+    local hide = addonNotes.Hide
+    list:ItemAdd("addons")
+    list:ItemSet(2,"  " .. L["Note Addons"])
+    list:ItemSetButton ("QuestHdr", hide)
+    if not hide then
+        for a,b in pairs(addonNotes) do
+            if a ~= "Hide" then
+                local space = strrep ("  ", level+1)
+                list:ItemAdd(a)
+                list:ItemSet(2, format ("%s|cffdfdfdf%s",space,a))
+            end
+        end
+    end
 end
 
 function Nx.Notes:UpdateFolder (folder, level)
 
-	local list = self.List
+    local list = self.List
 
-	local hide = folder["Hide"]
+    local hide = folder["Hide"]
 
-	if level > 1 then
-		list:ItemAdd (folder)
-		local space = strrep ("  ", level - 1)
-		list:ItemSet (2, format ("%s%s", space, folder["Name"]))
-		list:ItemSetButton ("QuestHdr", hide)
-	end
+    if level > 1 then
+        list:ItemAdd (folder)
+        local space = strrep ("  ", level - 1)
+        list:ItemSet (2, format ("%s%s", space, folder["Name"]))
+        list:ItemSetButton ("QuestHdr", hide)
+    end
 
-	if not hide then
+    if not hide then
 
-		local space = strrep ("  ", level)
+        local space = strrep ("  ", level)
 
-		for index, item in ipairs (folder) do
+        for index, item in ipairs (folder) do
 
-			local typ = item["T"]
-			local name = item["Name"]
+            local typ = item["T"]
+            local name = item["Name"]
 
-			if typ == "F" then
-				self:UpdateFolder (item, level + 1)
-			else
+            if typ == "F" then
+                self:UpdateFolder (item, level + 1)
+            else
 
-				self.FavCnt = self.FavCnt + 1
+                self.FavCnt = self.FavCnt + 1
 
-				list:ItemAdd (item)
-				list:ItemSet (2, format ("%s|cffdfdfdf%s", space, name))
+                list:ItemAdd (item)
+                list:ItemSet (2, format ("%s|cffdfdfdf%s", space, name))
 
-				if self.FavToSelect == item then
-					self.FavToSelect = nil
-					list:Select (list:ItemGetNum())
-				end
-			end
-		end
-	end
+                if self.FavToSelect == item then
+                    self.FavToSelect = nil
+                    list:Select (list:ItemGetNum())
+                end
+            end
+        end
+    end
 end
 
 function Nx.Notes:UpdateItems (selectI)
 
-	local list = self.ItemList
+    local list = self.ItemList
 
-	if not list then
-		return
-	end
+    if not list then
+        return
+    end
 
-	list:Empty()
+    list:Empty()
 
-	if self.CurFav then
-		if type(self.CurFav) == "string" then
-			if self.CurFav == "addons" then
-				selectI = 0
-			else
-				if self.CurFav ~= "Hide" then
-					if addonNotes[self.CurFav] then
-						for a,b in pairs (addonNotes[self.CurFav]["notes"]) do
-							local name, data = a,b
-							list:ItemAdd(item)
-							local icon, id, x, y, level = self:ParseItemNote (data)
-							icon = self:GetIconInline (icon)
-							id = Nx.Map:GetMapNameByID(id) or "?"
-							list:ItemSet (2, "Note:")
-							list:ItemSet (3, format ("%s %s", icon, name))
-							list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", id, x, y))
-						end
-					end
-				end
-			end
-		else
-			for index, str in ipairs (self.CurFav) do
+    if self.CurFav then
+        if type(self.CurFav) == "string" then
+            if self.CurFav == "addons" then
+                selectI = 0
+            else
+                if self.CurFav ~= "Hide" then
+                    if addonNotes[self.CurFav] then
+                        for a,b in pairs (addonNotes[self.CurFav]["notes"]) do
+                            local name, data = a,b
+                            list:ItemAdd(item)
+                            local icon, id, x, y, level = self:ParseItemNote (data)
+                            icon = self:GetIconInline (icon)
+                            id = Nx.Map:GetMapNameByID(id) or "?"
+                            list:ItemSet (2, "Note:")
+                            list:ItemSet (3, format ("%s %s", icon, name))
+                            list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", id, x, y))
+                        end
+                    end
+                end
+            end
+        else
+            for index, str in ipairs (self.CurFav) do
 
-				local typ, flags, name, data = self:ParseItem (str)
+                local typ, flags, name, data = self:ParseItem (str)
 
-				list:ItemAdd (item)
-				list:ItemSetButton ("Chk", bit.band (strbyte (flags) - 35, 1) > 0)
+                list:ItemAdd (item)
+                list:ItemSetButton ("Chk", bit.band (strbyte (flags) - 35, 1) > 0)
 
-				if typ == "" then			-- Comment
-					list:ItemSet (3, format ("|cffa0a0a0-- %s", name))
+                if typ == "" then            -- Comment
+                    list:ItemSet (3, format ("|cffa0a0a0-- %s", name))
 
-				elseif typ == "N" then			-- Note
+                elseif typ == "N" then            -- Note
 
-					local icon, id, x, y, level = self:ParseItemNote (data)
-					icon = self:GetIconInline (icon)
-					local newid = Nx.Map:GetMapNameByID(id) or "?"
-					list:ItemSet (2, L["Note"] .. ":")
-					list:ItemSet (3, format ("%s %s", icon, name))
-					list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", newid, x, y))
+                    local icon, id, x, y, level = self:ParseItemNote (data)
+                    icon = self:GetIconInline (icon)
+                    local newid = Nx.Map:GetMapNameByID(id) or "?"
+                    list:ItemSet (2, L["Note"] .. ":")
+                    list:ItemSet (3, format ("%s %s", icon, name))
+                    list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", newid, x, y))
 
-				elseif typ == "T" or typ == "t" then			-- Target
+                elseif typ == "T" or typ == "t" then            -- Target
 
-					local typName = typ == "T" and "Target 1st" or "Target"
-					local mapId, x, y = self:ParseItemTarget (data)
-					local mapName = Nx.Map:GetMapNameByID(mapId) or "?"
-					list:ItemSet (2, format ("%s:", typName))
-					list:ItemSet (3, format ("%s", name))
-					list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", mapName, x, y))
-				end
-			end
-		end
-	end
+                    local typName = typ == "T" and "Target 1st" or "Target"
+                    local mapId, x, y = self:ParseItemTarget (data)
+                    local mapName = Nx.Map:GetMapNameByID(mapId) or "?"
+                    list:ItemSet (2, format ("%s:", typName))
+                    list:ItemSet (3, format ("%s", name))
+                    list:ItemSet (4, format ("|cff80ef80(%s %.1f %.1f)", mapName, x, y))
+                end
+            end
+        end
+    end
 
-	if selectI then
-		list:Select (selectI)
-	end
+    if selectI then
+        list:Select (selectI)
+    end
 
-	list:Update()
+    list:Update()
 end
 
 -------------------------------------------------------------------------------
@@ -1223,8 +1223,8 @@ end
 --
 function Nx.Notes:SelectCur()
 
-	self.List:SendUserSelect()
-	self:SelectItems (1)
+    self.List:SendUserSelect()
+    self:SelectItems (1)
 end
 
 ---
@@ -1235,22 +1235,22 @@ end
 --
 function Nx.Notes:GetParent(item, folder)
 
-	folder = folder or self.Folders
+    folder = folder or self.Folders
 
-	for _, it in ipairs (folder) do
+    for _, it in ipairs (folder) do
 
-		if it == item then
-			return folder
-		end
+        if it == item then
+            return folder
+        end
 
-		local typ = it["T"]
-		if typ == "F" then
-			local v = self:GetParent (item, it)
-			if v then
-				return v
-			end
-		end
-	end
+        local typ = it["T"]
+        if typ == "F" then
+            local v = self:GetParent (item, it)
+            if v then
+                return v
+            end
+        end
+    end
 end
 
 ---
@@ -1261,16 +1261,16 @@ end
 --
 function Nx.Notes:FindFolder(name, parent)
 
-	parent = parent or self.Folders
+    parent = parent or self.Folders
 
-	for _, item in ipairs (parent) do
+    for _, item in ipairs (parent) do
 
-		if item["T"] == "F" then
-			if item["Name"] == name then
-				return item
-			end
-		end
-	end
+        if item["T"] == "F" then
+            if item["Name"] == name then
+                return item
+            end
+        end
+    end
 end
 
 ---
@@ -1282,16 +1282,16 @@ end
 --
 function Nx.Notes:FindFav(val, varName, parent)
 
-	parent = parent or self.Folders
+    parent = parent or self.Folders
 
-	for _, item in ipairs (parent) do
+    for _, item in ipairs (parent) do
 
-		if item["T"] == nil then
-			if item[varName] == val then
-				return item
-			end
-		end
-	end
+        if item["T"] == nil then
+            if item[varName] == val then
+                return item
+            end
+        end
+    end
 end
 
 ---
@@ -1302,24 +1302,24 @@ end
 --
 function Nx.Notes:OpenFoldersToFav(item, folder)
 
-	folder = folder or self.Folders
+    folder = folder or self.Folders
 
-	for index, it in ipairs (folder) do
+    for index, it in ipairs (folder) do
 
-		if it == item then
-			return index
-		end
+        if it == item then
+            return index
+        end
 
-		if it["T"] == "F" then
+        if it["T"] == "F" then
 
-			index = self:OpenFoldersToFav (item, it)
+            index = self:OpenFoldersToFav (item, it)
 
-			if index then	-- Found?
-				it["Hide"] = nil
-				return index
-			end
-		end
-	end
+            if index then    -- Found?
+                it["Hide"] = nil
+                return index
+            end
+        end
+    end
 end
 
 ---
@@ -1331,160 +1331,160 @@ end
 --
 function Nx.Notes:FindListI(item, folder, index)
 
-	folder = folder or self.Folders
-	index = index or 1
+    folder = folder or self.Folders
+    index = index or 1
 
-	for _, it in ipairs (folder) do
+    for _, it in ipairs (folder) do
 
-		if it == item then
-			return index
-		end
+        if it == item then
+            return index
+        end
 
-		index = index + 1
+        index = index + 1
 
-		if it["T"] == "F" then
-			if not it["Hide"] then
-				index = self:FindListI (item, it, index)
-				if index > 0 then	-- Found?
-					return index
-				end
-				index = -index
-			end
-		end
-	end
+        if it["T"] == "F" then
+            if not it["Hide"] then
+                index = self:FindListI (item, it, index)
+                if index > 0 then    -- Found?
+                    return index
+                end
+                index = -index
+            end
+        end
+    end
 
-	return -index		-- Failed
+    return -index        -- Failed
 end
 
 function Nx.Notes:AddFolder (name, parent, index)
 
-	local folder = {}
-	folder["Name"] = name
-	folder["T"] = "F"
+    local folder = {}
+    folder["Name"] = name
+    folder["T"] = "F"
 
-	parent = parent or self.Folders
+    parent = parent or self.Folders
 
-	if parent then
-		index = index or #parent + 1
-		tinsert (parent, index, folder)
-	end
+    if parent then
+        index = index or #parent + 1
+        tinsert (parent, index, folder)
+    end
 
-	return folder
+    return folder
 end
 
 function Nx.Notes:AddFavorite (name, parent, index)
 
-	local fav = {}
-	fav["Name"] = name
+    local fav = {}
+    fav["Name"] = name
 
-	parent = parent or self.Folders
+    parent = parent or self.Folders
 
-	if parent then
-		index = index or #parent + 1
-		tinsert (parent, index, fav)
-	end
+    if parent then
+        index = index or #parent + 1
+        tinsert (parent, index, fav)
+    end
 
-	return fav
+    return fav
 end
 
 function Nx.Notes:AddItem (fav, index, item)
 
---	Nx.prt ("Fav AddItem %s #%s %s", fav["Name"], index or "nil", item)
+--    Nx.prt ("Fav AddItem %s #%s %s", fav["Name"], index or "nil", item)
 
-	if fav then
+    if fav then
 
-		local i = max (min (index or 999999, #fav), 0) + 1
-		tinsert (fav, i, item)
+        local i = max (min (index or 999999, #fav), 0) + 1
+        tinsert (fav, i, item)
 
-		self:SelectItems (i)
-	end
+        self:SelectItems (i)
+    end
 end
 
 function Nx.Notes:CreateItem (typ, flags, name, p1, p2, p3, p4, p5)
 
-	p5 = p5 or 0
+    p5 = p5 or 0
 
-	flags = flags + 35
+    flags = flags + 35
 
-	name = gsub (name, "[~^]", "")
-	name = gsub (name, "\n", " ")
+    name = gsub (name, "[~^]", "")
+    name = gsub (name, "\n", " ")
 
-	if typ == "" then			-- Comment
-		return format ("~%c~%s", flags, name)
+    if typ == "" then            -- Comment
+        return format ("~%c~%s", flags, name)
 
-	elseif typ == "N" then	-- Note
-		return format ("N~%c~%s~%s|%s|%s|%s|%s", flags, name, p1, p2, p3,p4, p5)
-	elseif typ == "T" or typ == "t" then	-- Target		
-		return format ("%s~%c~%s~%s|%s|%s|%s", typ, flags, name, p1, p2, p3, p5)
-	end
+    elseif typ == "N" then    -- Note
+        return format ("N~%c~%s~%s|%s|%s|%s|%s", flags, name, p1, p2, p3,p4, p5)
+    elseif typ == "T" or typ == "t" then    -- Target
+        return format ("%s~%c~%s~%s|%s|%s|%s", typ, flags, name, p1, p2, p3, p5)
+    end
 end
 
 function Nx.Notes:MakeXY (x, y)
-	local s = Nx:PackXY (x, y % 100)
-	return s .. strchar (floor (y / 100) + 35)	-- Add dungeon level to end
+    local s = Nx:PackXY (x, y % 100)
+    return s .. strchar (floor (y / 100) + 35)    -- Add dungeon level to end
 end
 
 function Nx.Notes:ParseItem (item)
-	if item then
-		return strsplit ("~", item)	-- Type~Flags (# based)~Name~Data
-	end
+    if item then
+        return strsplit ("~", item)    -- Type~Flags (# based)~Name~Data
+    end
 end
 
 function Nx.Notes:ParseItemNote (data)
-	local iconI,zone,x,y, dLvl = Nx.Split("|",data)
-	if not dLvl then
-		dLvl = 0
-	end
-	return tonumber(iconI), tonumber(zone), tonumber(x), tonumber(y), tonumber(dLvl)
+    local iconI,zone,x,y, dLvl = Nx.Split("|",data)
+    if not dLvl then
+        dLvl = 0
+    end
+    return tonumber(iconI), tonumber(zone), tonumber(x), tonumber(y), tonumber(dLvl)
 end
 
 function Nx.Notes:ParseItemTarget (data)
-	local zone, x, y, dLvl = Nx.Split("|",data)
-	if not dLvl then
-		dLvl = 0
-	end
-	return tonumber(zone), tonumber(x), tonumber(y), tonumber(dLvl)
+    local zone, x, y, dLvl = Nx.Split("|",data)
+    if not dLvl then
+        dLvl = 0
+    end
+    return tonumber(zone), tonumber(x), tonumber(y), tonumber(dLvl)
 end
 
 function Nx.Notes:GetItemTypeName (index)
 
-	local fav = self.CurFav
-	if fav then
-		local typ, flags, name = strsplit ("~", fav[index])
-		return typ, name
-	end
+    local fav = self.CurFav
+    if fav then
+        local typ, flags, name = strsplit ("~", fav[index])
+        return typ, name
+    end
 end
 
 function Nx.Notes:SetItemFlags (index, mask, orFlags)
 
-	local fav = self.CurFav
-	if fav then
-		local typ, flags, name, data = strsplit ("~", fav[index])
+    local fav = self.CurFav
+    if fav then
+        local typ, flags, name, data = strsplit ("~", fav[index])
 
-		flags = bit.bor (bit.band (strbyte (flags) - 35, mask), orFlags) + 35
+        flags = bit.bor (bit.band (strbyte (flags) - 35, mask), orFlags) + 35
 
-		if data then
-			fav[index] = format ("%s~%c~%s~%s", typ, flags, name, data)
-		else
-			fav[index] = format ("%s~%c~%s", typ, flags, name)
-		end
-	end
+        if data then
+            fav[index] = format ("%s~%c~%s~%s", typ, flags, name, data)
+        else
+            fav[index] = format ("%s~%c~%s", typ, flags, name)
+        end
+    end
 end
 
 function Nx.Notes:SetItemName (index, name)
 
-	name = gsub (name, "[~^]", "")
-	name = gsub (name, "\n", " ")
+    name = gsub (name, "[~^]", "")
+    name = gsub (name, "\n", " ")
 
-	local fav = self.CurFav
-	if fav then
-		local typ, flags, _, data = strsplit ("~", fav[index])
-		if data then
-			fav[index] = format ("%s~%s~%s~%s", typ, flags, name, data)
-		else
-			fav[index] = format ("%s~%s~%s", typ, flags, name)
-		end
-	end
+    local fav = self.CurFav
+    if fav then
+        local typ, flags, _, data = strsplit ("~", fav[index])
+        if data then
+            fav[index] = format ("%s~%s~%s~%s", typ, flags, name, data)
+        else
+            fav[index] = format ("%s~%s~%s", typ, flags, name)
+        end
+    end
 end
 
 ---
@@ -1493,18 +1493,18 @@ end
 --
 function Nx.Notes:SelectItems(index)
 
-	if self.CurFav then
+    if self.CurFav then
 
-		if self.Recording ~= self.CurFav then
-			self:SetRecord (false)
-		end
+        if self.Recording ~= self.CurFav then
+            self:SetRecord (false)
+        end
 
-		self.CurItemI = min (index, #self.CurFav)
+        self.CurItemI = min (index, #self.CurFav)
 
-		self:UpdateItems (self.CurItemI)
+        self:UpdateItems (self.CurItemI)
 
-		self:UpdateTargets()
-	end
+        self:UpdateTargets()
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -1522,124 +1522,124 @@ end
 -- @param level  Dungeon level (optional)
 --
 function Nx.Notes:Record(typ, name, id, x, y, level)
-	if self.InUpdateTarget then
-		return
-	end
+    if self.InUpdateTarget then
+        return
+    end
 
-	local fav = self.Recording
+    local fav = self.Recording
 
-	self.RecId = id
-	self.RecX = x
-	self.RecY = y
-	self.RecL = level or 0
-	if typ == "Note" then
+    self.RecId = id
+    self.RecX = x
+    self.RecY = y
+    self.RecL = level or 0
+    if typ == "Note" then
 
-		local function func (name, self)
-			local fav = self.Recording or self:GetNoteFav (self.RecId)
-			local s = self:CreateItem ("N", 0, name, 1, self.RecId, self.RecX, self.RecY, self.RecL)
-			self:AddItem (fav, self.CurItemI, s)
-			self:Update()
-		end
+        local function func (name, self)
+            local fav = self.Recording or self:GetNoteFav (self.RecId)
+            local s = self:CreateItem ("N", 0, name, 1, self.RecId, self.RecX, self.RecY, self.RecL)
+            self:AddItem (fav, self.CurItemI, s)
+            self:Update()
+        end
 
-		Nx:ShowEditBox ("Name", name, self, func)
+        Nx:ShowEditBox ("Name", name, self, func)
 
-	elseif typ == "TargetS" then	-- Start
+    elseif typ == "TargetS" then    -- Start
 
-		local fav = self.Recording
-		if fav then
-			local s = self:CreateItem ("T", 0, name, self.RecId, self.RecX, self.RecY, self.RecL)
-			self:AddItem (fav, self.CurItemI, s)
-			self:Update()
-		end
+        local fav = self.Recording
+        if fav then
+            local s = self:CreateItem ("T", 0, name, self.RecId, self.RecX, self.RecY, self.RecL)
+            self:AddItem (fav, self.CurItemI, s)
+            self:Update()
+        end
 
-	elseif typ == "Target" then
+    elseif typ == "Target" then
 
-		local fav = self.Recording
-		if fav then
-			local s = self:CreateItem ("t", 0, name, self.RecId, self.RecX, self.RecY, self.RecL)
-			self:AddItem (fav, self.CurItemI, s)
-			self:Update()
-		end
-	end
+        local fav = self.Recording
+        if fav then
+            local s = self:CreateItem ("t", 0, name, self.RecId, self.RecX, self.RecY, self.RecL)
+            self:AddItem (fav, self.CurItemI, s)
+            self:Update()
+        end
+    end
 end
 
 function Nx.Notes:GetNoteFav (mapId)
 
-	local notes = self:FindFolder (L["My Notes"])
+    local notes = self:FindFolder (L["My Notes"])
 
-	if not notes then
-		notes = self:AddFolder (L["My Notes"])
-	end
+    if not notes then
+        notes = self:AddFolder (L["My Notes"])
+    end
 
-	local name = Nx.Map:IdToName (mapId)
+    local name = Nx.Map:IdToName (mapId)
 
-	local fav = self:FindFav (name, "Name", notes)
+    local fav = self:FindFav (name, "Name", notes)
 
-	if not fav then
-		fav = self:AddFavorite (name, notes)
-		fav["ID"] = mapId
-		sort (notes, function (a, b) return a["Name"] < b["Name"] end)
-	end
+    if not fav then
+        fav = self:AddFavorite (name, notes)
+        fav["ID"] = mapId
+        sort (notes, function (a, b) return a["Name"] < b["Name"] end)
+    end
 
-	return fav
+    return fav
 end
 
 function Nx.Notes:SetNoteAtStr (str)
 
-	local words = {}
-	local quote
-	local strDone
-	local curStr = ""
+    local words = {}
+    local quote
+    local strDone
+    local curStr = ""
 
-	for s in gmatch (str, ".") do
+    for s in gmatch (str, ".") do
 
---		Nx.prt ("%s", s)
+--        Nx.prt ("%s", s)
 
-		if s == quote then
-			quote = false
-			strDone = true
+        if s == quote then
+            quote = false
+            strDone = true
 
-		elseif not quote and (s == '"' or s == "'") then
-			quote = s
+        elseif not quote and (s == '"' or s == "'") then
+            quote = s
 
-		elseif s == ' ' and not quote then
-			strDone = true
+        elseif s == ' ' and not quote then
+            strDone = true
 
-		else
-			curStr = curStr .. s
-		end
+        else
+            curStr = curStr .. s
+        end
 
-		if strDone then
-			if #curStr > 0 then
-				tinsert (words, curStr)
-			end
-			strDone = false
-			curStr = ""
-		end
-	end
+        if strDone then
+            if #curStr > 0 then
+                tinsert (words, curStr)
+            end
+            strDone = false
+            curStr = ""
+        end
+    end
 
-	if #curStr > 0 then
-		tinsert (words, curStr)
-	end
+    if #curStr > 0 then
+        tinsert (words, curStr)
+    end
 
-	--
+    --
 
-	local map = Nx.Map:GetMap (1)
+    local map = Nx.Map:GetMap (1)
 
-	local mId = map.RMapId
-	local zx, zy = map.PlyrRZX, map.PlyrRZY
-	local level = map.DungeonLevel
-	
-	if #words > 1 then
-		mId, zx, zy = map:ParseTargetStr (table.concat (words, " ", 2))
-	end
+    local mId = map.RMapId
+    local zx, zy = map.PlyrRZX, map.PlyrRZY
+    local level = map.DungeonLevel
 
-	if mId then
-		local fav = self.Recording or self:GetNoteFav (mId)
-		local s = self:CreateItem ("N", 0, words[1] or "", 1, mId, zx, zy, level)
-		self:AddItem (fav, nil, s)
-		self:Update()
-	end
+    if #words > 1 then
+        mId, zx, zy = map:ParseTargetStr (table.concat (words, " ", 2))
+    end
+
+    if mId then
+        local fav = self.Recording or self:GetNoteFav (mId)
+        local s = self:CreateItem ("N", 0, words[1] or "", 1, mId, zx, zy, level)
+        self:AddItem (fav, nil, s)
+        self:Update()
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -1652,73 +1652,73 @@ end
 --
 function Nx.Notes:ShowIconNote(icon)
 
-	local fav, index = Nx.Map:GetIconFavData (icon)
+    local fav, index = Nx.Map:GetIconFavData (icon)
 
-	self:OpenFoldersToFav (fav)
-	self.FavToSelect = fav
+    self:OpenFoldersToFav (fav)
+    self.FavToSelect = fav
 
-	self.CurFolder = self:GetParent (fav)
-	self.CurFav = fav
-	self.CurItemI = index
+    self.CurFolder = self:GetParent (fav)
+    self.CurFav = fav
+    self.CurItemI = index
 
-	self.CurFavOrFolder = fav
+    self.CurFavOrFolder = fav
 
-	if not (self.Win and self.Win:IsShown()) then
-		self:ToggleShow()
-		if not self.Win then		-- Not validated?
-			return
-		end
-	else
-		self:Update()
-	end
+    if not (self.Win and self.Win:IsShown()) then
+        self:ToggleShow()
+        if not self.Win then        -- Not validated?
+            return
+        end
+    else
+        self:Update()
+    end
 
-	self:SelectItems (index)
+    self:SelectItems (index)
 end
 
 function Nx.Notes:UpdateTargets()
 
-	local shown = self.Win and self.Win:IsShown()
+    local shown = self.Win and self.Win:IsShown()
 
-	if self.CurFav and self.CurItemI	and (self.Recording or shown) then
+    if self.CurFav and self.CurItemI    and (self.Recording or shown) then
 
-		self.InUpdateTarget = true
+        self.InUpdateTarget = true
 
-		local map = Nx.Map:GetMap (1)
+        local map = Nx.Map:GetMap (1)
 
-		local keep
+        local keep
 
-		for n = self.CurItemI, #self.CurFav do
+        for n = self.CurItemI, #self.CurFav do
 
-			local str = self.CurFav[n]
-			local typ, flags, name, data = self:ParseItem (str)
-			if typ == "T" then
+            local str = self.CurFav[n]
+            local typ, flags, name, data = self:ParseItem (str)
+            if typ == "T" then
 
-				if n ~= self.CurItemI then		-- Another 1st target?
-					break
-				end
+                if n ~= self.CurItemI then        -- Another 1st target?
+                    break
+                end
 
-				local mapId, x, y = self:ParseItemTarget (data)
-				map:SetTargetXY (mapId, x, y, name, keep)
-				keep = true
+                local mapId, x, y = self:ParseItemTarget (data)
+                map:SetTargetXY (mapId, x, y, name, keep)
+                keep = true
 
-			elseif typ == "t" then
+            elseif typ == "t" then
 
-				local mapId, x, y = self:ParseItemTarget (data)
-				map:SetTargetXY (mapId, x, y, name, keep)
-				keep = true
+                local mapId, x, y = self:ParseItemTarget (data)
+                map:SetTargetXY (mapId, x, y, name, keep)
+                keep = true
 
-			else
+            else
 
-				break
-			end
-		end
+                break
+            end
+        end
 
-		if keep then	-- Had a target?
-			map:GotoPlayer()
-		end
+        if keep then    -- Had a target?
+            map:GotoPlayer()
+        end
 
-		self.InUpdateTarget = false
-	end
+        self.InUpdateTarget = false
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -1731,109 +1731,109 @@ end
 -- Includes user notes and addon integrations
 --
 function Nx.Notes:UpdateIcons()
-	local Map = Nx.Map
-	local map = Map:GetMap (1)
+    local Map = Nx.Map
+    local map = Map:GetMap (1)
 
-	if self.CurFav and self.CurItemI then
+    if self.CurFav and self.CurItemI then
 
-		map:InitIconType ("!Fav2", "WP", "", 21, 21)
-		local str
-		local typ, flags, name, data
-		if type(self.CurFav) == "string" then
-		else
-			str = self.CurFav[self.CurItemI]
-			typ, flags, name, data = self:ParseItem (str)
-		end
+        map:InitIconType ("!Fav2", "WP", "", 21, 21)
+        local str
+        local typ, flags, name, data
+        if type(self.CurFav) == "string" then
+        else
+            str = self.CurFav[self.CurItemI]
+            typ, flags, name, data = self:ParseItem (str)
+        end
 
-		if typ == "N" then
+        if typ == "N" then
 
-			local icon, mapId, x, y, level = self:ParseItemNote (data)
-			icon = self:GetIconFile (icon)
-			local wx, wy = Map:GetWorldPos (mapId, x, y)
+            local icon, mapId, x, y, level = self:ParseItemNote (data)
+            icon = self:GetIconFile (icon)
+            local wx, wy = Map:GetWorldPos (mapId, x, y)
 
-			local icon = map:AddIconPt ("!Fav2", wx, wy, level, nil, icon)
-			map:SetIconTip (icon, L["Note"] .. ": " .. name)
-			map:SetIconFavData (icon, self.CurFav, self.CurItemI)
+            local icon = map:AddIconPt ("!Fav2", wx, wy, level, nil, icon)
+            map:SetIconTip (icon, L["Note"] .. ": " .. name)
+            map:SetIconFavData (icon, self.CurFav, self.CurItemI)
 
-			map:SetIconTypeAlpha ("!Fav2", abs ((GetTime() * 100 % 100 - 50) / 50))
-		end
+            map:SetIconTypeAlpha ("!Fav2", abs ((GetTime() * 100 % 100 - 50) / 50))
+        end
 
-	else
-		map:ClearIconType ("!Fav2")
-	end
-	
-	local mapId = map.MapId
-	local draw = map.ScaleDraw > .3 and Nx.fdb.profile.Notes.ShowMap
+    else
+        map:ClearIconType ("!Fav2")
+    end
 
-	if (Nx.fdb.profile.Notes.Questie and Questie) then
-		Nx.Notes:Questie(mapId)
-	end
+    local mapId = map.MapId
+    local draw = map.ScaleDraw > .3 and Nx.fdb.profile.Notes.ShowMap
 
-	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
-		Nx.Notes:RareScanner(mapId)
-	end
+    if (Nx.fdb.profile.Notes.Questie and Questie) then
+        Nx.Notes:Questie(mapId)
+    end
 
-	if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
-		return
-	end
+    if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+        Nx.Notes:RareScanner(mapId)
+    end
 
-	self.DrawMapId = mapId
-	self.Draw = draw
+    if mapId == self.DrawMapId and draw == self.Draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
+        return
+    end
 
-	map:InitIconType ("!Fav", "WP", "", 17, 17)
---	map:SetIconTypeAlpha ("!Fav", map.GOpts["MapIconFavAlpha"])
+    self.DrawMapId = mapId
+    self.Draw = draw
 
-	if not draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
-		return
-	end
-	
-	self.InstLevelSet = Nx.Map:GetCurrentMapDungeonLevel()
-	
-	local cont = map:IdToContZone (mapId)
-	cont = tonumber(cont)
---	Nx.prt ("mapid %s, cont %s", mapId, cont)
+    map:InitIconType ("!Fav", "WP", "", 17, 17)
+--    map:SetIconTypeAlpha ("!Fav", map.GOpts["MapIconFavAlpha"])
 
-	if cont > 0 and cont < 90 then
+    if not draw and self.InstLevelSet == Nx.Map:GetCurrentMapDungeonLevel() then
+        return
+    end
 
-		local notes = self:FindFolder (L["My Notes"])
+    self.InstLevelSet = Nx.Map:GetCurrentMapDungeonLevel()
 
-		if notes then
+    local cont = map:IdToContZone (mapId)
+    cont = tonumber(cont)
+--    Nx.prt ("mapid %s, cont %s", mapId, cont)
 
-			local fav = self:FindFav (mapId, "ID", notes)
-			if fav then
-				for n, str in ipairs (fav) do
-					local typ, flags, name, data = self:ParseItem (str)
+    if cont > 0 and cont < 90 then
 
-					if typ == "N" then
-						local icon, _, x, y, level = self:ParseItemNote (data)
-						icon = self:GetIconFile (icon)
-						local wx, wy = Map:GetWorldPos (mapId, x, y)
+        local notes = self:FindFolder (L["My Notes"])
 
-						local icon = map:AddIconPt ("!Fav", wx, wy, level, nil, icon)
-						map:SetIconTip (icon, L["Note"] .. ": " .. name)
-						map:SetIconFavData (icon, fav, n)
-					end
-				end
-			end
-		end
-		for a,b in pairs(addonNotes) do
-			if a ~= "Hide" then
-				for c,d in pairs(addonNotes[a]["notes"]) do
-					local icon, zoneid, x, y, level = self:ParseItemNote(d)
-					if zoneid == mapId then
-						icon = self:GetIconFile (icon)
-						local wx, wy = Map:GetWorldPos(mapId,x,y)
-						local icon = map:AddIconPt("!Fav", wx, wy, level, nil, icon)
-						map:SetIconTip(icon, L["Note"] .. ": " .. c)
-						map:SetIconFavData(icon, fav, d)
-					end
-				end
-			end
-		end
-		Nx.Notes:HandyNotes(mapId)
-		--WorldMap_HijackTooltip(map.Frm)
-		GameTooltip:Hide()		
-	end
+        if notes then
+
+            local fav = self:FindFav (mapId, "ID", notes)
+            if fav then
+                for n, str in ipairs (fav) do
+                    local typ, flags, name, data = self:ParseItem (str)
+
+                    if typ == "N" then
+                        local icon, _, x, y, level = self:ParseItemNote (data)
+                        icon = self:GetIconFile (icon)
+                        local wx, wy = Map:GetWorldPos (mapId, x, y)
+
+                        local icon = map:AddIconPt ("!Fav", wx, wy, level, nil, icon)
+                        map:SetIconTip (icon, L["Note"] .. ": " .. name)
+                        map:SetIconFavData (icon, fav, n)
+                    end
+                end
+            end
+        end
+        for a,b in pairs(addonNotes) do
+            if a ~= "Hide" then
+                for c,d in pairs(addonNotes[a]["notes"]) do
+                    local icon, zoneid, x, y, level = self:ParseItemNote(d)
+                    if zoneid == mapId then
+                        icon = self:GetIconFile (icon)
+                        local wx, wy = Map:GetWorldPos(mapId,x,y)
+                        local icon = map:AddIconPt("!Fav", wx, wy, level, nil, icon)
+                        map:SetIconTip(icon, L["Note"] .. ": " .. c)
+                        map:SetIconFavData(icon, fav, d)
+                    end
+                end
+            end
+        end
+        Nx.Notes:HandyNotes(mapId)
+        --WorldMap_HijackTooltip(map.Frm)
+        GameTooltip:Hide()
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -1860,96 +1860,96 @@ end
 -- @param mapId  Current map ID
 --
 function Nx.Notes:HandyNotes(mapId)
-	local map = Nx.Map:GetMap (1)
-	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
-		local mapInfo = C_Map.GetMapInfo(mapId)
-		if not mapInfo or mapInfo.mapType ~= 3 then
-			return
-		end
-		
-		local lvl = Nx.Map:GetCurrentMapDungeonLevel()
-		
-		-- Quick check: if map and level haven't changed, skip entirely
-		local cacheKey = mapId .. "_" .. lvl
-		if self.HandyNotesLastMapId == mapId and self.HandyNotesLastLevel == lvl then
-			return -- Same map and level, skip
-		end
-		
-		-- Map/level changed - clear and rebuild
-		map:ClearIconType("!HANDY")
-		self.HandyNotesLastMapId = mapId
-		self.HandyNotesLastLevel = lvl
-		
-		map:InitIconType ("!HANDY", "WP", "", Nx.fdb.profile.Notes.HandyNotesSize or 15, Nx.fdb.profile.Notes.HandyNotesSize or 15)
-		map:SetIconTypeChop ("!HANDY", true)
-		map:SetIconTypeLevel ("!HANDY", 20)
-		
-		-- Reuse temp frame instead of creating new ones
-		local tempIcon = GetHandyTempFrame()
-		local tmpFrame = WorldMapFrame:GetCanvas()
-		tempIcon:SetParent(tmpFrame)
-		
-		for pluginName, pluginHandler in pairs(HandyNotes.plugins) do
-			HandyNotes:UpdateWorldMapPlugin(pluginName)
-			local pluginNodes, mapFile
-			if type(pluginHandler.GetNodes) == "function" then
-				mapFile = select(3, Nx.Map:GetLegacyMapInfo(mapId))
-				pluginNodes = {pluginHandler:GetNodes(mapFile, false, lvl)}
-			else
-				pluginNodes = {pluginHandler:GetNodes2(mapId, false)}
-			end
-			Nx.pluginNodes = pluginNodes
-			for coord, mapFile2, iconpath, scale, alpha, level2 in unpack(pluginNodes) do				
-				local x, y = floor(coord / 10000) / 100, (coord % 10000) / 100
-				local texture
-				local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-				local x1, x2, y1, y2
-				if type(iconpath) == "table" then
-					texture = iconpath.icon
-					if iconpath.tCoordLeft then
-						x1 = iconpath.tCoordLeft
-						x2 = iconpath.tCoordRight
-						y1 = iconpath.tCoordTop
-						y2 = iconpath.tCoordBottom
-					end
-				else
-					texture = iconpath
-				end
-				
-				-- Reuse temp frame for tooltip extraction
-				tempIcon:ClearAllPoints()
-				tempIcon:SetHeight(scale or 15)
-				tempIcon:SetWidth(scale or 15)
-				tempIcon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
-				safecall(HandyNotes.plugins[pluginName].OnEnter, tempIcon, mapFile and mapFile or mapId, coord)
-				
-				local tooltip = ""
-				local tooltipName = "GameTooltip"
-				local handynote
-				if x1 then
-					handynote = map:AddIconPt("!HANDY", wx, wy, level2, "FFFFFF", texture, x1, x2, y1, y2)
-				else
-					handynote = map:AddIconPt("!HANDY", wx, wy, level2, "FFFFFF", texture)
-				end
-				for i = 1,10 do
-					local text = _G[tooltipName .. "TextLeft" .. i]
-					if text and text:IsShown() then
-						local R, G, B, A = text:GetTextColor()
-						R = Nx.Util_dec2hex(R * 255)
-						G = Nx.Util_dec2hex(G * 255)
-						B = Nx.Util_dec2hex(B * 255)
-						if strlen(tooltip) == 0 then
-							tooltip = "|cFF" .. R .. G .. B .. text:GetText()
-						else
-							tooltip = tooltip .. "\n" .. "|cFF" .. R .. G .. B .. text:GetText()
-						end
-					end
-				end
-				map:SetIconTip(handynote,tooltip)
-				safecall(HandyNotes.plugins[pluginName].OnLeave, tempIcon, mapFile and mapFile or mapId, coord)
-			end
-		end
-	end
+    local map = Nx.Map:GetMap (1)
+    if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
+        local mapInfo = C_Map.GetMapInfo(mapId)
+        if not mapInfo or mapInfo.mapType ~= 3 then
+            return
+        end
+
+        local lvl = Nx.Map:GetCurrentMapDungeonLevel()
+
+        -- Quick check: if map and level haven't changed, skip entirely
+        local cacheKey = mapId .. "_" .. lvl
+        if self.HandyNotesLastMapId == mapId and self.HandyNotesLastLevel == lvl then
+            return -- Same map and level, skip
+        end
+
+        -- Map/level changed - clear and rebuild
+        map:ClearIconType("!HANDY")
+        self.HandyNotesLastMapId = mapId
+        self.HandyNotesLastLevel = lvl
+
+        map:InitIconType ("!HANDY", "WP", "", Nx.fdb.profile.Notes.HandyNotesSize or 15, Nx.fdb.profile.Notes.HandyNotesSize or 15)
+        map:SetIconTypeChop ("!HANDY", true)
+        map:SetIconTypeLevel ("!HANDY", 20)
+
+        -- Reuse temp frame instead of creating new ones
+        local tempIcon = GetHandyTempFrame()
+        local tmpFrame = WorldMapFrame:GetCanvas()
+        tempIcon:SetParent(tmpFrame)
+
+        for pluginName, pluginHandler in pairs(HandyNotes.plugins) do
+            HandyNotes:UpdateWorldMapPlugin(pluginName)
+            local pluginNodes, mapFile
+            if type(pluginHandler.GetNodes) == "function" then
+                mapFile = select(3, Nx.Map:GetLegacyMapInfo(mapId))
+                pluginNodes = {pluginHandler:GetNodes(mapFile, false, lvl)}
+            else
+                pluginNodes = {pluginHandler:GetNodes2(mapId, false)}
+            end
+            Nx.pluginNodes = pluginNodes
+            for coord, mapFile2, iconpath, scale, alpha, level2 in unpack(pluginNodes) do
+                local x, y = floor(coord / 10000) / 100, (coord % 10000) / 100
+                local texture
+                local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+                local x1, x2, y1, y2
+                if type(iconpath) == "table" then
+                    texture = iconpath.icon
+                    if iconpath.tCoordLeft then
+                        x1 = iconpath.tCoordLeft
+                        x2 = iconpath.tCoordRight
+                        y1 = iconpath.tCoordTop
+                        y2 = iconpath.tCoordBottom
+                    end
+                else
+                    texture = iconpath
+                end
+
+                -- Reuse temp frame for tooltip extraction
+                tempIcon:ClearAllPoints()
+                tempIcon:SetHeight(scale or 15)
+                tempIcon:SetWidth(scale or 15)
+                tempIcon:SetPoint("CENTER", tmpFrame, "TOPLEFT", x*tmpFrame:GetWidth(), -y*tmpFrame:GetHeight())
+                safecall(HandyNotes.plugins[pluginName].OnEnter, tempIcon, mapFile and mapFile or mapId, coord)
+
+                local tooltip = ""
+                local tooltipName = "GameTooltip"
+                local handynote
+                if x1 then
+                    handynote = map:AddIconPt("!HANDY", wx, wy, level2, "FFFFFF", texture, x1, x2, y1, y2)
+                else
+                    handynote = map:AddIconPt("!HANDY", wx, wy, level2, "FFFFFF", texture)
+                end
+                for i = 1,10 do
+                    local text = _G[tooltipName .. "TextLeft" .. i]
+                    if text and text:IsShown() then
+                        local R, G, B, A = text:GetTextColor()
+                        R = Nx.Util_dec2hex(R * 255)
+                        G = Nx.Util_dec2hex(G * 255)
+                        B = Nx.Util_dec2hex(B * 255)
+                        if strlen(tooltip) == 0 then
+                            tooltip = "|cFF" .. R .. G .. B .. text:GetText()
+                        else
+                            tooltip = tooltip .. "\n" .. "|cFF" .. R .. G .. B .. text:GetText()
+                        end
+                    end
+                end
+                map:SetIconTip(handynote,tooltip)
+                safecall(HandyNotes.plugins[pluginName].OnLeave, tempIcon, mapFile and mapFile or mapId, coord)
+            end
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -1966,85 +1966,85 @@ Nx.Notes.RSLastMapId = nil
 -- @param mapId  Current map ID
 --
 function Nx.Notes:RareScanner(mapId)
-	local map = Nx.Map:GetMap (1)
-	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
-		-- Collect all pins and build a hash of their positions/data
-		local rspins = {}
-		local currentHash = 0
-		
-		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
-			rspins[#rspins + 1] = pin
-			-- Hash includes position and mapID to detect any changes
-			if pin.POI then
-				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.POI.mapID or 0)
-			end
-		end
-		for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
-			rspins[#rspins + 1] = pin
-			-- Hash overlay pins too
-			if pin.pin and pin.pin.POI then
-				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.pin.POI.mapID or 0)
-			end
-		end
-		
-		-- Check if data actually changed (count + positions + map)
-		local cacheKey = mapId .. "_RS"
-		if self.RSCache[cacheKey] == currentHash and self.RSLastMapId == mapId and self.PrevRSPins == #rspins then
-			return -- No changes, skip update
-		end
-		
-		-- Data changed - clear old icons and rebuild
-		map:ClearIconType("!RSR")
-		self.RSCache[cacheKey] = currentHash
-		self.RSLastMapId = mapId
-		self.PrevRSPins = #rspins
-		
-		local level = nil
+    local map = Nx.Map:GetMap (1)
+    if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+        -- Collect all pins and build a hash of their positions/data
+        local rspins = {}
+        local currentHash = 0
 
-		map:InitIconType ("!RSR", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
-		map:SetIconTypeChop ("!RSR", true)
-		map:SetIconTypeLevel ("!RSR", 20)
+        for pin in WorldMapFrame:EnumeratePinsByTemplate("RSEntityPinTemplate") do
+            rspins[#rspins + 1] = pin
+            -- Hash includes position and mapID to detect any changes
+            if pin.POI then
+                currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.POI.mapID or 0)
+            end
+        end
+        for pin in WorldMapFrame:EnumeratePinsByTemplate("RSOverlayTemplate") do
+            rspins[#rspins + 1] = pin
+            -- Hash overlay pins too
+            if pin.pin and pin.pin.POI then
+                currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + (pin.pin.POI.mapID or 0)
+            end
+        end
 
-		for _,rspin in ipairs(rspins) do
-			if rspin.POI then
-				if rspin.POI.mapID == map.MapId then
-					local x = rspin.normalizedX * 100
-					local y = rspin.normalizedY * 100
-					local texture = rspin.Texture:GetTexture()
-					if not texture then
-						texture = rspin.pin and rspin.pin.POI and rspin.pin.POI.Texture
-					end
-					local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-					local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
-					local tooltip = rspin.POI.name
-					map:SetIconTip(rsnote,tooltip)
-					map:SetIconUserData(rsnote, rspin)
-				end
-			elseif rspin.pin and rspin.pin.POI then
-				if rspin.pin.POI.mapID == map.MapId then
-					local x = rspin.normalizedX * 100
-					local y = rspin.normalizedY * 100
-					if (rspin.normalizedX ~= rspin.pin.normalizedX or rspin.normalizedY ~= rspin.pin.normalizedY) then
-						local texture = rspin.Texture:GetTexture()
-						local colr, colg, colb = rspin.Texture:GetVertexColor()
-						local color = "FFFFFF"
-						if colr and colg and colb then
-							local IconColor = CreateColor(colr, colg, colb)
-							color = IconColor:GenerateHexColor()
-						end
-						if not texture then
-							texture = rspin.pin.POI.Texture
-						end
-						local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
-						local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
-						local tooltip = rspin.pin.POI.name
-						map:SetIconTip(rsnote,tooltip)
-						map:SetIconUserData(rsnote, rspin.pin)
-					end
-				end
-			end
-		end
-	end
+        -- Check if data actually changed (count + positions + map)
+        local cacheKey = mapId .. "_RS"
+        if self.RSCache[cacheKey] == currentHash and self.RSLastMapId == mapId and self.PrevRSPins == #rspins then
+            return -- No changes, skip update
+        end
+
+        -- Data changed - clear old icons and rebuild
+        map:ClearIconType("!RSR")
+        self.RSCache[cacheKey] = currentHash
+        self.RSLastMapId = mapId
+        self.PrevRSPins = #rspins
+
+        local level = nil
+
+        map:InitIconType ("!RSR", "WP", "", Nx.fdb.profile.Notes.RareScannerSize or 32, Nx.fdb.profile.Notes.RareScannerSize or 32)
+        map:SetIconTypeChop ("!RSR", true)
+        map:SetIconTypeLevel ("!RSR", 20)
+
+        for _,rspin in ipairs(rspins) do
+            if rspin.POI then
+                if rspin.POI.mapID == map.MapId then
+                    local x = rspin.normalizedX * 100
+                    local y = rspin.normalizedY * 100
+                    local texture = rspin.Texture:GetTexture()
+                    if not texture then
+                        texture = rspin.pin and rspin.pin.POI and rspin.pin.POI.Texture
+                    end
+                    local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+                    local rsnote = map:AddIconPt("!RSR", wx, wy, level, "FFFFFF", texture)
+                    local tooltip = rspin.POI.name
+                    map:SetIconTip(rsnote,tooltip)
+                    map:SetIconUserData(rsnote, rspin)
+                end
+            elseif rspin.pin and rspin.pin.POI then
+                if rspin.pin.POI.mapID == map.MapId then
+                    local x = rspin.normalizedX * 100
+                    local y = rspin.normalizedY * 100
+                    if (rspin.normalizedX ~= rspin.pin.normalizedX or rspin.normalizedY ~= rspin.pin.normalizedY) then
+                        local texture = rspin.Texture:GetTexture()
+                        local colr, colg, colb = rspin.Texture:GetVertexColor()
+                        local color = "FFFFFF"
+                        if colr and colg and colb then
+                            local IconColor = CreateColor(colr, colg, colb)
+                            color = IconColor:GenerateHexColor()
+                        end
+                        if not texture then
+                            texture = rspin.pin.POI.Texture
+                        end
+                        local wx, wy = Nx.Map:GetWorldPos(mapId,x,y)
+                        local rsnote = map:AddIconPt("!RSR", wx, wy, level, color, texture)
+                        local tooltip = rspin.pin.POI.name
+                        map:SetIconTip(rsnote,tooltip)
+                        map:SetIconUserData(rsnote, rspin.pin)
+                    end
+                end
+            end
+        end
+    end
 end
 
 
@@ -2062,64 +2062,64 @@ Nx.Notes.QuestieLastMapId = nil
 -- @param mapId  Current map ID
 --
 function Nx.Notes:Questie(mapId)
-	local map = Nx.Map:GetMap (1)
+    local map = Nx.Map:GetMap (1)
 
-	if (Nx.fdb.profile.Notes.Questie and Questie) then
-		-- Check if pin pool exists
-		local pinPool = WorldMapFrame.pinPools and WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"]
-		if not pinPool then
-			return
-		end
-		
-		-- Collect pins and build hash of positions/data
-		local questiePins = {}
-		local currentHash = 0
-		
-		for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
-			questiePins[#questiePins + 1] = pin
-			-- Hash includes position, mapID, and quest data ID to detect any changes
-			if pin.icon and pin.icon.data then
-				local questId = pin.icon.data.QuestData and pin.icon.data.QuestData.Id or 0
-				currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + questId
-			end
-		end
-		
-		-- Check if data actually changed (count + positions + quest data + map)
-		local cacheKey = mapId .. "_QUE"
-		if self.QuestieCache[cacheKey] == currentHash and self.QuestieLastMapId == mapId and self.PrevQuestiePins == #questiePins then
-			return -- No changes, skip update
-		end
-		
-		-- Data changed - clear old icons and rebuild
-		map:ClearIconType("!QUE")
-		self.QuestieCache[cacheKey] = currentHash
-		self.QuestieLastMapId = mapId
-		self.PrevQuestiePins = #questiePins
-		
-		local level = nil
-		
-		-- Cache settings lookup
-		local showAvailable = Nx.fdb.profile.Notes.QuestieSE
+    if (Nx.fdb.profile.Notes.Questie and Questie) then
+        -- Check if pin pool exists
+        local pinPool = WorldMapFrame.pinPools and WorldMapFrame.pinPools["HereBeDragonsPinsTemplateQuestie"]
+        if not pinPool then
+            return
+        end
 
-		map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
-		map:SetIconTypeChop ("!QUE", true)
-		map:SetIconTypeLevel ("!QUE", 20)
+        -- Collect pins and build hash of positions/data
+        local questiePins = {}
+        local currentHash = 0
 
-		for _,questiePin in ipairs(questiePins) do
-			local icon = questiePin.icon
-			if icon and icon.UiMapID == map.MapId and icon.data and icon.data.QuestData then
-				local dataType = icon.data.Type
-				if (showAvailable and dataType == "available") or dataType == "monster" or dataType == "item" then
-					local x = questiePin.normalizedX * 100
-					local y = questiePin.normalizedY * 100
-					local texture = icon.texture and icon.texture:GetTexture()
-					local wx, wy = Nx.Map:GetWorldPos(mapId, x, y)
-					local qnote = map:AddIconPt("!QUE", wx, wy, level, "FFFFFF", texture)
-					map:SetIconUserData(qnote, questiePin)
-				end
-			end
-		end
-	end
+        for pin in WorldMapFrame:EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
+            questiePins[#questiePins + 1] = pin
+            -- Hash includes position, mapID, and quest data ID to detect any changes
+            if pin.icon and pin.icon.data then
+                local questId = pin.icon.data.QuestData and pin.icon.data.QuestData.Id or 0
+                currentHash = currentHash + (pin.normalizedX or 0) * 10000 + (pin.normalizedY or 0) * 100 + questId
+            end
+        end
+
+        -- Check if data actually changed (count + positions + quest data + map)
+        local cacheKey = mapId .. "_QUE"
+        if self.QuestieCache[cacheKey] == currentHash and self.QuestieLastMapId == mapId and self.PrevQuestiePins == #questiePins then
+            return -- No changes, skip update
+        end
+
+        -- Data changed - clear old icons and rebuild
+        map:ClearIconType("!QUE")
+        self.QuestieCache[cacheKey] = currentHash
+        self.QuestieLastMapId = mapId
+        self.PrevQuestiePins = #questiePins
+
+        local level = nil
+
+        -- Cache settings lookup
+        local showAvailable = Nx.fdb.profile.Notes.QuestieSE
+
+        map:InitIconType ("!QUE", "WP", "", Nx.fdb.profile.Notes.QuestieSize or 32, Nx.fdb.profile.Notes.QuestieSize or 32)
+        map:SetIconTypeChop ("!QUE", true)
+        map:SetIconTypeLevel ("!QUE", 20)
+
+        for _,questiePin in ipairs(questiePins) do
+            local icon = questiePin.icon
+            if icon and icon.UiMapID == map.MapId and icon.data and icon.data.QuestData then
+                local dataType = icon.data.Type
+                if (showAvailable and dataType == "available") or dataType == "monster" or dataType == "item" then
+                    local x = questiePin.normalizedX * 100
+                    local y = questiePin.normalizedY * 100
+                    local texture = icon.texture and icon.texture:GetTexture()
+                    local wx, wy = Nx.Map:GetWorldPos(mapId, x, y)
+                    local qnote = map:AddIconPt("!QUE", wx, wy, level, "FFFFFF", texture)
+                    map:SetIconUserData(qnote, questiePin)
+                end
+            end
+        end
+    end
 end
 
 

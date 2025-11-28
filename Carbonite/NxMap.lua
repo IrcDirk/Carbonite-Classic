@@ -1219,7 +1219,7 @@ function Nx.Map:Create(index)
 
     local item = ismenu:AddItem(0, L["Icon Scaling Size"])
     item:SetSlider(Nx.db.profile.Map, 1, 50, nil, "InstanceScale")
-	
+
     ---------------------------------------------------------------------------
     -- TRANSPARENCY SUBMENU
     -- Alpha/opacity controls for various map elements
@@ -1762,30 +1762,30 @@ function Nx.Map:AttachWorldMap()
         f:Show()
         f:EnableMouse(false)
 
-		self:SetWorldMapIcons (.001)
+        self:SetWorldMapIcons (.001)
 
-		local tipf = _G["GameTooltip"]
-		if tipf then
-			tipf:SetParent (self.Frm)			
-		end
+        local tipf = _G["GameTooltip"]
+        if tipf then
+            tipf:SetParent (self.Frm)
+        end
 
-		local af = _G["WorldMapFrameAreaFrame"]
-		if af then
-			af:Hide()
---			af:SetParent (self.Frm)
---			af:SetPoint ("TOP", self.Frm, "TOP", 0, 0)
-		end
+        local af = _G["WorldMapFrameAreaFrame"]
+        if af then
+            af:Hide()
+--            af:SetParent (self.Frm)
+--            af:SetPoint ("TOP", self.Frm, "TOP", 0, 0)
+        end
 
---		Gatherer.MapNotes.MapDraw = function() Nx.prt ("Gath mapdraw") end
+--        Gatherer.MapNotes.MapDraw = function() Nx.prt ("Gath mapdraw") end
 
-		-- Remove leftovers
-		for n = 1, NUM_WORLDMAP_POIS do
-			local f = _G["WorldMapFramePOI" .. n]
-			f:Hide()
-		end
+        -- Remove leftovers
+        for n = 1, NUM_WORLDMAP_POIS do
+            local f = _G["WorldMapFramePOI" .. n]
+            f:Hide()
+        end
 
-		self.WorldMapFrmMapId = 0
-	end
+        self.WorldMapFrmMapId = 0
+    end
 ]]--
 end
 
@@ -1793,39 +1793,39 @@ end
 --
 
 function Nx.Map:DetachWorldMap()
-	---- THIS DOES NOT WORK, UNTIL FIXED DISABLING IT
---[[	
-	local f = self.WorldMapFrm
+    ---- THIS DOES NOT WORK, UNTIL FIXED DISABLING IT
+--[[
+    local f = self.WorldMapFrm
 
-	if f then
+    if f then
 
---		Nx.prt ("DetachWorldMap")
+--        Nx.prt ("DetachWorldMap")
 
-		self.WorldMapFrm = nil
+        self.WorldMapFrm = nil
 
-		f:SetParent (self.WorldMapFrmParent)
-		f:SetScale (self.WorldMapFrmScale)
-		f:SetPoint ("TOPLEFT", "WorldMapDetailFrame", "TOPLEFT", 0, 0)
-		f.GetCenter = self.WorldMapFrmGetCenter
+        f:SetParent (self.WorldMapFrmParent)
+        f:SetScale (self.WorldMapFrmScale)
+        f:SetPoint ("TOPLEFT", "WorldMapDetailFrame", "TOPLEFT", 0, 0)
+        f.GetCenter = self.WorldMapFrmGetCenter
 
-		f:EnableMouse (true)
+        f:EnableMouse (true)
 
-		self:SetWorldMapIcons (1)
+        self:SetWorldMapIcons (1)
 
-		local tipf = _G["GameTooltip"]
-		if tipf then
-			tipf:SetParent (self.WorldMapFrmParent)
-			tipf:SetFrameStrata ("TOOLTIP")
-		end
+        local tipf = _G["GameTooltip"]
+        if tipf then
+            tipf:SetParent (self.WorldMapFrmParent)
+            tipf:SetFrameStrata ("TOOLTIP")
+        end
 
-		local af = _G["WorldMapFrameAreaFrame"]
-		if af then
-			af:Show()
---			af:SetParent (f)
---			af:SetPoint ("TOP", f, "TOP", 0, -10)
-		end
+        local af = _G["WorldMapFrameAreaFrame"]
+        if af then
+            af:Show()
+--            af:SetParent (f)
+--            af:SetPoint ("TOP", f, "TOP", 0, -10)
+        end
 
-	end
+    end
 ]]--
 end
 
@@ -1834,63 +1834,63 @@ end
 
 function Nx.Map:UpdateWorldMap()
 
-	local f = self.WorldMapFrm
+    local f = self.WorldMapFrm
 
-	for factionIndex = 1, GetNumFactions() do
-		local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith,canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
---		if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
---			self.MapWorldInfo[418].Overlay = "krasarang_terrain1"
---		end
-	end
+    for factionIndex = 1, GetNumFactions() do
+        local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith,canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
+--        if (name == L["Operation: Shieldwall"]) or (name == L["Dominance Offensive"]) then
+--            self.MapWorldInfo[418].Overlay = "krasarang_terrain1"
+--        end
+    end
 
-	if f then
+    if f then
 
-		if self.StepTime ~= 0 or self.Scrolling or IsShiftKeyDown() then
-			f:Hide()
-		else
+        if self.StepTime ~= 0 or self.Scrolling or IsShiftKeyDown() then
+            f:Hide()
+        else
 
-			local tipf = _G["GameTooltip"]
-			if tipf then
-				tipf:SetFrameStrata ("TOOLTIP")
-			end
-			local af = _G["WorldMapFrameAreaFrame"]
-			if af then
-				af:SetFrameStrata ("HIGH")
-			end
+            local tipf = _G["GameTooltip"]
+            if tipf then
+                tipf:SetFrameStrata ("TOOLTIP")
+            end
+            local af = _G["WorldMapFrameAreaFrame"]
+            if af then
+                af:SetFrameStrata ("HIGH")
+            end
 
-			f:Show()
+            f:Show()
 
-			self:ClipZoneFrm (self.Cont, self.Zone, f, 1)
-			f:SetFrameLevel (self.Level)			
-			if self.WorldMapFrmMapId ~= self.MapId then
---				Nx.prt ("mapid %s", self.MapId)
-				self.WorldMapFrmMapId = self.MapId
-				self:SetChildLevels (f, self.Level + 1)
-				self.Level = self.Level + 4
-			end
-		end
+            self:ClipZoneFrm (self.Cont, self.Zone, f, 1)
+            f:SetFrameLevel (self.Level)
+            if self.WorldMapFrmMapId ~= self.MapId then
+--                Nx.prt ("mapid %s", self.MapId)
+                self.WorldMapFrmMapId = self.MapId
+                self:SetChildLevels (f, self.Level + 1)
+                self.Level = self.Level + 4
+            end
+        end
 
-		for k, v in ipairs (_G["MAP_VEHICLES"]) do
-			v:SetScale (.001)
-		end
-	end
-	if not InCombatLockdown() and Nx.BlobsAvailable then
-		self.Arch:DrawNone();
-		if Nx.db.char.Map.ShowArchBlobs then
-			local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
-			for i, digSite in ipairs(digSites) do
-				self.Arch:DrawBlob(digSite.poiBlobID, true)
-			end
-			self:ClipZoneFrm( self.Cont, self.Zone, self.Arch, 1 )
-			self.Arch:SetFrameLevel(self.Level)
-			self.Arch:SetFillAlpha(255 * self.ArchAlpha)
-			self.Arch:SetBorderAlpha(255 * self.ArchAlpha)
-			self.Arch:SetMapID(Nx.Map:GetCurrentMapAreaID())
-			self.Arch:Show()
-		else
-			self.Arch:Hide()
-		end
-	end
+        for k, v in ipairs (_G["MAP_VEHICLES"]) do
+            v:SetScale (.001)
+        end
+    end
+    if not InCombatLockdown() and Nx.BlobsAvailable then
+        self.Arch:DrawNone();
+        if Nx.db.char.Map.ShowArchBlobs then
+            local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
+            for i, digSite in ipairs(digSites) do
+                self.Arch:DrawBlob(digSite.poiBlobID, true)
+            end
+            self:ClipZoneFrm( self.Cont, self.Zone, self.Arch, 1 )
+            self.Arch:SetFrameLevel(self.Level)
+            self.Arch:SetFillAlpha(255 * self.ArchAlpha)
+            self.Arch:SetBorderAlpha(255 * self.ArchAlpha)
+            self.Arch:SetMapID(Nx.Map:GetCurrentMapAreaID())
+            self.Arch:Show()
+        else
+            self.Arch:Hide()
+        end
+    end
 end
 
 --------
@@ -1898,16 +1898,16 @@ end
 
 function Nx.Map:SetChildLevels (frm, lvl)
 
-	local ch = { frm:GetChildren() }
+    local ch = { frm:GetChildren() }
 
-	for n, chf in pairs (ch) do
+    for n, chf in pairs (ch) do
 
-		chf:SetFrameLevel (lvl)
+        chf:SetFrameLevel (lvl)
 
-		if chf:GetNumChildren() > 0 then
-			self:SetChildLevels (chf, lvl + 1)
-		end
-	end
+        if chf:GetNumChildren() > 0 then
+            self:SetChildLevels (chf, lvl + 1)
+        end
+    end
 end
 
 --------
@@ -1915,56 +1915,56 @@ end
 
 function Nx.Map:SetWorldMapIcons (scale)
 
-	for n = 1, MAX_PARTY_MEMBERS do
-		local f = _G["WorldMapParty" .. n]
-		if f then
-			f:SetScale (scale)
-		end
-	end
-	for n = 1, MAX_RAID_MEMBERS do
-		local f = _G["WorldMapRaid" .. n]
-		if f then
-			f:SetScale (scale)
-		end
-	end
-	local flags = GetNumBattlefieldFlagPositions()
-	for n = 1, flags do
-		local f = _G["WorldMapFlag" .. n]
-		if f then
-			f:SetScale (scale)
-		end
-	end
+    for n = 1, MAX_PARTY_MEMBERS do
+        local f = _G["WorldMapParty" .. n]
+        if f then
+            f:SetScale (scale)
+        end
+    end
+    for n = 1, MAX_RAID_MEMBERS do
+        local f = _G["WorldMapRaid" .. n]
+        if f then
+            f:SetScale (scale)
+        end
+    end
+    local flags = GetNumBattlefieldFlagPositions()
+    for n = 1, flags do
+        local f = _G["WorldMapFlag" .. n]
+        if f then
+            f:SetScale (scale)
+        end
+    end
 
-	for k, f in ipairs (_G["MAP_VEHICLES"]) do
-		f:SetScale (scale)
-	end
+    for k, f in ipairs (_G["MAP_VEHICLES"]) do
+        f:SetScale (scale)
+    end
 
-	for k, name in ipairs (Nx.Map.WorldMapHideNames) do
+    for k, name in ipairs (Nx.Map.WorldMapHideNames) do
 
-		local f = _G[name]
-		if f then
-			f:SetScale (scale)
-		end
-	end
+        local f = _G[name]
+        if f then
+            f:SetScale (scale)
+        end
+    end
 end
 
 --------
 --
 
 function Nx.Map:OnButZoomIn()
-	self:SetScaleOverTime (2)
+    self:SetScaleOverTime (2)
 end
 
 function Nx.Map:OnButZoomOut()
-	self:SetScaleOverTime (-2)
+    self:SetScaleOverTime (-2)
 end
 
 function Nx.Map:OnButToggleGuide (but)
-	self.Guide:ToggleShow()
+    self.Guide:ToggleShow()
 end
 
 function Nx.Map:OnButToggleEvent (but)
-	Nx.UEvents.List:Open()
+    Nx.UEvents.List:Open()
 end
 
 --------
@@ -1972,89 +1972,85 @@ end
 
 function Nx.Map:InitFrames()
 
-	local f = self.Frm
-	local m = self
+    local f = self.Frm
+    local m = self
 
-	-- Create map zone tile frames
+    -- Create map zone tile frames
 
-	self.TileFrms = {}
+    self.TileFrms = {}
 
-	local tf
+    local tf
 
-	for i = 1, 150 do
+    for i = 1, 150 do
 
-		tf = CreateFrame ("Frame", nil, f)
-		m.TileFrms[i] = tf
+        tf = CreateFrame ("Frame", nil, f)
+        m.TileFrms[i] = tf
 
-		local t = tf:CreateTexture()
-		t:SetAllPoints (tf)
-		t:SetSnapToPixelGrid(false)
-		t:SetTexelSnappingBias(0)
-		tf.texture = t
-	end
+        local t = tf:CreateTexture()
+        t:SetAllPoints (tf)
+        t:SetSnapToPixelGrid(false)
+        t:SetTexelSnappingBias(0)
+        tf.texture = t
+    end
 
-	-- Init continent frames
+    -- Init continent frames
 
-	Nx.ContBlks = self.ContBlks
+    Nx.ContBlks = self.ContBlks
 
-	self.ContFrms = {}
+    self.ContFrms = {}
 
-	for n = 1, Nx.Map.ContCnt do
+    for n = 1, Nx.Map.ContCnt do
 
-		self.ContFrms[n] = {}
+        self.ContFrms[n] = {}
 
-		local mapFileName = self.MapInfo[n].FileName
-		local texi = 1
+        local mapFileName = self.MapInfo[n].FileName
+        local texi = 1
 
---		Nx.prt ("Map Update ".. mapFileName)
-		local tileX = self.MapInfo[n].TileX or 4
-		local tileY = self.MapInfo[n].TileY or 3
-		
-		local numtiles = tileX * tileY
-		
-		for i = 1, numtiles do
+--        Nx.prt ("Map Update ".. mapFileName)
+        local tileX    = self.MapInfo[n].TileX or 4
+        local tileY    = self.MapInfo[n].TileY or 3
+        local numtiles = tileX * tileY
 
-			if Nx.ContBlks[n][i] ~= 0 then
+        for i = 1, numtiles do
+            if Nx.ContBlks[n][i] ~= 0 then
+                local cf = CreateFrame ("Frame", nil, f)
+                m.ContFrms[n][i] = cf
 
-				local cf = CreateFrame ("Frame", nil, f)
-				m.ContFrms[n][i] = cf
+                local t = cf:CreateTexture()
+                t:SetAllPoints (cf)
+                cf.texture = t
 
-				local t = cf:CreateTexture()
-				t:SetAllPoints (cf)
-				cf.texture = t
+                if n == 1 and not Nx.isClassic then
+                    t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal_"..i)
+                elseif n == 2 and not Nx.isClassic then
+                    t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Eas_"..i)
+                else
+                    t:SetTexture ("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i)
+                end
 
-				if n == 1 and not Nx.isClassic then
-					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Kal_"..i)
-				elseif n == 2 and not Nx.isClassic then
-					t:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\Cont\\".."Eas_"..i)
-				else
-					t:SetTexture ("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i)
-				end
-				
-				t:SetSnapToPixelGrid(false)
-				t:SetTexelSnappingBias(0)
-			end
-		end
-	end
+                t:SetSnapToPixelGrid(false)
+                t:SetTexelSnappingBias(0)
+            end
+        end
+    end
 
-	-- Create mini frames
+    -- Create mini frames
 
-	self.MiniFrms = {}
+    self.MiniFrms = {}
 
-	for n = 1, self.MiniBlks ^ 2 do
+    for n = 1, self.MiniBlks ^ 2 do
 
-		local tf = CreateFrame ("Frame", nil, f)
-		m.MiniFrms[n] = tf
+        local tf = CreateFrame ("Frame", nil, f)
+        m.MiniFrms[n] = tf
 
-		local t = tf:CreateTexture()
-		tf.texture = t
-		t:SetAllPoints (tf)
-		
-		t:SetSnapToPixelGrid(false)
-		t:SetTexelSnappingBias(0)
-	end
+        local t = tf:CreateTexture()
+        tf.texture = t
+        t:SetAllPoints (tf)
+        t:SetSnapToPixelGrid(false)
+        t:SetTexelSnappingBias(0)
+    end
 
-	self:InitHotspots()
+    self:InitHotspots()
 end
 
 --------
@@ -2062,95 +2058,95 @@ end
 
 function Nx.Map:InitHotspots()
 
-	local quad = {}
-	self.WorldHotspots = quad
-	local quadCity = {}
-	self.WorldHotspotsCity = quadCity
+    local quad = {}
+    self.WorldHotspots = quad
+    local quadCity = {}
+    self.WorldHotspotsCity = quadCity
 
-	for contN = 1, Nx.Map.ContCnt do
+    for contN = 1, Nx.Map.ContCnt do
 
-		cname = self:GetWorldContinentInfo (contN)
-		if not cname then
-			break
-		end
-		for _,zoneN in pairs(Nx.Map.MapZones[contN]) do
-			zname, zx, zy, zw, zh = self:GetWorldZoneInfo (contN, zoneN)
-			if not zx then
-				break
-			end
+        cname = self:GetWorldContinentInfo (contN)
+        if not cname then
+            break
+        end
+        for _,zoneN in pairs(Nx.Map.MapZones[contN]) do
+            zname, zx, zy, zw, zh = self:GetWorldZoneInfo (contN, zoneN)
+            if not zx then
+                break
+            end
 
-			local color, infoStr = self:GetMapNameDesc (zoneN)
-			local tipStr = format ("%s, %s%s (%s)", L[cname], color, zname, infoStr)
+            local color, infoStr = self:GetMapNameDesc (zoneN)
+            local tipStr = format ("%s, %s%s (%s)", L[cname], color, zname, infoStr)
 
-			local loc = Nx.MapWorldHotspots[nxz]	-- Old way
-			local locSize = 4
-			local mapId = zoneN
+            local loc = Nx.MapWorldHotspots[nxz]    -- Old way
+            local locSize = 4
+            local mapId = zoneN
 
-			if not loc then
+            if not loc then
 
-				loc = Nx.MapWorldHotspots2[mapId]
-				if loc then
-					locSize = 12
-				else
-					loc = format ("%c%c%c%c", 85, 85, 135, 135)
-				end
-			end
+                loc = Nx.MapWorldHotspots2[mapId]
+                if loc then
+                    locSize = 12
+                else
+                    loc = format ("%c%c%c%c", 85, 85, 135, 135)
+                end
+            end
 
-			for n = 0, 100 do
+            for n = 0, 100 do
 
-				local locN = n * locSize + 1
+                local locN = n * locSize + 1
 
-				local loc1 = strsub (loc, locN, locN + locSize - 1)
-				if loc1 == "" then
-					break
-				end
+                local loc1 = strsub (loc, locN, locN + locSize - 1)
+                if loc1 == "" then
+                    break
+                end
 
-				local zx, zy, zw, zh
+                local zx, zy, zw, zh
 
-				if locSize == 4 then
-					zx, zy, zw, zh = Nx.Map:UnpackLocRect (loc1)
-				else
-					zx = tonumber (strsub (loc1, 1, 3), 16) * 100 / 4095
-					zy = tonumber (strsub (loc1, 4, 6), 16) * 100 / 4095
-					zw = tonumber (strsub (loc1, 7, 9), 16) * 1002 / 4095
-					zh = tonumber (strsub (loc1, 10, 12), 16) * 668 / 4095
-				end
+                if locSize == 4 then
+                    zx, zy, zw, zh = Nx.Map:UnpackLocRect (loc1)
+                else
+                    zx = tonumber (strsub (loc1, 1, 3), 16) * 100 / 4095
+                    zy = tonumber (strsub (loc1, 4, 6), 16) * 100 / 4095
+                    zw = tonumber (strsub (loc1, 7, 9), 16) * 1002 / 4095
+                    zh = tonumber (strsub (loc1, 10, 12), 16) * 668 / 4095
+                end
 
-				local spot = {}
+                local spot = {}
 
-				local wzone = self:GetWorldZone (mapId)
+                local wzone = self:GetWorldZone (mapId)
 
-				if wzone.City or wzone.StartZone then
-					tinsert (quadCity, spot)
-				else
-					tinsert (quad, spot)
-				end
+                if wzone.City or wzone.StartZone then
+                    tinsert (quadCity, spot)
+                else
+                    tinsert (quad, spot)
+                end
 
-				spot.MapId = mapId
-				
-				spot.x = tonumber (strsub (loc1, 1, 3), 16)
-				spot.y = tonumber (strsub (loc1, 4, 6), 16)
-				spot.zx = zx
-				spot.zy = zy
-				
-				local wx, wy = self:GetWorldPos (mapId, zx, zy)
-				spot.WX1 = wx
-				spot.WY1 = wy
-				zw = zw / 1002 * 100
-				zh = zh / 668 * 100
-				local wx, wy = self:GetWorldPos (mapId, zx + zw, zy + zh)
-				spot.WX2 = wx
-				spot.WY2 = wy
+                spot.MapId = mapId
 
-				spot.NxTipBase = tipStr
+                spot.x = tonumber (strsub (loc1, 1, 3), 16)
+                spot.y = tonumber (strsub (loc1, 4, 6), 16)
+                spot.zx = zx
+                spot.zy = zy
 
---				if contN == 5 then
---					Nx.prtVar ("Spot", spot)
---				end
+                local wx, wy = self:GetWorldPos (mapId, zx, zy)
+                spot.WX1 = wx
+                spot.WY1 = wy
+                zw = zw / 1002 * 100
+                zh = zh / 668 * 100
+                local wx, wy = self:GetWorldPos (mapId, zx + zw, zy + zh)
+                spot.WX2 = wx
+                spot.WY2 = wy
 
-			end
-		end
-	end
+                spot.NxTipBase = tipStr
+
+--                if contN == 5 then
+--                    Nx.prtVar ("Spot", spot)
+--                end
+
+            end
+        end
+    end
 
 end
 
@@ -2159,108 +2155,108 @@ end
 
 function Nx.Map:GetMapNameDesc (mapId)
 
---	Nx.prt ("MapId %s", mapId)
-	local whichzone = Nx.Zones[mapId] or Nx.Zones[0]
-	local _, minLvl, maxLvl, faction = Nx.Split ("|", whichzone)
-	minLvl = tonumber (minLvl)
-	faction = tonumber (faction)
+--    Nx.prt ("MapId %s", mapId)
+    local whichzone = Nx.Zones[mapId] or Nx.Zones[0]
+    local _, minLvl, maxLvl, faction = Nx.Split ("|", whichzone)
+    minLvl = tonumber (minLvl)
+    faction = tonumber (faction)
 
-	local infoStr = format ("%d-%d", minLvl, maxLvl)
+    local infoStr = format ("%d-%d", minLvl, maxLvl)
 
-	local color = "|cffffffff"
-	if self.PlFactionNum == faction then
-		color = "|cff20ff20"
-	elseif faction == 2 then
-		color = "|cffffff00"
-	elseif faction < 2 then
-		color = "|cffff6060"
-	end
+    local color = "|cffffffff"
+    if self.PlFactionNum == faction then
+        color = "|cff20ff20"
+    elseif faction == 2 then
+        color = "|cffffff00"
+    elseif faction < 2 then
+        color = "|cffff6060"
+    end
 
-	if minLvl == 0 then
-		infoStr = L["Any"]
-	end
-	if self:GetWorldZone(mapId).City then
-		infoStr = L["City"]
-		minLvl = -1
-	end
+    if minLvl == 0 then
+        infoStr = L["Any"]
+    end
+    if self:GetWorldZone(mapId).City then
+        infoStr = L["City"]
+        minLvl = -1
+    end
 
-	return color, infoStr, minLvl
+    return color, infoStr, minLvl
 end
 
 --------
 -- Init minimap ownership
 
 function Nx.Map:MinimapOwnInit()
-	self.MMScales = {}
-	for n = 1, 6 do
-		self.MMScales[n] = (8 - n) * 66.6666666666666 / 5.0
-	end
-	self.MMScalesC = { 300, 240, 180, 120, 80, 50 }
-	for n = 1, 6 do
-		self.MMScalesC[n] = self.MMScalesC[n] / 5.0
-	end
-	--
-	local mm = self.MMFrm
-	local mmc = _G["MinimapCluster"]
-	self.MMChkDelay = 5		-- Prevent crash here
-	self.MMOwnedFrms = {}
-	if not self.MMOwn then
-		self.Win:Show (self.StartupShown)
-		Nx.Map:MinimapButtonShowUpdate()
-		return
-	end
-	mm:SetMaskTexture ("textures\\MinimapMask")
-	self:MinimapNodeGlowInit()
-	Nx.Map:MinimapButtonShowUpdate (true)
+    self.MMScales = {}
+    for n = 1, 6 do
+        self.MMScales[n] = (8 - n) * 66.6666666666666 / 5.0
+    end
+    self.MMScalesC = { 300, 240, 180, 120, 80, 50 }
+    for n = 1, 6 do
+        self.MMScalesC[n] = self.MMScalesC[n] / 5.0
+    end
+    --
+    local mm = self.MMFrm
+    local mmc = _G["MinimapCluster"]
+    self.MMChkDelay = 5        -- Prevent crash here
+    self.MMOwnedFrms = {}
+    if not self.MMOwn then
+        self.Win:Show (self.StartupShown)
+        Nx.Map:MinimapButtonShowUpdate()
+        return
+    end
+    mm:SetMaskTexture ("textures\\MinimapMask")
+    self:MinimapNodeGlowInit()
+    Nx.Map:MinimapButtonShowUpdate (true)
 
-	mm:SetClampedToScreen (true)
-	mm:SetWidth (140)
-	mm:SetHeight (140)
-	self.MMAlphaDelay = 100
+    mm:SetClampedToScreen (true)
+    mm:SetWidth (140)
+    mm:SetHeight (140)
+    self.MMAlphaDelay = 100
 
-	mm:SetParent (self.Frm)
+    mm:SetParent (self.Frm)
 
-	--self.MMFrm:SetQuestBlobRingAlpha(1)
-	self.MMFrm:SetPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
-	self.MMFrm:SetStaticPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
-	mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)
-	mm:SetScript ("OnMouseUp", self.MinimapOnMouseUp)
-	mm:SetScript ("OnEnter", self.MinimapOnEnter)
-	mm:SetScript ("OnLeave", self.MinimapOnLeave)
+    --self.MMFrm:SetQuestBlobRingAlpha(1)
+    self.MMFrm:SetPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
+    self.MMFrm:SetStaticPOIArrowTexture("Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent")
+    mm:SetScript ("OnMouseDown", self.MinimapOnMouseDown)
+    mm:SetScript ("OnMouseUp", self.MinimapOnMouseUp)
+    mm:SetScript ("OnEnter", self.MinimapOnEnter)
+    mm:SetScript ("OnLeave", self.MinimapOnLeave)
 
---	local prtFrameChildren = Nx.prtFrameChildren
---	prtFrameChildren ("Minimap", mm)
---	prtFrameChildren ("MinimapCluster", mmc)
+--    local prtFrameChildren = Nx.prtFrameChildren
+--    prtFrameChildren ("Minimap", mm)
+--    prtFrameChildren ("MinimapCluster", mmc)
 
 --[[
-	local mmsf = CreateFrame ("ScrollFrame", nil, self.Frm)
-	self.MMScFrm = mmsf
+    local mmsf = CreateFrame ("ScrollFrame", nil, self.Frm)
+    self.MMScFrm = mmsf
 
-	mm:SetParent (mmsf)
+    mm:SetParent (mmsf)
 
-	mmsf:SetAllPoints (self.Frm)
---	mmsf:SetScrollChild (mm)
+    mmsf:SetAllPoints (self.Frm)
+--    mmsf:SetScrollChild (mm)
 --]]
 
-	-- Ping
+    -- Ping
 
---[[	--V4
-	local ping = MinimapPing
-	ping:SetParent (UIParent)
+--[[    --V4
+    local ping = MinimapPing
+    ping:SetParent (UIParent)
 
-	self.MMOwnedFrms[ping] = 0
+    self.MMOwnedFrms[ping] = 0
 --]]
 
-	-- Data setup
+    -- Data setup
 
-	self.MMModels = {}
-	self.MMAddonFrms = {}
+    self.MMModels = {}
+    self.MMAddonFrms = {}
 
-	local f = _G["MinimapBackdrop"]
-	if f then
-		f:Hide()
-		f:SetParent (mmc)
-	end
+    local f = _G["MinimapBackdrop"]
+    if f then
+        f:Hide()
+        f:SetParent (mmc)
+    end
 
     hooksecurefunc("Minimap_ZoomIn", Nx.Map.Minimap_ZoomInClick)
     hooksecurefunc("Minimap_ZoomOut", Nx.Map.Minimap_ZoomOutClick)
@@ -2784,505 +2780,504 @@ function Nx.Map:MinimapUpdateEnd()
         self:MinimapSetScale(self.MMFScale, iconScale)
 
         local x = 0
-		local y = 0
-		local sz = 140 * self.MMFScale
+        local y = 0
+        local sz = 140 * self.MMFScale
 
-		if Nx.db.profile.MiniMap.DockRight then
-			x = (self.MapW - sz + 1)
-		end
-		if Nx.db.profile.MiniMap.DockBottom then
-			y = (self.MapH - sz + 1)
-		end
+        if Nx.db.profile.MiniMap.DockRight then
+            x = (self.MapW - sz + 1)
+        end
+        if Nx.db.profile.MiniMap.DockBottom then
+            y = (self.MapH - sz + 1)
+        end
 
-		mm:ClearAllPoints()
-		mm:SetPoint ("TOPLEFT", (x + Nx.db.profile.MiniMap.DXO) / iconScale,
-										(-y - Nx.db.profile.MiniMap.DYO) / iconScale)
-		mm:Show()
-		if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
-			mm:SetFrameLevel (self.Level + 50)
-		else
-			mm:SetFrameLevel (self.Level)
-		end
-		self:MinimapUpdateDetachedFrms (self.Level + 1)
-		self.Level = self.Level + 2
-	end
+        mm:ClearAllPoints()
+        mm:SetPoint ("TOPLEFT", (x + Nx.db.profile.MiniMap.DXO) / iconScale,
+                                        (-y - Nx.db.profile.MiniMap.DYO) / iconScale)
+        mm:Show()
+        if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
+            mm:SetFrameLevel (self.Level + 50)
+        else
+            mm:SetFrameLevel (self.Level)
+        end
+        self:MinimapUpdateDetachedFrms (self.Level + 1)
+        self.Level = self.Level + 2
+    end
 
-	if self.MMZoomChanged then
+    if self.MMZoomChanged then
 
-		self.MMZoomChanged = false
+        self.MMZoomChanged = false
 
-		local zoom = max (self.MMZoomType - 1, 0)
+        local zoom = max (self.MMZoomType - 1, 0)
 
-		if self.MMZoomType == 0 then
-			zoom = Nx.db.profile.MiniMap.DockZoom
-		end
+        if self.MMZoomType == 0 then
+            zoom = Nx.db.profile.MiniMap.DockZoom
+        end
 
-		local z = zoom - 1
-		if z < 0 then
-			z = 1
-		end
+        local z = zoom - 1
+        if z < 0 then
+            z = 1
+        end
 
-		-- Force icon update
-		mm:SetZoom (z)
-		mm:SetZoom (zoom)
+        -- Force icon update
+        mm:SetZoom (z)
+        mm:SetZoom (zoom)
 
---		Nx.prt ("zoom %d", zoom)
+--        Nx.prt ("zoom %d", zoom)
 
-		if self.MMZoomType == 0 then
-			mm:SetAlpha (1)
-		end
+        if self.MMZoomType == 0 then
+            mm:SetAlpha (1)
+        end
 
---		if Gatherer then
---			Nx.Timer:Start ("Gatherer", .1, self, self.OnGathererTimer)
---		end
-	end
+--        if Gatherer then
+--            Nx.Timer:Start ("Gatherer", .1, self, self.OnGathererTimer)
+--        end
+    end
 
-	-- Transfer window and minimap scale
+    -- Transfer window and minimap scale
 
-	--V4 gone TEST!!!!!!!!!
---	MinimapPing:SetScale (self.Win.Frm:GetScale() * mm:GetScale())
+    --V4 gone TEST!!!!!!!!!
+--    MinimapPing:SetScale (self.Win.Frm:GetScale() * mm:GetScale())
 end
 
 function Nx.Map:MinimapSetScale (scale, iconScale)
-	--if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
-	if InCombatLockdown() then
-		return
-	end
-	local mm = self.MMFrm
-	local sz = 140 * scale / iconScale
-	mm:SetWidth (sz)
-	mm:SetHeight (sz)
-	mm:SetScale (iconScale)
+    --if InCombatLockdown() and Nx.db.profile.Map.Compatibility then
+    if InCombatLockdown() then
+        return
+    end
+    local mm = self.MMFrm
+    local sz = 140 * scale / iconScale
+    mm:SetWidth (sz)
+    mm:SetHeight (sz)
+    mm:SetScale (iconScale)
 end
 
 function Nx.Map:MinimapUpdateMask (optName)
 
-	local name = Nx.db.profile.MiniMap[optName] and "Interface\\Buttons\\White8x8" or "textures\\MinimapMask"
+    local name = Nx.db.profile.MiniMap[optName] and "Interface\\Buttons\\White8x8" or "textures\\MinimapMask"
 
---	if IsControlKeyDown() then
---		self.MMMaskName = nil
---	end
+--    if IsControlKeyDown() then
+--        self.MMMaskName = nil
+--    end
 
-	if self.MMMaskName ~= name then
-		self.MMMaskName = name
+    if self.MMMaskName ~= name then
+        self.MMMaskName = name
 
-		local mm = self.MMFrm
-		mm:SetMaskTexture (name)
+        local mm = self.MMFrm
+        mm:SetMaskTexture (name)
 
---		Nx.prt ("MMmask %s", name)
-	end
+--        Nx.prt ("MMmask %s", name)
+    end
 
-	local name = self.MMZoomType == 0 and "Interface\\Minimap\\MinimapArrow" or "Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent"
-	if self.MMArrowName ~= name then
-		self.MMArrowName = name
-		if (name ~= "") then
-			self.MMFrm:SetPlayerTexture (name)
-		end
-	end
+    local name = self.MMZoomType == 0 and "Interface\\Minimap\\MinimapArrow" or "Interface\\Addons\\Carbonite\\Gfx\\Map\\32Transparent"
+    if self.MMArrowName ~= name then
+        self.MMArrowName = name
+        if (name ~= "") then
+            self.MMFrm:SetPlayerTexture (name)
+        end
+    end
 end
 
 --[[
 function Nx.Map.OnGathererTimer()
 
-	Nx.prt ("Gatherer update")
+    Nx.prt ("Gatherer update")
 
-	local mn = Gatherer["MiniNotes"]
-	if mn then
-		local update = mn["ForceUpdate"]
-		if update then
-			update()
-		end
-	else
-		Nx.prt ("no mn")
-	end
+    local mn = Gatherer["MiniNotes"]
+    if mn then
+        local update = mn["ForceUpdate"]
+        if update then
+            update()
+        end
+    else
+        Nx.prt ("no mn")
+    end
 end
 --]]
 
 function Nx.Map:MinimapDetachFrms()
 
-	local mm = self.MMFrm
-	local mmc = _G["MinimapCluster"]
-	local winf = self.Win.Frm
-	local dock = Nx.Map.Dock
+    local mm = self.MMFrm
+    local mmc = _G["MinimapCluster"]
+    local winf = self.Win.Frm
+    local dock = Nx.Map.Dock
 
-	if dock.InitPending then
-		return
-	end
+    if dock.InitPending then
+        return
+    end
 
-	self.MMChkDelay = self.MMChkDelay - 1
+    self.MMChkDelay = self.MMChkDelay - 1
 
-	if self.MMChkDelay < 1 then
+    if self.MMChkDelay < 1 then
 
-		self.MMChkDelay = 40		-- Reset
+        self.MMChkDelay = 40        -- Reset
 
-		-- Find and own any minimap child windows
+        -- Find and own any minimap child windows
 
-		local mmNames = self.AddonMinimapNames
-		local ch = { mm:GetChildren() }
+        local mmNames = self.AddonMinimapNames
+        local ch = { mm:GetChildren() }
 
-		for n = 1, #ch do
+        for n = 1, #ch do
 
-			local c = ch[n]
-			if c ~= mmc then
+            local c = ch[n]
+            if c ~= mmc then
 
---				if not c:IsVisible() then
---					Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
---				end
+--                if not c:IsVisible() then
+--                    Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
+--                end
 
-				if c:IsShown() and not self.MMOwnedFrms[c] then
+                if c:IsShown() and not self.MMOwnedFrms[c] then
 
-					if c:IsObjectType ("Model") then
---						Nx.prt ("MM Model %s", c:GetName() or "nil")
+                    if c:IsObjectType ("Model") then
+--                        Nx.prt ("MM Model %s", c:GetName() or "nil")
 
-						if self.MMOwn then
+                        if self.MMOwn then
 
-							c:SetParent (winf)
-							self.MMOwnedFrms[c] = 0
-							tinsert (self.MMModels, c)
-						end
+                            c:SetParent (winf)
+                            self.MMOwnedFrms[c] = 0
+                            tinsert (self.MMModels, c)
+                        end
 
-					elseif c:IsObjectType ("Frame") then
+                    elseif c:IsObjectType ("Frame") then
 
-						local name = gsub (c:GetName() or "", "%d", "")
+                        local name = gsub (c:GetName() or "", "%d", "")
 
-						if mmNames[name] then
+                        if mmNames[name] then
 
-							if self.MMOwn then
-								self.MMOwnedFrms[c] = 0
-								self.MMAddonFrms[c] = 1
-							end
+                            if self.MMOwn then
+                                self.MMOwnedFrms[c] = 0
+                                self.MMAddonFrms[c] = 1
+                            end
 
-						elseif dock.MMFrms then
+                        elseif dock.MMFrms then
 
-							local excludeFrame = false
-							local excludeFrames = {'HandyNotesPin', 'QuestieFrame'}
-							
-							for k, exF in ipairs (excludeFrames) do
-								if c:GetName() and Nx.strpos(c:GetName(), exF) then excludeFrame = true end
-							end
-							
-							if not excludeFrame then 						
-								self.MMOwnedFrms[c] = 0
-								tinsert (dock.MMFrms, c)
-								
-	--							Nx.prt ("MM Frm %s #%s %s", c:GetName() or "nil", c:GetNumChildren(), Nx.strpos(c:GetName(), 'QuestieFrame'))
-	--							Nx.prtFrameChildren (c:GetName() or "nil", c)
+                            local excludeFrame = false
+                            local excludeFrames = {'HandyNotesPin', 'QuestieFrame'}
 
-								if c:GetNumChildren() > 0 then
+                            for k, exF in ipairs (excludeFrames) do
+                                if c:GetName() and Nx.strpos(c:GetName(), exF) then excludeFrame = true end
+                            end
 
-									local ch = { c:GetChildren() }
-									for k, c in ipairs (ch) do
+                            if not excludeFrame then
+                                self.MMOwnedFrms[c] = 0
+                                tinsert (dock.MMFrms, c)
 
-	--									if not c:IsShown() then
-	--										Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
-	--									end
+    --                            Nx.prt ("MM Frm %s #%s %s", c:GetName() or "nil", c:GetNumChildren(), Nx.strpos(c:GetName(), 'QuestieFrame'))
+    --                            Nx.prtFrameChildren (c:GetName() or "nil", c)
 
-										if c:IsShown() then
-											if c:IsObjectType ("Frame") then
-												local pt, relTo = c:GetPoint()
-												if relTo == mm then
-													tinsert (dock.MMFrms, c)
-	--												Nx.prt ("MMCC %s", c:GetName())
-												end
-											end
-										end
-									end
-								end
-							end
+                                if c:GetNumChildren() > 0 then
 
-						end
-					end
-				end
-			end
-		end
-	end
+                                    local ch = { c:GetChildren() }
+                                    for k, c in ipairs (ch) do
 
-	--
-	if HandyNotes then
-		HandyNotes:UpdateMinimap()
-	end
+    --                                    if not c:IsShown() then
+    --                                        Nx.prt ("MM Frm v0 %s", c:GetName() or "nil")
+    --                                    end
 
-	dock:MinimapDetachFrms()
+                                        if c:IsShown() then
+                                            if c:IsObjectType ("Frame") then
+                                                local pt, relTo = c:GetPoint()
+                                                if relTo == mm then
+                                                    tinsert (dock.MMFrms, c)
+    --                                                Nx.prt ("MMCC %s", c:GetName())
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    --
+    if HandyNotes then
+        HandyNotes:UpdateMinimap()
+    end
+
+    dock:MinimapDetachFrms()
 end
 
 function Nx.Map:MinimapUpdateDetachedFrms (lvl)
 
---	self:MinimapDetachFrms()
+--    self:MinimapDetachFrms()
 
-	local sc = self.MMFScale
-	local arrowsc = sc
-	local msc = min (1 / sc, 1) * .5
+    local sc = self.MMFScale
+    local arrowsc = sc
+    local msc = min (1 / sc, 1) * .5
 
-	if Nx.InBG then
-		arrowsc = .001
-	end
+    if Nx.InBG then
+        arrowsc = .001
+    end
 
-	local mmplyr = Nx.Map.MinimapPlyrModel		-- Old
+    local mmplyr = Nx.Map.MinimapPlyrModel        -- Old
 
-	for n, f in ipairs (self.MMModels) do
+    for n, f in ipairs (self.MMModels) do
 
-		if f:IsShown() then
+        if f:IsShown() then
 
-			f:SetFrameLevel (lvl)
+            f:SetFrameLevel (lvl)
 
-			local name = f:GetModel()
+            local name = f:GetModel()
 
-			if name == "interface\\minimap\\ping\\minimapping.m2" then
-				f:SetScale (sc)
-				f:SetModelScale (msc)
-				f:SetAlpha (1)
+            if name == "interface\\minimap\\ping\\minimapping.m2" then
+                f:SetScale (sc)
+                f:SetModelScale (msc)
+                f:SetAlpha (1)
 
-			elseif f == mmplyr then
-				if self.MMZoomType == 0 then
-					f:SetScale (max (.4, min (.9, sc)) * Nx.db.profile.Map.PlyrArrowSize / 28)
---					f:SetModelScale (min (.2, sc))
-					f:SetModelScale (1)
-				else
-					f:SetScale (.1)
-					f:SetModelScale (1)
-				end
-			else
-				f:SetScale (arrowsc)
-				f:SetModelScale (msc)
-			end
+            elseif f == mmplyr then
+                if self.MMZoomType == 0 then
+                    f:SetScale (max (.4, min (.9, sc)) * Nx.db.profile.Map.PlyrArrowSize / 28)
+--                    f:SetModelScale (min (.2, sc))
+                    f:SetModelScale (1)
+                else
+                    f:SetScale (.1)
+                    f:SetModelScale (1)
+                end
+            else
+                f:SetScale (arrowsc)
+                f:SetModelScale (msc)
+            end
 --[[
-			if IsAltKeyDown() then
-				Nx.prt ("Model %s (%s %s)", f:GetModel() or "", f:GetScale(), f:GetModelScale())
-			end
+            if IsAltKeyDown() then
+                Nx.prt ("Model %s (%s %s)", f:GetModel() or "", f:GetScale(), f:GetModelScale())
+            end
 --]]
-		end
-	end
+        end
+    end
 
-	for f, v in pairs (self.MMAddonFrms) do
-		f:SetFrameLevel (lvl)
---		f:SetScale (sc)
---		f:SetModelScale (msc)
-	end
+    for f, v in pairs (self.MMAddonFrms) do
+        f:SetFrameLevel (lvl)
+--        f:SetScale (sc)
+--        f:SetModelScale (msc)
+    end
 end
 
 --------
 
 function Nx.Map:Menu_OnGoto (item)
-	self:SetTargetAtClick()
+    self:SetTargetAtClick()
 end
 
 function Nx.Map:Menu_OnClearGoto (item)
-	self:ClearTargets()
-	self.Guide:ClearAll()
+    self:ClearTargets()
+    self.Guide:ClearAll()
 end
 
 function Nx.Map:Menu_OnMonitorZone (item)
-	Nx.Com:MonitorZone (self.MenuMapId, item:GetChecked())
+    Nx.Com:MonitorZone (self.MenuMapId, item:GetChecked())
 end
 
 function Nx.Map:Menu_OnScaleSave()
-	self.CurOpts.NXScaleSave = self.Scale
+    self.CurOpts.NXScaleSave = self.Scale
 end
 
 function Nx.Map:Menu_OnScaleRestore()
-	local s = Nx.Map:GetMap(1).CurOpts.NXScaleSave
-	if s then
-		Nx.Map:GetMap(1).Scale = s
-		Nx.Map:GetMap(1).RealScale = s
-		Nx.Map:GetMap(1).StepTime = 10
-	else
---		Nx.prt ("Scale not set")
-	end
+    local s = Nx.Map:GetMap(1).CurOpts.NXScaleSave
+    if s then
+        Nx.Map:GetMap(1).Scale = s
+        Nx.Map:GetMap(1).RealScale = s
+        Nx.Map:GetMap(1).StepTime = 10
+    else
+--        Nx.prt ("Scale not set")
+    end
 end
 
 function Nx:NXMapKeyScaleRestore()
-	local map = Nx.Map:GetMap (1)
-	map:Menu_OnScaleRestore()
+    local map = Nx.Map:GetMap (1)
+    map:Menu_OnScaleRestore()
 end
 
 function Nx.Map:Menu_OnPlyrFollow (item)
-	self.CurOpts.NXPlyrFollow = item:GetChecked()
+    self.CurOpts.NXPlyrFollow = item:GetChecked()
 end
 
 function Nx.Map:Menu_InstanceMap (item)
-	self.CurOpts.NXInstanceMaps = item:GetChecked()
+    self.CurOpts.NXInstanceMaps = item:GetChecked()
 end
 
 function Nx.Map:Menu_OnShowWorld (item)
-	self.CurOpts.NXWorldShow = item:GetChecked()
+    self.CurOpts.NXWorldShow = item:GetChecked()
 end
 
 function Nx.Map:Menu_OnShowPlayerZone()
-	self:GotoCurrentZone()
+    self:GotoCurrentZone()
 end
 
 function Nx.Map:Menu_OnShowKills (item)
-	self.KillShow = item:GetChecked()
+    self.KillShow = item:GetChecked()
 end
 
 function Nx.Map:Menu_OnDetailAlpha (item)
-	self.LOpts.NXDetailAlpha = item:GetSlider()
+    self.LOpts.NXDetailAlpha = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnBackgndAlphaFade (item)
-	self.BackgndAlphaFade = item:GetSlider()
+    self.BackgndAlphaFade = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnArchAlpha (item)
-	self.ArchAlpha = item:GetSlider()
+    self.ArchAlpha = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnQuestAlpha (item)
-	self.QuestAlpha = item:GetSlider()
+    self.QuestAlpha = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnBackgndAlphaFull (item)
-	self.BackgndAlphaFull = item:GetSlider()
+    self.BackgndAlphaFull = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnDotZoneScale (item)
-	self.DotZoneScale = item:GetSlider()
+    self.DotZoneScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnDotPalScale (item)
-	self.DotPalScale = item:GetSlider()
+    self.DotPalScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnDotPartyScale (item)
-	self.DotPartyScale = item:GetSlider()
+    self.DotPartyScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnDotRaidScale (item)
-	self.DotRaidScale = item:GetSlider()
+    self.DotRaidScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnIconScale (item)
-	self.IconScale = item:GetSlider()
+    self.IconScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnIconNavScale (item)
-	self.IconNavScale = item:GetSlider()
+    self.IconNavScale = item:GetSlider()
 end
 
 function Nx.Map:Menu_OnOptions (item)
-	Nx.Opts:Open ("Map")
+    Nx.Opts:Open ("Map")
 end
 
 -- Debug sub menu
 
 function Nx.Map:Menu_OnMapDebugFullCoords (item)
-	self.DebugFullCoords = item:GetChecked()
+    self.DebugFullCoords = item:GetChecked()
 end
 
 function Nx.Map:Menu_OnQuestDebug (item)
-	Nx.Quest.Debug = item:GetChecked()
+    Nx.Quest.Debug = item:GetChecked()
 end
 
 -- Plyr icon menu
 
 function Nx.Map:Menu_OnWhisper()
 
-	for _, name in pairs (Nx.Map.PlyrNames) do
+    for _, name in pairs (Nx.Map.PlyrNames) do
 
-		local box = ChatEdit_ChooseBoxForSend()
-		ChatEdit_ActivateChat (box)
-		box:SetText ("/w " .. name .. " " .. box:GetText())
+        local box = ChatEdit_ChooseBoxForSend()
+        ChatEdit_ActivateChat (box)
+        box:SetText ("/w " .. name .. " " .. box:GetText())
 --[[
-		local frm = DEFAULT_CHAT_FRAME
-		local eb = frm["editBox"]
-		if not eb:IsVisible() then
-			ChatFrame_OpenChat ("/w " .. name, frm)
-		else
-			eb:SetText ("/w " .. name .. " " .. eb:GetText())
-		end
+        local frm = DEFAULT_CHAT_FRAME
+        local eb = frm["editBox"]
+        if not eb:IsVisible() then
+            ChatFrame_OpenChat ("/w " .. name, frm)
+        else
+            eb:SetText ("/w " .. name .. " " .. eb:GetText())
+        end
 --]]
-		break
-	end
+        break
+    end
 end
 
 -- Plyr icon menu
 
 function Nx.Map:Menu_OnInvite()
 
-	for _, name in pairs (Nx.Map.PlyrNames) do
-		InviteUnit (name)
-		break
-	end
+    for _, name in pairs (Nx.Map.PlyrNames) do
+        InviteUnit (name)
+        break
+    end
 end
 
 function Nx.Map:Menu_OnGetQuests (item)
-	if Nx.Quest then
-	for _, name in pairs (Nx.Map.PlyrNames) do
-		Nx.Quest:GetFromPlyr (name)
-		break
-	end
-	end
+    if Nx.Quest then
+    for _, name in pairs (Nx.Map.PlyrNames) do
+        Nx.Quest:GetFromPlyr (name)
+        break
+    end
+    end
 end
 
 function Nx.Map:Menu_OnTrackPlyr (item)
 
-	for _, name in pairs (Nx.Map.PlyrNames) do
-		self.TrackPlyrs[name] = true
-	end
+    for _, name in pairs (Nx.Map.PlyrNames) do
+        self.TrackPlyrs[name] = true
+    end
 end
 
 function Nx.Map:Menu_OnRemoveTracking (item)
 
-	for _, name in pairs (Nx.Map.PlyrNames) do
-		self.TrackPlyrs[name] = nil
-	end
+    for _, name in pairs (Nx.Map.PlyrNames) do
+        self.TrackPlyrs[name] = nil
+    end
 end
 
 function Nx.Map:Menu_OnReportPlyrAFK (item)
-	local n = 0
-	for k, v in pairs (Nx.Map.AFKers) do
-		ReportPlayerIsPVPAFK (v)
-		n = n + 1
-	end
-	Nx.prt ("%d " .. L["reported"], n)
+    local n = 0
+    for k, v in pairs (Nx.Map.AFKers) do
+        ReportPlayerIsPVPAFK (v)
+        n = n + 1
+    end
+    Nx.prt ("%d " .. L["reported"], n)
 end
 
 --[[
 function Nx.Map:Menu_OnReportAllAFK (item)
 
-	local members = MAX_PARTY_MEMBERS
-	local unitName = "party"
+    local members = MAX_PARTY_MEMBERS
+    local unitName = "party"
 
-	if IsInRaid() > 0 then
-		members = MAX_RAID_MEMBERS
-		unitName = "raid"
-	end
+    if IsInRaid() > 0 then
+        members = MAX_RAID_MEMBERS
+        unitName = "raid"
+    end
 
-	local cnt = 0
+    local cnt = 0
 
-	for i = 1, members do
+    for i = 1, members do
 
-		local unit = unitName..i
+        local unit = unitName..i
 
-		if not UnitIsUnit (unit, "player") then
-			ReportPlayerIsPVPAFK (unit)
-			cnt = cnt + 1
-		end
-	end
+        if not UnitIsUnit (unit, "player") then
+            ReportPlayerIsPVPAFK (unit)
+            cnt = cnt + 1
+        end
+    end
 
-	Nx.prt ("%d reported", cnt)
+    Nx.prt ("%d reported", cnt)
 end
 --]]
 
 function Nx.Map:Menu_OnGrowConflictBars (item)
-	self.BGGrowBars = item:GetChecked()
+    self.BGGrowBars = item:GetChecked()
 end
 
 function Nx.Map:GMenuOpen (icon, typ)
 
-	self.GIconMenuITogInst:Show (false)
-	self.GIconMenuIFindNote:Show (false)
+    self.GIconMenuITogInst:Show (false)
+    self.GIconMenuIFindNote:Show (false)
 
-	if typ == 3000 then
-		if icon.UData then
-			self.GIconMenuITogInst:Show()
-		end
+    if typ == 3000 then
+        if icon.UData then
+            self.GIconMenuITogInst:Show()
+        end
 
-		if icon.FavData1 then
-			self.GIconMenuIFindNote:Show()
-		end
-	end
-	self.GIconMenu:Open()
+        if icon.FavData1 then
+            self.GIconMenuIFindNote:Show()
+        end
+    end
+    self.GIconMenu:Open()
 end
 
 -------------------------------------------------------------------------------
@@ -3756,19 +3751,19 @@ function Nx.Map:MaxSize()
             Nx.prt("MapMax %s", debugstack(2, 4, 0))
         end
 
-		self.Win:ToggleSize()
+        self.Win:ToggleSize()
 
-		self:SaveView ("")
+        self:SaveView ("")
 
-		self:MouseEnable (true)
-		if self:IsInstanceMap(Nx.Map.UpdateMapID) then
-			self.Scale = 256.0
-		end
-		if Nx.db.profile.Map.MaxCenter then
-			self:CenterMap()
-		end
-		self.StepTime = min (self.StepTime, 1)
-	end
+        self:MouseEnable (true)
+        if self:IsInstanceMap(Nx.Map.UpdateMapID) then
+            self.Scale = 256.0
+        end
+        if Nx.db.profile.Map.MaxCenter then
+            self:CenterMap()
+        end
+        self.StepTime = min (self.StepTime, 1)
+    end
 end
 
 --------
@@ -3777,15 +3772,15 @@ end
 
 function Nx:NXMapKeyTogMiniFull()
 
-	if Nx.Free then
-		return
-	end
+    if Nx.Free then
+        return
+    end
 
-	local map = Nx.Map:GetMap (1)
-	map.LOpts.NXMMFull = not map.LOpts.NXMMFull
-	map.MMZoomChanged = true
-	map.MMMenuIFull:SetChecked (map.LOpts.NXMMFull)
-	Nx.Menu:CheckUpdate (map.MMMenuIFull)
+    local map = Nx.Map:GetMap (1)
+    map.LOpts.NXMMFull = not map.LOpts.NXMMFull
+    map.MMZoomChanged = true
+    map.MMMenuIFull:SetChecked (map.LOpts.NXMMFull)
+    Nx.Menu:CheckUpdate (map.MMMenuIFull)
 end
 
 --------
@@ -3793,10 +3788,10 @@ end
 -- global func
 
 function Nx:NXMapKeyTogHerb()
-	local map = Nx.Map:GetMap (1)
-	Nx.db.char.Map.ShowGatherH = not Nx.db.char.Map.ShowGatherH
-	map.MenuIShowHerb:SetChecked (Nx.db.char.Map, "ShowGatherH")
-	map.Guide:UpdateGatherFolders()
+    local map = Nx.Map:GetMap (1)
+    Nx.db.char.Map.ShowGatherH = not Nx.db.char.Map.ShowGatherH
+    map.MenuIShowHerb:SetChecked (Nx.db.char.Map, "ShowGatherH")
+    map.Guide:UpdateGatherFolders()
 end
 
 --------
@@ -3804,10 +3799,10 @@ end
 -- global func
 
 function Nx:NXMapKeyTogMine()
-	local map = Nx.Map:GetMap (1)
-	Nx.db.char.Map.ShowGatherM = not Nx.db.char.Map.ShowGatherM
-	map.MenuIShowMine:SetChecked (Nx.db.char.Map, "ShowGatherM")
-	map.Guide:UpdateGatherFolders()
+    local map = Nx.Map:GetMap (1)
+    Nx.db.char.Map.ShowGatherM = not Nx.db.char.Map.ShowGatherM
+    map.MenuIShowMine:SetChecked (Nx.db.char.Map, "ShowGatherM")
+    map.Guide:UpdateGatherFolders()
 end
 
 --------
@@ -3815,57 +3810,57 @@ end
 
 function Nx.Map:MouseEnable (max)
 
---	Nx.prt ("MouseEnable %s %s", max and "max" or "min", alt and 1 or 0)
+--    Nx.prt ("MouseEnable %s %s", max and "max" or "min", alt and 1 or 0)
 
-	local on = true
+    local on = true
 
-	if max then
-		if Nx.db.profile.Map.MaxMouseIgnore then
-			on = IsAltKeyDown() and true or false		-- IsAltKeyDown returns nil or 1
-		end
-	else
-		if Nx.db.profile.Map.MaxMouseIgnore then
-			on = IsAltKeyDown() and true or false		-- IsAltKeyDown returns nil or 1
-		end
-	end
+    if max then
+        if Nx.db.profile.Map.MaxMouseIgnore then
+            on = IsAltKeyDown() and true or false        -- IsAltKeyDown returns nil or 1
+        end
+    else
+        if Nx.db.profile.Map.MaxMouseIgnore then
+            on = IsAltKeyDown() and true or false        -- IsAltKeyDown returns nil or 1
+        end
+    end
 
-	if self.MouseEnabled ~= on then
+    if self.MouseEnabled ~= on then
 
---		Nx.prt ("MouseEnable up")
+--        Nx.prt ("MouseEnable up")
 
-		self.MouseEnabled = on
+        self.MouseEnabled = on
 
-		self.Win:EnableMouse (on)
+        self.Win:EnableMouse (on)
 
-		if on then
-			self.ButAutoScaleOn.Frm:Show()
-			self:UpdateToolBar()		-- Will show or hide
-		else
-			self.ButAutoScaleOn.Frm:Hide()
-			self.ToolBar.Frm:Hide()
-		end
+        if on then
+            self.ButAutoScaleOn.Frm:Show()
+            self:UpdateToolBar()        -- Will show or hide
+        else
+            self.ButAutoScaleOn.Frm:Hide()
+            self.ToolBar.Frm:Hide()
+        end
 
-		self.Frm:EnableMouse (on)
-		self.Frm:EnableMouseWheel (on)
+        self.Frm:EnableMouse (on)
+        self.Frm:EnableMouseWheel (on)
 
-		self.MMFrm:EnableMouse (on)
-		self.MMFrm:EnableMouseWheel (on)
+        self.MMFrm:EnableMouse (on)
+        self.MMFrm:EnableMouseWheel (on)
 
-		for n, f in ipairs (self.IconFrms) do
-			f:EnableMouse (on)
-		end
+        for n, f in ipairs (self.IconFrms) do
+            f:EnableMouse (on)
+        end
 
-		for n, f in ipairs (self.IconStaticFrms) do
-			f:EnableMouse (on)
-		end
-	end
-	
-	--[[if not Nx.db.profile.Map.MaxMouseIgnore and ((Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps) then
-		self.Win:EnableMouse (true)
-		self.Frm:EnableMouse (true)
-		self.ButAutoScaleOn.Frm:Show()
-		self:UpdateToolBar()
-	end]]--
+        for n, f in ipairs (self.IconStaticFrms) do
+            f:EnableMouse (on)
+        end
+    end
+
+    --[[if not Nx.db.profile.Map.MaxMouseIgnore and ((Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps) then
+        self.Win:EnableMouse (true)
+        self.Frm:EnableMouse (true)
+        self.ButAutoScaleOn.Frm:Show()
+        self:UpdateToolBar()
+    end]]--
 end
 
 --------
@@ -3873,130 +3868,130 @@ end
 -- self = map table
 
 function Nx.Map:OnEvent (event, ...)
---	Nx.prtVar ("Map Event", self)
---	Nx.prt ("Map Event %s", event)
-	local map = Nx.Map:GetMap (1)
-	if event == "WORLD_MAP_UPDATE" then
-		if not map.Win then
-			return
-		end		
-		if map.Win.Frm:IsVisible() then
-			map:UpdateAll()
-		end
-	elseif event == "PLAYER_REGEN_DISABLED" then
-		local win = map.Win
-		if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
-			map.Win.Frm:Hide()
-		end
-		if Nx.BlobsAvailable then
-			map.Arch:Hide()
-			map.QuestWin:Hide()
-			map.Arch:SetParent(nil)
-			map.QuestWin:SetParent(nil)
-			map.Arch:ClearAllPoints()
-			map.QuestWin:ClearAllPoints()
-		end
-	elseif event == "PLAYER_REGEN_ENABLED" then
-		if Nx.BlobsAvailable then
-			map.Arch:SetParent(map.TextScFrm:GetScrollChild())		
-			map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())		
-			map.Arch:Show()
-			map.QuestWin:Hide()
-		end
-	elseif event == "ZONE_CHANGED_NEW_AREA" then
-		-- DETECT EXIT INSTANCE
-		if Nx.Map.NInstMapId then 
-			Nx.Map:Menu_OnScaleRestore()
-			Nx.Map.NInstMapId = nil
-			Nx.Map:HideNewPlrFrame()
-		end
-	elseif event == "ZONE_CHANGED" then
-		Nx.Map.Indoors = false
-		Nx.Map.NInstMapId = nil
-		Nx.Map:HideNewPlrFrame()
-		Nx.Map:SetToCurrentZone()
-	elseif event == "ZONE_CHANGED_INDOORS" then
-		Nx.Map.Indoors = true
-		Nx.Map.NInstMapId = nil
-		Nx.Map:HideNewPlrFrame()
-		Nx.Map:SetToCurrentZone()
-	end
+--    Nx.prtVar ("Map Event", self)
+--    Nx.prt ("Map Event %s", event)
+    local map = Nx.Map:GetMap (1)
+    if event == "WORLD_MAP_UPDATE" then
+        if not map.Win then
+            return
+        end
+        if map.Win.Frm:IsVisible() then
+            map:UpdateAll()
+        end
+    elseif event == "PLAYER_REGEN_DISABLED" then
+        local win = map.Win
+        if (Nx.db.profile.Map.HideCombat and win:IsSizeMax()) then
+            map.Win.Frm:Hide()
+        end
+        if Nx.BlobsAvailable then
+            map.Arch:Hide()
+            map.QuestWin:Hide()
+            map.Arch:SetParent(nil)
+            map.QuestWin:SetParent(nil)
+            map.Arch:ClearAllPoints()
+            map.QuestWin:ClearAllPoints()
+        end
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        if Nx.BlobsAvailable then
+            map.Arch:SetParent(map.TextScFrm:GetScrollChild())
+            map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())
+            map.Arch:Show()
+            map.QuestWin:Hide()
+        end
+    elseif event == "ZONE_CHANGED_NEW_AREA" then
+        -- DETECT EXIT INSTANCE
+        if Nx.Map.NInstMapId then
+            Nx.Map:Menu_OnScaleRestore()
+            Nx.Map.NInstMapId = nil
+            Nx.Map:HideNewPlrFrame()
+        end
+    elseif event == "ZONE_CHANGED" then
+        Nx.Map.Indoors = false
+        Nx.Map.NInstMapId = nil
+        Nx.Map:HideNewPlrFrame()
+        Nx.Map:SetToCurrentZone()
+    elseif event == "ZONE_CHANGED_INDOORS" then
+        Nx.Map.Indoors = true
+        Nx.Map.NInstMapId = nil
+        Nx.Map:HideNewPlrFrame()
+        Nx.Map:SetToCurrentZone()
+    end
 end
 
 function Nx.Map:OnMouseDown (button)
 
-	local map = self.NxMap	--V4 this
-	local this = map.Frm
+    local map = self.NxMap    --V4 this
+    local this = map.Frm
 
-	local x, y = GetCursorPosition()
-	x = x / this:GetEffectiveScale()
-	y = y / this:GetEffectiveScale()
+    local x, y = GetCursorPosition()
+    x = x / this:GetEffectiveScale()
+    y = y / this:GetEffectiveScale()
 
-	map:CalcClick()
+    map:CalcClick()
 
-	ResetCursor()
+    ResetCursor()
 
---	Nx.prt ("Map MouseDown %s %s %s %s %s", button, x, y, rgt, bot)
+--    Nx.prt ("Map MouseDown %s %s %s %s %s", button, x, y, rgt, bot)
 
-	if button == "LeftButton" then
+    if button == "LeftButton" then
 
 --[[
-		if map["DebugHotspots"] then
+        if map["DebugHotspots"] then
 
-			map.HotspotDebugCurT = nil
+            map.HotspotDebugCurT = nil
 
-			if map:IsDoubleClick() then
-				map.DebugMapId = map.MapId
-			else
-				map.LClickTime = GetTime()
-				map.Scrolling = true
-				map.ScrollingX = x
-				map.ScrollingY = y
-				map.ScrollingFrm = map.ClickFrm
-			end
-			return
-		end
+            if map:IsDoubleClick() then
+                map.DebugMapId = map.MapId
+            else
+                map.LClickTime = GetTime()
+                map.Scrolling = true
+                map.ScrollingX = x
+                map.ScrollingY = y
+                map.ScrollingFrm = map.ClickFrm
+            end
+            return
+        end
 --]]
 
-		if IsControlKeyDown() and map:CallFunc ("ButLCtrl") then	-- If func does nothing continue
+        if IsControlKeyDown() and map:CallFunc ("ButLCtrl") then    -- If func does nothing continue
 
-		elseif IsAltKeyDown() and map:CallFunc ("ButLAlt") then	-- If func does nothing continue
+        elseif IsAltKeyDown() and map:CallFunc ("ButLAlt") then    -- If func does nothing continue
 
-		elseif IsShiftKeyDown() then
-			map:Ping()
+        elseif IsShiftKeyDown() then
+            map:Ping()
 
-		else
+        else
 
-			if map:IsDoubleClick() then
+            if map:IsDoubleClick() then
 
-				map:CenterMap()
-				map.DebugMapId = map.MapId
+                map:CenterMap()
+                map.DebugMapId = map.MapId
 
-			else
-				if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and map.CurOpts.NXInstanceMaps then
-					return
-				end
-				map.LClickTime = GetTime()
-				map.Scrolling = true
-				map.ScrollingX = x
-				map.ScrollingY = y
-				map.ScrollingFrm = map.ClickFrm
-			end
-		end
+            else
+                if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and map.CurOpts.NXInstanceMaps then
+                    return
+                end
+                map.LClickTime = GetTime()
+                map.Scrolling = true
+                map.ScrollingX = x
+                map.ScrollingY = y
+                map.ScrollingFrm = map.ClickFrm
+            end
+        end
 
-	elseif button == "MiddleButton" then
+    elseif button == "MiddleButton" then
 
-		if IsControlKeyDown() then
-			map:CallFunc ("ButMCtrl")
-		elseif IsAltKeyDown() then
-			map:CallFunc ("ButMAlt")
-		else
-			map:CallFunc ("ButM")
-		end
+        if IsControlKeyDown() then
+            map:CallFunc ("ButMCtrl")
+        elseif IsAltKeyDown() then
+            map:CallFunc ("ButMAlt")
+        else
+            map:CallFunc ("ButM")
+        end
 
-	elseif button == "RightButton" then
+    elseif button == "RightButton" then
 
-		if IsControlKeyDown() and map:CallFunc ("ButRCtrl") then
+        if IsControlKeyDown() and map:CallFunc ("ButRCtrl") then
 
         elseif IsAltKeyDown() and map:CallFunc("ButRAlt") then
             -- Alt+Right click action
@@ -4273,265 +4268,265 @@ function Nx.Map.OnUpdate(this, elapsed)
 
     Nx.Map:UpdateOptions(map.MapIndex)
 
-	local winx, winy = Nx.Util_IsMouseOver (this)
-	if not this:IsVisible() or not map.MouseEnabled then
-		winx = nil
-		map.Scrolling = false
-	end
+    local winx, winy = Nx.Util_IsMouseOver (this)
+    if not this:IsVisible() or not map.MouseEnabled then
+        winx = nil
+        map.Scrolling = false
+    end
 
-	if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and map.CurOpts.NXInstanceMaps then	
-		winx = nil	
-		map.Scrolling = false
-	end
+    if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and map.CurOpts.NXInstanceMaps then
+        winx = nil
+        map.Scrolling = false
+    end
 
-	if map.MMZoomType == 0 and Nx.Util_IsMouseOver (map.MMFrm) then
-		winx = nil
-	end
+    if map.MMZoomType == 0 and Nx.Util_IsMouseOver (map.MMFrm) then
+        winx = nil
+    end
 
-	map.MouseIsOver = winx
+    map.MouseIsOver = winx
 
-	if winx then
-		Nx.Map.MouseOver = true
-	else
-		Nx.Map.MouseOver = false
-	end
-	
-	if Nx.Map:IsInstanceMap(Nx.Map.RMapId) then
-		--winx = nil	
-		--Nx.Map.MouseOver = false
-	end
-	
-	-- Scroll map with mouse
+    if winx then
+        Nx.Map.MouseOver = true
+    else
+        Nx.Map.MouseOver = false
+    end
 
-	if map.Scrolling then		
-		local cx, cy = GetCursorPosition()
-		cx = cx / map.EffScale
-		cy = cy / map.EffScale		
-		local x = cx - map.ScrollingX
-		local y = cy - map.ScrollingY
+    if Nx.Map:IsInstanceMap(Nx.Map.RMapId) then
+        --winx = nil
+        --Nx.Map.MouseOver = false
+    end
+
+    -- Scroll map with mouse
+
+    if map.Scrolling then
+        local cx, cy = GetCursorPosition()
+        cx = cx / map.EffScale
+        cy = cy / map.EffScale
+        local x = cx - map.ScrollingX
+        local y = cy - map.ScrollingY
 
 --[[
-		if map["DebugHotspots"] or (map.Debug and IsAltKeyDown()) then
-			if map:OnButScrollDebug (0, 0, x, -y) then
-				x = 0
-				y = 0
-			end
-		end
+        if map["DebugHotspots"] or (map.Debug and IsAltKeyDown()) then
+            if map:OnButScrollDebug (0, 0, x, -y) then
+                x = 0
+                y = 0
+            end
+        end
 --]]
 
-		if x ~= 0 or y ~= 0 then		-- Moved? Cancel double click
-			map.LClickTime = 0
-		end
+        if x ~= 0 or y ~= 0 then        -- Moved? Cancel double click
+            map.LClickTime = 0
+        end
 
-		map.ScrollingX = cx
-		map.ScrollingY = cy
+        map.ScrollingX = cx
+        map.ScrollingY = cy
 
-		local left = this:GetLeft()
-		local top = this:GetTop()
+        local left = this:GetLeft()
+        local top = this:GetTop()
 
-		local mx = x / map.ScaleDraw
-		local my = y / map.ScaleDraw
-		map.MapPosXDraw = map.MapPosXDraw - mx
-		map.MapPosYDraw = map.MapPosYDraw + my
+        local mx = x / map.ScaleDraw
+        local my = y / map.ScaleDraw
+        map.MapPosXDraw = map.MapPosXDraw - mx
+        map.MapPosYDraw = map.MapPosYDraw + my
 
-		map.MapPosX = map.MapPosXDraw
-		map.MapPosY = map.MapPosYDraw
-		map.Scale = map.ScaleDraw
-	end
+        map.MapPosX = map.MapPosXDraw
+        map.MapPosY = map.MapPosYDraw
+        map.Scale = map.ScaleDraw
+    end
 
-	map:Update (elapsed)
+    map:Update (elapsed)
 
-	-- Title text
+    -- Title text
 
-	local title = ""
-	if Nx.db.profile.Map.ShowTitleName then
-		title = map:IdToName (map.UpdateMapID)
---		for n = 1, MAX_BATTLEFIELD_QUEUES do
-		for n = 1, GetMaxBattlefieldID() do		-- Patch 4.3
+    local title = ""
+    if Nx.db.profile.Map.ShowTitleName then
+        title = map:IdToName (map.UpdateMapID)
+--        for n = 1, MAX_BATTLEFIELD_QUEUES do
+        for n = 1, GetMaxBattlefieldID() do        -- Patch 4.3
 
-			local status, _, instId = GetBattlefieldStatus (n)
-			if status == "active" then
-				title = title .. format (" #%s", instId)
-				break
-			end
-		end
-	end
+            local status, _, instId = GetBattlefieldStatus (n)
+            if status == "active" then
+                title = title .. format (" #%s", instId)
+                break
+            end
+        end
+    end
 
-	if Nx.db.profile.Map.ShowTitleXY then
-		if map.PlyrRZX ~= 0 or map.PlyrRZY ~= 0 then				
-			if map.DebugFullCoords then
-				title = title .. format (" %4.2f, %4.2f", map.PlyrRZX, map.PlyrRZY)
-			else
-				title = title .. format (" %4.1f, %4.1f", map.PlyrRZX, map.PlyrRZY)
-			end		
-		end
-	end
+    if Nx.db.profile.Map.ShowTitleXY then
+        if map.PlyrRZX ~= 0 or map.PlyrRZY ~= 0 then
+            if map.DebugFullCoords then
+                title = title .. format (" %4.2f, %4.2f", map.PlyrRZX, map.PlyrRZY)
+            else
+                title = title .. format (" %4.1f, %4.1f", map.PlyrRZX, map.PlyrRZY)
+            end
+        end
+    end
 
-	if map.PlyrSpeed > 0 and Nx.db.profile.Map.ShowTitleSpeed then
+    if map.PlyrSpeed > 0 and Nx.db.profile.Map.ShowTitleSpeed then
 
-		local speed = map.PlyrSpeed
+        local speed = map.PlyrSpeed
 
-		local sa = Nx.Map.MapWorldInfo[map.MapId] and Nx.Map.MapWorldInfo[map.MapId].ScaleAdjust or 1
-		if sa then
-			speed = speed * sa
-		end
+        local sa = Nx.Map.MapWorldInfo[map.MapId] and Nx.Map.MapWorldInfo[map.MapId].ScaleAdjust or 1
+        if sa then
+            speed = speed * sa
+        end
 
-		speed = speed / 6.4 * 100 - 100
-		if abs (speed) < .5 then	-- Removes small -0%
-			speed = 0
-		end
-		title = title..format (" |cffa0a0a0" .. L["Speed"] .. "%+.0f%%", speed)
---		Nx.prt ("Speed %f %f, Tm %.4f, %.3f %.3f", map.PlyrSpeed, speed, elapsed, map.PlyrX, map.PlyrY)		-- DEBUG!
-	end
+        speed = speed / 6.4 * 100 - 100
+        if abs (speed) < .5 then    -- Removes small -0%
+            speed = 0
+        end
+        title = title..format (" |cffa0a0a0" .. L["Speed"] .. "%+.0f%%", speed)
+--        Nx.prt ("Speed %f %f, Tm %.4f, %.3f %.3f", map.PlyrSpeed, speed, elapsed, map.PlyrX, map.PlyrY)        -- DEBUG!
+    end
 
---	title = title..format (" Dir %.1f", map.PlyrDir)
+--    title = title..format (" Dir %.1f", map.PlyrDir)
 
-	local cursorLocStr = ""
-	local cursorLocXY = ""
+    local cursorLocStr = ""
+    local cursorLocXY = ""
 
-	local menuOpened = Nx.Menu:IsAnyOpened()
+    local menuOpened = Nx.Menu:IsAnyOpened()
 
-	if winx then
+    if winx then
 
-		map.BackgndAlphaTarget = map.BackgndAlphaFull
+        map.BackgndAlphaTarget = map.BackgndAlphaFull
 
-		winy = this:GetHeight() - winy
+        winy = this:GetHeight() - winy
 
-		if winy >= map.TitleH then
+        if winy >= map.TitleH then
 
-			local wx, wy = map:FramePosToWorldPos (winx, winy)			
-			if not menuOpened then
---				local tm = GetTime()
-				map:CheckWorldHotspots (wx, wy)
---				Nx.prt ("CheckWorldHotspots Time %s", GetTime() - tm)
-			end
+            local wx, wy = map:FramePosToWorldPos (winx, winy)
+            if not menuOpened then
+--                local tm = GetTime()
+                map:CheckWorldHotspots (wx, wy)
+--                Nx.prt ("CheckWorldHotspots Time %s", GetTime() - tm)
+            end
 
-			local x, y = map:GetZonePos (Nx.Map.RMapId, wx, wy)			
-			x = floor (x * 10) / 10	-- Chop fraction to tenths
-			y = floor (y * 10) / 10
-			local dist = ((wx - map.PlyrX) ^ 2 + (wy - map.PlyrY) ^ 2) ^ .5 * 4.575
+            local x, y = map:GetZonePos (Nx.Map.RMapId, wx, wy)
+            x = floor (x * 10) / 10    -- Chop fraction to tenths
+            y = floor (y * 10) / 10
+            local dist = ((wx - map.PlyrX) ^ 2 + (wy - map.PlyrY) ^ 2) ^ .5 * 4.575
 
-			cursorLocXY = format ("|cff80b080%.1f %.1f %.0f " .. L["yds"], x, y, dist)
-			cursorLocStr = cursorLocXY
+            cursorLocXY = format ("|cff80b080%.1f %.1f %.0f " .. L["yds"], x, y, dist)
+            cursorLocStr = cursorLocXY
 
-			--[[local name = UpdateMapHighlight (x / 100, y / 100)
-			if name then
-				cursorLocStr = format ("%s\n|cffafafaf%s", cursorLocStr, name)
-			end]]--
-		end
+            --[[local name = UpdateMapHighlight (x / 100, y / 100)
+            if name then
+                cursorLocStr = format ("%s\n|cffafafaf%s", cursorLocStr, name)
+            end]]--
+        end
 
-	else
---		if GameTooltip:IsOwned (map.Win.Frm) and map.TooltipType == 1 then
---			Nx.prt ("map TT hide")
---			map.TooltipType = 0
---			GameTooltip:Hide()
---		end
+    else
+--        if GameTooltip:IsOwned (map.Win.Frm) and map.TooltipType == 1 then
+--            Nx.prt ("map TT hide")
+--            map.TooltipType = 0
+--            GameTooltip:Hide()
+--        end
 
-		if not map.Scrolling and not menuOpened then
+        if not map.Scrolling and not menuOpened then
 
-			map.BackgndAlphaTarget = map.BackgndAlphaFade
+            map.BackgndAlphaTarget = map.BackgndAlphaFade
 
-			local rid = map.RMapId
+            local rid = map.RMapId
 
-			if rid ~= 9000 then
+            if rid ~= 9000 then
 
-				local mapId = map:GetCurrentMapId()
-				if map:IsInstanceMap (rid) then
-					if not Nx.Map.InstanceInfo[rid] then		-- Don't convert WotLK/Cata instances
-						local lrid = Nx.Map.MapWorldInfo[rid].EntryMId
-						if lrid ~= nil then rid = lrid end
-					end
-					local lvl = Nx.Map:GetCurrentMapDungeonLevel()
-					if lvl ~= map.InstLevelSet then
-						map.MapId = 0	-- Force set
---						Nx.prt ("map force set inst")
-					end
-				end
+                local mapId = map:GetCurrentMapId()
+                if map:IsInstanceMap (rid) then
+                    if not Nx.Map.InstanceInfo[rid] then        -- Don't convert WotLK/Cata instances
+                        local lrid = Nx.Map.MapWorldInfo[rid].EntryMId
+                        if lrid ~= nil then rid = lrid end
+                    end
+                    local lvl = Nx.Map:GetCurrentMapDungeonLevel()
+                    if lvl ~= map.InstLevelSet then
+                        map.MapId = 0    -- Force set
+--                        Nx.prt ("map force set inst")
+                    end
+                end
 
-				if map.UpdateMapID ~= rid then
-					if map:IsBattleGroundMap (rid) then
-						Nx.Map:SetToCurrentZone()
-						Nx.Map.UpdateMapID = WorldMapFrame.mapID										
-					else										
-						map:SetCurrentMap (rid)
-					end
-				end
-			end
-		end
-	end
-	
-	if IsIndoors() or Nx.Map.Indoors then 
-		map.BackgndAlphaTarget = map.BackgndAlphaFull 
-	end
-	
-	-- Check quest window
-	if Nx.Quest then
-		if map.Guide.Win.Frm:IsVisible() or Nx.Quest.List.Win and Nx.Quest.List.Win.Frm:IsVisible() then
-			map.BackgndAlphaTarget = map.BackgndAlphaFull
-		end
-	end
+                if map.UpdateMapID ~= rid then
+                    if map:IsBattleGroundMap (rid) then
+                        Nx.Map:SetToCurrentZone()
+                        Nx.Map.UpdateMapID = WorldMapFrame.mapID
+                    else
+                        map:SetCurrentMap (rid)
+                    end
+                end
+            end
+        end
+    end
 
-	-- Profiling
+    if IsIndoors() or Nx.Map.Indoors then
+        map.BackgndAlphaTarget = map.BackgndAlphaFull
+    end
 
-	if map.DebugTime then
+    -- Check quest window
+    if Nx.Quest then
+        if map.Guide.Win.Frm:IsVisible() or Nx.Quest.List.Win and Nx.Quest.List.Win.Frm:IsVisible() then
+            map.BackgndAlphaTarget = map.BackgndAlphaFull
+        end
+    end
 
-		profileTime = GetTime() - profileTime
-		local t = map.DebugProfileTime or .01
-		t = t * .95 + profileTime * .05
-		map.DebugProfileTime = t
+    -- Profiling
 
-		UpdateAddOnMemoryUsage()
-		local mem = GetAddOnMemoryUsage ("Carbonite")
+    if map.DebugTime then
 
-		local memdif = mem - (map.DebugMemUse or 0)
-		map.DebugMemUse = mem
+        profileTime = GetTime() - profileTime
+        local t = map.DebugProfileTime or .01
+        t = t * .95 + profileTime * .05
+        map.DebugProfileTime = t
 
-		title = title..format (" Time %.4f Mem %d %.4f", t, mem, memdif)
-	end
+        UpdateAddOnMemoryUsage()
+        local mem = GetAddOnMemoryUsage ("Carbonite")
 
-	if GetCVar ("scriptProfile") == "1" then
+        local memdif = mem - (map.DebugMemUse or 0)
+        map.DebugMemUse = mem
 
-		UpdateAddOnCPUUsage()
+        title = title..format (" Time %.4f Mem %d %.4f", t, mem, memdif)
+    end
 
-		title = title..format (" |cffffffffCPU %6.3f %6.3f", GetAddOnCPUUsage ("CARBONITE"), GetScriptCPUUsage())
+    if GetCVar ("scriptProfile") == "1" then
 
-		ResetCPUUsage()
-	end
+        UpdateAddOnCPUUsage()
 
-	--
+        title = title..format (" |cffffffffCPU %6.3f %6.3f", GetAddOnCPUUsage ("CARBONITE"), GetScriptCPUUsage())
 
-	if Nx.Tick % 3 == 0 then	-- Do less often, since tip makes garbage
+        ResetCPUUsage()
+    end
 
-		local tip = format (" %s", cursorLocStr)
-		if map.Debug and winx then
-			local x, y = map:FramePosToWorldPos (winx, winy)
-			tip = tip .. format ("\n|cffc080a0%.2f WXY %6.2f %6.2f PXY %6.2f %6.2f", map.Scale, x, y, map.PlyrX, map.PlyrY)
-			map.DebugWX = x
-			map.DebugWY = y
-		end
+    --
 
-		local over = winx and not Nx.Util_IsMouseOver (map.ToolBar.Frm)
-		map:SetLocationTip (over and not menuOpened and map.WorldHotspotTipStr and (map.WorldHotspotTipStr .. tip))
-	end
+    if Nx.Tick % 3 == 0 then    -- Do less often, since tip makes garbage
 
-	if map.Win:IsSizeMax() then
-		local s = Nx.Map:GetZoneAchievement (true)
-		if s then
-			title = title .. "  " .. s
-		end
-	end
+        local tip = format (" %s", cursorLocStr)
+        if map.Debug and winx then
+            local x, y = map:FramePosToWorldPos (winx, winy)
+            tip = tip .. format ("\n|cffc080a0%.2f WXY %6.2f %6.2f PXY %6.2f %6.2f", map.Scale, x, y, map.PlyrX, map.PlyrY)
+            map.DebugWX = x
+            map.DebugWY = y
+        end
 
-	map.Win:SetTitle (title, 1)
+        local over = winx and not Nx.Util_IsMouseOver (map.ToolBar.Frm)
+        map:SetLocationTip (over and not menuOpened and map.WorldHotspotTipStr and (map.WorldHotspotTipStr .. tip))
+    end
 
-	if Nx.db.profile.Map.ShowTitle2 then
+    if map.Win:IsSizeMax() then
+        local s = Nx.Map:GetZoneAchievement (true)
+        if s then
+            title = title .. "  " .. s
+        end
+    end
 
-		local s = GetSubZoneText()
-		local pvpType = GetZonePVPInfo()
-		if pvpType then
-			s = s .. " (" .. L[pvpType] .. ")"
-		end
-		map.Win:SetTitle (format ("%s %s", s, cursorLocXY), 2)
-	end
+    map.Win:SetTitle (title, 1)
+
+    if Nx.db.profile.Map.ShowTitle2 then
+
+        local s = GetSubZoneText()
+        local pvpType = GetZonePVPInfo()
+        if pvpType then
+            s = s .. " (" .. L[pvpType] .. ")"
+        end
+        map.Win:SetTitle (format ("%s %s", s, cursorLocXY), 2)
+    end
 end
 
 --------
@@ -4540,12 +4535,12 @@ end
 --[[
 function Nx.Map:WorldHotspotOnMouseDown (button)
 
---	Nx.prt ("MapWorldHotspotOnMouseDown "..button.." "..(this:GetName() or "?"))
+--    Nx.prt ("MapWorldHotspotOnMouseDown "..button.." "..(this:GetName() or "?"))
 
-	local map = this.NxMap
-	map.ClickFrm = this
-	this = map.Frm
-	map:OnMouseDown (button)
+    local map = this.NxMap
+    map.ClickFrm = this
+    this = map.Frm
+    map:OnMouseDown (button)
 end
 --]]
 
@@ -4555,15 +4550,15 @@ end
 --[[
 function Nx.Map:WorldHotspotOnEnter (motion)
 
-	local map = this.NxMap
+    local map = this.NxMap
 
-	if not map.Scrolling then
+    if not map.Scrolling then
 
-		local mapId = this.NxMapId
-		map:SetCurrentMap (mapId)
+        local mapId = this.NxMapId
+        map:SetCurrentMap (mapId)
 
-		map:IconOnEnter (motion)
-	end
+        map:IconOnEnter (motion)
+    end
 end
 --]]
 
@@ -4572,9 +4567,9 @@ end
 
 function Nx.Map:UpdateAll()
 
-	self.NeedWorldUpdate = true
+    self.NeedWorldUpdate = true
 
---	Nx.prt ("%d Map UpdateAll %d (%d)", self.Tick, self:GetCurrentMapId(), self.MapId)
+--    Nx.prt ("%d Map UpdateAll %d (%d)", self.Tick, self:GetCurrentMapId(), self.MapId)
 end
 
 --------
@@ -4582,1107 +4577,1107 @@ end
 
 function Nx.Map:UpdateWorld()
 
-	if self.Debug then
---		Nx.prt ("%d Map UpdateWorld1 %d L%d",
---				self.Tick, self:GetCurrentMapId(), GetCurrentMapDungeonLevel())
-	end
+    if self.Debug then
+--        Nx.prt ("%d Map UpdateWorld1 %d L%d",
+--                self.Tick, self:GetCurrentMapId(), GetCurrentMapDungeonLevel())
+    end
 
-	self.NeedWorldUpdate = false
-	if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then			
-		--Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
-		Nx.Map:SetToCurrentZone()	
-		--Nx.Map:RegisterEvent ("WORLD_MAP_UPDATE", "OnEvent")	
-	end
-	local mapId = self:GetCurrentMapId()
-	
-	local winfo = self.MapWorldInfo[mapId]
-	if winfo and self.MapWorldInfo[mapId].BaseMap then
-	  winfo = self.MapWorldInfo[self.MapWorldInfo[mapId].BaseMap]
-	end
-	if not winfo then
-		winfo = {}
-	end
-	if winfo.MapLevel then
-		if Nx.Map:GetCurrentMapDungeonLevel() ~= winfo.MapLevel then	-- Wrong level?
-			--SetDungeonMapLevel (winfo.MapLevel)
-		end
-	end
+    self.NeedWorldUpdate = false
+    if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then
+        --Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
+        Nx.Map:SetToCurrentZone()
+        --Nx.Map:RegisterEvent ("WORLD_MAP_UPDATE", "OnEvent")
+    end
+    local mapId = self:GetCurrentMapId()
 
-	local i = self:GetExploredOverlayNum()
+    local winfo = self.MapWorldInfo[mapId]
+    if winfo and self.MapWorldInfo[mapId].BaseMap then
+      winfo = self.MapWorldInfo[self.MapWorldInfo[mapId].BaseMap]
+    end
+    if not winfo then
+        winfo = {}
+    end
+    if winfo.MapLevel then
+        if Nx.Map:GetCurrentMapDungeonLevel() ~= winfo.MapLevel then    -- Wrong level?
+            --SetDungeonMapLevel (winfo.MapLevel)
+        end
+    end
 
-	if self.CurWorldUpdateMapId == mapId and i == self.CurWorldUpdateOverlayNum and Nx.Map:GetCurrentMapDungeonLevel() == self.LastDungeonLevel then
-		return
-	end
+    local i = self:GetExploredOverlayNum()
 
-	self.CurWorldUpdateMapId = mapId
-	self.CurWorldUpdateOverlayNum = i
-	self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+    if self.CurWorldUpdateMapId == mapId and i == self.CurWorldUpdateOverlayNum and Nx.Map:GetCurrentMapDungeonLevel() == self.LastDungeonLevel then
+        return
+    end
 
-	self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
---	local mapInfo = C_Map.GetMapInfo(mapId)
-	local mapInfo = Nx.Map:GetMapInfo(mapId)
-	local mapFileName = winfo.Overlay or (mapInfo.name and mapInfo.name:gsub(" ", "") or "")
-	if not mapFileName then
-		if Nx.Map:GetCurrentMapContinent() == WORLDMAP_COSMIC_ID then
-			mapFileName = "Cosmic"
-		else
-			mapFileName = "World"
-		end
-	end
-	local texPath = "Interface\\WorldMap\\"..(isMicro and "MicroDungeon\\"..mapFileName.."\\"..microTex or mapFileName).."\\"	
-	local texName = microTex or mapFileName
+    self.CurWorldUpdateMapId = mapId
+    self.CurWorldUpdateOverlayNum = i
+    self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
 
-	self:UpdateOverlayUnexplored()
+    self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+--    local mapInfo = C_Map.GetMapInfo(mapId)
+    local mapInfo = Nx.Map:GetMapInfo(mapId)
+    local mapFileName = winfo.Overlay or (mapInfo.name and mapInfo.name:gsub(" ", "") or "")
+    if not mapFileName then
+        if Nx.Map:GetCurrentMapContinent() == WORLDMAP_COSMIC_ID then
+            mapFileName = "Cosmic"
+        else
+            mapFileName = "World"
+        end
+    end
+    local texPath = "Interface\\WorldMap\\"..(isMicro and "MicroDungeon\\"..mapFileName.."\\"..microTex or mapFileName).."\\"
+    local texName = microTex or mapFileName
 
-	Nx.UEvents:UpdateMap (true)
-	local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel();
-	--[[if (DungeonUsesTerrainMap()) then
-		dungeonLevel = dungeonLevel - 1;
-	end]]--
-	if dungeonLevel>0 then texName = texName..dungeonLevel.."_" end
-	if winfo.MapBaseName and not winfo.Garrison then texName = winfo.MapBaseName end
-	if winfo.Garrison and not isMicro then
-		local level, mapname, x, y = C_Garrison.GetGarrisonInfo(LE_GARRISON_TYPE_6_0)
-		if not level then
-			level = "1"
-		end
-		texPath = "Interface\\WorldMap\\" .. winfo.MapBaseName .. level.."\\"
-		texName = winfo.MapBaseName .. level
-	end
-	
-	if self.Debug then
-		Nx.prt ("%d Map UpdateWorld %d", self.Tick, self:GetCurrentMapId())
-		Nx.prt (" File %s", texPath..texName..mapId)
-	end
-	
-	local tileX = winfo.TileX or 4
-	local tileY = winfo.TileY or 3
-	local numtiles = tileX * tileY
-	
-	local GetMapArtLayerTexturesMapId = ((self.MapWorldInfo[mapId] and self.MapWorldInfo[mapId].RBaseMap) and self.MapWorldInfo[mapId].RBaseMap or mapId)
-	if GetMapArtLayerTexturesMapId == nil then
-		return
-	end
+    self:UpdateOverlayUnexplored()
 
-	if not Nx.isMoPClassic then
-		if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
-		if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
-	end
+    Nx.UEvents:UpdateMap (true)
+    local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel();
+    --[[if (DungeonUsesTerrainMap()) then
+        dungeonLevel = dungeonLevel - 1;
+    end]]--
+    if dungeonLevel>0 then texName = texName..dungeonLevel.."_" end
+    if winfo.MapBaseName and not winfo.Garrison then texName = winfo.MapBaseName end
+    if winfo.Garrison and not isMicro then
+        local level, mapname, x, y = C_Garrison.GetGarrisonInfo(LE_GARRISON_TYPE_6_0)
+        if not level then
+            level = "1"
+        end
+        texPath = "Interface\\WorldMap\\" .. winfo.MapBaseName .. level.."\\"
+        texName = winfo.MapBaseName .. level
+    end
 
-	local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
-	
-	for i = 1, numtiles do
-		self.TileFrms[i].texture:SetTexture (texturesIDs[i])
-		-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
-	end
+    if self.Debug then
+        Nx.prt ("%d Map UpdateWorld %d", self.Tick, self:GetCurrentMapId())
+        Nx.prt (" File %s", texPath..texName..mapId)
+    end
+
+    local tileX = winfo.TileX or 4
+    local tileY = winfo.TileY or 3
+    local numtiles = tileX * tileY
+
+    local GetMapArtLayerTexturesMapId = ((self.MapWorldInfo[mapId] and self.MapWorldInfo[mapId].RBaseMap) and self.MapWorldInfo[mapId].RBaseMap or mapId)
+    if GetMapArtLayerTexturesMapId == nil then
+        return
+    end
+
+    if not Nx.isMoPClassic then
+        if GetMapArtLayerTexturesMapId == 12 then GetMapArtLayerTexturesMapId = 1414 end
+        if GetMapArtLayerTexturesMapId == 13 then GetMapArtLayerTexturesMapId = 1415 end
+    end
+
+    local texturesIDs = C_Map.GetMapArtLayerTextures(GetMapArtLayerTexturesMapId, 1)
+
+    for i = 1, numtiles do
+        self.TileFrms[i].texture:SetTexture (texturesIDs[i])
+        -- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
+    end
 end
 
 --------
 -- Update window fade
 
 function Nx.Map:WinUpdateFade (fade)
-	--self.ToolBar:SetFade (fade * .9 + .1)
-	self.ButAutoScaleOn.Frm:SetAlpha (fade * .9 + .1)
+    --self.ToolBar:SetFade (fade * .9 + .1)
+    self.ButAutoScaleOn.Frm:SetAlpha (fade * .9 + .1)
 end
 
 --------
 -- Update map. Called every tick, make it quick
 
 function Nx.Map:Update (elapsed)
-	if IS_BACKGROUND_WORLD_CACHING then
-		return
-	end
-	if WorldMapFrame:IsVisible() then
-		--return
-	end
-	local Nx = Nx
-	local Map = Nx.Map
-
-	self:MouseEnable (self.Win:IsSizeMax())
-
-	--if self.NeedWorldUpdate then		
-		self:UpdateWorld()
-	--end
-
-	self.MapW = self.Frm:GetWidth() - self.PadX * 2
-	self.MapH = self.Frm:GetHeight() - self.TitleH
-	self.Level = self.Frm:GetFrameLevel() + 1	
-	local mapId = Nx.Map:GetCurrentMapAreaID()
-	self.Cont, self.Zone = self:IdToContZone (mapId)
-
-	Nx.InSanctuary = C_PvP.GetZonePVPInfo() == "sanctuary"
-
-	local doSetCurZone
-	local mapChange
-
-	if self.MapId ~= mapId then
-
---		Nx.prtD ("%d Map change %d to %d", self.Tick, self.MapId, mapId)
-
-		self.CurMapBG = self:IsBattleGroundMap (mapId)
-
-		if not self:IsBattleGroundMap (self.MapId) then
---			self.MapIdOld = self.MapId
-			self:AddOldMap (mapId)
-		end
-
-		self.MapId = mapId
-		mapChange = true
-
-		Nx.Com.PlyrChange = GetTime()
-	end
-
-	local rid = self.MapId
-	Nx.Map.UpdateMapID = rid
-	local inBG = self:IsBattleGroundMap (rid)
-	
-	-- Cache instance/BG checks for use throughout the frame
-	local isInstance = self:IsInstanceMap(rid)
-	FrameCache.isInstance = isInstance
-	FrameCache.isBG = inBG
-	FrameCache.mapId = rid
-	FrameCache.dungeonLevel = Nx.Map.DungeonLevel
-	
-	if Nx.InBG and Nx.InBG ~= rid then	-- Left or changed BG?
-
---		Nx.prt ("Left BG %s", Nx.InBG)
-		
-		local cb = Nx.Combat
-
-		if Nx.InArena then
-			local s = Nx.Map:GetShortName (Nx.InArena)
-			Nx.UEvents:AddInfo (format ("Left %s %d %d %dD %dH", s, cb.KBs, cb.Deaths, cb.DamDone, cb.HealDone))
-
-		else
-			local total = cb.KBs + cb.Deaths + cb.HKs + cb.Honor
-			if total > 0 then
-				local sname = Nx.Map:GetShortName (Nx.InBG)
-				Nx.UEvents:AddInfo (format ("Left %s %d %d %d %d", sname, cb.KBs, cb.Deaths, cb.HKs, cb.Honor))
-
-				local tm = GetTime() - cb.BGEnterTime
-				--local _, honor = GetCurrencyInfo (392)		--V4
-				--local hGain = honor - cb.BGEnterHonor
-				
-				RequestBattlefieldScoreData();
-			
-				for i=1, GetNumBattlefieldScores() do
-					local name, killingBlows, honorableKills, deaths, hGain, faction, rank, race, class = GetBattlefieldScore(i);
-					if (name == UnitName("player")) then
-						Nx.UEvents:AddInfo (format (" %s +%d honor, +%d hour", Nx.Util_GetTimeElapsedMinSecStr (tm), hGain, hGain / tm * 3600))
-					end
-				end
-
-				local xpGain = UnitXP ("player") - cb.BGEnterXP
-				if xpGain > 0 then
-					Nx.UEvents:AddInfo (format (" +%d xp, +%d hour", xpGain, xpGain / tm * 3600))
-				end
-			end
-		end
-
-		cb.KBs = 0
-		cb.Deaths = 0
-		cb.HKs = 0
-		cb.Honor = 0
-		Nx.InBG = nil
-
-		if Nx.InArena then
-			self.LOpts.NXMMFull = false
-		end
-		Nx.InArena = nil
-	end
-
-	if inBG and Nx.InBG ~= rid then
-		Nx.InBG = rid
-
-		local cb = Nx.Combat
-		cb.BGEnterTime = GetTime()
-		--local _, honor = GetCurrencyInfo (392)		--V4
-		cb.BGEnterHonor = 0
-		cb.BGEnterXP = UnitXP ("player")
-
-		if self.MapWorldInfo[rid].Arena then
-			Nx.InArena = rid
-			self.LOpts.NXMMFull = true
-		end
-
---		Nx.prt ("Entering BG %s", rid)
-		doSetCurZone = true
-	end
-
-	-- Taxi update
-
-	Nx.Map.DungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-	
-	local ontaxi = UnitOnTaxi ("player")
-
-	if ontaxi then
-		if not Map.TaxiOn then	-- New taxi ride?
-			Map.TaxiStartTime = GetTime()
-			Map.TaxiOn = true
-			if Nx.db.profile.Debug.DebugMap then
-				Nx.prt ("Taxi start")
-			end
-		end
-
-	elseif Map.TaxiOn then	-- Done with taxi
-		Map.TaxiOn = false
-		Map.TaxiX = nil		-- Clear so if we pop on a taxi by a unhooked method we don't track old
-
-		local tm = GetTime() - Map.TaxiStartTime
-
-		Nx.Travel:TaxiSaveTime (tm)
-
-		if Nx.db.profile.Debug.DebugMap then
-			Nx.prt ("Taxi time %.1f seconds", tm)
-		end
-	end
-
-	-- Real map switch
-
-	if Nx.Map.RMapId ~= rid then
-		if rid ~= 9000 then
---			Nx.prtD ("Map zone changed %d, %d", rid, mapId)
-
-			if Nx.Map.RMapId == 9000 then	-- Loading?
-				self.CurOpts = nil
-				self:SwitchOptions (rid, true)
-			end
-			if not Nx.Menu:IsAnyOpened() then
-				Nx.Map:SetMapByID(rid)						
-				Nx.Map.RMapId = rid				
-				Nx.Map.DungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-				self:SwitchOptions (rid)
-				self:SwitchRealMap (rid)
-			end
-		end
-		--self.Scale = self.RealScale
-	end
-	local plZX, plZY = Nx.Map.GetPlayerMapPosition ("player")		
-	if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then		
-		Nx.Map.MoveWorldMap()
-		Nx.Map:GetMap(1).PlyrFrm:Hide()
-	else
-		Nx.Map.RestoreWorldMap()
-		Nx.Map:GetMap(1).PlyrFrm:Show()
-	end
-	if (Nx.Map.RMapId ~= Nx.Map.UpdateMapID) then
-		plZX = 0
-		plZY = 0
-	end
-	local dungeontest = Nx.Map:GetCurrentMapDungeonLevel()
-	self.InstanceId = false
-	
-	if self:IsInstanceMap (Nx.Map.UpdateMapID) and not self.CurOpts.NXInstanceMaps then
-		self.InstanceId = Nx.Map.UpdateMapID
-		plZX = plZX * 100
-		plZY = plZY * 100
-
---		self.PlyrInstX = plZX
---		self.PlyrInstY = plZY
-
---		Nx.prt ("XY %s %s", plZX, plZY)
-
-		self.PlyrRZX = plZX
-		self.PlyrRZY = plZY
-
-		local x, y = self:GetWorldPos (Nx.Map.UpdateMapID, 0, 0)		
-		local lvl = max (Nx.Map:GetCurrentMapDungeonLevel(), 1)		-- 0 if no level		
-		if Nx.Map:GetCurrentMapAreaID() == 520 then
-			if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
-				lvl = 1
-			else
-				lvl = 2
-			end
-		end
-
-		if not self.InstMapId then		-- Not showing instance?
-			plZX = 0
-			plZY = 0
-
-		elseif plZX == 0 and plZY == 0 then
-
-			self.InstLevelSet = -1
-		end
-
-		local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
-		local layers = C_Map.GetMapArtLayers(mapId)
-
-		self.PlyrX = x + plZX * layers[layerIndex].layerWidth / 25600
-		self.PlyrY = y + plZY * layers[layerIndex].layerHeight / 25600 + (lvl - 1) * layers[layerIndex].layerHeight / 256
---		self.InstanceLevel = GetCurrentMapDungeonLevel()
-
-		self.PlyrSpeed = 0
-		
-		Nx.Map.MouseOver = false
-	elseif plZX > 0 or plZY > 0 then	-- Update world position of player if we can get it
-
-		plZX = plZX * 100
-		plZY = plZY * 100
-		PLMapID = MapUtil.GetDisplayableMapForPlayer()
-
-		if not Nx.isMoPClassic then
-			if PLMapID == 1414 then PLMapID = 12 end
-			if PLMapID == 1415 then PLMapID = 13 end
-		end
-
-		local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
-
-		if elapsed > 0 then
-
-			if x == self.PlyrX and y == self.PlyrY then	-- Not moving?
-				self.PlyrSpeedCalcTime = GetTime()
-				self.PlyrSpeed = 0
-				self.PlyrSpeedX = x
-				self.PlyrSpeedY = y				
-			else
-				local tmDif = GetTime() - self.PlyrSpeedCalcTime
-				if tmDif > .5 then
-					self.PlyrSpeedCalcTime = GetTime()
-					self.PlyrSpeed = ((x - self.PlyrSpeedX) ^ 2 + (y - self.PlyrSpeedY) ^ 2) ^ .5 * 4.575 / tmDif
-					self.PlyrSpeedX = x
-					self.PlyrSpeedY = y					
-				end
-			end
-		end
-
---		if elapsed > 0 then
---			self.PlyrSpeed = ((x - self.PlyrX) ^ 2 + (y - self.PlyrY) ^ 2) ^ .5 * 4.575 / elapsed
---		end
-
-		self.PlyrX = x
-		self.PlyrY = y
-		if mapId ~= rid then			-- Not in real zone?
-			if (self:IsMicroDungeon(mapId)) then
-			else
-				plZX, plZY = self:GetZonePos (rid, x, y)
-			end
-		end
-
-		self.PlyrRZX = plZX
-		self.PlyrRZY = plZY
-
-		if mapChange then
-			self.MoveLastX = x
-			self.MoveLastY = y
-		end
-	end
-
---	Nx.prt ("Dir %s", GetPlayerFacing())
-	self.PlyrDir = 0 
-	if GetPlayerFacing() ~= nil then
-		self.PlyrDir = 360 - GetPlayerFacing() / 2 / math.pi * 360
-	end
-
-	local plX = self.PlyrX
-	local plY = self.PlyrY
-	local x = plX - self.MoveLastX
-	local y = plY - self.MoveLastY
-	local ang = self.PlyrDir - self.PlyrLastDir
-
-	local moveDist = (x * x + y * y) ^ .5
-
---	if moveDist > 0 then Nx.prt ("MoveDist %f %f", moveDist, self.BaseScale) end
-
-	if moveDist >= .01 * self.BaseScale or abs (ang) > .01 then
-		Nx.Com.PlyrChange = GetTime()
-
-		if self.MoveLastX ~= -1 then
-			self.MoveDir = math.deg (math.atan2 (x, -y / 1.5))
-		end
-
-		self.MoveLastX = plX
-		self.MoveLastY = plY
-
---		if not rotOk then
---			self.PlyrDir = self.MoveDir
---		end
-
-		self.PlyrLastDir = self.PlyrDir
-
-		if not self.Scrolling and not self.MouseIsOver then			
-			if self.CurOpts.NXPlyrFollow then
-				local scOn = self.LOpts.NXAutoScaleOn		--self.GOpts["MapFollowChangeScale"]
-				if plZX ~= 0 or plZY ~= 0 then
-					if #self.Tracking == 0 or not scOn then
-						self:Move (plX, plY, nil, 30)
-					end
-				end
-				if scOn then					
-					local midX
-					local midY
-					local dtx
-					local dty
-					local cX, cY
-					
-					-- Only check corpse if player is actually dead
-					if UnitIsDeadOrGhost("player") and C_Map.GetBestMapForUnit("player") then
-						local CorpseInfo = C_DeathInfo.GetCorpseMapPosition(C_Map.GetBestMapForUnit("player"))
-						if CorpseInfo then
-							cX = CorpseInfo.x or 0
-							cY = CorpseInfo.y or 0
-						end
-					end
-					if cX == nil or cY == nil then
-						cX = 0
-						cY = 0
-					end
-					
-					if cX ~= 0 or cY ~= 0 then
-
-						midX, midY = self:GetWorldPos (mapId, cX * 100, cY * 100)
-						dtx = 1
-						dty = 1
-
-					elseif #self.Tracking > 0 then
-
-						local tr = self.Tracking[1]
-						midX = tr.TargetMX
-						midY = tr.TargetMY
-						dtx = abs (tr.TargetX1 - tr.TargetX2)
-						dty = abs (tr.TargetY1 - tr.TargetY2)
-
-					elseif Map.TaxiX then
-
-						midX, midY = self.TaxiX, self.TaxiY
-						dtx = 1
-						dty = 1
-					end
-
-					if midX then
-						local mX = (midX + self.PlyrX) * .5
-						local mY = (midY + self.PlyrY) * .5						
-						local dx = abs (midX - self.PlyrX)						
-						local dy = abs (midY - self.PlyrY)
-						
-						-- Minimum distance threshold to prevent extreme scaling
-						-- When player is very close to target, don't auto-scale
-						local MIN_DISTANCE = 10  -- Minimum world units before auto-scale kicks in
-						
-						if dx < MIN_DISTANCE and dy < MIN_DISTANCE then
-							-- Player is very close to target, just follow without scaling
-							self:Move (plX, plY, nil, 30)
-						else
-							-- Ensure minimum distance to prevent division by tiny numbers
-							dx = max(dx, MIN_DISTANCE)
-							dy = max(dy, MIN_DISTANCE)
-							
-							local scaleX = self.MapW / dx
-							local scaleY = self.MapH / dy
-							local scale = min (scaleX, scaleY) * .5
-
-							-- Target rectangle scaling
-							if dtx and dty then
-								dtx = max(dtx, 1)
-								dty = max(dty, 1)
-								local targetScaleX = self.MapW / dtx
-								local targetScaleY = self.MapH / dty
-								scale = min (min (targetScaleX, targetScaleY), scale)
-							end
-
-							local scmax = self.InstanceId and 800 or self.LOpts.NXAutoScaleMax
-							local scmin = self.LOpts.NXAutoScaleMin
-							
-							-- Sanity check: don't change scale drastically in one frame
-							local currentScale = self.Scale or 1
-							local maxScaleChange = currentScale * 2  -- Max 2x change per update
-							scale = max(min(scale, maxScaleChange), currentScale / 2)
-							
-							-- Apply final min/max limits
-							scale = max (min (scale, scmax), scmin)
-							self:Move (mX, mY, scale, 30)
-						end
-					end
-				end
-
-				if rid ~= mapId then
-					doSetCurZone = true
---					Nx.prt ("Map Nx.Map:SetToCurrentZone")
-				end
-			end
-		end
-	end
-
-	-- Adjust draw scale and position
-
-	local scaleDiff = abs (self.ScaleDraw - self.Scale)
-	local xDiff = self.MapPosXDraw - self.MapPosX
-	local yDiff = self.MapPosYDraw - self.MapPosY
-
-	if self.StepTime ~= 0 and (scaleDiff > 0 or xDiff ~= 0 or yDiff ~= 0) then
---	if (xDiff ~= 0 or yDiff ~= 0) and (self.Tick % 1 == 0) then
-
---		Nx.prt ("Tick %f", self.Tick)
-
-		if self.StepTime > 0 then
-
---			Nx.prt ("Steptime Go #%d %f", self.Tick, self.StepTime)
-
-			self.StepTime = -self.StepTime
-
-			self.ScaleDrawW = 1 / self.ScaleDraw
-			self.ScaleW = 1 / self.Scale
-		end
-
-		local st = -self.StepTime
-
-		self.MapPosXDraw = Nx.Util_StepValue (self.MapPosXDraw, self.MapPosX, abs (xDiff) / st)
-		self.MapPosYDraw = Nx.Util_StepValue (self.MapPosYDraw, self.MapPosY, abs (yDiff) / st)
-		self.ScaleDrawW = Nx.Util_StepValue (self.ScaleDrawW, self.ScaleW, abs (self.ScaleDrawW - self.ScaleW) / st)
-		self.ScaleDraw = 1 / self.ScaleDrawW
-
---		Nx.prt ("Map scrl #%d %f %f", self.StepTime, self.MapPosXDraw, self.MapPosX)
---		Nx.prt ("Map scrl %f %f", self.OCur, self.OEnd)
---		Nx.prt ("Map scrl %f %f", self.ScaleDraw, self.Scale)
-
-		self.StepTime = self.StepTime + 1
-	end
-
-	local _, zx, zy, zw = self:GetWorldZoneInfo (self.Cont, self.Zone)
-	if zx then
-		self.MapScale = self.Scale / 10.02
-	end
-
-	--
-
-	local plSize = Nx.db.profile.Map.PlyrArrowSize
-	if IsShiftKeyDown() then
-		plSize = 5
-	end
-	if self.PlyrFrm:IsVisible() then
-		self:ClipFrameW (self.PlyrFrm, self.PlyrX, self.PlyrY, plSize, plSize, self.PlyrDir)
-	end
-	self.InCombat = UnitAffectingCombat ("player")
-	local g = 1
-	local b = 1
-	local al = 1
-	if self.InCombat then
-		g = 0
-		b = 0
-		al = abs (GetTime() % 1 - .5) / .5 * .5 + .4
-	end
-	self.PlyrFrm.texture:SetVertexColor (1, g, b, al)
-
---	local str = format ("%s %d %d", UnitName ("player"), UnitHealth ("player"), UnitMana ("player"))
---	self.PlyrFrm.NxTip = str
-
-	self.BackgndAlpha = Nx.Util_StepValue (self.BackgndAlpha, self.BackgndAlphaTarget, .05)
-	self.Frm.texture:SetVertexColor (1, 1, 1, self.BackgndAlpha)
-
-	self.WorldAlpha = (self.BackgndAlpha - self.BackgndAlphaFade) / (self.BackgndAlphaFull - self.BackgndAlphaFade) * self.BackgndAlphaFull
-
-	self:ResetIcons()
-
-	self:MoveContinents()
---	self:MoveWorldHotspots()
-
---	if not (IsAltKeyDown() and IsControlKeyDown()) then
---	end
-
-	self:UpdateZones()
-	self:UpdateInstanceMap()
-
-	self:MinimapUpdate()
---	self.MMFrm:GetParent():SetAlpha(0)
-	self:UpdateWorldMap()
-
-	self:DrawContinentsPOIs()
-
-	if Nx.db.profile.Map.ShowTrail then		
-		self:UpdatePlyrHistory()
-	end
-	
+    if IS_BACKGROUND_WORLD_CACHING then
+        return
+    end
+    if WorldMapFrame:IsVisible() then
+        --return
+    end
+    local Nx = Nx
+    local Map = Nx.Map
+
+    self:MouseEnable (self.Win:IsSizeMax())
+
+    --if self.NeedWorldUpdate then
+        self:UpdateWorld()
+    --end
+
+    self.MapW = self.Frm:GetWidth() - self.PadX * 2
+    self.MapH = self.Frm:GetHeight() - self.TitleH
+    self.Level = self.Frm:GetFrameLevel() + 1
+    local mapId = Nx.Map:GetCurrentMapAreaID()
+    self.Cont, self.Zone = self:IdToContZone (mapId)
+
+    Nx.InSanctuary = C_PvP.GetZonePVPInfo() == "sanctuary"
+
+    local doSetCurZone
+    local mapChange
+
+    if self.MapId ~= mapId then
+
+--        Nx.prtD ("%d Map change %d to %d", self.Tick, self.MapId, mapId)
+
+        self.CurMapBG = self:IsBattleGroundMap (mapId)
+
+        if not self:IsBattleGroundMap (self.MapId) then
+--            self.MapIdOld = self.MapId
+            self:AddOldMap (mapId)
+        end
+
+        self.MapId = mapId
+        mapChange = true
+
+        Nx.Com.PlyrChange = GetTime()
+    end
+
+    local rid = self.MapId
+    Nx.Map.UpdateMapID = rid
+    local inBG = self:IsBattleGroundMap (rid)
+
+    -- Cache instance/BG checks for use throughout the frame
+    local isInstance = self:IsInstanceMap(rid)
+    FrameCache.isInstance = isInstance
+    FrameCache.isBG = inBG
+    FrameCache.mapId = rid
+    FrameCache.dungeonLevel = Nx.Map.DungeonLevel
+
+    if Nx.InBG and Nx.InBG ~= rid then    -- Left or changed BG?
+
+--        Nx.prt ("Left BG %s", Nx.InBG)
+
+        local cb = Nx.Combat
+
+        if Nx.InArena then
+            local s = Nx.Map:GetShortName (Nx.InArena)
+            Nx.UEvents:AddInfo (format ("Left %s %d %d %dD %dH", s, cb.KBs, cb.Deaths, cb.DamDone, cb.HealDone))
+
+        else
+            local total = cb.KBs + cb.Deaths + cb.HKs + cb.Honor
+            if total > 0 then
+                local sname = Nx.Map:GetShortName (Nx.InBG)
+                Nx.UEvents:AddInfo (format ("Left %s %d %d %d %d", sname, cb.KBs, cb.Deaths, cb.HKs, cb.Honor))
+
+                local tm = GetTime() - cb.BGEnterTime
+                --local _, honor = GetCurrencyInfo (392)        --V4
+                --local hGain = honor - cb.BGEnterHonor
+
+                RequestBattlefieldScoreData();
+
+                for i=1, GetNumBattlefieldScores() do
+                    local name, killingBlows, honorableKills, deaths, hGain, faction, rank, race, class = GetBattlefieldScore(i);
+                    if (name == UnitName("player")) then
+                        Nx.UEvents:AddInfo (format (" %s +%d honor, +%d hour", Nx.Util_GetTimeElapsedMinSecStr (tm), hGain, hGain / tm * 3600))
+                    end
+                end
+
+                local xpGain = UnitXP ("player") - cb.BGEnterXP
+                if xpGain > 0 then
+                    Nx.UEvents:AddInfo (format (" +%d xp, +%d hour", xpGain, xpGain / tm * 3600))
+                end
+            end
+        end
+
+        cb.KBs = 0
+        cb.Deaths = 0
+        cb.HKs = 0
+        cb.Honor = 0
+        Nx.InBG = nil
+
+        if Nx.InArena then
+            self.LOpts.NXMMFull = false
+        end
+        Nx.InArena = nil
+    end
+
+    if inBG and Nx.InBG ~= rid then
+        Nx.InBG = rid
+
+        local cb = Nx.Combat
+        cb.BGEnterTime = GetTime()
+        --local _, honor = GetCurrencyInfo (392)        --V4
+        cb.BGEnterHonor = 0
+        cb.BGEnterXP = UnitXP ("player")
+
+        if self.MapWorldInfo[rid].Arena then
+            Nx.InArena = rid
+            self.LOpts.NXMMFull = true
+        end
+
+--        Nx.prt ("Entering BG %s", rid)
+        doSetCurZone = true
+    end
+
+    -- Taxi update
+
+    Nx.Map.DungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+
+    local ontaxi = UnitOnTaxi ("player")
+
+    if ontaxi then
+        if not Map.TaxiOn then    -- New taxi ride?
+            Map.TaxiStartTime = GetTime()
+            Map.TaxiOn = true
+            if Nx.db.profile.Debug.DebugMap then
+                Nx.prt ("Taxi start")
+            end
+        end
+
+    elseif Map.TaxiOn then    -- Done with taxi
+        Map.TaxiOn = false
+        Map.TaxiX = nil        -- Clear so if we pop on a taxi by a unhooked method we don't track old
+
+        local tm = GetTime() - Map.TaxiStartTime
+
+        Nx.Travel:TaxiSaveTime (tm)
+
+        if Nx.db.profile.Debug.DebugMap then
+            Nx.prt ("Taxi time %.1f seconds", tm)
+        end
+    end
+
+    -- Real map switch
+
+    if Nx.Map.RMapId ~= rid then
+        if rid ~= 9000 then
+--            Nx.prtD ("Map zone changed %d, %d", rid, mapId)
+
+            if Nx.Map.RMapId == 9000 then    -- Loading?
+                self.CurOpts = nil
+                self:SwitchOptions (rid, true)
+            end
+            if not Nx.Menu:IsAnyOpened() then
+                Nx.Map:SetMapByID(rid)
+                Nx.Map.RMapId = rid
+                Nx.Map.DungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+                self:SwitchOptions (rid)
+                self:SwitchRealMap (rid)
+            end
+        end
+        --self.Scale = self.RealScale
+    end
+    local plZX, plZY = Nx.Map.GetPlayerMapPosition ("player")
+    if (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
+        Nx.Map.MoveWorldMap()
+        Nx.Map:GetMap(1).PlyrFrm:Hide()
+    else
+        Nx.Map.RestoreWorldMap()
+        Nx.Map:GetMap(1).PlyrFrm:Show()
+    end
+    if (Nx.Map.RMapId ~= Nx.Map.UpdateMapID) then
+        plZX = 0
+        plZY = 0
+    end
+    local dungeontest = Nx.Map:GetCurrentMapDungeonLevel()
+    self.InstanceId = false
+
+    if self:IsInstanceMap (Nx.Map.UpdateMapID) and not self.CurOpts.NXInstanceMaps then
+        self.InstanceId = Nx.Map.UpdateMapID
+        plZX = plZX * 100
+        plZY = plZY * 100
+
+--        self.PlyrInstX = plZX
+--        self.PlyrInstY = plZY
+
+--        Nx.prt ("XY %s %s", plZX, plZY)
+
+        self.PlyrRZX = plZX
+        self.PlyrRZY = plZY
+
+        local x, y = self:GetWorldPos (Nx.Map.UpdateMapID, 0, 0)
+        local lvl = max (Nx.Map:GetCurrentMapDungeonLevel(), 1)        -- 0 if no level
+        if Nx.Map:GetCurrentMapAreaID() == 520 then
+            if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
+                lvl = 1
+            else
+                lvl = 2
+            end
+        end
+
+        if not self.InstMapId then        -- Not showing instance?
+            plZX = 0
+            plZY = 0
+
+        elseif plZX == 0 and plZY == 0 then
+
+            self.InstLevelSet = -1
+        end
+
+        local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
+        local layers = C_Map.GetMapArtLayers(mapId)
+
+        self.PlyrX = x + plZX * layers[layerIndex].layerWidth / 25600
+        self.PlyrY = y + plZY * layers[layerIndex].layerHeight / 25600 + (lvl - 1) * layers[layerIndex].layerHeight / 256
+--        self.InstanceLevel = GetCurrentMapDungeonLevel()
+
+        self.PlyrSpeed = 0
+
+        Nx.Map.MouseOver = false
+    elseif plZX > 0 or plZY > 0 then    -- Update world position of player if we can get it
+
+        plZX = plZX * 100
+        plZY = plZY * 100
+        PLMapID = MapUtil.GetDisplayableMapForPlayer()
+
+        if not Nx.isMoPClassic then
+            if PLMapID == 1414 then PLMapID = 12 end
+            if PLMapID == 1415 then PLMapID = 13 end
+        end
+
+        local x, y = self:GetWorldPos (PLMapID, plZX, plZY)
+
+        if elapsed > 0 then
+
+            if x == self.PlyrX and y == self.PlyrY then    -- Not moving?
+                self.PlyrSpeedCalcTime = GetTime()
+                self.PlyrSpeed = 0
+                self.PlyrSpeedX = x
+                self.PlyrSpeedY = y
+            else
+                local tmDif = GetTime() - self.PlyrSpeedCalcTime
+                if tmDif > .5 then
+                    self.PlyrSpeedCalcTime = GetTime()
+                    self.PlyrSpeed = ((x - self.PlyrSpeedX) ^ 2 + (y - self.PlyrSpeedY) ^ 2) ^ .5 * 4.575 / tmDif
+                    self.PlyrSpeedX = x
+                    self.PlyrSpeedY = y
+                end
+            end
+        end
+
+--        if elapsed > 0 then
+--            self.PlyrSpeed = ((x - self.PlyrX) ^ 2 + (y - self.PlyrY) ^ 2) ^ .5 * 4.575 / elapsed
+--        end
+
+        self.PlyrX = x
+        self.PlyrY = y
+        if mapId ~= rid then            -- Not in real zone?
+            if (self:IsMicroDungeon(mapId)) then
+            else
+                plZX, plZY = self:GetZonePos (rid, x, y)
+            end
+        end
+
+        self.PlyrRZX = plZX
+        self.PlyrRZY = plZY
+
+        if mapChange then
+            self.MoveLastX = x
+            self.MoveLastY = y
+        end
+    end
+
+--    Nx.prt ("Dir %s", GetPlayerFacing())
+    self.PlyrDir = 0
+    if GetPlayerFacing() ~= nil then
+        self.PlyrDir = 360 - GetPlayerFacing() / 2 / math.pi * 360
+    end
+
+    local plX = self.PlyrX
+    local plY = self.PlyrY
+    local x = plX - self.MoveLastX
+    local y = plY - self.MoveLastY
+    local ang = self.PlyrDir - self.PlyrLastDir
+
+    local moveDist = (x * x + y * y) ^ .5
+
+--    if moveDist > 0 then Nx.prt ("MoveDist %f %f", moveDist, self.BaseScale) end
+
+    if moveDist >= .01 * self.BaseScale or abs (ang) > .01 then
+        Nx.Com.PlyrChange = GetTime()
+
+        if self.MoveLastX ~= -1 then
+            self.MoveDir = math.deg (math.atan2 (x, -y / 1.5))
+        end
+
+        self.MoveLastX = plX
+        self.MoveLastY = plY
+
+--        if not rotOk then
+--            self.PlyrDir = self.MoveDir
+--        end
+
+        self.PlyrLastDir = self.PlyrDir
+
+        if not self.Scrolling and not self.MouseIsOver then
+            if self.CurOpts.NXPlyrFollow then
+                local scOn = self.LOpts.NXAutoScaleOn        --self.GOpts["MapFollowChangeScale"]
+                if plZX ~= 0 or plZY ~= 0 then
+                    if #self.Tracking == 0 or not scOn then
+                        self:Move (plX, plY, nil, 30)
+                    end
+                end
+                if scOn then
+                    local midX
+                    local midY
+                    local dtx
+                    local dty
+                    local cX, cY
+
+                    -- Only check corpse if player is actually dead
+                    if UnitIsDeadOrGhost("player") and C_Map.GetBestMapForUnit("player") then
+                        local CorpseInfo = C_DeathInfo.GetCorpseMapPosition(C_Map.GetBestMapForUnit("player"))
+                        if CorpseInfo then
+                            cX = CorpseInfo.x or 0
+                            cY = CorpseInfo.y or 0
+                        end
+                    end
+                    if cX == nil or cY == nil then
+                        cX = 0
+                        cY = 0
+                    end
+
+                    if cX ~= 0 or cY ~= 0 then
+
+                        midX, midY = self:GetWorldPos (mapId, cX * 100, cY * 100)
+                        dtx = 1
+                        dty = 1
+
+                    elseif #self.Tracking > 0 then
+
+                        local tr = self.Tracking[1]
+                        midX = tr.TargetMX
+                        midY = tr.TargetMY
+                        dtx = abs (tr.TargetX1 - tr.TargetX2)
+                        dty = abs (tr.TargetY1 - tr.TargetY2)
+
+                    elseif Map.TaxiX then
+
+                        midX, midY = self.TaxiX, self.TaxiY
+                        dtx = 1
+                        dty = 1
+                    end
+
+                    if midX then
+                        local mX = (midX + self.PlyrX) * .5
+                        local mY = (midY + self.PlyrY) * .5
+                        local dx = abs (midX - self.PlyrX)
+                        local dy = abs (midY - self.PlyrY)
+
+                        -- Minimum distance threshold to prevent extreme scaling
+                        -- When player is very close to target, don't auto-scale
+                        local MIN_DISTANCE = 10  -- Minimum world units before auto-scale kicks in
+
+                        if dx < MIN_DISTANCE and dy < MIN_DISTANCE then
+                            -- Player is very close to target, just follow without scaling
+                            self:Move (plX, plY, nil, 30)
+                        else
+                            -- Ensure minimum distance to prevent division by tiny numbers
+                            dx = max(dx, MIN_DISTANCE)
+                            dy = max(dy, MIN_DISTANCE)
+
+                            local scaleX = self.MapW / dx
+                            local scaleY = self.MapH / dy
+                            local scale = min (scaleX, scaleY) * .5
+
+                            -- Target rectangle scaling
+                            if dtx and dty then
+                                dtx = max(dtx, 1)
+                                dty = max(dty, 1)
+                                local targetScaleX = self.MapW / dtx
+                                local targetScaleY = self.MapH / dty
+                                scale = min (min (targetScaleX, targetScaleY), scale)
+                            end
+
+                            local scmax = self.InstanceId and 800 or self.LOpts.NXAutoScaleMax
+                            local scmin = self.LOpts.NXAutoScaleMin
+
+                            -- Sanity check: don't change scale drastically in one frame
+                            local currentScale = self.Scale or 1
+                            local maxScaleChange = currentScale * 2  -- Max 2x change per update
+                            scale = max(min(scale, maxScaleChange), currentScale / 2)
+
+                            -- Apply final min/max limits
+                            scale = max (min (scale, scmax), scmin)
+                            self:Move (mX, mY, scale, 30)
+                        end
+                    end
+                end
+
+                if rid ~= mapId then
+                    doSetCurZone = true
+--                    Nx.prt ("Map Nx.Map:SetToCurrentZone")
+                end
+            end
+        end
+    end
+
+    -- Adjust draw scale and position
+
+    local scaleDiff = abs (self.ScaleDraw - self.Scale)
+    local xDiff = self.MapPosXDraw - self.MapPosX
+    local yDiff = self.MapPosYDraw - self.MapPosY
+
+    if self.StepTime ~= 0 and (scaleDiff > 0 or xDiff ~= 0 or yDiff ~= 0) then
+--    if (xDiff ~= 0 or yDiff ~= 0) and (self.Tick % 1 == 0) then
+
+--        Nx.prt ("Tick %f", self.Tick)
+
+        if self.StepTime > 0 then
+
+--            Nx.prt ("Steptime Go #%d %f", self.Tick, self.StepTime)
+
+            self.StepTime = -self.StepTime
+
+            self.ScaleDrawW = 1 / self.ScaleDraw
+            self.ScaleW = 1 / self.Scale
+        end
+
+        local st = -self.StepTime
+
+        self.MapPosXDraw = Nx.Util_StepValue (self.MapPosXDraw, self.MapPosX, abs (xDiff) / st)
+        self.MapPosYDraw = Nx.Util_StepValue (self.MapPosYDraw, self.MapPosY, abs (yDiff) / st)
+        self.ScaleDrawW = Nx.Util_StepValue (self.ScaleDrawW, self.ScaleW, abs (self.ScaleDrawW - self.ScaleW) / st)
+        self.ScaleDraw = 1 / self.ScaleDrawW
+
+--        Nx.prt ("Map scrl #%d %f %f", self.StepTime, self.MapPosXDraw, self.MapPosX)
+--        Nx.prt ("Map scrl %f %f", self.OCur, self.OEnd)
+--        Nx.prt ("Map scrl %f %f", self.ScaleDraw, self.Scale)
+
+        self.StepTime = self.StepTime + 1
+    end
+
+    local _, zx, zy, zw = self:GetWorldZoneInfo (self.Cont, self.Zone)
+    if zx then
+        self.MapScale = self.Scale / 10.02
+    end
+
+    --
+
+    local plSize = Nx.db.profile.Map.PlyrArrowSize
+    if IsShiftKeyDown() then
+        plSize = 5
+    end
+    if self.PlyrFrm:IsVisible() then
+        self:ClipFrameW (self.PlyrFrm, self.PlyrX, self.PlyrY, plSize, plSize, self.PlyrDir)
+    end
+    self.InCombat = UnitAffectingCombat ("player")
+    local g = 1
+    local b = 1
+    local al = 1
+    if self.InCombat then
+        g = 0
+        b = 0
+        al = abs (GetTime() % 1 - .5) / .5 * .5 + .4
+    end
+    self.PlyrFrm.texture:SetVertexColor (1, g, b, al)
+
+--    local str = format ("%s %d %d", UnitName ("player"), UnitHealth ("player"), UnitMana ("player"))
+--    self.PlyrFrm.NxTip = str
+
+    self.BackgndAlpha = Nx.Util_StepValue (self.BackgndAlpha, self.BackgndAlphaTarget, .05)
+    self.Frm.texture:SetVertexColor (1, 1, 1, self.BackgndAlpha)
+
+    self.WorldAlpha = (self.BackgndAlpha - self.BackgndAlphaFade) / (self.BackgndAlphaFull - self.BackgndAlphaFade) * self.BackgndAlphaFull
+
+    self:ResetIcons()
+
+    self:MoveContinents()
+--    self:MoveWorldHotspots()
+
+--    if not (IsAltKeyDown() and IsControlKeyDown()) then
+--    end
+
+    self:UpdateZones()
+    self:UpdateInstanceMap()
+
+    self:MinimapUpdate()
+--    self.MMFrm:GetParent():SetAlpha(0)
+    self:UpdateWorldMap()
+
+    self:DrawContinentsPOIs()
+
+    if Nx.db.profile.Map.ShowTrail then
+        self:UpdatePlyrHistory()
+    end
+
 --[[
-	if self["DebugHotspots"] then
-		self:UpdateHotspotsDebug()
-	end
+    if self["DebugHotspots"] then
+        self:UpdateHotspotsDebug()
+    end
 --]]
-	if Nx.Social and Nx.scdb then
-		if Nx.scdb.profile.Social.MapShowPunks then
-			Nx.Social:UpdateIcons (self)
-		end
-	end
-
-	-- map BG Flags
-
-	if GetNumBattlefieldFlagPositions() > 0 then
-		for fpn = 1, GetNumBattlefieldFlagPositions() do
-			local fpX, fpY, flagIcon = GetBattlefieldFlagPosition(fpn)
-			local ficon = self:GetIcon(3)
-			fpX = fpX * 100
-			fpY = fpY * 100
-			fpX, fpY = self:GetWorldPos (self.MapId, fpX, fpY)
-			self:ClipFrameWChop(ficon, fpX, fpY, 32 * self.ScaleDraw, 32 * self.ScaleDraw)
-			ficon.texture:SetTexture("Interface\\WorldStateFrame\\" .. flagIcon)
-		end
-	end
-
-	-- POI's (Points of interest)
-
-	local oldLev = self.Level
-
-	if IsShiftKeyDown() or inBG then
-		oldLev = oldLev - 4
-		self.Level = self.Level + 16
-	end
-	
-	local type, name, description, txIndex, pX, pY, atlasIcon
-	local txX1, txX2, txY1, txY2
-	
-	if not IsAltKeyDown() then
-		local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
-		-- Reuse pooled tables instead of creating new ones every frame
-		local pPOIs = POI_Pool.pPOIs
-		wipe(pPOIs)
-		local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
-		local aPOIs = POI_Pool.aPOIs
-		wipe(aPOIs)
-		local awinfo = Map.MapWorldInfo[rid]
-		if not awinfo.City then
-			for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
-				aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
-			end
-		end
-		local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
-
-		-- Use pooled table for concatenation
-		local zPOIs = POI_Pool.zPOIs
-		Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
-		
-		for i, zPOI in ipairs(zPOIs) do
-			local type = zPOI._type
-			local name = zPOI.name
-			local txIndex = zPOI.textureIndex
-			local pX, pY
-			if zPOI.position then
-				pX = zPOI.position.x
-				pY = zPOI.position.y
-			else
-				pX = zPOI.x
-				pY = zPOI.y
-			end 
-			local atlasIcon = zPOI.atlasName
-			local desc = zPOI.description
-			local faction = zPOI.faction
-			
-			local skip = false
-			
-			local _, splitname = strsplit(",", name)
-			if type == 1 and not Nx.strpos(Nx.Map:GetMapNameByID(rid), strtrim(splitname and splitname or name)) then
-				skip = true
-			end
-			
-			-- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (i)
-			-- local type, name, desc, txIndex, pX, pY, mapLinkID, inBattleMap, graveyardID, areaID, poiID, isObjectIcon, atlasIcon = C_WorldMap.GetMapLandmarkInfo(i);
-			-- Nx.prtCtrl ("LandMs %s, %s, %s, %s, %s, %s, %s, %s", i, poiID, txIndex or '-', name, type, isObjectIcon, atlasIcon, WorldMap_IsSpecialPOI(poiID))
-			if (atlasIcon or (pX and txIndex ~= 0)) and not skip then		-- WotLK has 0 index POIs for named locations
-				if (type ~= 4 or (type == 4 and Nx.db.char.Map.ShowArchBlobs)) and (faction == nil or faction == 0 or Nx.PlFactionNum == faction) then
-					local tip = name
-					if desc then
-						tip = format ("%s\n%s", name, desc)
-					end			
-					pX = pX * 100
-					pY = pY * 100
-					
-		--			Nx.prtCtrl ("poi %d %s %s %d", i, name, desc, txIndex)
-
-					local f = self:GetIcon (3)
-
-					if self.CurMapBG then
-
-						f.NXType = 2000
-
-						local iconType = Nx.MapPOITypes[txIndex]
-
-						local sideStr = ""
-						if iconType == 1 then	-- Ally?
-							sideStr = " (Ally)"
-						elseif iconType == 2 then	-- Horde?
-							sideStr = " (Horde)"
-						end
+    if Nx.Social and Nx.scdb then
+        if Nx.scdb.profile.Social.MapShowPunks then
+            Nx.Social:UpdateIcons (self)
+        end
+    end
+
+    -- map BG Flags
+
+    if GetNumBattlefieldFlagPositions() > 0 then
+        for fpn = 1, GetNumBattlefieldFlagPositions() do
+            local fpX, fpY, flagIcon = GetBattlefieldFlagPosition(fpn)
+            local ficon = self:GetIcon(3)
+            fpX = fpX * 100
+            fpY = fpY * 100
+            fpX, fpY = self:GetWorldPos (self.MapId, fpX, fpY)
+            self:ClipFrameWChop(ficon, fpX, fpY, 32 * self.ScaleDraw, 32 * self.ScaleDraw)
+            ficon.texture:SetTexture("Interface\\WorldStateFrame\\" .. flagIcon)
+        end
+    end
+
+    -- POI's (Points of interest)
+
+    local oldLev = self.Level
+
+    if IsShiftKeyDown() or inBG then
+        oldLev = oldLev - 4
+        self.Level = self.Level + 16
+    end
+
+    local type, name, description, txIndex, pX, pY, atlasIcon
+    local txX1, txX2, txY1, txY2
+
+    if not IsAltKeyDown() then
+        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
+        -- Reuse pooled tables instead of creating new ones every frame
+        local pPOIs = POI_Pool.pPOIs
+        wipe(pPOIs)
+        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
+        local aPOIs = POI_Pool.aPOIs
+        wipe(aPOIs)
+        local awinfo = Map.MapWorldInfo[rid]
+        if not awinfo.City then
+            for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
+                aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
+            end
+        end
+        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
+
+        -- Use pooled table for concatenation
+        local zPOIs = POI_Pool.zPOIs
+        Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
+
+        for i, zPOI in ipairs(zPOIs) do
+            local type = zPOI._type
+            local name = zPOI.name
+            local txIndex = zPOI.textureIndex
+            local pX, pY
+            if zPOI.position then
+                pX = zPOI.position.x
+                pY = zPOI.position.y
+            else
+                pX = zPOI.x
+                pY = zPOI.y
+            end
+            local atlasIcon = zPOI.atlasName
+            local desc = zPOI.description
+            local faction = zPOI.faction
+
+            local skip = false
+
+            local _, splitname = strsplit(",", name)
+            if type == 1 and not Nx.strpos(Nx.Map:GetMapNameByID(rid), strtrim(splitname and splitname or name)) then
+                skip = true
+            end
+
+            -- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (i)
+            -- local type, name, desc, txIndex, pX, pY, mapLinkID, inBattleMap, graveyardID, areaID, poiID, isObjectIcon, atlasIcon = C_WorldMap.GetMapLandmarkInfo(i);
+            -- Nx.prtCtrl ("LandMs %s, %s, %s, %s, %s, %s, %s, %s", i, poiID, txIndex or '-', name, type, isObjectIcon, atlasIcon, WorldMap_IsSpecialPOI(poiID))
+            if (atlasIcon or (pX and txIndex ~= 0)) and not skip then        -- WotLK has 0 index POIs for named locations
+                if (type ~= 4 or (type == 4 and Nx.db.char.Map.ShowArchBlobs)) and (faction == nil or faction == 0 or Nx.PlFactionNum == faction) then
+                    local tip = name
+                    if desc then
+                        tip = format ("%s\n%s", name, desc)
+                    end
+                    pX = pX * 100
+                    pY = pY * 100
+
+        --            Nx.prtCtrl ("poi %d %s %s %d", i, name, desc, txIndex)
+
+                    local f = self:GetIcon (3)
+
+                    if self.CurMapBG then
+
+                        f.NXType = 2000
+
+                        local iconType = Nx.MapPOITypes[txIndex]
+
+                        local sideStr = ""
+                        if iconType == 1 then    -- Ally?
+                            sideStr = " (Ally)"
+                        elseif iconType == 2 then    -- Horde?
+                            sideStr = " (Horde)"
+                        end
 
-						if desc == L["In Conflict"] then
+                        if desc == L["In Conflict"] then
 
-							local state = self.BGTimers[name]
-							if state ~= txIndex then
-								self.BGTimers[name] = txIndex
-								self.BGTimers[name.."#"] = GetTime()
-							end
+                            local state = self.BGTimers[name]
+                            if state ~= txIndex then
+                                self.BGTimers[name] = txIndex
+                                self.BGTimers[name.."#"] = GetTime()
+                            end
 
-							local dur = GetTime() - self.BGTimers[name.."#"]
-							local doneDur = (rid == 461 or rid == 540 or rid == 736) and 64 or 241
-							local leftDur = max (doneDur - dur, 0)
-							local tmStr
+                            local dur = GetTime() - self.BGTimers[name.."#"]
+                            local doneDur = (rid == 461 or rid == 540 or rid == 736) and 64 or 241
+                            local leftDur = max (doneDur - dur, 0)
+                            local tmStr
 
-							if leftDur < 60 then
-								tmStr = format (":%02d", leftDur)
-							else
-								tmStr = format ("%d:%02d", floor (leftDur / 60), floor (leftDur % 60))
-							end
+                            if leftDur < 60 then
+                                tmStr = format (":%02d", leftDur)
+                            else
+                                tmStr = format ("%d:%02d", floor (leftDur / 60), floor (leftDur % 60))
+                            end
 
-							f.NXData = format ("1~%f~%f~%s%s %s", pX, pY, name, sideStr, tmStr)
+                            f.NXData = format ("1~%f~%f~%s%s %s", pX, pY, name, sideStr, tmStr)
 
-							tip = format ("%s\n%s", tip, tmStr)
+                            tip = format ("%s\n%s", tip, tmStr)
 
-							-- Horizontal bar
+                            -- Horizontal bar
 
-							local sz = 30 / self.ScaleDraw
+                            local sz = 30 / self.ScaleDraw
 
-							local f2 = self:GetIcon (0)
-							self:ClipFrameZTLO (f2, pX, pY, sz, sz, -15, -15)
-							f2.texture:SetColorTexture (0, 0, 0, .35)
-
-							f2.NXType = 2000
-							f2.NxTip = tip
-							f2.NXData = f.NXData
-
-							local f2 = self:GetIconNI (1)
-
-							if leftDur < 10 then
-
-								if self.BGGrowBars then
-
-									local al = abs (GetTime() % .4 - .2) / .2 * .2 + .8
-
-									local f3 = self:GetIconNI (2)
-									self:ClipFrameZTLO (f3, pX, pY, sz * (10 - leftDur) * .1, 3 / self.ScaleDraw, -15, -15)
-									f3.texture:SetColorTexture (.5, 1, .5, al)
-
-									local f3 = self:GetIconNI (2)
-									self:ClipFrameZTLO (f3, pX, pY, sz * (10 - leftDur) * .1, 3 / self.ScaleDraw, -15, 12)
-									f3.texture:SetColorTexture (.5, 1, .5, al)
-								end
-
-		--						f2.texture:SetColorTexture (.5, 1, .5, abs (GetTime() % .6 - .3) / .3 * .7 + .3)
-							end
-
-							local red = .3
-							local blue = 1
-							if iconType == 2 then	-- Horde?
-								red = 1
-								blue = .3
-							end
-
-							f2.texture:SetColorTexture (red, .3, blue, abs (GetTime() % 2 - 1) * .5 + .5)
-
-							local per = leftDur / doneDur
-							local vper = per > .1 and 1 or per * 10
-
-							if self.BGGrowBars then
-								per = 1 - per
-								vper = 1
-							else
-								per = max (per, .1)
-							end
-
-							self:ClipFrameZTLO (f2, pX, pY, sz * per, sz * vper, -15, -15)
-
-						else	-- No conflict
-
-							f.NXData = format ("0~%f~%f~%s%s", pX, pY, name, sideStr)
-
-							self.BGTimers[name] = nil
-
-							-- Rect
+                            local f2 = self:GetIcon (0)
+                            self:ClipFrameZTLO (f2, pX, pY, sz, sz, -15, -15)
+                            f2.texture:SetColorTexture (0, 0, 0, .35)
 
-							local sz = 30 / self.ScaleDraw
+                            f2.NXType = 2000
+                            f2.NxTip = tip
+                            f2.NXData = f.NXData
+
+                            local f2 = self:GetIconNI (1)
 
-							local f2 = self:GetIcon (0)
-							self:ClipFrameZTLO (f2, pX, pY, sz, sz, -15, -15)
+                            if leftDur < 10 then
 
-		--					Nx.prtCtrl ("I %s %s %s", name, txIndex, iconType or "nil")
+                                if self.BGGrowBars then
 
-							if iconType == 1 then	-- Ally?
-								f2.texture:SetColorTexture (0, 0, 1, .3)
-		--						Nx.prtCtrl ("Blue")
-							elseif iconType == 2 then	-- Horde?
-								f2.texture:SetColorTexture (1, 0, 0, .3)
-		--						Nx.prtCtrl ("Red")
-							else
-								f2.texture:SetColorTexture (0, 0, 0, .3)
-							end
+                                    local al = abs (GetTime() % .4 - .2) / .2 * .2 + .8
+
+                                    local f3 = self:GetIconNI (2)
+                                    self:ClipFrameZTLO (f3, pX, pY, sz * (10 - leftDur) * .1, 3 / self.ScaleDraw, -15, -15)
+                                    f3.texture:SetColorTexture (.5, 1, .5, al)
+
+                                    local f3 = self:GetIconNI (2)
+                                    self:ClipFrameZTLO (f3, pX, pY, sz * (10 - leftDur) * .1, 3 / self.ScaleDraw, -15, 12)
+                                    f3.texture:SetColorTexture (.5, 1, .5, al)
+                                end
 
-							f2.NXType = 2000
-							f2.NxTip = tip
-							f2.NXData = f.NXData
+        --                        f2.texture:SetColorTexture (.5, 1, .5, abs (GetTime() % .6 - .3) / .3 * .7 + .3)
+                            end
+
+                            local red = .3
+                            local blue = 1
+                            if iconType == 2 then    -- Horde?
+                                red = 1
+                                blue = .3
+                            end
+
+                            f2.texture:SetColorTexture (red, .3, blue, abs (GetTime() % 2 - 1) * .5 + .5)
 
-						end
-					end
+                            local per = leftDur / doneDur
+                            local vper = per > .1 and 1 or per * 10
 
-					f.NxTip = tip
-					
-					-- Sentinax and Broken Shore bosses
-					if atlasIcon and (Nx.strpos(atlasIcon, 'DemonShip') == 1 or Nx.strpos(atlasIcon, 'DemonInvasion') == 1) then
-						pX, pY = self:GetWorldPos (self.MapId, pX, pY)
-						if self.ScaleDraw > 1 then	
-							self:ClipFrameTL (f, pX-16, pY-16, 32 / self.ScaleDraw, 32 / self.ScaleDraw, 0)
-						else
-							self:ClipFrameTL (f, pX-16, pY-16, 32, 32, 0)
-						end
-						f.texture:SetAtlas(atlasIcon)
-					else
-						pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-						self:ClipFrameWChop(f, pX, pY, 16 * self.ScaleDraw, 16 * self.ScaleDraw)
-						if atlasIcon then
-							f.texture:SetAtlas(atlasIcon)
-						else
-							f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-							txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
-							f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
-							f.texture:SetVertexColor (1, 1, 1, 1)
-						end
-					end
-				end
-			end
-		end
-	end
-	
-	self.Level = oldLev + 4
+                            if self.BGGrowBars then
+                                per = 1 - per
+                                vper = 1
+                            else
+                                per = max (per, .1)
+                            end
 
-	-- Update misc icons (herbs, ore, ...)
-	-- Levels:
-	--  +0 quest areas
-	--  +1 quest area target
-	--  +2-3 com players (++3 if alt key)
-	--  +4 quest icons
-	--  +5 ?
+                            self:ClipFrameZTLO (f2, pX, pY, sz * per, sz * vper, -15, -15)
 
-	Nx.HUD:Update (self)
+                        else    -- No conflict
 
-	local comTrackName, comTrackX, comTrackY = Nx.Com:UpdateIcons (self)
+                            f.NXData = format ("0~%f~%f~%s%s", pX, pY, name, sideStr)
 
-	self.Level = self.Level + 2
-	self.Guide:UpdateZonePOIIcons()
-	for a,b in pairs(Nx.ModuleUpdateIcon) do
-		if b ~= "test" then
-			Nx[b]:UpdateIcons(self)
-			self.Level = self.Level + 2
-		end
-	end
+                            self.BGTimers[name] = nil
 
-	self:UpdateIcons (self.KillShow)
+                            -- Rect
 
-	-- Battlefield flags
+                            local sz = 30 / self.ScaleDraw
 
-	local fX, fY, fToken
-	local flagNum = GetNumBattlefieldFlagPositions()
+                            local f2 = self:GetIcon (0)
+                            self:ClipFrameZTLO (f2, pX, pY, sz, sz, -15, -15)
 
-	for i = 1, flagNum do
+        --                    Nx.prtCtrl ("I %s %s %s", name, txIndex, iconType or "nil")
 
-		fX, fY, fToken = GetBattlefieldFlagPosition (i)
+                            if iconType == 1 then    -- Ally?
+                                f2.texture:SetColorTexture (0, 0, 1, .3)
+        --                        Nx.prtCtrl ("Blue")
+                            elseif iconType == 2 then    -- Horde?
+                                f2.texture:SetColorTexture (1, 0, 0, .3)
+        --                        Nx.prtCtrl ("Red")
+                            else
+                                f2.texture:SetColorTexture (0, 0, 0, .3)
+                            end
 
-		if fX ~= 0 or fY ~= 0 then
+                            f2.NXType = 2000
+                            f2.NxTip = tip
+                            f2.NXData = f.NXData
 
-			local f = self:GetIconNI()
-			f.texture:SetTexture (fToken)
-			self:ClipFrameZ (f, (fX or 0) * 100, (fY or 0) * 100, 36, 36, 0)
-		end
-	end
+                        end
+                    end
 
-	self.Level = self.Level + 1
+                    f.NxTip = tip
 
-	-- Raid or party icons (AKA group)
+                    -- Sentinax and Broken Shore bosses
+                    if atlasIcon and (Nx.strpos(atlasIcon, 'DemonShip') == 1 or Nx.strpos(atlasIcon, 'DemonInvasion') == 1) then
+                        pX, pY = self:GetWorldPos (self.MapId, pX, pY)
+                        if self.ScaleDraw > 1 then
+                            self:ClipFrameTL (f, pX-16, pY-16, 32 / self.ScaleDraw, 32 / self.ScaleDraw, 0)
+                        else
+                            self:ClipFrameTL (f, pX-16, pY-16, 32, 32, 0)
+                        end
+                        f.texture:SetAtlas(atlasIcon)
+                    else
+                        pX, pY = self:GetWorldPos(self.MapId, pX, pY)
+                        self:ClipFrameWChop(f, pX, pY, 16 * self.ScaleDraw, 16 * self.ScaleDraw)
+                        if atlasIcon then
+                            f.texture:SetAtlas(atlasIcon)
+                        else
+                            f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                            txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
+                            f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                            f.texture:SetVertexColor (1, 1, 1, 1)
+                        end
+                    end
+                end
+            end
+        end
+    end
 
-	local palName, palX, palY = self:UpdateGroup (plX, plY)
+    self.Level = oldLev + 4
 
-	-- Tracking animation
+    -- Update misc icons (herbs, ore, ...)
+    -- Levels:
+    --  +0 quest areas
+    --  +1 quest area target
+    --  +2-3 com players (++3 if alt key)
+    --  +4 quest icons
+    --  +5 ?
 
-	if self.PlyrSpeed == 0 then
+    Nx.HUD:Update (self)
 
---		self.ArrowPulse = self.ArrowPulse + .05
---		if self.ArrowPulse > cnt then
---			self.ArrowPulse = 1
---		end
+    local comTrackName, comTrackX, comTrackY = Nx.Com:UpdateIcons (self)
 
-		self.ArrowScroll = self.ArrowScroll + .01
-		if self.ArrowScroll >= 1 then
-			self.ArrowScroll = 0
-		end
-	end
+    self.Level = self.Level + 2
+    self.Guide:UpdateZonePOIIcons()
+    for a,b in pairs(Nx.ModuleUpdateIcon) do
+        if b ~= "test" then
+            Nx[b]:UpdateIcons(self)
+            self.Level = self.Level + 2
+        end
+    end
 
-	-- Corpse or target tracking
+    self:UpdateIcons (self.KillShow)
 
-	self.TrackDir = false
+    -- Battlefield flags
 
-	self.Guide:OnMapUpdate()	-- For closest target
+    local fX, fY, fToken
+    local flagNum = GetNumBattlefieldFlagPositions()
 
-	if #self.Targets > 0 then
+    for i = 1, flagNum do
 
-		self:UpdateTargets()
-		self:UpdateTracking()
-		self.Level = self.Level + 2
-	end
+        fX, fY, fToken = GetBattlefieldFlagPosition (i)
 
-	self.TrackETA = false
-	local cX, cY
-	if C_Map.GetBestMapForUnit("player") then
-	  local CorpseInfo = C_DeathInfo.GetCorpseMapPosition(C_Map.GetBestMapForUnit("player"))
-	  if CorpseInfo then
-		  cX = CorpseInfo.x or 0
-		  cY = CorpseInfo.y or 0
-	  end
-	end
-	if cX == nil or cY == nil then
-		cX = 0
-		cY = 0
-	end
-	
-	if (cX > 0 or cY > 0) and not inBG then	-- We dead, but not in BG?
+        if fX ~= 0 or fY ~= 0 then
 
-		if Nx.db.profile.Track.ATCorpse then
+            local f = self:GetIconNI()
+            f.texture:SetTexture (fToken)
+            self:ClipFrameZ (f, (fX or 0) * 100, (fY or 0) * 100, 36, 36, 0)
+        end
+    end
 
-			self.TrackName = "Corpse"
+    self.Level = self.Level + 1
 
-			local x, y = self:GetWorldPos (C_Map.GetBestMapForUnit("player"), cX * 100, cY * 100)
-			self:DrawTracking (plX, plY, x, y, "D")
+    -- Raid or party icons (AKA group)
 
-			local f = self:GetIcon (1)
+    local palName, palX, palY = self:UpdateGroup (plX, plY)
 
-			f.NxTip = "Your corpse"
-			f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-			self:ClipFrameZ (f, cX * 100, cY * 100, 16, 16, 0)
-			-- Override clipping (FIX maybe?)
-			f.texture:SetTexCoord (0.56640625, 0.6328125, 0.00390625, 0.0703125)	-- 16x16 grid (.0625 uv size)
+    -- Tracking animation
 
-			self.Level = self.Level + 2
-		end
+    if self.PlyrSpeed == 0 then
 
-	elseif ontaxi and Map.TaxiX then
+--        self.ArrowPulse = self.ArrowPulse + .05
+--        if self.ArrowPulse > cnt then
+--            self.ArrowPulse = 1
+--        end
 
-		if Nx.db.profile.Track.ATTaxi then
+        self.ArrowScroll = self.ArrowScroll + .01
+        if self.ArrowScroll >= 1 then
+            self.ArrowScroll = 0
+        end
+    end
 
-			self.TrackName = Map.TaxiName
-			self.TrackETA = Map.TaxiETA
+    -- Corpse or target tracking
 
-			local x, y = self.TaxiX, self.TaxiY
-			self:DrawTracking (plX, plY, x, y, "F")
+    self.TrackDir = false
 
---			Nx.prt ("taxi %s %s", x, y)
+    self.Guide:OnMapUpdate()    -- For closest target
 
-			local f = self:GetIcon (1)
+    if #self.Targets > 0 then
 
-			f.NxTip = Map.TaxiName
-			f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01")
-			self:ClipFrameByMapType (f, x, y, 16, 16, 0)
+        self:UpdateTargets()
+        self:UpdateTracking()
+        self.Level = self.Level + 2
+    end
 
-			self.Level = self.Level + 2
-		end
-	end
+    self.TrackETA = false
+    local cX, cY
+    if C_Map.GetBestMapForUnit("player") then
+      local CorpseInfo = C_DeathInfo.GetCorpseMapPosition(C_Map.GetBestMapForUnit("player"))
+      if CorpseInfo then
+          cX = CorpseInfo.x or 0
+          cY = CorpseInfo.y or 0
+      end
+    end
+    if cX == nil or cY == nil then
+        cX = 0
+        cY = 0
+    end
 
-	-- Battle ground or manual pal tracking
+    if (cX > 0 or cY > 0) and not inBG then    -- We dead, but not in BG?
 
-	if (palX or comTrackX) and (inBG or next (self.TrackPlyrs)) then
+        if Nx.db.profile.Track.ATCorpse then
 
-		if palX then
+            self.TrackName = "Corpse"
 
-			self.TrackName = palName
-			self:DrawTracking (plX, plY, palX, palY, "B")
-		else
-			self.TrackName = comTrackName
-			self:DrawTracking (plX, plY, comTrackX, comTrackY)
-		end
+            local x, y = self:GetWorldPos (C_Map.GetBestMapForUnit("player"), cX * 100, cY * 100)
+            self:DrawTracking (plX, plY, x, y, "D")
 
-		self.Level = self.Level + 2
-	end
+            local f = self:GetIcon (1)
 
-	-- Set final levels
+            f.NxTip = "Your corpse"
+            f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+            self:ClipFrameZ (f, cX * 100, cY * 100, 16, 16, 0)
+            -- Override clipping (FIX maybe?)
+            f.texture:SetTexCoord (0.56640625, 0.6328125, 0.00390625, 0.0703125)    -- 16x16 grid (.0625 uv size)
 
-	self.TextScFrm:SetFrameLevel (self.Level)
-	self.PlyrFrm:SetFrameLevel (self.Level + 1)
+            self.Level = self.Level + 2
+        end
 
-	self.ToolBar:SetLevels (self.Level + 2)
+    elseif ontaxi and Map.TaxiX then
 
-	self.Level = self.Level + 3
+        if Nx.db.profile.Track.ATTaxi then
 
-	self:MinimapUpdateEnd()		-- Uses 2 levels
+            self.TrackName = Map.TaxiName
+            self.TrackETA = Map.TaxiETA
 
-	self.LocTipFrm:SetFrameLevel (self.Level + 2)
+            local x, y = self.TaxiX, self.TaxiY
+            self:DrawTracking (plX, plY, x, y, "F")
 
-	-- Hide leftovers
+--            Nx.prt ("taxi %s %s", x, y)
 
-	self:HideExtraIcons()
+            local f = self:GetIcon (1)
 
-	-- Scan. Switch maps if needed. Do at end so we dont glitch
+            f.NxTip = Map.TaxiName
+            f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01")
+            self:ClipFrameByMapType (f, x, y, 16, 16, 0)
 
-	if Nx.Tick % self.ScanContinentsMod == 3 then
-		self:ScanContinents()
-	end
+            self.Level = self.Level + 2
+        end
+    end
 
-	if doSetCurZone then		
-		self:SetToCurrentZone()
-	end
-	
-	self.Frm:SetAlpha(self.BackgndAlpha)
+    -- Battle ground or manual pal tracking
 
-	-- Debug
+    if (palX or comTrackX) and (inBG or next (self.TrackPlyrs)) then
+
+        if palX then
+
+            self.TrackName = palName
+            self:DrawTracking (plX, plY, palX, palY, "B")
+        else
+            self.TrackName = comTrackName
+            self:DrawTracking (plX, plY, comTrackX, comTrackY)
+        end
+
+        self.Level = self.Level + 2
+    end
+
+    -- Set final levels
+
+    self.TextScFrm:SetFrameLevel (self.Level)
+    self.PlyrFrm:SetFrameLevel (self.Level + 1)
+
+    self.ToolBar:SetLevels (self.Level + 2)
+
+    self.Level = self.Level + 3
+
+    self:MinimapUpdateEnd()        -- Uses 2 levels
+
+    self.LocTipFrm:SetFrameLevel (self.Level + 2)
+
+    -- Hide leftovers
+
+    self:HideExtraIcons()
+
+    -- Scan. Switch maps if needed. Do at end so we dont glitch
+
+    if Nx.Tick % self.ScanContinentsMod == 3 then
+        self:ScanContinents()
+    end
+
+    if doSetCurZone then
+        self:SetToCurrentZone()
+    end
+
+    self.Frm:SetAlpha(self.BackgndAlpha)
+
+    -- Debug
 --[[
-	Nx.prt ("Map WPos %s ZPos %s WScale %s", self.GetWorldPosCnt or 0, self.GetZonePosCnt or 0, self.GetWorldZoneScaleCnt or 0)
-	self.GetWorldPosCnt = 0
-	self.GetZonePosCnt = 0
-	self.GetWorldZoneScaleCnt = 0
+    Nx.prt ("Map WPos %s ZPos %s WScale %s", self.GetWorldPosCnt or 0, self.GetZonePosCnt or 0, self.GetWorldZoneScaleCnt or 0)
+    self.GetWorldPosCnt = 0
+    self.GetZonePosCnt = 0
+    self.GetWorldZoneScaleCnt = 0
 --]]
 
 end
 
 function Nx.Map:SetInstanceMap (mapId)
-	self.InstMapId = nil
-	if not mapId then
-		return
-	end
-	local Map = Nx.Map
-	local info = Map.InstanceInfo[mapId]
+    self.InstMapId = nil
+    if not mapId then
+        return
+    end
+    local Map = Nx.Map
+    local info = Map.InstanceInfo[mapId]
 
-	if not(info) then
-		Nx.Map:GetInstanceMapTextures(mapId)
-		info=Map.InstanceInfo[mapId]
-	end
+    if not(info) then
+        Nx.Map:GetInstanceMapTextures(mapId)
+        info=Map.InstanceInfo[mapId]
+    end
 
-	local sizex, sizey = 1002, 668
-	if info then
-		self:SetCurrentMap (mapId)
-		self.InstMapId = mapId
-		self.InstMapInfo = info
-		local winfo = Map.MapWorldInfo[mapId]
-		if winfo.BaseMap then
-			winfo = Map.MapWorldInfo[winfo.BaseMap]
-		end
-		local wx = winfo.X
-		local wy = winfo.Y
-		self.InstMapWX1 = wx
-		self.InstMapWY1 = wy
-		self.InstMapWX2 = wx + sizex / 256
-		self.InstMapWY2 = wy + sizey / 256 * #info / 3
-	end
+    local sizex, sizey = 1002, 668
+    if info then
+        self:SetCurrentMap (mapId)
+        self.InstMapId = mapId
+        self.InstMapInfo = info
+        local winfo = Map.MapWorldInfo[mapId]
+        if winfo.BaseMap then
+            winfo = Map.MapWorldInfo[winfo.BaseMap]
+        end
+        local wx = winfo.X
+        local wy = winfo.Y
+        self.InstMapWX1 = wx
+        self.InstMapWY1 = wy
+        self.InstMapWX2 = wx + sizex / 256
+        self.InstMapWY2 = wy + sizey / 256 * #info / 3
+    end
 end
 
 function Nx.Map:GetNumDungeonMapLevels()
-	local maps = { GetNumDungeonMapLevels() }
-	local first = GetNumDungeonMapLevels()
-	if not first then
-		if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
-			return 0,0
-		end
-		return 1, 1
-	end
-	local count = 0
-	for _ in pairs(maps) do 
-		count = count + 1
-	end	
-	return count, 1
+    local maps = { GetNumDungeonMapLevels() }
+    local first = GetNumDungeonMapLevels()
+    if not first then
+        if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
+            return 0,0
+        end
+        return 1, 1
+    end
+    local count = 0
+    for _ in pairs(maps) do
+        count = count + 1
+    end
+    return count, 1
 end
 
 function Nx.Map:GetInstanceMapTextures(mapId)
-	local areaId = mapId
-	if areaId then
-		Nx.Map:SetMapByID(areaId)
-		local mapName = C_Map.GetMapInfo(mapId).name:gsub('%W','')
---		local levels, first = Nx.Map:GetNumDungeonMapLevels()
---		local useTerrainMap = DungeonUsesTerrainMap()
-		Nx.Map.InstanceInfo[mapId] = {}		
-		local fileName = mapName.."\\"..mapName;
-		Nx.Map.InstanceInfo[mapId][4] = 0
-		Nx.Map.InstanceInfo[mapId][5] = -100
-		Nx.Map.InstanceInfo[mapId][6] = fileName
-	end
+    local areaId = mapId
+    if areaId then
+        Nx.Map:SetMapByID(areaId)
+        local mapName = C_Map.GetMapInfo(mapId).name:gsub('%W','')
+--        local levels, first = Nx.Map:GetNumDungeonMapLevels()
+--        local useTerrainMap = DungeonUsesTerrainMap()
+        Nx.Map.InstanceInfo[mapId] = {}
+        local fileName = mapName.."\\"..mapName;
+        Nx.Map.InstanceInfo[mapId][4] = 0
+        Nx.Map.InstanceInfo[mapId][5] = -100
+        Nx.Map.InstanceInfo[mapId][6] = fileName
+    end
 end
 
 --------
@@ -5690,220 +5685,220 @@ end
 -- self = map
 
 function Nx.Map:SwitchRealMap (id)
-	if self:IsInstanceMap (id) then
-		self:SetInstanceMap (id)			-- Turn it on
-		
-		self:GotoCurrentZone()
-		--self:CenterMap (id)
-		--[[local s = 100
-		self.Scale = s
-		self.RealScale = s
-		self.StepTime = 10]]--
-	else
-		self:SetInstanceMap()				-- Turn it off
-	end
+    if self:IsInstanceMap (id) then
+        self:SetInstanceMap (id)            -- Turn it on
 
-	local map = Nx.Map:GetMap (1)
-	map.Guide:UpdateMapIcons()
+        self:GotoCurrentZone()
+        --self:CenterMap (id)
+        --[[local s = 100
+        self.Scale = s
+        self.RealScale = s
+        self.StepTime = 10]]--
+    else
+        self:SetInstanceMap()                -- Turn it off
+    end
+
+    local map = Nx.Map:GetMap (1)
+    map.Guide:UpdateMapIcons()
 end
 --------
 -- Scan the continents for POI data
 
 function Nx.Map:ScanContinents()
 
-	Nx.Map.ScanContinentsMod = 500
+    Nx.Map.ScanContinentsMod = 500
 
-	local oldCont = Nx.Map:GetCurrentMapContinent()
-	if oldCont < 0 then
-		return
-	end
+    local oldCont = Nx.Map:GetCurrentMapContinent()
+    if oldCont < 0 then
+        return
+    end
 
-	--local oldZone = GetCurrentMapZone()
-	local mapLvl = Nx.Map:GetCurrentMapDungeonLevel()
-	local isMicroDungeon = Nx.Map:IsMicroDungeon(Nx.Map:GetCurrentMapAreaID())
+    --local oldZone = GetCurrentMapZone()
+    local mapLvl = Nx.Map:GetCurrentMapDungeonLevel()
+    local isMicroDungeon = Nx.Map:IsMicroDungeon(Nx.Map:GetCurrentMapAreaID())
 
---	Nx.prt ("ScanContinents cont zone, %s %s", oldCont, oldZone)
+--    Nx.prt ("ScanContinents cont zone, %s %s", oldCont, oldZone)
 
-	--
+    --
 
-	--ObjectiveTrackerFrame:UnregisterEvent ("WORLD_MAP_UPDATE")
+    --ObjectiveTrackerFrame:UnregisterEvent ("WORLD_MAP_UPDATE")
 
-	local hideT = {}
-	hideT[0] = true	-- WotLK has 0 index POIs for named locations
-	hideT[6] = not Nx.db.profile.Map.ShowCCity
-	hideT[46] = not Nx.db.profile.Map.ShowCCity
-	hideT[48] = not Nx.db.profile.Map.ShowCCity
-	hideT[41] = not Nx.db.profile.Map.ShowCExtra
-	hideT[5] = not Nx.db.profile.Map.ShowCTown
+    local hideT = {}
+    hideT[0] = true    -- WotLK has 0 index POIs for named locations
+    hideT[6] = not Nx.db.profile.Map.ShowCCity
+    hideT[46] = not Nx.db.profile.Map.ShowCCity
+    hideT[48] = not Nx.db.profile.Map.ShowCCity
+    hideT[41] = not Nx.db.profile.Map.ShowCExtra
+    hideT[5] = not Nx.db.profile.Map.ShowCTown
 
-	for cont = 1, self.ContCnt do
+    for cont = 1, self.ContCnt do
 
-		local poiT = {}
-		self.ContPOIs[cont] = poiT
+        local poiT = {}
+        self.ContPOIs[cont] = poiT
 
-		--SetMapZoom (cont)
-		local mapId = Nx.Map.MapZones[0][cont]
-		
-		local mapId2 = mapId
-		
-		local name, description, txIndex, pX, pY
-		local txX1, txX2, txY1, txY2
-		
-		local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId2);
-		for i, areaPoiID in ipairs(areaPOIs) do
-			-- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (n)
-			local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId2, areaPoiID)
-			name = cPOI.name
-			txIndex = cPOI.textureIndex
-			pX = cPOI.position.x
-			pY = cPOI.position.y
-				
-			if pX and name and not hideT[txIndex] then
+        --SetMapZoom (cont)
+        local mapId = Nx.Map.MapZones[0][cont]
 
-				local poi = {}
-				tinsert (poiT, poi)
-				poi.Name = name
-				poi.Desc = desc
-				poi.TxIndex = txIndex
-				if cPOI.atlasName then 
-					poi.atlasIcon = cPOI.atlasName
-				end
+        local mapId2 = mapId
 
-				local x, y = self:GetWorldPos (mapId, pX * 100, pY * 100)
-				poi.WX = x
-				poi.WY = y
-			end
-		end
-	end
+        local name, description, txIndex, pX, pY
+        local txX1, txX2, txY1, txY2
 
-	--
+        local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId2);
+        for i, areaPoiID in ipairs(areaPOIs) do
+            -- type, name, desc, txIndex, pX, pY = C_WorldMap.GetMapLandmarkInfo (n)
+            local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId2, areaPoiID)
+            name = cPOI.name
+            txIndex = cPOI.textureIndex
+            pX = cPOI.position.x
+            pY = cPOI.position.y
+
+            if pX and name and not hideT[txIndex] then
+
+                local poi = {}
+                tinsert (poiT, poi)
+                poi.Name = name
+                poi.Desc = desc
+                poi.TxIndex = txIndex
+                if cPOI.atlasName then
+                    poi.atlasIcon = cPOI.atlasName
+                end
+
+                local x, y = self:GetWorldPos (mapId, pX * 100, pY * 100)
+                poi.WX = x
+                poi.WY = y
+            end
+        end
+    end
+
+    --
 --[[
-	local members = MAX_PARTY_MEMBERS
-	local unitName = "party"
-	local raid
+    local members = MAX_PARTY_MEMBERS
+    local unitName = "party"
+    local raid
 
-	if IsInRaid() > 0 then
-		members = MAX_RAID_MEMBERS
-		unitName = "raid"
-		raid = true
-	end
+    if IsInRaid() > 0 then
+        members = MAX_RAID_MEMBERS
+        unitName = "raid"
+        raid = true
+    end
 
-	local pals = Nx.Com.PalNames
-	local palName
-	local palDist = 99999999
-	local palX, palY
-	local combatName
-	local combatUnit
-	local combatHealth
-	local combatDist = 99999999
-	local combatX, combatY
+    local pals = Nx.Com.PalNames
+    local palName
+    local palDist = 99999999
+    local palX, palY
+    local combatName
+    local combatUnit
+    local combatHealth
+    local combatDist = 99999999
+    local combatX, combatY
 
-	local palsInfo = Nx.Com.PalsInfo
+    local palsInfo = Nx.Com.PalsInfo
 
-	for i = 1, members do
+    for i = 1, members do
 
-		local unit = unitName .. i
-		local name, unitRealm = UnitName (unit)
+        local unit = unitName .. i
+        local name, unitRealm = UnitName (unit)
 
-		local mapId = self.MapId
+        local mapId = self.MapId
 
-		local pX, pY = Nx.GetPlayerMapPosition (unit)
-		if pX <= 0 and pY <= 0 then
+        local pX, pY = Nx.GetPlayerMapPosition (unit)
+        if pX <= 0 and pY <= 0 then
 
-			local info = palsInfo[name]
-			if info and info.EntryMId == mapId then
-				mapId = info.MId
-				pX = info.X + .00001
-				pY = info.Y
-			end
+            local info = palsInfo[name]
+            if info and info.EntryMId == mapId then
+                mapId = info.MId
+                pX = info.X + .00001
+                pY = info.Y
+            end
 
-		else
-			pX = pX * 100
-			pY = pY * 100
-		end
+        else
+            pX = pX * 100
+            pY = pY * 100
+        end
 
-		if (pX ~= 0 or pY ~= 0) and not UnitIsUnit (unit, "player") then
+        if (pX ~= 0 or pY ~= 0) and not UnitIsUnit (unit, "player") then
 
-			local fullName = unitRealm and (name .. "-" .. unitRealm) or name
+            local fullName = unitRealm and (name .. "-" .. unitRealm) or name
 
-			local wx, wy = self:GetWorldPos (mapId, pX, pY)
+            local wx, wy = self:GetWorldPos (mapId, pX, pY)
 
-		end
-	end
+        end
+    end
 --]]
-	-- Restore
+    -- Restore
 
-	if(isMicroDungeon)then
-		Nx.Map:SetToCurrentZone()		
-	else
-		--SetMapZoom (oldCont, oldZone)
-		--SetDungeonMapLevel (mapLvl)
-	end
+    if(isMicroDungeon)then
+        Nx.Map:SetToCurrentZone()
+    else
+        --SetMapZoom (oldCont, oldZone)
+        --SetDungeonMapLevel (mapLvl)
+    end
 
-	--ObjectiveTrackerFrame:RegisterEvent ("WORLD_MAP_UPDATE")
+    --ObjectiveTrackerFrame:RegisterEvent ("WORLD_MAP_UPDATE")
 end
 
 function Nx.Map:GetAreaPOIs(mapId)
-	local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId);
-	for i, areaPoiID in ipairs(areaPOIs) do
-		local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId, areaPoiID)
-		areaPOIs[i] = cPOI
-	end
-	return areaPOIs
+    local areaPOIs = C_AreaPoiInfo.GetAreaPOIForMap(mapId);
+    for i, areaPoiID in ipairs(areaPOIs) do
+        local cPOI = C_AreaPoiInfo.GetAreaPOIInfo(mapId, areaPoiID)
+        areaPOIs[i] = cPOI
+    end
+    return areaPOIs
 end
 
 --------
 -- Draw the continents POI data
 
 function Nx.Map:DrawContinentsPOIs()
-	
-	if self.ScaleDraw > self.LOpts.NXPOIAtScale then
 
-		if not Nx.db.char.Map.ShowGatherA then
-			return
-		end
-	end
-	
-	if not Nx.db.char.Map.ShowContPois then
-		return
-	end
-	
-	local getCoords = C_Minimap.GetPOITextureCoords
+    if self.ScaleDraw > self.LOpts.NXPOIAtScale then
 
-	for cont = 1, self.ContCnt do
+        if not Nx.db.char.Map.ShowGatherA then
+            return
+        end
+    end
 
-		for k, poi in ipairs (self.ContPOIs[cont]) do
-			local txi = poi.TxIndex
-			local z = txi == 177 and 13 or 3
+    if not Nx.db.char.Map.ShowContPois then
+        return
+    end
 
-			local f = self:GetIcon (z)
+    local getCoords = C_Minimap.GetPOITextureCoords
 
-			if self:ClipFrameByMapType (f, poi.WX, poi.WY, 16, 16, 0) then
+    for cont = 1, self.ContCnt do
 
-				f.NxTip = poi.Name			 --.. poi.TxIndex
+        for k, poi in ipairs (self.ContPOIs[cont]) do
+            local txi = poi.TxIndex
+            local z = txi == 177 and 13 or 3
 
-				-- 1 2
-				-- 4 3
+            local f = self:GetIcon (z)
 
-				local t1x, t1y, t4x, t4y, t2x = f.texture:GetTexCoord()
+            if self:ClipFrameByMapType (f, poi.WX, poi.WY, 16, 16, 0) then
 
-				f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-				local txX1, txX2, txY1, txY2 = getCoords (txi)
---				f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                f.NxTip = poi.Name             --.. poi.TxIndex
 
-				local x = txX1 + .003
-				local y = txY1 + .003
-				local w = txX2 - .003 - x
-				local h = txY2 - .003 - y
-				f.texture:SetTexCoord (x + w * t1x, x + w * t2x,
-							y + h * t1y, y + h * t4y)
+                -- 1 2
+                -- 4 3
 
---				Nx.prtCtrl ("%s %s %s %s %s %s", t1x, t1y, t4x, t4y, t2x, t2y)
-			end
-		end
-	end
+                local t1x, t1y, t4x, t4y, t2x = f.texture:GetTexCoord()
 
-	self.Level = self.Level + 1
+                f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                local txX1, txX2, txY1, txY2 = getCoords (txi)
+--                f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+
+                local x = txX1 + .003
+                local y = txY1 + .003
+                local w = txX2 - .003 - x
+                local h = txY2 - .003 - y
+                f.texture:SetTexCoord (x + w * t1x, x + w * t2x,
+                            y + h * t1y, y + h * t4y)
+
+--                Nx.prtCtrl ("%s %s %s %s %s %s", t1x, t1y, t4x, t4y, t2x, t2y)
+            end
+        end
+    end
+
+    self.Level = self.Level + 1
 end
 
 --------
@@ -5912,283 +5907,283 @@ end
 
 function Nx.Map:UpdateGroup (plX, plY)
 
-	local alt = IsAltKeyDown()
-	local redGlow = abs (GetTime() * 400 % 200 - 100) / 200 + .5
+    local alt = IsAltKeyDown()
+    local redGlow = abs (GetTime() * 400 % 200 - 100) / 200 + .5
 
-	local members = MAX_PARTY_MEMBERS
-	local unitName = "party"
-	local raid
+    local members = MAX_PARTY_MEMBERS
+    local unitName = "party"
+    local raid
 
-	if IsInRaid() then
-		members = MAX_RAID_MEMBERS
-		unitName = "raid"
-		raid = true
-	end
+    if IsInRaid() then
+        members = MAX_RAID_MEMBERS
+        unitName = "raid"
+        raid = true
+    end
 
-	local pals = Nx.Com.PalNames
-	local palName
-	local palDist = 99999999
-	local palX, palY
-	local combatName
-	local combatUnit
-	local combatHealth
-	local combatDist = 99999999
-	local combatX, combatY
+    local pals = Nx.Com.PalNames
+    local palName
+    local palDist = 99999999
+    local palX, palY
+    local combatName
+    local combatUnit
+    local combatHealth
+    local combatDist = 99999999
+    local combatX, combatY
 
-	local palsInfo = Nx.Com.PalsInfo
+    local palsInfo = Nx.Com.PalsInfo
 
-	for i = 1, members do
+    for i = 1, members do
 
-		local unit = unitName .. i
-		local name, unitRealm = UnitName (unit)
+        local unit = unitName .. i
+        local name, unitRealm = UnitName (unit)
 
-		local mapId = self.MapId
-		
-		local pX, pY = Nx.Map.GetPlayerMapPosition (unit)
-		
-		if pX <= 0 and pY <= 0 then
+        local mapId = self.MapId
 
-			local info = palsInfo[name]
-			if info and info.EntryMId == mapId then
-				mapId = info.MId
-				pX = info.X + .00001
-				pY = info.Y
-			end
+        local pX, pY = Nx.Map.GetPlayerMapPosition (unit)
 
-		else
-			pX = pX * 100
-			pY = pY * 100
-			local lvl = max (Nx.Map:GetCurrentMapDungeonLevel(), 1)
-			if Nx.Map:GetCurrentMapAreaID() == 520 then
-				if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
-					lvl = 1
-				else
-					lvl = 2
-				end
-			end
---			pY = pY + (((lvl - 1) * 668) / 256)
-			pY = pY + (lvl - 1) * 100
-		end
-		if (pX ~= 0 or pY ~= 0) and not UnitIsUnit (unit, "player") then
+        if pX <= 0 and pY <= 0 then
 
-			local fullName = unitRealm and #unitRealm > 0 and (name .. "-" .. unitRealm) or name
+            local info = palsInfo[name]
+            if info and info.EntryMId == mapId then
+                mapId = info.MId
+                pX = info.X + .00001
+                pY = info.Y
+            end
 
-			local wx, wy = self:GetWorldPos (mapId, pX, pY)
+        else
+            pX = pX * 100
+            pY = pY * 100
+            local lvl = max (Nx.Map:GetCurrentMapDungeonLevel(), 1)
+            if Nx.Map:GetCurrentMapAreaID() == 520 then
+                if Nx.Map:GetCurrentMapDungeonLevel() == 0 then
+                    lvl = 1
+                else
+                    lvl = 2
+                end
+            end
+--            pY = pY + (((lvl - 1) * 668) / 256)
+            pY = pY + (lvl - 1) * 100
+        end
+        if (pX ~= 0 or pY ~= 0) and not UnitIsUnit (unit, "player") then
 
-			local sz = 16 * self.DotRaidScale
-			if UnitInParty (unit) then
-				sz = 18 * self.DotPartyScale
-			end
+            local fullName = unitRealm and #unitRealm > 0 and (name .. "-" .. unitRealm) or name
 
-			local cls = UnitClass (unit) or ""
-			local inCombat
+            local wx, wy = self:GetWorldPos (mapId, pX, pY)
+
+            local sz = 16 * self.DotRaidScale
+            if UnitInParty (unit) then
+                sz = 18 * self.DotPartyScale
+            end
+
+            local cls = UnitClass (unit) or ""
+            local inCombat
 --PAIDS!
-			inCombat = UnitAffectingCombat (unit)
+            inCombat = UnitAffectingCombat (unit)
 --PAIDE!
-			local h = UnitHealth (unit)
-			if UnitIsDeadOrGhost (unit) then
-				h = 0
-			end
-			local m = UnitHealthMax (unit)
-			local per = min (Nx.Util_NanToZero(h / m), 1)			-- Can overflow?
+            local h = UnitHealth (unit)
+            if UnitIsDeadOrGhost (unit) then
+                h = 0
+            end
+            local m = UnitHealthMax (unit)
+            local per = min (Nx.Util_NanToZero(h / m), 1)            -- Can overflow?
 
-			if per > 0 then
+            if per > 0 then
 
-				if pals[name] ~= nil or self.TrackPlyrs[name] then
+                if pals[name] ~= nil or self.TrackPlyrs[name] then
 
---					Nx.prtCtrl ("Pal %s", name)
+--                    Nx.prtCtrl ("Pal %s", name)
 
-					sz = 20 * self.DotPalScale
+                    sz = 20 * self.DotPalScale
 
-					if self.TrackPlyrs[name] then
-						sz = 25 * self.DotPalScale
-					end
+                    if self.TrackPlyrs[name] then
+                        sz = 25 * self.DotPalScale
+                    end
 
-					local dist = (plX - wx) ^ 2 + (plY - wy) ^ 2
-					if dist < palDist then
-						palName = name
-						palDist = dist
-						palX, palY = wx, wy
+                    local dist = (plX - wx) ^ 2 + (plY - wy) ^ 2
+                    if dist < palDist then
+                        palName = name
+                        palDist = dist
+                        palX, palY = wx, wy
 
---						Nx.prtCtrl ("Pal %s %s", name, dist)
-					end
-				end
+--                        Nx.prtCtrl ("Pal %s %s", name, dist)
+                    end
+                end
 
-				if inCombat then
+                if inCombat then
 
-					local dist = (plX - wx) ^ 2 + (plY - wy) ^ 2
-					if dist < combatDist then
-						combatName = name
-						combatUnit = unit
-						combatHealth = per
-						combatDist = dist
-						combatX, combatY = wx, wy
-					end
-				end
-			end
+                    local dist = (plX - wx) ^ 2 + (plY - wy) ^ 2
+                    if dist < combatDist then
+                        combatName = name
+                        combatUnit = unit
+                        combatHealth = per
+                        combatDist = dist
+                        combatX, combatY = wx, wy
+                    end
+                end
+            end
 
-			local f1 = self:GetIcon (1)
+            local f1 = self:GetIcon (1)
 
-			if self:ClipFrameByMapType (f1, wx, wy, sz, sz, 0) then
+            if self:ClipFrameByMapType (f1, wx, wy, sz, sz, 0) then
 
-				f1.NXType = 1000
-				f1.NXData = unit
-				f1.NXData2 = fullName
+                f1.NXType = 1000
+                f1.NXData = unit
+                f1.NXData2 = fullName
 
-				local inactive
-				for n = 1, MAX_TARGET_DEBUFFS do
-					if UnitDebuff (unit, n) == "Inactive" then
-						inactive = true
-						per = 0
-						break
-					end
-				end
+                local inactive
+                for n = 1, MAX_TARGET_DEBUFFS do
+                    if UnitDebuff (unit, n) == "Inactive" then
+                        inactive = true
+                        per = 0
+                        break
+                    end
+                end
 
-				local txName = "IconPlyrP"
+                local txName = "IconPlyrP"
 
-				if pals[name] == false then
-					txName = "IconPlyrF"
-				elseif pals[name] == true then
-					txName = "IconPlyrG"
-				end
+                if pals[name] == false then
+                    txName = "IconPlyrF"
+                elseif pals[name] == true then
+                    txName = "IconPlyrG"
+                end
 
-				if inCombat then
-					txName = txName.."C"
-				end
+                if inCombat then
+                    txName = txName.."C"
+                end
 
-				f1.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\"..txName)
+                f1.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\"..txName)
 
---				Nx.prt ("#%d %.1f %.1f", i, pX, pY)
+--                Nx.prt ("#%d %.1f %.1f", i, pX, pY)
 
-				-- Show health
+                -- Show health
 
-				local tStr = ""
+                local tStr = ""
 --PAIDS!
-				f = self:GetIconNI (2)
+                f = self:GetIconNI (2)
 
-				if per > .33 then
+                if per > .33 then
 
-					-- Horizontal bar at top left
+                    -- Horizontal bar at top left
 
-					local sc = self.ScaleDraw
-					self:ClipFrameTL (f, wx - 9 / sc, wy - 10 / sc, 16 * per / sc, 1 / sc)
---					self:ClipFrameZTLO (f, pX, pY, 12 * per / self.ScaleDraw, .9 / self.ScaleDraw, -7, -7)
-					f.texture:SetColorTexture (1, 1, 1, 1)
+                    local sc = self.ScaleDraw
+                    self:ClipFrameTL (f, wx - 9 / sc, wy - 10 / sc, 16 * per / sc, 1 / sc)
+--                    self:ClipFrameZTLO (f, pX, pY, 12 * per / self.ScaleDraw, .9 / self.ScaleDraw, -7, -7)
+                    f.texture:SetColorTexture (1, 1, 1, 1)
 
-				else
-					self:ClipFrameByMapType (f, wx, wy, 7, 7, 0)
---					self:ClipFrameZ (f, pX, pY, 7, 7, 0)
+                else
+                    self:ClipFrameByMapType (f, wx, wy, 7, 7, 0)
+--                    self:ClipFrameZ (f, pX, pY, 7, 7, 0)
 
-					if per > 0 then
-						f.texture:SetColorTexture (1, .1, .1, 1 - per * 2)
-					else
-						if inactive then
-							f.texture:SetColorTexture (1, 0, 1, .7)	-- Punk
-						else
-							f.texture:SetColorTexture (0, 0, 0, .5)	-- Dead
-						end
-					end
-				end
+                    if per > 0 then
+                        f.texture:SetColorTexture (1, .1, .1, 1 - per * 2)
+                    else
+                        if inactive then
+                            f.texture:SetColorTexture (1, 0, 1, .7)    -- Punk
+                        else
+                            f.texture:SetColorTexture (0, 0, 0, .5)    -- Dead
+                        end
+                    end
+                end
 
-				-- Show target info
+                -- Show target info
 
-				local unitTarget = unit.."target"
-				local tName = UnitName (unitTarget)
-				local tEnPlayer
+                local unitTarget = unit.."target"
+                local tName = UnitName (unitTarget)
+                local tEnPlayer
 
-				if tName then
+                if tName then
 
-					local tLvl = UnitLevel (unitTarget)
-					local tCls = UnitClass (unitTarget) or ""
-					if tName == tCls then
-						tCls = ""
-					end
+                    local tLvl = UnitLevel (unitTarget)
+                    local tCls = UnitClass (unitTarget) or ""
+                    if tName == tCls then
+                        tCls = ""
+                    end
 
-					local th = UnitHealth (unitTarget)
-					if UnitIsDeadOrGhost (unitTarget) then
-						th = 0
-					end
-					local tm = max (UnitHealthMax (unitTarget), 1)
-					local per = min (Nx.Util_NanToZero(th / tm), 1)
+                    local th = UnitHealth (unitTarget)
+                    if UnitIsDeadOrGhost (unitTarget) then
+                        th = 0
+                    end
+                    local tm = max (UnitHealthMax (unitTarget), 1)
+                    local per = min (Nx.Util_NanToZero(th / tm), 1)
 
---					Nx.prt ("H %d", th)
+--                    Nx.prt ("H %d", th)
 
-					local f = self:GetIconNI (2)
-					local sc = self.ScaleDraw
+                    local f = self:GetIconNI (2)
+                    local sc = self.ScaleDraw
 
-					if UnitIsFriend ("player", unitTarget) then
+                    if UnitIsFriend ("player", unitTarget) then
 
-						-- Horizontal green bar
-						self:ClipFrameTL (f, wx - 9 / sc, wy - 2 / sc, 16 * per / sc, 1 / sc)
-						f.texture:SetColorTexture (0, 1, 0, 1)
+                        -- Horizontal green bar
+                        self:ClipFrameTL (f, wx - 9 / sc, wy - 2 / sc, 16 * per / sc, 1 / sc)
+                        f.texture:SetColorTexture (0, 1, 0, 1)
 
-						tStr = format ("\n|cff80ff80%s %d %s %.f", tName, tLvl, tCls, th)
+                        tStr = format ("\n|cff80ff80%s %d %s %.f", tName, tLvl, tCls, th)
 
-						if not UnitIsPlayer (unitTarget) then	-- NPC?
-							tStr = tStr .. "%"
-						end
-					else
-						self:ClipFrameTL (f, wx - 9 / sc, wy - 9 / sc, 1 / sc, 15 * per / sc)
+                        if not UnitIsPlayer (unitTarget) then    -- NPC?
+                            tStr = tStr .. "%"
+                        end
+                    else
+                        self:ClipFrameTL (f, wx - 9 / sc, wy - 9 / sc, 1 / sc, 15 * per / sc)
 
-						if UnitIsPlayer (unitTarget) then
+                        if UnitIsPlayer (unitTarget) then
 
-							tEnPlayer = true
-							tStr = format ("\n|cffff4040%s %d %s %.f%%", tName, tLvl, tCls, th)
-							f.texture:SetColorTexture (redGlow, .1, 0, 1)
+                            tEnPlayer = true
+                            tStr = format ("\n|cffff4040%s %d %s %.f%%", tName, tLvl, tCls, th)
+                            f.texture:SetColorTexture (redGlow, .1, 0, 1)
 
-						elseif UnitIsEnemy ("player", unitTarget) then
+                        elseif UnitIsEnemy ("player", unitTarget) then
 
-							tStr = format ("\n|cffffff40%s %d %s %.f%%", tName, tLvl, tCls, th)
+                            tStr = format ("\n|cffffff40%s %d %s %.f%%", tName, tLvl, tCls, th)
 
-							if Nx:UnitIsPlusMob (unitTarget) then
-								f.texture:SetColorTexture (1, .4, 1, 1)
-							else
-								f.texture:SetColorTexture (1, 1, 0, 1)
-							end
+                            if Nx:UnitIsPlusMob (unitTarget) then
+                                f.texture:SetColorTexture (1, .4, 1, 1)
+                            else
+                                f.texture:SetColorTexture (1, 1, 0, 1)
+                            end
 
-						else
-							tStr = format ("\n|cffc0c0ff%s %d %s %.f%%", tName, tLvl, tCls, th)
-							f.texture:SetColorTexture (.7, .7, 1, 1)
-						end
-					end
-				end
+                        else
+                            tStr = format ("\n|cffc0c0ff%s %d %s %.f%%", tName, tLvl, tCls, th)
+                            f.texture:SetColorTexture (.7, .7, 1, 1)
+                        end
+                    end
+                end
 --PAIDE!
-				local lvl = UnitLevel (unit)
-				local qStr = Nx.Com:GetPlyrQStr (name)
+                local lvl = UnitLevel (unit)
+                local qStr = Nx.Com:GetPlyrQStr (name)
 
-				if raid then
-					local name, rank, grp = GetRaidRosterInfo (i)
-					cls = cls .. " G" .. grp
-				end
+                if raid then
+                    local name, rank, grp = GetRaidRosterInfo (i)
+                    cls = cls .. " G" .. grp
+                end
 
-				f1.NxTip = format ("%s %d %s %d%%\n(%d,%d) %s %s%s", fullName, lvl, cls, per * 100, pX, pY, inactive and "Inactive" or "", tStr, qStr or "")
+                f1.NxTip = format ("%s %d %s %d%%\n(%d,%d) %s %s%s", fullName, lvl, cls, per * 100, pX, pY, inactive and "Inactive" or "", tStr, qStr or "")
 
---				if alt then
-					-- tStr has \n
---					local s = tEnPlayer and (name .. tStr) or name
---					local txt = self:GetText (s)
---					self:MoveTextToIcon (txt, f1, 15, 1)
---				end
-			end
-		end
-	end
+--                if alt then
+                    -- tStr has \n
+--                    local s = tEnPlayer and (name .. tStr) or name
+--                    local txt = self:GetText (s)
+--                    self:MoveTextToIcon (txt, f1, 15, 1)
+--                end
+            end
+        end
+    end
 
-	self.Level = self.Level + 3
+    self.Level = self.Level + 3
 
-	if palName and Nx.db.profile.Track.ATBGPal then
-		if not combatName or combatDist > palDist then
-			self.TrackPlayer = palName
-			return palName, palX, palY
-		end
-	end
+    if palName and Nx.db.profile.Track.ATBGPal then
+        if not combatName or combatDist > palDist then
+            self.TrackPlayer = palName
+            return palName, palX, palY
+        end
+    end
 
-	if combatName then
+    if combatName then
 
-		if not self.InCombat or combatDist > 35 then
-			self.TrackPlayer = combatName
-			return format ("Combat, %s %d%%", combatName, combatHealth * 100), combatX, combatY
-		end
-	end
+        if not self.InCombat or combatDist > 35 then
+            self.TrackPlayer = combatName
+            return format ("Combat, %s %d%%", combatName, combatHealth * 100), combatX, combatY
+        end
+    end
 end
 
 --------
@@ -6196,72 +6191,72 @@ end
 
 function Nx.Map:UpdatePlyrHistory()
 
-	local Map = Nx.Map			-- Use global map
-	local hist = Map.PlyrHist
+    local Map = Nx.Map            -- Use global map
+    local hist = Map.PlyrHist
 
-	local tm = GetTime()
+    local tm = GetTime()
 
-	local scale = self.BaseScale
-	local usezone = nil
-	
-	local x = hist.LastX - self.MoveLastX
-	local y = hist.LastY - self.MoveLastY
-	
-	if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) and self.CurOpts.NXInstanceMaps then
-		local _x1, _y1 = self:GetZonePos(Nx.Map.UpdateMapID,hist.LastX,hist.LastY)
-		local _x2, _y2 = self:GetZonePos(Nx.Map.UpdateMapID,self.MoveLastX,self.MoveLastY)
-		x = _x1 - _x2
-		y = _y1 - _y2
-		scale = 1
-	end		
-	
-	local moveDist = (x * x + y * y) ^ .5	
-	
-	if moveDist > Nx.db.profile.Map.TrailDist * scale then
+    local scale = self.BaseScale
+    local usezone = nil
 
-		hist.LastX = self.MoveLastX
-		hist.LastY = self.MoveLastY
+    local x = hist.LastX - self.MoveLastX
+    local y = hist.LastY - self.MoveLastY
 
-		hist.Time = tm
+    if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) and self.CurOpts.NXInstanceMaps then
+        local _x1, _y1 = self:GetZonePos(Nx.Map.UpdateMapID,hist.LastX,hist.LastY)
+        local _x2, _y2 = self:GetZonePos(Nx.Map.UpdateMapID,self.MoveLastX,self.MoveLastY)
+        x = _x1 - _x2
+        y = _y1 - _y2
+        scale = 1
+    end
 
-		local next = hist.Next
-		local o = next * 4 - 3
+    local moveDist = (x * x + y * y) ^ .5
 
-		hist[o] = GetTime()
-		hist[o + 1] = self.PlyrX
-		hist[o + 2] = self.PlyrY
-		hist[o + 3] = self.PlyrDir
+    if moveDist > Nx.db.profile.Map.TrailDist * scale then
 
-		if next >= hist.Cnt then
-			next = 0
-		end
+        hist.LastX = self.MoveLastX
+        hist.LastY = self.MoveLastY
 
-		hist.Next = next + 1
-	end
+        hist.Time = tm
 
-	local size = min (max (4 * self.ScaleDraw * self.BaseScale, 3), 25)
-	local fadeTime = Nx.db.profile.Map.TrailTime	
-	for n = 1, hist.Cnt * 4, 4 do
+        local next = hist.Next
+        local o = next * 4 - 3
 
-		local secs = hist[n]
-		local tmdif = tm - secs
+        hist[o] = GetTime()
+        hist[o + 1] = self.PlyrX
+        hist[o + 2] = self.PlyrY
+        hist[o + 3] = self.PlyrDir
 
-		if tmdif < fadeTime then
+        if next >= hist.Cnt then
+            next = 0
+        end
 
-			local x = hist[n + 1]
-			local y = hist[n + 2]
-			local dir = hist[n + 3]
-			
-			local f = self:GetIconNI()
-			
-			if self:ClipFrameByMapType (f, x, y, size, size, dir) then
-				f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconCircleFade")
-				local a = (fadeTime - tmdif) / fadeTime * .9
-				f.texture:SetVertexColor (1, 0, 0, a)												
-			end
+        hist.Next = next + 1
+    end
 
-		end
-	end
+    local size = min (max (4 * self.ScaleDraw * self.BaseScale, 3), 25)
+    local fadeTime = Nx.db.profile.Map.TrailTime
+    for n = 1, hist.Cnt * 4, 4 do
+
+        local secs = hist[n]
+        local tmdif = tm - secs
+
+        if tmdif < fadeTime then
+
+            local x = hist[n + 1]
+            local y = hist[n + 2]
+            local dir = hist[n + 3]
+
+            local f = self:GetIconNI()
+
+            if self:ClipFrameByMapType (f, x, y, size, size, dir) then
+                f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconCircleFade")
+                local a = (fadeTime - tmdif) / fadeTime * .9
+                f.texture:SetVertexColor (1, 0, 0, a)
+            end
+
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -6426,107 +6421,107 @@ end
 --
 function Nx.Map:DrawTracking(srcX, srcY, dstX, dstY, mode, target)
 
-	local x = dstX - srcX
-	local y = dstY - srcY
+    local x = dstX - srcX
+    local y = dstY - srcY
 
-	local dist = (x * x + y * y) ^ .5
-	self.TrackDistYd = dist * 4.575
-	
-	if target then
-		local f = self:GetIcon (1)
-		f.NxTarget = target;
-		target.dist = dist;
+    local dist = (x * x + y * y) ^ .5
+    self.TrackDistYd = dist * 4.575
 
-		local size = 16 * self.IconNavScale
-		self:ClipFrameByMapType (f, dstX, dstY, size, size, 0)
-		
-		if target.TargetDisplayID then
-			SetPortraitTextureFromCreatureDisplayID(f.texture, target.TargetDisplayID)
-		else
-			f.texture:SetTexture (target.TargetTex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
-		end
-	end
+    if target then
+        local f = self:GetIcon (1)
+        f.NxTarget = target;
+        target.dist = dist;
 
-	self.TrackDir = false
+        local size = 16 * self.IconNavScale
+        self:ClipFrameByMapType (f, dstX, dstY, size, size, 0)
 
-	if 1 then
+        if target.TargetDisplayID then
+            SetPortraitTextureFromCreatureDisplayID(f.texture, target.TargetDisplayID)
+        else
+            f.texture:SetTexture (target.TargetTex or "Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconWayTarget")
+        end
+    end
 
-		local dir = math.deg (math.atan2 (y, x)) + 90
+    self.TrackDir = false
 
-		self.TrackDir = dir
+    if 1 then
 
-		local sx = self.ScaleDraw
-		local sy = self.ScaleDraw / 1.5
+        local dir = math.deg (math.atan2 (y, x)) + 90
 
-		x = x * sx
-		y = y * sy
+        self.TrackDir = dir
 
-		-- Offset toward target
---		local off = 1 / sqrt (x * x + y * y)
---		local xo = x * off
---		local yo = y * off
+        local sx = self.ScaleDraw
+        local sy = self.ScaleDraw / 1.5
 
-		local cnt = (x * x + y * y) ^ .5 / 15 / self.IconNavScale
-		if cnt < 5 then
-			cnt = cnt + .5
-		end
-		cnt = min (floor (cnt), 40)
+        x = x * sx
+        y = y * sy
 
-		if cnt >= 1 then
+        -- Offset toward target
+--        local off = 1 / sqrt (x * x + y * y)
+--        local xo = x * off
+--        local yo = y * off
 
-			local dx = x / cnt
-			local dy = y / cnt
+        local cnt = (x * x + y * y) ^ .5 / 15 / self.IconNavScale
+        if cnt < 5 then
+            cnt = cnt + .5
+        end
+        cnt = min (floor (cnt), 40)
 
-			local offset = self.ArrowScroll
-			x = dx * offset
-			y = dy * offset
+        if cnt >= 1 then
 
-			local size = 16 * self.IconNavScale
---			local pulse = floor (self.ArrowPulse)
-			local usedIcon = true
-			local f
+            local dx = x / cnt
+            local dy = y / cnt
 
-			for n = 1, cnt do
+            local offset = self.ArrowScroll
+            x = dx * offset
+            y = dy * offset
 
-				local wx = srcX + x / sx
-				local wy = srcY + y / sy
+            local size = 16 * self.IconNavScale
+--            local pulse = floor (self.ArrowPulse)
+            local usedIcon = true
+            local f
 
---[[			-- Needed if we use an offset
-				if n >= cnt then
-					if sqrt ((wx - srcX) ^ 2 + (wy - plY) ^ 2) > dist then
-						Nx.prt ("Target arrow")
-						break
-					end
-				end
+            for n = 1, cnt do
+
+                local wx = srcX + x / sx
+                local wy = srcY + y / sy
+
+--[[            -- Needed if we use an offset
+                if n >= cnt then
+                    if sqrt ((wx - srcX) ^ 2 + (wy - plY) ^ 2) > dist then
+                        Nx.prt ("Target arrow")
+                        break
+                    end
+                end
 --]]
-				if usedIcon then
-					usedIcon = false
-					f = self:GetIconNI()
-				end
+                if usedIcon then
+                    usedIcon = false
+                    f = self:GetIconNI()
+                end
 
-				if self:ClipFrameByMapType (f, wx, wy, size, size, dir) then
+                if self:ClipFrameByMapType (f, wx, wy, size, size, dir) then
 
-					f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconArrowGrad")
+                    f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\IconArrowGrad")
 
---					local a = n == pulse and .8 or .2
---					f.texture:SetVertexColor (1, 1, 1, a)
+--                    local a = n == pulse and .8 or .2
+--                    f.texture:SetVertexColor (1, 1, 1, a)
 
-					if mode == "B" then
-						f.texture:SetVertexColor (.7, .7, 1, .5)
-					elseif mode == "F" then
-						f.texture:SetVertexColor (1, 1, 0, .9)
-					elseif mode == "D" then
-						f.texture:SetVertexColor (1, 0, 0, 1)
-					end
+                    if mode == "B" then
+                        f.texture:SetVertexColor (.7, .7, 1, .5)
+                    elseif mode == "F" then
+                        f.texture:SetVertexColor (1, 1, 0, .9)
+                    elseif mode == "D" then
+                        f.texture:SetVertexColor (1, 0, 0, 1)
+                    end
 
-					usedIcon = true
-				end
+                    usedIcon = true
+                end
 
-				x = x + dx
-				y = y + dy
-			end
-		end
-	end
+                x = x + dx
+                y = y + dy
+            end
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -6625,27 +6620,27 @@ function Nx.Map:CheckWorldHotspots(wx, wy)
         end
     end
 
-	local quad1 = self.WorldHotspotsCity
-	local quad2 = self.WorldHotspots
+    local quad1 = self.WorldHotspotsCity
+    local quad2 = self.WorldHotspots
 
-	if self.NXCitiesUnder then
-		quad1, quad2 = quad2, quad1
-	end
+    if self.NXCitiesUnder then
+        quad1, quad2 = quad2, quad1
+    end
 
-	if self:CheckWorldHotspotsType (wx, wy, quad1) then
-		return
-	end
+    if self:CheckWorldHotspotsType (wx, wy, quad1) then
+        return
+    end
 
-	if self:CheckWorldHotspotsType (wx, wy, quad2) then
-		return
-	end
+    if self:CheckWorldHotspotsType (wx, wy, quad2) then
+        return
+    end
 
-	self.WorldHotspotTipStr = false
+    self.WorldHotspotTipStr = false
 
---	local tt = GameTooltip
---	if tt:IsOwned (self.Win.Frm) and self.TooltipType == 1 then
---		tt:Hide()
---	end
+--    local tt = GameTooltip
+--    if tt:IsOwned (self.Win.Frm) and self.TooltipType == 1 then
+--        tt:Hide()
+--    end
 end
 
 --------
@@ -6653,57 +6648,57 @@ end
 -- This is very fast. No need to make a quad tree
 
 function Nx.Map:CheckDropdownListVisible()
-	for i = 1, 10 do
-		local _DropdownList = _G["DropDownList" .. i]
-		if _DropdownList and _DropdownList:IsVisible() and _DropdownList:GetFrameStrata() == "FULLSCREEN_DIALOG" then
-			return true
-		end
-	end
-	
-	return false
+    for i = 1, 10 do
+        local _DropdownList = _G["DropDownList" .. i]
+        if _DropdownList and _DropdownList:IsVisible() and _DropdownList:GetFrameStrata() == "FULLSCREEN_DIALOG" then
+            return true
+        end
+    end
+
+    return false
 end
 
 function Nx.Map:CheckWorldHotspotsType (wx, wy, quad)
 
-	for n, spot in ipairs (quad) do
-		if wx >= spot.WX1 and wx <= spot.WX2 and wy >= spot.WY1 and wy <= spot.WY2 then
+    for n, spot in ipairs (quad) do
+        if wx >= spot.WX1 and wx <= spot.WX2 and wy >= spot.WY1 and wy <= spot.WY2 then
 
-			local curId = self:GetCurrentMapId()
+            local curId = self:GetCurrentMapId()
 
-			if spot.MapId ~= curId then
+            if spot.MapId ~= curId then
 
---				Nx.prt ("hotspot %s %s %s %s %s", spot.MapId, spot.WX1, spot.WX2, spot.WY1, spot.WY2)
-				if not Nx.Map:CheckDropdownListVisible() then self:SetCurrentMap (spot.MapId) end		
-			end
-			Nx.Map.MouseIsOverMap = spot.MapId
-			self.WorldHotspotTipStr = spot.NxTipBase .. "\n"
+--                Nx.prt ("hotspot %s %s %s %s %s", spot.MapId, spot.WX1, spot.WX2, spot.WY1, spot.WY2)
+                if not Nx.Map:CheckDropdownListVisible() then self:SetCurrentMap (spot.MapId) end
+            end
+            Nx.Map.MouseIsOverMap = spot.MapId
+            self.WorldHotspotTipStr = spot.NxTipBase .. "\n"
 --[[
-			if false then
+            if false then
 
-				local tt = GameTooltip
-				local owner = self.Win.Frm
+                local tt = GameTooltip
+                local owner = self.Win.Frm
 
-				owner.NXTip = spot.NxTipBase
+                owner.NXTip = spot.NxTipBase
 
-				if not tt:IsVisible() then
+                if not tt:IsVisible() then
 
---					Nx.prt ("hotspot tip")
+--                    Nx.prt ("hotspot tip")
 
-					local tippos = "ANCHOR_TOPLEFT"
+                    local tippos = "ANCHOR_TOPLEFT"
 
-					Nx.TooltipOwner = owner
-					self.TooltipType = 1
+                    Nx.TooltipOwner = owner
+                    self.TooltipType = 1
 
-					tt:SetOwner (owner, tippos, 0, 0)
-					Nx:SetTooltipText (owner.NXTip .. Nx.Map.PlyrNamesTipStr)
+                    tt:SetOwner (owner, tippos, 0, 0)
+                    Nx:SetTooltipText (owner.NXTip .. Nx.Map.PlyrNamesTipStr)
 
-					owner["UpdateTooltip"] = Nx.Map.OnUpdateTooltip
-				end
-			end
+                    owner["UpdateTooltip"] = Nx.Map.OnUpdateTooltip
+                end
+            end
 --]]
-			return true
-		end
-	end
+            return true
+        end
+    end
 end
 
 --------
@@ -6713,12 +6708,12 @@ end
 --[[
 function Nx.Map:OnUpdateTooltip()
 
-	local map = self.NxMap
-	map:BuildPlyrLists()
+    local map = self.NxMap
+    map:BuildPlyrLists()
 
-	Nx:SetTooltipText (self.NXTip .. map.TipStr .. Nx.Map.PlyrNamesTipStr)
+    Nx:SetTooltipText (self.NXTip .. map.TipStr .. Nx.Map.PlyrNamesTipStr)
 
---	Nx.prt ("OnUpdateTooltip %s %s", self.NXTip, map.TipStr)
+--    Nx.prt ("OnUpdateTooltip %s %s", self.NXTip, map.TipStr)
 end
 --]]
 
@@ -6728,47 +6723,47 @@ end
 --[[
 function Nx.Map:MoveWorldHotspots()
 
-	local clip = self.ClipFrameTL
+    local clip = self.ClipFrameTL
 
-	local level = self.Level
-	local alpha = 0
+    local level = self.Level
+    local alpha = 0
 
-	if self.Debug then
-		level = level + 15
-		alpha = self.BackgndAlpha * .5
-	end
+    if self.Debug then
+        level = level + 15
+        alpha = self.BackgndAlpha * .5
+    end
 
-	self.Level = self.Level + 2
+    self.Level = self.Level + 2
 
-	local cont = self.Cont
-	local zone = self.Zone
+    local cont = self.Cont
+    local zone = self.Zone
 
-	local _, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
-	if not zx then
-		return
-	end
+    local _, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
+    if not zx then
+        return
+    end
 
---	Nx.prt ("Map World XY "..basex.." "..basey)
+--    Nx.prt ("Map World XY "..basex.." "..basey)
 
-	local frms = self.WorldHotFrms
+    local frms = self.WorldHotFrms
 
-	frms.UpStart = (frms.UpStart + 1) % 3
+    frms.UpStart = (frms.UpStart + 1) % 3
 
-	for n = frms.UpStart + 1, #frms, 3 do
+    for n = frms.UpStart + 1, #frms, 3 do
 
-		local f = frms[n]
+        local f = frms[n]
 
-		if clip (self, f, f.NXWX, f.NXWY, f.NXW, f.NXH) then
+        if clip (self, f, f.NXWX, f.NXWY, f.NXW, f.NXH) then
 
-			if self.DebugMap then
-				f.texture:SetVertexColor (1, 1, 1, alpha)
-			end
+            if self.DebugMap then
+                f.texture:SetVertexColor (1, 1, 1, alpha)
+            end
 
-			f:SetFrameLevel (level + f.NXLev)
+            f:SetFrameLevel (level + f.NXLev)
 
-			f.NxTip = f.NxTipBase .. self.TipStr .. "~T"
-		end
-	end
+            f.NxTip = f.NxTipBase .. self.TipStr .. "~T"
+        end
+    end
 end
 --]]
 
@@ -6777,13 +6772,13 @@ end
 
 function Nx.Map:SetLevelWorldHotspots()
 --[[
-	local lvl =	self.NXCitiesUnder and -1 or 1
+    local lvl =    self.NXCitiesUnder and -1 or 1
 
-	for _, f in ipairs (self.WorldHotFrms) do
-		if f.NXLev ~= 0 then		-- A city?
-			f.NXLev = lvl
-		end
-	end
+    for _, f in ipairs (self.WorldHotFrms) do
+        if f.NXLev ~= 0 then        -- A city?
+            f.NXLev = lvl
+        end
+    end
 --]]
 end
 
@@ -6792,34 +6787,34 @@ end
 
 function Nx.Map:MoveCurZoneTiles (clear)
 
-	local mapId = self.MapId
-	local wzone = self:GetWorldZone (mapId)
-	if not wzone then
-		wzone = {}
-	end
-	if not clear and
-			(not wzone or wzone.City or (wzone.StartZone and Nx.Map.RMapId == mapId) or
-			self:IsBattleGroundMap (Nx.Map.RMapId)) or self:IsMicroDungeon(Nx.Map.RMapId) then
+    local mapId = self.MapId
+    local wzone = self:GetWorldZone (mapId)
+    if not wzone then
+        wzone = {}
+    end
+    if not clear and
+            (not wzone or wzone.City or (wzone.StartZone and Nx.Map.RMapId == mapId) or
+            self:IsBattleGroundMap (Nx.Map.RMapId)) or self:IsMicroDungeon(Nx.Map.RMapId) then
 
---		Nx.prt ("MoveCurZoneTiles %d", mapId)
-		local alpha = self.BackgndAlpha * (wzone.Alpha or 1)
+--        Nx.prt ("MoveCurZoneTiles %d", mapId)
+        local alpha = self.BackgndAlpha * (wzone.Alpha or 1)
 
-		self:MoveZoneTiles (self.Cont, self.Zone, self.TileFrms, alpha, self.Level)
-		self.Level = self.Level + 1
+        self:MoveZoneTiles (self.Cont, self.Zone, self.TileFrms, alpha, self.Level)
+        self.Level = self.Level + 1
 
-	else
---		Nx.prt ("ClearCurZoneTiles %d", mapId)
-		local frms, frm
+    else
+--        Nx.prt ("ClearCurZoneTiles %d", mapId)
+        local frms, frm
 
-		frms = self.TileFrms
+        frms = self.TileFrms
 
-		for i = 1, 150 do
-			frm = frms[i]
-			if frm then
-				frm:Hide()
-			end
-		end
-	end
+        for i = 1, 150 do
+            frm = frms[i]
+            if frm then
+                frm:Hide()
+            end
+        end
+    end
 end
 
 --------
@@ -6827,145 +6822,145 @@ end
 
 function Nx.Map:HideExtraZoneTiles()
 
-	local frms = self.TileFrms
-	frms[4]:Hide()
-	frms[8]:Hide()
-	frms[9]:Hide()
-	frms[12]:Hide()
+    local frms = self.TileFrms
+    frms[4]:Hide()
+    frms[8]:Hide()
+    frms[9]:Hide()
+    frms[12]:Hide()
 end
 
 --------
 -- Update map zone tiles (4 x 3 or custom TileX x TileY blocks)
 
 function Nx.Map:MoveZoneTiles (cont, zone, frms, alpha, level)
-	local zname, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
-	if not zx then
-		return
-	end
-	-- Nx.prt ("MapZ %f, %f", zx, zy, zone)
+    local zname, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
+    if not zx then
+        return
+    end
+    -- Nx.prt ("MapZ %f, %f", zx, zy, zone)
 
-	local scale = self.ScaleDraw
-	local tilex, tiley
-	if zone == 0 then
-		tilex = self.MapInfo[cont].TileX or 4
-		tiley = self.MapInfo[cont].TileY or 3
-		
-		if self.MapInfo[cont].ZXOff and self.MapInfo[cont].ZYOff then
-			zx = zx + self.MapInfo[cont].ZXOff
-			zy = zy + self.MapInfo[cont].ZYOff
-		end
-		
-		if self.MapInfo[cont].ZWOff and self.MapInfo[cont].ZHOff then
-			zw = zw + self.MapInfo[cont].ZWOff
-			zh = zh + self.MapInfo[cont].ZHOff
-		end
-	else
-		tilex = self.MapWorldInfo[zone].TileX or 4
-		tiley = self.MapWorldInfo[zone].TileY or 3
-		
-		if self.MapWorldInfo[zone].ZXOff and self.MapWorldInfo[zone].ZYOff then
-			zx = zx + self.MapWorldInfo[zone].ZXOff
-			zy = zy + self.MapWorldInfo[zone].ZYOff
-		end
-		
-		if self.MapWorldInfo[zone].ZWOff and self.MapWorldInfo[zone].ZHOff then
-			zw = zw + self.MapWorldInfo[zone].ZWOff
-			zh = zh + self.MapWorldInfo[zone].ZHOff
-		end
-	end
-	
-	--[[if cont == 11 then 
-		zw = zw + (self.DebugMZWOff or 0)
-		zh = zh + (self.DebugMZHOff or 0)
-		zx = zx + (self.DebugMXOff or 0)
-		zy = zy + (self.DebugMYOff or 0)
-	end]]--
-	
-	local clipW = self.MapW
-	local clipH = self.MapH
-	local x = (zx - self.MapPosXDraw) * scale + clipW / 2
-	local y = (zy - self.MapPosYDraw) * scale + clipH / 2
-	local bx = 0
-	local by = 0
-	local bw = zw * (tilex == 15 and 1 or 1024 / 1002) / tilex * scale
-	local bh = zh * (tiley == 10 and 1 or 768 / 668) / tiley * scale
-	
-	if zone > 0 then	
-		local layerIndex = 1;--WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
-		local layers = C_Map.GetMapArtLayers(zone);
-		local layerInfo = layers[layerIndex];
-		local TILE_SIZE_WIDTH = layerInfo.tileWidth;
-		local TILE_SIZE_HEIGHT = layerInfo.tileHeight;
-	end
-	
-	local w, h
-	local texX1, texX2
-	local texY1, texY2
-	local numtiles = tilex * tiley
-	
-	for i = 1, numtiles do
-		
-		local frm = frms[i]
-		if frm then
-			--Nx.prt ("MapZ %f", i)
-			texX1 = 0
-			texX2 = 1
-			texY1 = 0
-			texY2 = 1
+    local scale = self.ScaleDraw
+    local tilex, tiley
+    if zone == 0 then
+        tilex = self.MapInfo[cont].TileX or 4
+        tiley = self.MapInfo[cont].TileY or 3
 
-			local vx0 = bx * bw + x
-			local vx1 = vx0
-			local vx2 = vx0 + bw
+        if self.MapInfo[cont].ZXOff and self.MapInfo[cont].ZYOff then
+            zx = zx + self.MapInfo[cont].ZXOff
+            zy = zy + self.MapInfo[cont].ZYOff
+        end
 
-			if vx1 < 0 then
-				vx1 = 0
-				texX1 = (vx1 - vx0) / bw
-			end
+        if self.MapInfo[cont].ZWOff and self.MapInfo[cont].ZHOff then
+            zw = zw + self.MapInfo[cont].ZWOff
+            zh = zh + self.MapInfo[cont].ZHOff
+        end
+    else
+        tilex = self.MapWorldInfo[zone].TileX or 4
+        tiley = self.MapWorldInfo[zone].TileY or 3
 
-			if vx2 > clipW then
-				vx2 = clipW
-				texX2 = (vx2 - vx0) / bw
-			end
+        if self.MapWorldInfo[zone].ZXOff and self.MapWorldInfo[zone].ZYOff then
+            zx = zx + self.MapWorldInfo[zone].ZXOff
+            zy = zy + self.MapWorldInfo[zone].ZYOff
+        end
 
-			local vy0 = by * bh + y
-			local vy1 = vy0
-			local vy2 = vy0 + bh
+        if self.MapWorldInfo[zone].ZWOff and self.MapWorldInfo[zone].ZHOff then
+            zw = zw + self.MapWorldInfo[zone].ZWOff
+            zh = zh + self.MapWorldInfo[zone].ZHOff
+        end
+    end
 
-			if vy1 < 0 then
-				vy1 = 0
-				texY1 = (vy1 - vy0) / bh
-			end
+    --[[if cont == 11 then
+        zw = zw + (self.DebugMZWOff or 0)
+        zh = zh + (self.DebugMZHOff or 0)
+        zx = zx + (self.DebugMXOff or 0)
+        zy = zy + (self.DebugMYOff or 0)
+    end]]--
 
-			if vy2 > clipH then
-				vy2 = clipH
-				texY2 = (vy2 - vy0) / bh
-			end
+    local clipW = self.MapW
+    local clipH = self.MapH
+    local x = (zx - self.MapPosXDraw) * scale + clipW / 2
+    local y = (zy - self.MapPosYDraw) * scale + clipH / 2
+    local bx = 0
+    local by = 0
+    local bw = zw * (tilex == 15 and 1 or 1024 / 1002) / tilex * scale
+    local bh = zh * (tiley == 10 and 1 or 768 / 668) / tiley * scale
 
-			w = vx2 - vx1
-			h = vy2 - vy1
+    if zone > 0 then
+        local layerIndex = 1;--WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
+        local layers = C_Map.GetMapArtLayers(zone);
+        local layerInfo = layers[layerIndex];
+        local TILE_SIZE_WIDTH = layerInfo.tileWidth;
+        local TILE_SIZE_HEIGHT = layerInfo.tileHeight;
+    end
 
-			if w <= 0 or h <= 0 then
-				frm:Hide()
-			else
-				frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
-				frm:SetWidth (w)
-				frm:SetHeight (h)
-				frm:SetFrameLevel (level)
+    local w, h
+    local texX1, texX2
+    local texY1, texY2
+    local numtiles = tilex * tiley
 
-				frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
-				--frm.texture:SetVertexColor (1, 1, 1, self.BackgndAlpha)
+    for i = 1, numtiles do
 
-				frm:Show()
-			end
-		end
+        local frm = frms[i]
+        if frm then
+            --Nx.prt ("MapZ %f", i)
+            texX1 = 0
+            texX2 = 1
+            texY1 = 0
+            texY2 = 1
 
-		bx = bx + 1
+            local vx0 = bx * bw + x
+            local vx1 = vx0
+            local vx2 = vx0 + bw
 
-		if bx >= tilex then
-			bx = 0
-			by = by + 1
-		end
-	end
+            if vx1 < 0 then
+                vx1 = 0
+                texX1 = (vx1 - vx0) / bw
+            end
+
+            if vx2 > clipW then
+                vx2 = clipW
+                texX2 = (vx2 - vx0) / bw
+            end
+
+            local vy0 = by * bh + y
+            local vy1 = vy0
+            local vy2 = vy0 + bh
+
+            if vy1 < 0 then
+                vy1 = 0
+                texY1 = (vy1 - vy0) / bh
+            end
+
+            if vy2 > clipH then
+                vy2 = clipH
+                texY2 = (vy2 - vy0) / bh
+            end
+
+            w = vx2 - vx1
+            h = vy2 - vy1
+
+            if w <= 0 or h <= 0 then
+                frm:Hide()
+            else
+                frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+                frm:SetWidth (w)
+                frm:SetHeight (h)
+                frm:SetFrameLevel (level)
+
+                frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
+                --frm.texture:SetVertexColor (1, 1, 1, self.BackgndAlpha)
+
+                frm:Show()
+            end
+        end
+
+        bx = bx + 1
+
+        if bx >= tilex then
+            bx = 0
+            by = by + 1
+        end
+    end
 end
 
 --------
@@ -6973,122 +6968,122 @@ end
 
 function Nx.Map:AddOldMap (newMapId)
 
-	if self.MapId == 0 then		-- Happens on startup
-		return
-	end
+    if self.MapId == 0 then        -- Happens on startup
+        return
+    end
 
-	-- Remove any for new zone
+    -- Remove any for new zone
 
-	local off = 1
-	local dup
+    local off = 1
+    local dup
 
-	for n = 1, #self.MapsDrawnOrder do
-		if self.MapsDrawnOrder[off] == newMapId then
-			tremove (self.MapsDrawnOrder, off)
-			dup = true
-		else
-			off = off + 1
-		end
-	end
+    for n = 1, #self.MapsDrawnOrder do
+        if self.MapsDrawnOrder[off] == newMapId then
+            tremove (self.MapsDrawnOrder, off)
+            dup = true
+        else
+            off = off + 1
+        end
+    end
 
-	local drawCnt = Nx.db.profile.Map.ZoneDrawCnt
+    local drawCnt = Nx.db.profile.Map.ZoneDrawCnt
 
-	if not dup then
+    if not dup then
 
---		Nx.prt ("no dup")
+--        Nx.prt ("no dup")
 
-		local extra = #self.MapsDrawnOrder - drawCnt + 2
-		for n = 1, extra do
-			tremove (self.MapsDrawnOrder, 1)
-		end
-	end
+        local extra = #self.MapsDrawnOrder - drawCnt + 2
+        for n = 1, extra do
+            tremove (self.MapsDrawnOrder, 1)
+        end
+    end
 
-	if drawCnt > 1 then
+    if drawCnt > 1 then
 
-		self.MapsDrawnFade[self.MapId] = -1
-		tinsert (self.MapsDrawnOrder, self.MapId)		-- Newest at end
+        self.MapsDrawnFade[self.MapId] = -1
+        tinsert (self.MapsDrawnOrder, self.MapId)        -- Newest at end
 
---		Nx.prt ("Cur map %s", self:GetCurrentMapId())
---		Nx.prtVar ("order", self.MapsDrawnOrder)
-	end
+--        Nx.prt ("Cur map %s", self:GetCurrentMapId())
+--        Nx.prtVar ("order", self.MapsDrawnOrder)
+    end
 end
 
 --------
 -- Caches for overlay optimization (avoid per-frame allocations and API calls)
 local OverlayCache = {
-	layerInfo = {},           -- [mapId] = layerInfo table
-	exploredTextures = {},    -- [mapId] = explored lookup table
-	parsedOverlays = {},      -- [txFolder] = pre-parsed overlay data
-	lastExploredCheck = {},   -- [mapId] = GetTime() of last exploration check
+    layerInfo = {},           -- [mapId] = layerInfo table
+    exploredTextures = {},    -- [mapId] = explored lookup table
+    parsedOverlays = {},      -- [txFolder] = pre-parsed overlay data
+    lastExploredCheck = {},   -- [mapId] = GetTime() of last exploration check
 }
 
 -- Pre-parse overlay string data once (avoids Nx.Split every frame)
 local function GetParsedOverlay(txFolder, txName, whxyStr)
-	local cacheKey = txFolder .. txName
-	local cached = OverlayCache.parsedOverlays[cacheKey]
-	if cached then
-		return cached
-	end
-	
-	local oX, oY, txW, txH, mode = Nx.Split(",", whxyStr)
-	local arTx
-	if string.find(txName, ",") then
-		arTx = {Nx.Split(",", txName)}
-	elseif tonumber(txName) then
-		arTx = {txName}
-	end
-	
-	cached = {
-		oX = tonumber(oX),
-		oY = tonumber(oY),
-		txW = tonumber(txW),
-		txH = tonumber(txH),
-		mode = mode,
-		arTx = arTx,
-		whxyKey = oX..","..oY..","..txW..","..txH,
-	}
-	OverlayCache.parsedOverlays[cacheKey] = cached
-	return cached
+    local cacheKey = txFolder .. txName
+    local cached = OverlayCache.parsedOverlays[cacheKey]
+    if cached then
+        return cached
+    end
+
+    local oX, oY, txW, txH, mode = Nx.Split(",", whxyStr)
+    local arTx
+    if string.find(txName, ",") then
+        arTx = {Nx.Split(",", txName)}
+    elseif tonumber(txName) then
+        arTx = {txName}
+    end
+
+    cached = {
+        oX = tonumber(oX),
+        oY = tonumber(oY),
+        txW = tonumber(txW),
+        txH = tonumber(txH),
+        mode = mode,
+        arTx = arTx,
+        whxyKey = oX..","..oY..","..txW..","..txH,
+    }
+    OverlayCache.parsedOverlays[cacheKey] = cached
+    return cached
 end
 
 -- Get cached layer info (avoids API calls every frame)
 local function GetCachedLayerInfo(mapId)
-	local cached = OverlayCache.layerInfo[mapId]
-	if cached then
-		return cached
-	end
-	
-	local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex()
-	local layers = C_Map.GetMapArtLayers(mapId)
-	if layers and layers[layerIndex] then
-		cached = layers[layerIndex]
-		OverlayCache.layerInfo[mapId] = cached
-	end
-	return cached
+    local cached = OverlayCache.layerInfo[mapId]
+    if cached then
+        return cached
+    end
+
+    local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex()
+    local layers = C_Map.GetMapArtLayers(mapId)
+    if layers and layers[layerIndex] then
+        cached = layers[layerIndex]
+        OverlayCache.layerInfo[mapId] = cached
+    end
+    return cached
 end
 
 -- Get cached explored textures (only refresh every 2 seconds)
 local function GetCachedExploredTextures(mapId, forceRefresh)
-	local now = GetTime()
-	local lastCheck = OverlayCache.lastExploredCheck[mapId] or 0
-	
-	-- Only refresh exploration data every 2 seconds (exploration doesn't change often)
-	if not forceRefresh and (now - lastCheck) < 2 and OverlayCache.exploredTextures[mapId] then
-		return OverlayCache.exploredTextures[mapId]
-	end
-	
-	local exploredWHXY = {}
-	local explored = C_MapExplorationInfo.GetExploredMapTextures(mapId)
-	if explored then
-		for i, ex in ipairs(explored) do
-			local key = ex.offsetX..","..ex.offsetY..","..ex.textureWidth..","..ex.textureHeight
-			exploredWHXY[key] = true
-		end
-	end
-	
-	OverlayCache.exploredTextures[mapId] = exploredWHXY
-	OverlayCache.lastExploredCheck[mapId] = now
-	return exploredWHXY
+    local now = GetTime()
+    local lastCheck = OverlayCache.lastExploredCheck[mapId] or 0
+
+    -- Only refresh exploration data every 2 seconds (exploration doesn't change often)
+    if not forceRefresh and (now - lastCheck) < 2 and OverlayCache.exploredTextures[mapId] then
+        return OverlayCache.exploredTextures[mapId]
+    end
+
+    local exploredWHXY = {}
+    local explored = C_MapExplorationInfo.GetExploredMapTextures(mapId)
+    if explored then
+        for i, ex in ipairs(explored) do
+            local key = ex.offsetX..","..ex.offsetY..","..ex.textureWidth..","..ex.textureHeight
+            exploredWHXY[key] = true
+        end
+    end
+
+    OverlayCache.exploredTextures[mapId] = exploredWHXY
+    OverlayCache.lastExploredCheck[mapId] = now
+    return exploredWHXY
 end
 
 --------
@@ -7096,326 +7091,326 @@ end
 
 function Nx.Map:UpdateZones()
 
-	local mapId = self.MapId
-	local winfo = self.MapWorldInfo[mapId]
-	if not winfo then
-		winfo = {}
-	end
---	Nx.prt ("UpdateZones %s, %s", mapId, winfo.Name or "nil")
+    local mapId = self.MapId
+    local winfo = self.MapWorldInfo[mapId]
+    if not winfo then
+        winfo = {}
+    end
+--    Nx.prt ("UpdateZones %s, %s", mapId, winfo.Name or "nil")
 
-	local s = self.LOpts.NXDetailScale
+    local s = self.LOpts.NXDetailScale
 
-	local freeOrScale = self.ScaleDraw <= s
+    local freeOrScale = self.ScaleDraw <= s
 
-	if freeOrScale or
-		winfo.City or winfo.NoTilemap or 
-		(winfo.StartZone and Nx.Map.UpdateMapID == mapId) or
-		self:IsBattleGroundMap (Nx.Map.UpdateMapID) or
-		self:IsMicroDungeon(Nx.Map.UpdateMapID)  then
+    if freeOrScale or
+        winfo.City or winfo.NoTilemap or
+        (winfo.StartZone and Nx.Map.UpdateMapID == mapId) or
+        self:IsBattleGroundMap (Nx.Map.UpdateMapID) or
+        self:IsMicroDungeon(Nx.Map.UpdateMapID)  then
 
---		if freeOrScale and self.MapIdOld and self.MapIdOld ~= mapId then
---			self:UpdateOverlay (id, .8, true)
---		end
-		-- LOD optimization: when very zoomed out, limit overlay updates
-		local scale = self.ScaleDraw
-		local maxOverlays = scale < 0.1 and 3 or (scale < 0.2 and 6 or #self.MapsDrawnOrder)
-		local overlayCount = 0
-		
-		for n, id in ipairs (self.MapsDrawnOrder) do
-			overlayCount = overlayCount + 1
-			if overlayCount <= maxOverlays then
-				self:UpdateOverlay (id, .8, true)
-			end
-		end
-		if winfo.City then
---			Nx.prt ("city %s", self.Level)
-			self:UpdateMiniFrames()
-			self:MoveCurZoneTiles()
-		else
-			self:MoveCurZoneTiles()
-			self:UpdateOverlay (mapId, 1)
-			self:UpdateMiniFrames()
-		end
+--        if freeOrScale and self.MapIdOld and self.MapIdOld ~= mapId then
+--            self:UpdateOverlay (id, .8, true)
+--        end
+        -- LOD optimization: when very zoomed out, limit overlay updates
+        local scale = self.ScaleDraw
+        local maxOverlays = scale < 0.1 and 3 or (scale < 0.2 and 6 or #self.MapsDrawnOrder)
+        local overlayCount = 0
 
-	else
-		self:MoveCurZoneTiles (true)		-- Clear
-		self:UpdateMiniFrames()
-	end
+        for n, id in ipairs (self.MapsDrawnOrder) do
+            overlayCount = overlayCount + 1
+            if overlayCount <= maxOverlays then
+                self:UpdateOverlay (id, .8, true)
+            end
+        end
+        if winfo.City then
+--            Nx.prt ("city %s", self.Level)
+            self:UpdateMiniFrames()
+            self:MoveCurZoneTiles()
+        else
+            self:MoveCurZoneTiles()
+            self:UpdateOverlay (mapId, 1)
+            self:UpdateMiniFrames()
+        end
+
+    else
+        self:MoveCurZoneTiles (true)        -- Clear
+        self:UpdateMiniFrames()
+    end
 end
 
 function Nx.Map:GetExploredOverlayNum()
 
---	local overlayNum = GetNumMapOverlays()		-- Cartographer makes this return 0
+--    local overlayNum = GetNumMapOverlays()        -- Cartographer makes this return 0
 
-	local overlays = C_MapExplorationInfo.GetExploredMapTextures(C_Map.GetBestMapForUnit('player') or 0)
-	return overlays and #overlays or 0
+    local overlays = C_MapExplorationInfo.GetExploredMapTextures(C_Map.GetBestMapForUnit('player') or 0)
+    return overlays and #overlays or 0
 end
 
 function Nx.Map:UpdateOverlayUnexplored()
 
-	self.CurOverlays = rm
-	local txFolder
+    self.CurOverlays = rm
+    local txFolder
 
-	local mapId = self:GetCurrentMapId(true)	
-	local wzone = self:GetWorldZone (mapId)
-	if wzone then
-		if wzone.City then
-			return
-		end
-		txFolder = wzone.Overlay
-	end
+    local mapId = self:GetCurrentMapId(true)
+    local wzone = self:GetWorldZone (mapId)
+    if wzone then
+        if wzone.City then
+            return
+        end
+        txFolder = wzone.Overlay
+    end
 
-	local overlays
+    local overlays
 
-	if txFolder then
-		overlays = Nx.Map.ZoneOverlays[txFolder]
-	end
+    if txFolder then
+        overlays = Nx.Map.ZoneOverlays[txFolder]
+    end
 
-	if not overlays or not self.ShowUnexplored then		
---		local overlayNum = GetNumMapOverlays()		-- Cartographer makes this return 0
---		Nx.prt ("Overlays %s", overlayNum)
+    if not overlays or not self.ShowUnexplored then
+--        local overlayNum = GetNumMapOverlays()        -- Cartographer makes this return 0
+--        Nx.prt ("Overlays %s", overlayNum)
 
-		local s1, s2, file
-		local ol = {}
+        local s1, s2, file
+        local ol = {}
 
-		if overlays then
-			for txName, whxyStr in pairs (overlays) do	-- Copy overlay table
-				ol[txName] = whxyStr
-			end
-		end
+        if overlays then
+            for txName, whxyStr in pairs (overlays) do    -- Copy overlay table
+                ol[txName] = whxyStr
+            end
+        end
 
-		overlays = ol
+        overlays = ol
 
-		--[[for i = 1, 99 do
+        --[[for i = 1, 99 do
 
-			-- Terrokar has 4 overlays with "" for name
+            -- Terrokar has 4 overlays with "" for name
 
-			local txName, txW, txH, oX, oY = GetMapOverlayInfo (i)
-			if not txName then
-				break
-			end
+            local txName, txW, txH, oX, oY = GetMapOverlayInfo (i)
+            if not txName then
+                break
+            end
 
-			local s1, s2, folder, file = strfind (txName, ".+\\.+\\(.+)\\(.+)")
-			if s1 then
-				txFolder = folder
-				file = strlower (file)
-				overlays[file] = format ("%d,%d,%d,%d", oX - 10000, oY, txW, txH)
+            local s1, s2, folder, file = strfind (txName, ".+\\.+\\(.+)\\(.+)")
+            if s1 then
+                txFolder = folder
+                file = strlower (file)
+                overlays[file] = format ("%d,%d,%d,%d", oX - 10000, oY, txW, txH)
 
---				Nx.prt (" %s %s", txName, overlays[file])
-			end
-		end]]--
+--                Nx.prt (" %s %s", txName, overlays[file])
+            end
+        end]]--
 
-		if not txFolder then		-- Can happen on log in
-			overlays = false
-		end
-	end
+        if not txFolder then        -- Can happen on log in
+            overlays = false
+        end
+    end
 
-	self.CurOverlays = overlays
-	self.CurOverlaysTexFolder = txFolder
+    self.CurOverlays = overlays
+    self.CurOverlaysTexFolder = txFolder
 end
 
 function Nx.Map:TargetOverlayUnexplored()
 
-	local mapId = self:GetCurrentMapId(true)	
-	self:ClearTargets()		-- Will change current mapid
+    local mapId = self:GetCurrentMapId(true)
+    self:ClearTargets()        -- Will change current mapid
 
-	local wzone = self:GetWorldZone (mapId)
-	if wzone and wzone.City then
-		return
-	end
+    local wzone = self:GetWorldZone (mapId)
+    if wzone and wzone.City then
+        return
+    end
 
-	local overlays = self.CurOverlays
+    local overlays = self.CurOverlays
 
-	if not overlays then	-- Not found? New stuff probably
-		return
-	end
+    if not overlays then    -- Not found? New stuff probably
+        return
+    end
 
-	for txName, whxyStr in pairs (overlays) do
+    for txName, whxyStr in pairs (overlays) do
 
-		local oX, oY, txW, txH = Nx.Split (",", whxyStr)
+        local oX, oY, txW, txH = Nx.Split (",", whxyStr)
 
-		oX = tonumber (oX)
-		oY = tonumber (oY)
+        oX = tonumber (oX)
+        oY = tonumber (oY)
 
-		if oX >= 0 then
+        if oX >= 0 then
 
-			txW = tonumber (txW)
-			txH = tonumber (txH)
+            txW = tonumber (txW)
+            txH = tonumber (txH)
 
-			if txW == 512 then
-				txW = txW * .75
-			end
-			if txH == 512 then
-				txH = txH * .75
-			end
+            if txW == 512 then
+                txW = txW * .75
+            end
+            if txH == 512 then
+                txH = txH * .75
+            end
 
---			Nx.prt ("%s %s %s %s %s", txName, oX, oY, txW, txH)
+--            Nx.prt ("%s %s %s %s %s", txName, oX, oY, txW, txH)
 
-			local x, y = (oX + txW / 2) / 1002 * 100, (oY + txH / 2) / 668 * 100
---			local wx, wy = self:GetWorldPos (mapId, (oX) / 1002 * 100, (oY) / 668 * 100)
+            local x, y = (oX + txW / 2) / 1002 * 100, (oY + txH / 2) / 668 * 100
+--            local wx, wy = self:GetWorldPos (mapId, (oX) / 1002 * 100, (oY) / 668 * 100)
 
-			self:SetTargetXY (mapId, x, y, "Explore", true)
-		end
-	end
+            self:SetTargetXY (mapId, x, y, "Explore", true)
+        end
+    end
 end
 
 --------
 -- Update the overlays
 
 function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
-	if(mapId == 0) then mapId = Nx.Map:GetCurrentMapAreaID(); end
-	if (mapId == nil or mapId == -1) then
-		return
-	end
-	local wzone = self:GetWorldZone (mapId)
-	if wzone and (wzone.City or self:IsMicroDungeon(mapId)) then
-		return
-	end
-	local txFolder = wzone and wzone.Overlay or ""	
-	local overlays = Nx.Map.ZoneOverlays[txFolder]
+    if(mapId == 0) then mapId = Nx.Map:GetCurrentMapAreaID(); end
+    if (mapId == nil or mapId == -1) then
+        return
+    end
+    local wzone = self:GetWorldZone (mapId)
+    if wzone and (wzone.City or self:IsMicroDungeon(mapId)) then
+        return
+    end
+    local txFolder = wzone and wzone.Overlay or ""
+    local overlays = Nx.Map.ZoneOverlays[txFolder]
 
-	local unex
-	if not noUnexplored and (not overlays or not self.ShowUnexplored) then
-		if not (wzone and wzone.Explored) then
-			unex = true
-		end
-	end
-	if self:IsBattleGroundMap(Nx.Map.UpdateMapID) then
-		return
-	end
-	if not overlays then	-- Not found? New stuff probably
-		return
-	end
+    local unex
+    if not noUnexplored and (not overlays or not self.ShowUnexplored) then
+        if not (wzone and wzone.Explored) then
+            unex = true
+        end
+    end
+    if self:IsBattleGroundMap(Nx.Map.UpdateMapID) then
+        return
+    end
+    if not overlays then    -- Not found? New stuff probably
+        return
+    end
 
-	local bW, bH
-	local txIndex
-	local txPixelW, txFileW, txPixelH, txFileH
+    local bW, bH
+    local txIndex
+    local txPixelW, txFileW, txPixelH, txFileH
 
-	-- Cache path construction (only changes with mapId/phase)
-	local path
-	if wzone.Phase then
-		path = "Interface\\Worldmap\\" .. txFolder .. "_" .. wzone.Phase .. "\\"
-	else
-		path = "Interface\\Worldmap\\" .. txFolder .. "\\"
-	end
-	local alpha = self.BackgndAlpha
-	local unExAl = self.LOpts.NXUnexploredAlpha
-	local zscale = self:GetWorldZoneScale (mapId) / 10
+    -- Cache path construction (only changes with mapId/phase)
+    local path
+    if wzone.Phase then
+        path = "Interface\\Worldmap\\" .. txFolder .. "_" .. wzone.Phase .. "\\"
+    else
+        path = "Interface\\Worldmap\\" .. txFolder .. "\\"
+    end
+    local alpha = self.BackgndAlpha
+    local unExAl = self.LOpts.NXUnexploredAlpha
+    local zscale = self:GetWorldZoneScale (mapId) / 10
 
-	-- Use cached explored textures (refreshes every 2 seconds instead of every frame)
-	local exploredWHXY = unex and GetCachedExploredTextures(mapId) or {}
-	
-	-- Use cached layer info (avoids API calls every frame)
-	local layerInfo = GetCachedLayerInfo(mapId)
-	if not layerInfo then
-		return
-	end
-	local TILE_SIZE_WIDTH = layerInfo.tileWidth
-	local TILE_SIZE_HEIGHT = layerInfo.tileHeight
-	local layerWidth = layerInfo.layerWidth
-	local layerHeight = layerInfo.layerHeight
-	
-	-- LOD: Skip very small overlays when zoomed out (they're not visible anyway)
-	local scale = self.ScaleDraw
-	local minVisibleSize = scale < 0.15 and 128 or (scale < 0.3 and 64 or 0)
-	
-	for oName, whxyStr in pairs (overlays) do
-		-- Skip dynamic overlays
-		if oName == "dynamic" then
-			return
-		end
-		
-		-- Use pre-parsed overlay data (avoids Nx.Split every frame)
-		local parsed = GetParsedOverlay(txFolder, oName, whxyStr)
-		local oX, oY = parsed.oX, parsed.oY
-		local txW, txH = parsed.txW, parsed.txH
-		local mode = parsed.mode
-		local arTx = parsed.arTx
-		local whxyKey = parsed.whxyKey
-		
-		-- LOD: Skip small overlays when zoomed out
-		if txW < minVisibleSize and txH < minVisibleSize then
-			-- Skip this overlay, too small to see
-		else
-			local lev = 0
-			local brt = bright
-			local txName = path .. oName
-			
-			if exploredWHXY[whxyKey] then
-				oX = oX - 10000
-			end
-			
-			if unex then		-- Dimming unexplored?
-				if oX < 0 then
-					oX = oX + 10000	-- Fix explored x
-				else
-					brt = unExAl		-- Dim
-					lev = 1
-				end
-			end
+    -- Use cached explored textures (refreshes every 2 seconds instead of every frame)
+    local exploredWHXY = unex and GetCachedExploredTextures(mapId) or {}
 
-			bW = ceil (txW / TILE_SIZE_WIDTH)
-			bH = ceil (txH / TILE_SIZE_HEIGHT)
-			txIndex = 1
+    -- Use cached layer info (avoids API calls every frame)
+    local layerInfo = GetCachedLayerInfo(mapId)
+    if not layerInfo then
+        return
+    end
+    local TILE_SIZE_WIDTH = layerInfo.tileWidth
+    local TILE_SIZE_HEIGHT = layerInfo.tileHeight
+    local layerWidth = layerInfo.layerWidth
+    local layerHeight = layerInfo.layerHeight
 
-			for bY = 0, bH - 1 do
+    -- LOD: Skip very small overlays when zoomed out (they're not visible anyway)
+    local scale = self.ScaleDraw
+    local minVisibleSize = scale < 0.15 and 128 or (scale < 0.3 and 64 or 0)
 
-				if bY < bH - 1 then
-					txPixelH = TILE_SIZE_HEIGHT
-					txFileH = TILE_SIZE_HEIGHT
-				else
-					txPixelH = mod (txH, TILE_SIZE_HEIGHT)
-					if txPixelH == 0 then
-						txPixelH = TILE_SIZE_HEIGHT
-					end
-					txFileH = 16
-					while txFileH < txPixelH do
-						txFileH = txFileH * 2
-					end
-				end
+    for oName, whxyStr in pairs (overlays) do
+        -- Skip dynamic overlays
+        if oName == "dynamic" then
+            return
+        end
 
-				for bX = 0, bW - 1 do
+        -- Use pre-parsed overlay data (avoids Nx.Split every frame)
+        local parsed = GetParsedOverlay(txFolder, oName, whxyStr)
+        local oX, oY = parsed.oX, parsed.oY
+        local txW, txH = parsed.txW, parsed.txH
+        local mode = parsed.mode
+        local arTx = parsed.arTx
+        local whxyKey = parsed.whxyKey
 
-					if bX < bW - 1 then
-						txPixelW = TILE_SIZE_WIDTH
-						txFileW = TILE_SIZE_WIDTH
-					else
-						txPixelW = mod (txW, TILE_SIZE_WIDTH)
-						if txPixelW == 0 then
-							txPixelW = TILE_SIZE_WIDTH
-						end
-						txFileW = 16
-						while txFileW < txPixelW do
-							txFileW = txFileW * 2
-						end
-					end
+        -- LOD: Skip small overlays when zoomed out
+        if txW < minVisibleSize and txH < minVisibleSize then
+            -- Skip this overlay, too small to see
+        else
+            local lev = 0
+            local brt = bright
+            local txName = path .. oName
 
-					local f = self:GetIconNI (lev)
+            if exploredWHXY[whxyKey] then
+                oX = oX - 10000
+            end
 
-					local wx, wy = self:GetWorldPos (mapId, (oX + bX * TILE_SIZE_WIDTH) / layerWidth * 100, (oY + bY * TILE_SIZE_HEIGHT) / layerHeight * 100)
+            if unex then        -- Dimming unexplored?
+                if oX < 0 then
+                    oX = oX + 10000    -- Fix explored x
+                else
+                    brt = unExAl        -- Dim
+                    lev = 1
+                end
+            end
 
-					if self:ClipFrameTL (f, wx, wy, txFileW * zscale, txFileH * zscale) then
+            bW = ceil (txW / TILE_SIZE_WIDTH)
+            bH = ceil (txH / TILE_SIZE_HEIGHT)
+            txIndex = 1
 
-						f.texture:SetColorTexture (1, 0, 0, 0) -- fix for background green overlays
+            for bY = 0, bH - 1 do
 
-						if arTx then
-							f.texture:SetTexture (arTx[txIndex])
-						elseif wzone.Phase then -- Classic MOP phases support
-							local phasetex = format("%s%s_%s", txName, txIndex, wzone.Phase)
-							f.texture:SetTexture (phasetex)
-						else 
-							f.texture:SetTexture (mode and txName or txName .. txIndex)
-						end
-						f.texture:SetVertexColor (brt, brt, brt, alpha)
-					end
+                if bY < bH - 1 then
+                    txPixelH = TILE_SIZE_HEIGHT
+                    txFileH = TILE_SIZE_HEIGHT
+                else
+                    txPixelH = mod (txH, TILE_SIZE_HEIGHT)
+                    if txPixelH == 0 then
+                        txPixelH = TILE_SIZE_HEIGHT
+                    end
+                    txFileH = 16
+                    while txFileH < txPixelH do
+                        txFileH = txFileH * 2
+                    end
+                end
 
-					txIndex = txIndex + 1
-				end
-			end
-		end -- end LOD size check
-	end
+                for bX = 0, bW - 1 do
 
-	self.Level = self.Level + 2	
+                    if bX < bW - 1 then
+                        txPixelW = TILE_SIZE_WIDTH
+                        txFileW = TILE_SIZE_WIDTH
+                    else
+                        txPixelW = mod (txW, TILE_SIZE_WIDTH)
+                        if txPixelW == 0 then
+                            txPixelW = TILE_SIZE_WIDTH
+                        end
+                        txFileW = 16
+                        while txFileW < txPixelW do
+                            txFileW = txFileW * 2
+                        end
+                    end
+
+                    local f = self:GetIconNI (lev)
+
+                    local wx, wy = self:GetWorldPos (mapId, (oX + bX * TILE_SIZE_WIDTH) / layerWidth * 100, (oY + bY * TILE_SIZE_HEIGHT) / layerHeight * 100)
+
+                    if self:ClipFrameTL (f, wx, wy, txFileW * zscale, txFileH * zscale) then
+
+                        f.texture:SetColorTexture (1, 0, 0, 0) -- fix for background green overlays
+
+                        if arTx then
+                            f.texture:SetTexture (arTx[txIndex])
+                        elseif wzone.Phase then -- Classic MOP phases support
+                            local phasetex = format("%s%s_%s", txName, txIndex, wzone.Phase)
+                            f.texture:SetTexture (phasetex)
+                        else
+                            f.texture:SetTexture (mode and txName or txName .. txIndex)
+                        end
+                        f.texture:SetVertexColor (brt, brt, brt, alpha)
+                    end
+
+                    txIndex = txIndex + 1
+                end
+            end
+        end -- end LOD size check
+    end
+
+    self.Level = self.Level + 2
 end
 
 --------
@@ -7424,134 +7419,134 @@ end
 function Nx.Map:UpdateMiniFrames()
 
 --[[
-	SaveView (5)
---	local x = GetCVar ("cameraYawD")
---	local y = GetCVar ("cameraPitchD")
---	local isLook = IsMouselooking()
+    SaveView (5)
+--    local x = GetCVar ("cameraYawD")
+--    local y = GetCVar ("cameraPitchD")
+--    local isLook = IsMouselooking()
 
---	Nx.prtCtrl ("Cam %s %s %s", x, y, isLook or "nil")
+--    Nx.prtCtrl ("Cam %s %s %s", x, y, isLook or "nil")
 
-	local vartest = {
-		"cameraYaw",
-		"cameraYawA",
-		"cameraYawB",
-		"cameraYawC",
-		"cameraYawD",
-	}
+    local vartest = {
+        "cameraYaw",
+        "cameraYawA",
+        "cameraYawB",
+        "cameraYawC",
+        "cameraYawD",
+    }
 
-	for k, name in pairs (vartest) do
-		Nx.prtCtrl ("Cam %s %s", name, GetCVar (name) or "nil")
-	end
+    for k, name in pairs (vartest) do
+        Nx.prtCtrl ("Cam %s %s", name, GetCVar (name) or "nil")
+    end
 --]]
 
-	local Map = Nx.Map
-	local mapId = self.MapId
-	local winfo = self.MapWorldInfo[mapId]
+    local Map = Nx.Map
+    local mapId = self.MapId
+    local winfo = self.MapWorldInfo[mapId]
 
-	local opts = self.LOpts
+    local opts = self.LOpts
 
-	local alphaRange = opts.NXDetailScale * .35
-	local s = opts.NXDetailScale - alphaRange
+    local alphaRange = opts.NXDetailScale * .35
+    local s = opts.NXDetailScale - alphaRange
 
---	s = .1
+--    s = .1
 
---	or winfo.City
+--    or winfo.City
 
-	if self.ScaleDraw <= s or opts.NXDetailAlpha <= 0 or self:IsBattleGroundMap (Nx.Map.UpdateMapID) or self:IsMicroDungeon(Nx.Map.UpdateMapID) then
-		self:HideMiniFrames()
-		return
-	end
+    if self.ScaleDraw <= s or opts.NXDetailAlpha <= 0 or self:IsBattleGroundMap (Nx.Map.UpdateMapID) or self:IsMicroDungeon(Nx.Map.UpdateMapID) then
+        self:HideMiniFrames()
+        return
+    end
 
-	local alphaPer = min ((self.ScaleDraw - s) / alphaRange, 1)
---	Nx.prt ("alpha %s", alphaPer)
+    local alphaPer = min ((self.ScaleDraw - s) / alphaRange, 1)
+--    Nx.prt ("alpha %s", alphaPer)
 
---	local cont = self.Cont
---	local zname, zx, zy
+--    local cont = self.Cont
+--    local zname, zx, zy
 
-	local miniT, basex, basey = self:GetMiniInfo (mapId)
---	basex = basex + (self.DebugPXOff or 0)
---	basey = basey + (self.DebugPYOff or 0)
-	
-	if not miniT then
-		self:HideMiniFrames()
-		return
-	end
+    local miniT, basex, basey = self:GetMiniInfo (mapId)
+--    basex = basex + (self.DebugPXOff or 0)
+--    basey = basey + (self.DebugPYOff or 0)
 
-	local level = self.Level
-	self.Level = self.Level + 1
-	
-	local f
-	local frmNum = 1
+    if not miniT then
+        self:HideMiniFrames()
+        return
+    end
 
-	local scale = 256 * 0.416767770014
-	local size = scale
+    local level = self.Level
+    self.Level = self.Level + 1
 
---	size = size - 4
+    local f
+    local frmNum = 1
 
-	local miniX = floor ((self.MapPosXDraw - basex) / scale - self.MiniBlks / 2 + .5)
-	local miniY = floor ((self.MapPosYDraw - basey) / scale - self.MiniBlks / 2 + .5)
+    local scale = 256 * 0.416767770014
+    local size = scale
 
---	Nx.prt ("MiniXY %f %f", miniX, miniY)
+--    size = size - 4
 
-	basex = basex + miniX * scale
-	basey = basey + miniY * scale
+    local miniX = floor ((self.MapPosXDraw - basex) / scale - self.MiniBlks / 2 + .5)
+    local miniY = floor ((self.MapPosYDraw - basey) / scale - self.MiniBlks / 2 + .5)
 
-	local wx
-	local wy = basey
-	local al = self.BackgndAlpha * opts.NXDetailAlpha * alphaPer
+--    Nx.prt ("MiniXY %f %f", miniX, miniY)
 
-	for y = miniY, miniY + self.MiniBlks - 1 do
+    basex = basex + miniX * scale
+    basey = basey + miniY * scale
 
-		wx = basex
+    local wx
+    local wy = basey
+    local al = self.BackgndAlpha * opts.NXDetailAlpha * alphaPer
 
-		for x = miniX, miniX + self.MiniBlks - 1 do
+    for y = miniY, miniY + self.MiniBlks - 1 do
 
-			f = self.MiniFrms[frmNum]
-			--Nx.prt(mapId.." | "..miniT[3] .." "..miniT[4] .." "..miniT[7].." | "..x.." "..y.." | "..(tonumber(format("%02d%02d", (x + miniT[3]), (y + miniT[4])))).." | "..(txname and txname or "nil"));
-			local txname = miniT[1][tonumber(format("%02d%02d", (x + miniT[3]), (y + miniT[4])))] --Map:GetMiniBlkName (miniT, x, y)
-			
-			if txname and txname ~= "" then
+        wx = basex
 
-				if self:ClipFrameTL (f, wx, wy, size, size) then
+        for x = miniX, miniX + self.MiniBlks - 1 do
 
-					f:SetFrameLevel (level)
-					f.texture:SetVertexColor (1, 1, 1, al)
---					txname = "Textures\\Minimap\\"..txname
-					f.texture:SetTexture (txname)
-					
---					Nx.prtD("%s %s, %s", x, y, txname)
+            f = self.MiniFrms[frmNum]
+            --Nx.prt(mapId.." | "..miniT[3] .." "..miniT[4] .." "..miniT[7].." | "..x.." "..y.." | "..(tonumber(format("%02d%02d", (x + miniT[3]), (y + miniT[4])))).." | "..(txname and txname or "nil"));
+            local txname = miniT[1][tonumber(format("%02d%02d", (x + miniT[3]), (y + miniT[4])))] --Map:GetMiniBlkName (miniT, x, y)
+
+            if txname and txname ~= "" then
+
+                if self:ClipFrameTL (f, wx, wy, size, size) then
+
+                    f:SetFrameLevel (level)
+                    f.texture:SetVertexColor (1, 1, 1, al)
+--                    txname = "Textures\\Minimap\\"..txname
+                    f.texture:SetTexture (txname)
+
+--                    Nx.prtD("%s %s, %s", x, y, txname)
 --[[
---					Nx.prtCtrl ("%s %s, %s", x, y, txname)
+--                    Nx.prtCtrl ("%s %s, %s", x, y, txname)
 
-					local r, r2, r3 = f.texture:SetTexture (txname)		--V4 always returns r=1?
-					Nx.prtVar ("mmtex", r)
-					Nx.prtVar ("mmtex2", r2)
-					Nx.prtVar ("mmtex3", r3)
-					if not r then
-						Nx.prtCtrl ("%s %s, %s", x, y, txname)
-					end
+                    local r, r2, r3 = f.texture:SetTexture (txname)        --V4 always returns r=1?
+                    Nx.prtVar ("mmtex", r)
+                    Nx.prtVar ("mmtex2", r2)
+                    Nx.prtVar ("mmtex3", r3)
+                    if not r then
+                        Nx.prtCtrl ("%s %s, %s", x, y, txname)
+                    end
 --]]
-				end
+                end
 
-			else
+            else
 
-				f:Hide()
-			end
+                f:Hide()
+            end
 
-			wx = wx + scale
-			frmNum = frmNum + 1
-		end
+            wx = wx + scale
+            frmNum = frmNum + 1
+        end
 
-		wy = wy + scale
-	end
+        wy = wy + scale
+    end
 
 end
 
 function Nx.Map:HideMiniFrames()
 
-	for n = 1, self.MiniBlks ^ 2 do
-		self.MiniFrms[n]:Hide()
-	end
+    for n = 1, self.MiniBlks ^ 2 do
+        self.MiniFrms[n]:Hide()
+    end
 end
 
 --------
@@ -7560,53 +7555,53 @@ end
 --[[
 Nx.POITypes = { "Mailbox", "Anvil", "Forge", "Moonwell", "Manaloom" }
 Nx.POITex = { "Icons\\INV_Letter_15",
-	"Icons\\Trade_BlackSmithing",
-	"Icons\\INV_Sword_09",
-	"Icons\\Spell_Fire_BlueFlameRing",
-	"Icons\\Spell_Fire_BlueFlameRing"
+    "Icons\\Trade_BlackSmithing",
+    "Icons\\INV_Sword_09",
+    "Icons\\Spell_Fire_BlueFlameRing",
+    "Icons\\Spell_Fire_BlueFlameRing"
 }
 
 function Nx.Map:UpdateNxPOI()
 
-	local Map = Nx.Map
+    local Map = Nx.Map
 
-	for poiType, v in pairs (Nx.POI) do
+    for poiType, v in pairs (Nx.POI) do
 
-		local str = Nx.POI[poiType]
+        local str = Nx.POI[poiType]
 
-		for n = 1, #str, 5 do
+        for n = 1, #str, 5 do
 
-			local zone = strbyte (str, n)
-			if not zone then
-				break
-			end
+            local zone = strbyte (str, n)
+            if not zone then
+                break
+            end
 
-			zone = zone - 35
+            zone = zone - 35
 
-			local x = ((strbyte (str, n + 1) - 35) * 221 + (strbyte (str, n + 2) - 35)) / 100
-			local y = ((strbyte (str, n + 3) - 35) * 221 + (strbyte (str, n + 4) - 35)) / 100
+            local x = ((strbyte (str, n + 1) - 35) * 221 + (strbyte (str, n + 2) - 35)) / 100
+            local y = ((strbyte (str, n + 3) - 35) * 221 + (strbyte (str, n + 4) - 35)) / 100
 
-			if self.Debug then
---				Nx.prt ("POI #%d %d %d %d", (n+4) / 5, zone, x, y)
-			end
+            if self.Debug then
+--                Nx.prt ("POI #%d %d %d %d", (n+4) / 5, zone, x, y)
+            end
 
-			local mapId = Map.NxzoneToMapId[tonumber (zone)]
+            local mapId = Map.NxzoneToMapId[tonumber (zone)]
 
-			if not mapId then
---				Nx.prt ("POI #%d %d %d %d", (n+4) / 5, zone, x, y)
+            if not mapId then
+--                Nx.prt ("POI #%d %d %d %d", (n+4) / 5, zone, x, y)
 
-			else
-				x, y = self:GetWorldPos (mapId, x, y)
+            else
+                x, y = self:GetWorldPos (mapId, x, y)
 
-				local f = self:GetIcon()
+                local f = self:GetIcon()
 
-				if self:ClipFrameW (f, x, y, 16, 16, 0) then
-					f.NxTip = format ("%s", Nx.POITypes[poiType])
-					f.texture:SetTexture ("Interface\\" .. Nx.POITex[poiType])
-				end
-			end
-		end
-	end
+                if self:ClipFrameW (f, x, y, 16, 16, 0) then
+                    f.NxTip = format ("%s", Nx.POITypes[poiType])
+                    f.texture:SetTexture ("Interface\\" .. Nx.POITex[poiType])
+                end
+            end
+        end
+    end
 end
 --]]
 
@@ -7615,17 +7610,17 @@ end
 --[[
 function Nx.Map:DrawZoneRect (mapId, x, y, w, h, tip)
 
-	mapId = mapId or self.MapId
+    mapId = mapId or self.MapId
 
-	local wx, wy = self:GetWorldPos (mapId, x, y)
-	local scale = self:GetWorldZoneScale (mapId) / 10.02
+    local wx, wy = self:GetWorldPos (mapId, x, y)
+    local scale = self:GetWorldZoneScale (mapId) / 10.02
 
-	local f = map:GetIcon()
+    local f = map:GetIcon()
 
-	if self:ClipFrameTL (f, wx, wy, w * scale, h * scale) then
-		f.NxTip = tip
-		f.texture:SetTexture (r, g, b, .5)
-	end
+    if self:ClipFrameTL (f, wx, wy, w * scale, h * scale) then
+        f.NxTip = tip
+        f.texture:SetTexture (r, g, b, .5)
+    end
 end
 --]]
 
@@ -7635,8 +7630,8 @@ end
 
 function Nx.Map:ClipFrameZ (frm, x, y, w, h, dir)
 
-	x, y = self:GetWorldPos (self.MapId, x, y)
-	return self:ClipFrameByMapType (frm, x, y, w, h, dir)
+    x, y = self:GetWorldPos (self.MapId, x, y)
+    return self:ClipFrameByMapType (frm, x, y, w, h, dir)
 end
 
 --------
@@ -7645,8 +7640,8 @@ end
 
 function Nx.Map:ClipFrameZTL (frm, x, y, w, h)
 
-	x, y = self:GetWorldPos (self.MapId, x, y)
-	return self:ClipFrameTL (frm, x, y, w, h)
+    x, y = self:GetWorldPos (self.MapId, x, y)
+    return self:ClipFrameTL (frm, x, y, w, h)
 end
 
 --------
@@ -7655,138 +7650,138 @@ end
 
 function Nx.Map:ClipFrameZTLO (frm, x, y, w, h, xo, yo)
 
-	x, y = self:GetWorldPos (self.MapId, x, y)
-	return self:ClipFrameTL (frm, x + xo / self.ScaleDraw, y + yo / self.ScaleDraw, w, h)
+    x, y = self:GetWorldPos (self.MapId, x, y)
+    return self:ClipFrameTL (frm, x + xo / self.ScaleDraw, y + yo / self.ScaleDraw, w, h)
 end
 
 
-function Nx.Map:ClipFrameByMapType (frm, bx, by, w, h, dir)	
-	if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
-		return self:ClipFrameMF (frm, bx, by, w, h, dir)
-	else
-		return self:ClipFrameW (frm, bx, by, w, h, dir)
-	end
+function Nx.Map:ClipFrameByMapType (frm, bx, by, w, h, dir)
+    if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
+        return self:ClipFrameMF (frm, bx, by, w, h, dir)
+    else
+        return self:ClipFrameW (frm, bx, by, w, h, dir)
+    end
 end
 
 --------
 -- Clip a frame to the map and set position, size and texture coords
 -- XY is center. Width and height are not scaled
 
-function Nx.Map:ClipFrameW (frm, bx, by, w, h, dir)	
-	local scale = self.ScaleDraw
+function Nx.Map:ClipFrameW (frm, bx, by, w, h, dir)
+    local scale = self.ScaleDraw
 
-	-- Calc x
+    -- Calc x
 
-	local bw = w
-	local clipW = self.MapW
-	local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local bw = w
+    local clipW = self.MapW
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
 
-	local texX1 = 0
-	local texX2 = 1
+    local texX1 = 0
+    local texX2 = 1
 
-	local vx0 = x - bw * .5		-- Center frame at bx
-	local vx1 = vx0
-	local vx2 = vx0 + bw
+    local vx0 = x - bw * .5        -- Center frame at bx
+    local vx1 = vx0
+    local vx2 = vx0 + bw
 
-	if vx1 < 0 then
-		vx1 = 0
-		texX1 = (vx1 - vx0) / bw
-	end
+    if vx1 < 0 then
+        vx1 = 0
+        texX1 = (vx1 - vx0) / bw
+    end
 
-	if vx2 > clipW then
-		vx2 = clipW
-		texX2 = (vx2 - vx0) / bw
-	end
+    if vx2 > clipW then
+        vx2 = clipW
+        texX2 = (vx2 - vx0) / bw
+    end
 
-	w = vx2 - vx1
+    w = vx2 - vx1
 
-	if w < .3 then
+    if w < .3 then
 
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	-- Calc y
+    -- Calc y
 
-	local bh = h
-	local clipH = self.MapH
-	local y = (by - self.MapPosYDraw) * scale + clipH * .5
+    local bh = h
+    local clipH = self.MapH
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
 
-	local texY1 = 0
-	local texY2 = 1
+    local texY1 = 0
+    local texY2 = 1
 
-	local vy0 = y - bh * .5		-- Center frame at by
-	local vy1 = vy0
-	local vy2 = vy0 + bh
+    local vy0 = y - bh * .5        -- Center frame at by
+    local vy1 = vy0
+    local vy2 = vy0 + bh
 
-	if vy1 < 0 then
-		vy1 = 0
-		texY1 = (vy1 - vy0) / bh
-	end
+    if vy1 < 0 then
+        vy1 = 0
+        texY1 = (vy1 - vy0) / bh
+    end
 
-	if vy2 > clipH then
-		vy2 = clipH
-		texY2 = (vy2 - vy0) / bh
-	end
+    if vy2 > clipH then
+        vy2 = clipH
+        texY2 = (vy2 - vy0) / bh
+    end
 
-	h = vy2 - vy1
+    h = vy2 - vy1
 
-	if h < .3 then
+    if h < .3 then
 
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	-- Set frame
+    -- Set frame
 
-	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
-	frm:SetWidth (w)
-	frm:SetHeight (h)
+    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
-	if dir == 0 then
+    if dir == 0 then
 
-		frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
+        frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
 
-	else
-		-- 13 UV order
-		-- 24
-		local t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y
+    else
+        -- 13 UV order
+        -- 24
+        local t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y
 
-		-- Make UV range -.5 to .5
-		texX1 = texX1 - .5
-		texX2 = texX2 - .5
-		texY1 = texY1 - .5
-		texY2 = texY2 - .5
+        -- Make UV range -.5 to .5
+        texX1 = texX1 - .5
+        texX2 = texX2 - .5
+        texY1 = texY1 - .5
+        texY2 = texY2 - .5
 
-		local co = cos (dir)
-		local si = sin (dir)
-		t1x = texX1 * co + texY1 * si + .5
-		t1y = texX1 * -si + texY1 * co + .5
-		t2x = texX1 * co + texY2 * si + .5
-		t2y = texX1 * -si + texY2 * co + .5
-		t3x = texX2 * co + texY1 * si + .5
-		t3y = texX2 * -si + texY1 * co + .5
-		t4x = texX2 * co + texY2 * si + .5
-		t4y = texX2 * -si + texY2 * co + .5
-		frm.texture:SetTexCoord (t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y)
+        local co = cos (dir)
+        local si = sin (dir)
+        t1x = texX1 * co + texY1 * si + .5
+        t1y = texX1 * -si + texY1 * co + .5
+        t2x = texX1 * co + texY2 * si + .5
+        t2y = texX1 * -si + texY2 * co + .5
+        t3x = texX2 * co + texY1 * si + .5
+        t3y = texX2 * -si + texY1 * co + .5
+        t4x = texX2 * co + texY2 * si + .5
+        t4y = texX2 * -si + texY2 * co + .5
+        frm.texture:SetTexCoord (t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y)
 
---		Nx.prt (" T1 "..t1x.." "..t1y)
---		Nx.prt (" T2 "..t2x.." "..t2y)
-	end
-	
-	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias moved to icon creation for performance
-	
-	frm:Show()
+--        Nx.prt (" T1 "..t1x.." "..t1y)
+--        Nx.prt (" T2 "..t2x.." "..t2y)
+    end
 
-	return true
+    -- Note: SetSnapToPixelGrid/SetTexelSnappingBias moved to icon creation for performance
+
+    frm:Show()
+
+    return true
 end
 
 --------
@@ -7795,84 +7790,84 @@ end
 
 function Nx.Map:ClipFrameWChop (frm, bx, by, w, h)
 
-	local bw = w
-	local bh = h
-	local clipW = self.MapW
-	local clipH = self.MapH
+    local bw = w
+    local bh = h
+    local clipW = self.MapW
+    local clipH = self.MapH
 
-	local scale = self.ScaleDraw
-	local x = (bx - self.MapPosXDraw) * scale + clipW / 2
-	local y = (by - self.MapPosYDraw) * scale + clipH / 2
+    local scale = self.ScaleDraw
+    local x = (bx - self.MapPosXDraw) * scale + clipW / 2
+    local y = (by - self.MapPosYDraw) * scale + clipH / 2
 
-	local texX1 = 0
-	local texX2 = 1
+    local texX1 = 0
+    local texX2 = 1
 
-	-- Center frame at bx, by
+    -- Center frame at bx, by
 
-	local vx0 = x - bw * .5
-	local vx1 = vx0
-	local vx2 = vx0 + bw
+    local vx0 = x - bw * .5
+    local vx1 = vx0
+    local vx2 = vx0 + bw
 
-	if vx1 < 0 then
-		vx1 = 0
-		texX1 = (vx1 - vx0) / bw
-	end
+    if vx1 < 0 then
+        vx1 = 0
+        texX1 = (vx1 - vx0) / bw
+    end
 
-	if vx2 > clipW then
-		vx2 = clipW
-		texX2 = (vx2 - vx0) / bw
-	end
+    if vx2 > clipW then
+        vx2 = clipW
+        texX2 = (vx2 - vx0) / bw
+    end
 
-	w = vx2 - vx1
+    w = vx2 - vx1
 
-	if w < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if w < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	local texY1 = 0
-	local texY2 = 1
+    local texY1 = 0
+    local texY2 = 1
 
-	local vy0 = y - bh * .5
-	local vy1 = vy0
-	local vy2 = vy0 + bh
+    local vy0 = y - bh * .5
+    local vy1 = vy0
+    local vy2 = vy0 + bh
 
-	if vy1 < 0 then
-		vy1 = 0
-		texY1 = (vy1 - vy0) / bh
-	end
+    if vy1 < 0 then
+        vy1 = 0
+        texY1 = (vy1 - vy0) / bh
+    end
 
-	if vy2 > clipH then
-		vy2 = clipH
-		texY2 = (vy2 - vy0) / bh
-	end
+    if vy2 > clipH then
+        vy2 = clipH
+        texY2 = (vy2 - vy0) / bh
+    end
 
-	h = vy2 - vy1
+    h = vy2 - vy1
 
-	if h < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if h < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
-	frm:SetWidth (w)
-	frm:SetHeight (h)
+    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
-	frm.texture:SetTexCoord (texX1 * .9 + .05, texX2 * .9 + .05, texY1 * .9 + .05, texY2 * .9 + .05)
-	
-	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
-	
-	frm:Show()
+    frm.texture:SetTexCoord (texX1 * .9 + .05, texX2 * .9 + .05, texY1 * .9 + .05, texY2 * .9 + .05)
 
-	return true
+    -- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
+
+    frm:Show()
+
+    return true
 end
 
 --------
@@ -7881,61 +7876,61 @@ end
 
 function Nx.Map:ClipMMW (frm, bx, by, w, h)
 
-	local scale = self.ScaleDraw
+    local scale = self.ScaleDraw
 
-	-- Each world unit maps to a pixel, so w * scale == size in pixels
+    -- Each world unit maps to a pixel, so w * scale == size in pixels
 
-	local bw = w * scale
-	local bh = h * scale
-	local clipW = self.MapW
-	local clipH = self.MapH
-	local x = (bx - self.MapPosXDraw) * scale + clipW * .5
-	local y = (by - self.MapPosYDraw) * scale + clipH * .5
+    local bw = w * scale
+    local bh = h * scale
+    local clipW = self.MapW
+    local clipH = self.MapH
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
 
-	local vx0 = x - bw * .5
-	local vx1 = vx0
-	local vx2 = vx0 + bw
+    local vx0 = x - bw * .5
+    local vx1 = vx0
+    local vx2 = vx0 + bw
 
-	if vx1 < 0 or vx2 > clipW then
-		return false
-	end
+    if vx1 < 0 or vx2 > clipW then
+        return false
+    end
 
-	w = vx2 - vx1
+    w = vx2 - vx1
 
-	if w <= 0 then
-		return false
-	end
+    if w <= 0 then
+        return false
+    end
 
-	local vy0 = y - bh * .5
-	local vy1 = vy0
-	local vy2 = vy0 + bh
+    local vy0 = y - bh * .5
+    local vy1 = vy0
+    local vy2 = vy0 + bh
 
-	if vy1 < 0 or vy2 > clipH then
-		return false
-	end
+    if vy1 < 0 or vy2 > clipH then
+        return false
+    end
 
-	h = vy2 - vy1
+    h = vy2 - vy1
 
-	if h <= 0 then
-		return false
-	end
+    if h <= 0 then
+        return false
+    end
 
---	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
---	frm:SetWidth (w)
---	frm:SetHeight (h)
+--    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+--    frm:SetWidth (w)
+--    frm:SetHeight (h)
 
-	local sc = w / 140
-	self.MMFScale = sc
+    local sc = w / 140
+    self.MMFScale = sc
 
-	local isc = Nx.db.profile.MiniMap.IScale
-	self:MinimapSetScale (sc, isc)
+    local isc = Nx.db.profile.MiniMap.IScale
+    self:MinimapSetScale (sc, isc)
 
---	frm:SetScale (sc)
-	frm:SetPoint ("TOPLEFT", self.Frm, "TOPLEFT", vx1 / isc, (-vy1 - self.TitleH) / isc)
+--    frm:SetScale (sc)
+    frm:SetPoint ("TOPLEFT", self.Frm, "TOPLEFT", vx1 / isc, (-vy1 - self.TitleH) / isc)
 
-	frm:Show()
+    frm:Show()
 
-	return true
+    return true
 end
 
 -------------------------------------------------------------------------------
@@ -7956,104 +7951,104 @@ end
 --
 function Nx.Map:ClipFrameTL (frm, bx, by, w, h)
 
-	-- Each world unit maps to a pixel, so w * scale == size in pixels
+    -- Each world unit maps to a pixel, so w * scale == size in pixels
 
-	local scale = self.ScaleDraw
+    local scale = self.ScaleDraw
 
-	-- Calc x
+    -- Calc x
 
-	local bw = w * scale
-	local clipW = self.MapW
-	local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local bw = w * scale
+    local clipW = self.MapW
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
 
-	local texX1 = 0
-	local texX2 = 1
+    local texX1 = 0
+    local texX2 = 1
 
-	local vx1 = x
-	local vx2 = x + bw
+    local vx1 = x
+    local vx2 = x + bw
 
-	if vx1 < 0 then
-		vx1 = 0
-		texX1 = (vx1 - x) / bw
-	end
+    if vx1 < 0 then
+        vx1 = 0
+        texX1 = (vx1 - x) / bw
+    end
 
-	if vx2 > clipW then
-		vx2 = clipW
-		texX2 = (vx2 - x) / bw
-	end
+    if vx2 > clipW then
+        vx2 = clipW
+        texX2 = (vx2 - x) / bw
+    end
 
-	w = vx2 - vx1
+    w = vx2 - vx1
 
-	if w < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if w < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	-- Calc y
+    -- Calc y
 
-	local bh = h * scale
-	local clipH = self.MapH
-	local y = (by - self.MapPosYDraw) * scale + clipH * .5
+    local bh = h * scale
+    local clipH = self.MapH
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
 
-	local texY1 = 0
-	local texY2 = 1
+    local texY1 = 0
+    local texY2 = 1
 
-	local vy1 = y
-	local vy2 = y + bh
+    local vy1 = y
+    local vy2 = y + bh
 
-	if vy1 < 0 then
-		vy1 = 0
-		texY1 = (vy1 - y) / bh
-	end
+    if vy1 < 0 then
+        vy1 = 0
+        texY1 = (vy1 - y) / bh
+    end
 
-	if vy2 > clipH then
-		vy2 = clipH
-		texY2 = (vy2 - y) / bh
-	end
+    if vy2 > clipH then
+        vy2 = clipH
+        texY2 = (vy2 - y) / bh
+    end
 
-	h = vy2 - vy1
+    h = vy2 - vy1
 
-	if h < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if h < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
 
-	if w <= 1.2 then		-- Adjust so we get a clean line
-		w = self.Size1
-		if w <= 0 then
-			frm:SetWidth (.001)
-			return
-		end
-	end
+    if w <= 1.2 then        -- Adjust so we get a clean line
+        w = self.Size1
+        if w <= 0 then
+            frm:SetWidth (.001)
+            return
+        end
+    end
 
-	if h <= 1.2 then
-		h = self.Size1
-		if h <= 0 then
-			frm:SetWidth (.001)
-			return
-		end
-	end
+    if h <= 1.2 then
+        h = self.Size1
+        if h <= 0 then
+            frm:SetWidth (.001)
+            return
+        end
+    end
 
-	frm:SetWidth (w)
-	frm:SetHeight (h)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
-	frm.texture:SetTexCoord (Nx.Util_NanToZero(texX1), Nx.Util_NanToZero(texX2), Nx.Util_NanToZero(texY1), Nx.Util_NanToZero(texY2))
-	
-	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
-	
-	frm:Show()
+    frm.texture:SetTexCoord (Nx.Util_NanToZero(texX1), Nx.Util_NanToZero(texX2), Nx.Util_NanToZero(texY1), Nx.Util_NanToZero(texY2))
 
-	return true
+    -- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
+
+    frm:Show()
+
+    return true
 end
 
 ---
@@ -8068,91 +8063,91 @@ end
 -- @return     visible, x, y - visibility flag and final screen coordinates
 --
 function Nx.Map:ClipFrameMF (frm, bx, by, w, h, dir)
-	local x, y = Nx.Map:GetZonePos(self.MapId, bx, by)	
-	
-	local bw = w
-	local clipW = self.MapW	
+    local x, y = Nx.Map:GetZonePos(self.MapId, bx, by)
 
-	local texX1 = 0
-	local texX2 = 1
+    local bw = w
+    local clipW = self.MapW
 
-	local vx0 = x - bw * .5
-	local vx1 = vx0
-	local vx2 = vx0 + bw
+    local texX1 = 0
+    local texX2 = 1
 
-	if vx1 < 0 then
-		vx1 = 0
-		texX1 = (vx1 - vx0) / bw
-	end
+    local vx0 = x - bw * .5
+    local vx1 = vx0
+    local vx2 = vx0 + bw
 
-	if vx2 > clipW then
-		vx2 = clipW
-		texX2 = (vx2 - vx0) / bw
-	end
+    if vx1 < 0 then
+        vx1 = 0
+        texX1 = (vx1 - vx0) / bw
+    end
 
-	w = vx2 - vx1
-	
-	local bh = h
-	local clipH = self.MapH	
-	
-	local texY1 = 0
-	local texY2 = 1
+    if vx2 > clipW then
+        vx2 = clipW
+        texX2 = (vx2 - vx0) / bw
+    end
 
-	local vy0 = y - bh * .5		-- Center frame at by
-	local vy1 = vy0
-	local vy2 = vy0 + bh
+    w = vx2 - vx1
 
-	if vy1 < 0 then
-		vy1 = 0
-		texY1 = (vy1 - vy0) / bh
-	end
+    local bh = h
+    local clipH = self.MapH
 
-	if vy2 > clipH then
-		vy2 = clipH
-		texY2 = (vy2 - vy0) / bh
-	end
+    local texY1 = 0
+    local texY2 = 1
 
-	h = vy2 - vy1
-	
-	frm:SetPoint("TOPLEFT", x / 100 * self.MapW - 8, -y  / 100 * self.MapH + 8)
-	
-	frm:SetWidth (Nx.db.profile.Map.InstanceScale)
-	frm:SetHeight (Nx.db.profile.Map.InstanceScale)
-	
-	frm.texture:SetTexCoord (0, 1, 0, 1)
+    local vy0 = y - bh * .5        -- Center frame at by
+    local vy1 = vy0
+    local vy2 = vy0 + bh
 
-	if dir == 0 then
-		if texX1 <= 1 and texX1 >= 0 and texX2 <= 1 and texX2 >= 0 and texY1 <= 1 and texY1 >= 0 and texY2 <= 1 and texY2 >= 0 then
-			frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
-		end
-	else
-		local t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y
-		texX1 = texX1 - .5
-		texX2 = texX2 - .5
-		texY1 = texY1 - .5
-		texY2 = texY2 - .5
+    if vy1 < 0 then
+        vy1 = 0
+        texY1 = (vy1 - vy0) / bh
+    end
 
-		local co = cos (dir)
-		local si = sin (dir)
-		t1x = texX1 * co + texY1 * si + .5
-		t1y = texX1 * -si + texY1 * co + .5
-		t2x = texX1 * co + texY2 * si + .5
-		t2y = texX1 * -si + texY2 * co + .5
-		t3x = texX2 * co + texY1 * si + .5
-		t3y = texX2 * -si + texY1 * co + .5
-		t4x = texX2 * co + texY2 * si + .5
-		t4y = texX2 * -si + texY2 * co + .5
-		if t1x <= 1 and t1x >= 0 and t2x <= 1 and t2x >= 0 and t3x <= 1 and t3x >= 0 and t4x <= 1 and t4x >= 0 and t1y <= 1 and t1y >= 0 and t2y <= 1 and t2y >= 0 and t3y <= 1 and t3y >= 0 and t4y <= 1 and t4y >= 0 then
-			frm.texture:SetTexCoord (t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y)
-		end
-	end
-	frm:SetFrameLevel(50)
-	
-	-- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
-	
-	frm:Show()
+    if vy2 > clipH then
+        vy2 = clipH
+        texY2 = (vy2 - vy0) / bh
+    end
 
-	return true, x, y
+    h = vy2 - vy1
+
+    frm:SetPoint("TOPLEFT", x / 100 * self.MapW - 8, -y  / 100 * self.MapH + 8)
+
+    frm:SetWidth (Nx.db.profile.Map.InstanceScale)
+    frm:SetHeight (Nx.db.profile.Map.InstanceScale)
+
+    frm.texture:SetTexCoord (0, 1, 0, 1)
+
+    if dir == 0 then
+        if texX1 <= 1 and texX1 >= 0 and texX2 <= 1 and texX2 >= 0 and texY1 <= 1 and texY1 >= 0 and texY2 <= 1 and texY2 >= 0 then
+            frm.texture:SetTexCoord (texX1, texX2, texY1, texY2)
+        end
+    else
+        local t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y
+        texX1 = texX1 - .5
+        texX2 = texX2 - .5
+        texY1 = texY1 - .5
+        texY2 = texY2 - .5
+
+        local co = cos (dir)
+        local si = sin (dir)
+        t1x = texX1 * co + texY1 * si + .5
+        t1y = texX1 * -si + texY1 * co + .5
+        t2x = texX1 * co + texY2 * si + .5
+        t2y = texX1 * -si + texY2 * co + .5
+        t3x = texX2 * co + texY1 * si + .5
+        t3y = texX2 * -si + texY1 * co + .5
+        t4x = texX2 * co + texY2 * si + .5
+        t4y = texX2 * -si + texY2 * co + .5
+        if t1x <= 1 and t1x >= 0 and t2x <= 1 and t2x >= 0 and t3x <= 1 and t3x >= 0 and t4x <= 1 and t4x >= 0 and t1y <= 1 and t1y >= 0 and t2y <= 1 and t2y >= 0 and t3y <= 1 and t3y >= 0 and t4y <= 1 and t4y >= 0 then
+            frm.texture:SetTexCoord (t1x, t1y, t2x, t2y, t3x, t3y, t4x, t4y)
+        end
+    end
+    frm:SetFrameLevel(50)
+
+    -- Note: SetSnapToPixelGrid/SetTexelSnappingBias now set once at frame creation
+
+    frm:Show()
+
+    return true, x, y
 end
 
 ---
@@ -8168,107 +8163,107 @@ end
 --
 function Nx.Map:ClipFrameINST (frm, bx, by, w, h, ret)
 
-	-- Each world unit maps to a pixel, so w * scale == size in pixels
+    -- Each world unit maps to a pixel, so w * scale == size in pixels
 
-	local scale = self.ScaleDraw
+    local scale = self.ScaleDraw
 
-	-- Calc x
+    -- Calc x
 
-	local bw = w * scale
-	local clipW = self.MapW
-	local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local bw = w * scale
+    local clipW = self.MapW
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
 
-	local texX1 = 0
-	local texX2 = 1
-	
-	local sx1 = 0
-	local sx2 = 0
-	
-	local vx1 = x
-	local vx2 = x + bw
+    local texX1 = 0
+    local texX2 = 1
 
-	if vx1 < 0 then
-		vx1 = 0
-		texX1 = (vx1 - x) / bw
-		sx1 = vx1 - x
-	end
+    local sx1 = 0
+    local sx2 = 0
 
-	if vx2 > clipW then
-		vx2 = clipW
-		texX2 = (vx2 - x) / bw
-		sx2 = vx2 - (x + bw)
-	end
+    local vx1 = x
+    local vx2 = x + bw
 
-	w = vx2 - vx1
+    if vx1 < 0 then
+        vx1 = 0
+        texX1 = (vx1 - x) / bw
+        sx1 = vx1 - x
+    end
 
-	if w < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-	end
+    if vx2 > clipW then
+        vx2 = clipW
+        texX2 = (vx2 - x) / bw
+        sx2 = vx2 - (x + bw)
+    end
 
-	-- Calc y
+    w = vx2 - vx1
 
-	local bh = h * scale
-	local clipH = self.MapH
-	local y = (by - self.MapPosYDraw) * scale + clipH * .5
+    if w < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+    end
 
-	local texY1 = 0
-	local texY2 = 1
-	
-	local sy1 = 0
-	local sy2 = 0
-	
-	local vy1 = y
-	local vy2 = y + bh
+    -- Calc y
 
-	if vy1 < 0 then
-		vy1 = 0
-		texY1 = (vy1 - y) / bh
-		sy1 = vy1 - y
-	end
+    local bh = h * scale
+    local clipH = self.MapH
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
 
-	if vy2 > clipH then
-		vy2 = clipH
-		texY2 = (vy2 - y) / bh
-		sy2 = vy2 - (y + bh)
-	end
+    local texY1 = 0
+    local texY2 = 1
 
-	h = vy2 - vy1
+    local sy1 = 0
+    local sy2 = 0
 
-	if h < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-	end
+    local vy1 = y
+    local vy2 = y + bh
 
-	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+    if vy1 < 0 then
+        vy1 = 0
+        texY1 = (vy1 - y) / bh
+        sy1 = vy1 - y
+    end
 
-	if w <= 1.2 then		-- Adjust so we get a clean line
-		--w = self.Size1
-		if w <= 0 then
-			frm:SetWidth (.001)
-			return 0, 0, 0, 0
-		end
-	end
+    if vy2 > clipH then
+        vy2 = clipH
+        texY2 = (vy2 - y) / bh
+        sy2 = vy2 - (y + bh)
+    end
 
-	if h <= 1.2 then
-		--h = self.Size1
-		if h <= 0 then
-			frm:SetWidth (.001)
-			return 0, 0, 0, 0
-		end
-	end
+    h = vy2 - vy1
 
-	frm:SetWidth (w)
-	frm:SetHeight (h)
-	frm:Show()
+    if h < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+    end
 
-	return sx1, sy1, sx2, sy2
+    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+
+    if w <= 1.2 then        -- Adjust so we get a clean line
+        --w = self.Size1
+        if w <= 0 then
+            frm:SetWidth (.001)
+            return 0, 0, 0, 0
+        end
+    end
+
+    if h <= 1.2 then
+        --h = self.Size1
+        if h <= 0 then
+            frm:SetWidth (.001)
+            return 0, 0, 0, 0
+        end
+    end
+
+    frm:SetWidth (w)
+    frm:SetHeight (h)
+    frm:Show()
+
+    return sx1, sy1, sx2, sy2
 end
 
 ---
@@ -8284,68 +8279,68 @@ end
 --
 function Nx.Map:ClipFrameTLSolid (frm, bx, by, w, h)
 
-	-- Each world unit maps to a pixel, so w * scale == size in pixels
+    -- Each world unit maps to a pixel, so w * scale == size in pixels
 
-	local scale = self.ScaleDraw
+    local scale = self.ScaleDraw
 
-	-- Calc x
+    -- Calc x
 
-	local clipW = self.MapW
-	local vx1 = (bx - self.MapPosXDraw) * scale + clipW * .5
-	local vx2 = vx1 + w * scale
+    local clipW = self.MapW
+    local vx1 = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local vx2 = vx1 + w * scale
 
-	if vx1 < 0 then
-		vx1 = 0
-	end
+    if vx1 < 0 then
+        vx1 = 0
+    end
 
-	if vx2 > clipW then
-		vx2 = clipW
-	end
+    if vx2 > clipW then
+        vx2 = clipW
+    end
 
-	w = vx2 - vx1
+    w = vx2 - vx1
 
-	if w < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if w < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	-- Calc y
+    -- Calc y
 
-	local clipH = self.MapH
-	local vy1 = (by - self.MapPosYDraw) * scale + clipH * .5
-	local vy2 = vy1 + h * scale
+    local clipH = self.MapH
+    local vy1 = (by - self.MapPosYDraw) * scale + clipH * .5
+    local vy2 = vy1 + h * scale
 
-	if vy1 < 0 then
-		vy1 = 0
-	end
+    if vy1 < 0 then
+        vy1 = 0
+    end
 
-	if vy2 > clipH then
-		vy2 = clipH
-	end
+    if vy2 > clipH then
+        vy2 = clipH
+    end
 
-	h = vy2 - vy1
+    h = vy2 - vy1
 
-	if h < .3 then
-		if self.ScrollingFrm ~= frm then
-			frm:Hide()
-		else
-			frm:SetWidth (.001)
-		end
-		return false
-	end
+    if h < .3 then
+        if self.ScrollingFrm ~= frm then
+            frm:Hide()
+        else
+            frm:SetWidth (.001)
+        end
+        return false
+    end
 
-	frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+    frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
 
-	frm:SetWidth (w)
-	frm:SetHeight (h)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
-	frm:Show()
+    frm:Show()
 
-	return true
+    return true
 end
 
 ---
@@ -8358,54 +8353,54 @@ end
 --
 function Nx.Map:ClipZoneFrm (cont, zone, frm, alpha)
 
-	local zname, zx, zy, zw, zh
-	zname, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
-	if not zx then
-		return
-	end
+    local zname, zx, zy, zw, zh
+    zname, zx, zy, zw, zh = self:GetWorldZoneInfo (cont, zone)
+    if not zx then
+        return
+    end
 
-	local scale = self.ScaleDraw
+    local scale = self.ScaleDraw
 
-	local clipW = self.MapW
-	local clipH = self.MapH
-	local x = (zx - self.MapPosXDraw) * scale + clipW / 2
-	local y = (zy - self.MapPosYDraw) * scale + clipH / 2
-	local bx = 0
-	local by = 0
-	local bw = zw * scale
-	local bh = zh * scale
-	local w, h
+    local clipW = self.MapW
+    local clipH = self.MapH
+    local x = (zx - self.MapPosXDraw) * scale + clipW / 2
+    local y = (zy - self.MapPosYDraw) * scale + clipH / 2
+    local bx = 0
+    local by = 0
+    local bw = zw * scale
+    local bh = zh * scale
+    local w, h
 
-	local level = self.Level
+    local level = self.Level
 
-	if frm then
+    if frm then
 
-		local vx0 = bx * bw + x
-		local vx1 = vx0
-		local vx2 = vx0 + bw
+        local vx0 = bx * bw + x
+        local vx1 = vx0
+        local vx2 = vx0 + bw
 
-		local vy0 = by * bh + y
-		local vy1 = vy0
-		local vy2 = vy0 + bh
+        local vy0 = by * bh + y
+        local vy1 = vy0
+        local vy2 = vy0 + bh
 
-		w = vx2 - vx1
-		h = vy2 - vy1
+        w = vx2 - vx1
+        h = vy2 - vy1
 
-		if w <= 0 or h <= 0 then
-			frm:Hide()
-		else
-			local sc = w / 1002
-			vx1 = vx1 / sc
-			vy1 = vy1 / sc
-			frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
-			frm:SetScale (sc)
-			if level then frm:SetFrameLevel (level) end
+        if w <= 0 or h <= 0 then
+            frm:Hide()
+        else
+            local sc = w / 1002
+            vx1 = vx1 / sc
+            vy1 = vy1 / sc
+            frm:SetPoint ("TOPLEFT", vx1, -vy1 - self.TitleH)
+            frm:SetScale (sc)
+            if level then frm:SetFrameLevel (level) end
 
-			frm:Show()
+            frm:Show()
 
---			Nx.prt ("ClipZF %f, %f (%s)", vx1, vy1, sc)
-		end
-	end
+--            Nx.prt ("ClipZF %f, %f (%s)", vx1, vy1, sc)
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -8424,17 +8419,17 @@ end
 --
 function Nx.Map:InitIconType (iconType, drawMode, texture, w, h)
 
-	local d = self.Data
+    local d = self.Data
 
-	local t = wipe (d[iconType] or {})
-	d[iconType] = t
-	t.Num = 0
-	t.Enabled = true
-	t.DrawMode = drawMode or "ZP"	-- Zone point is default
-	t.Tex = texture
-	t.W = w
-	t.H = h
-	t.Scale = 1	-- USED???	
+    local t = wipe (d[iconType] or {})
+    d[iconType] = t
+    t.Num = 0
+    t.Enabled = true
+    t.DrawMode = drawMode or "ZP"    -- Zone point is default
+    t.Tex = texture
+    t.W = w
+    t.H = h
+    t.Scale = 1    -- USED???
 end
 
 ---
@@ -8443,8 +8438,8 @@ end
 --
 function Nx.Map:ClearIconType (iconType)
 
-	local d = self.Data
-	d[iconType] = nil
+    local d = self.Data
+    d[iconType] = nil
 end
 
 ---
@@ -8455,11 +8450,11 @@ end
 --
 function Nx.Map:SetIconTypeAlpha (iconType, alpha, alphaNear)
 
-	local d = self.Data
-	assert (d[iconType])
+    local d = self.Data
+    assert (d[iconType])
 
-	d[iconType].Alpha = alpha
-	d[iconType].AlphaNear = alphaNear
+    d[iconType].Alpha = alpha
+    d[iconType].AlphaNear = alphaNear
 end
 
 ---
@@ -8470,10 +8465,10 @@ end
 --
 function Nx.Map:SetIconTypeAtScale (iconType, scale)
 
-	local d = self.Data
-	assert (d[iconType])
+    local d = self.Data
+    assert (d[iconType])
 
-	d[iconType].AtScale = scale
+    d[iconType].AtScale = scale
 end
 
 ---
@@ -8484,10 +8479,10 @@ end
 --
 function Nx.Map:SetIconTypeLevel (iconType, level)
 
-	local d = self.Data
-	assert (d[iconType])
+    local d = self.Data
+    assert (d[iconType])
 
-	d[iconType].Lvl = level
+    d[iconType].Lvl = level
 end
 
 ---
@@ -8498,10 +8493,10 @@ end
 --
 function Nx.Map:SetIconTypeChop (iconType, on)
 
-	local d = self.Data
-	assert (d[iconType])
+    local d = self.Data
+    assert (d[iconType])
 
-	d[iconType].ClipFunc = on and self.ClipFrameWChop or self.ClipFrameW
+    d[iconType].ClipFunc = on and self.ClipFrameWChop or self.ClipFrameW
 end
 
 ---
@@ -8519,31 +8514,31 @@ end
 -- @return          Icon table for further customization
 --
 function Nx.Map:AddIconPt (iconType, x, y, level, color, texture, tx1, ty1, tx2, ty2)
-	local d = self.Data
+    local d = self.Data
 
-	assert (d[iconType])
+    assert (d[iconType])
 
-	local tdata = d[iconType]
-	tdata.Num = tdata.Num + 1 -- Use # instead??	
+    local tdata = d[iconType]
+    tdata.Num = tdata.Num + 1 -- Use # instead??
 
-	local icon = {}
-	tdata[tdata.Num] = icon
+    local icon = {}
+    tdata[tdata.Num] = icon
 
-	icon.X = x
-	icon.Y = y
-	icon.iconType = iconType
-	icon.Level = level	
-	icon.Color = color
-	icon.Tex = texture
-	if tx1 and ty1 and tx2 and ty2 then
-		icon.TX1 = tx1
-		icon.TY1 = ty1
-		icon.TX2 = tx2
-		icon.TY2 = ty2
-	end
-	assert (tdata.Tex or texture or color)
+    icon.X = x
+    icon.Y = y
+    icon.iconType = iconType
+    icon.Level = level
+    icon.Color = color
+    icon.Tex = texture
+    if tx1 and ty1 and tx2 and ty2 then
+        icon.TX1 = tx1
+        icon.TY1 = ty1
+        icon.TX2 = tx2
+        icon.TY2 = ty2
+    end
+    assert (tdata.Tex or texture or color)
 
-	return icon
+    return icon
 end
 
 ---
@@ -8553,7 +8548,7 @@ end
 --
 function Nx.Map:GetIconCnt (iconType)
 
-	return #self.Data[iconType]
+    return #self.Data[iconType]
 end
 
 ---
@@ -8565,10 +8560,10 @@ end
 --
 function Nx.Map:GetIconPt (iconType, index)
 
-	local icon = self.Data[iconType][index]
-	if (icon.Level == Nx.Map.DungeonLevel) then
-		return icon.X, icon.Y
-	end	
+    local icon = self.Data[iconType][index]
+    if (icon.Level == Nx.Map.DungeonLevel) then
+        return icon.X, icon.Y
+    end
 end
 
 ---
@@ -8585,24 +8580,24 @@ end
 --
 function Nx.Map:AddIconRect (iconType, mapId, x, y, x2, y2, color)
 
-	local d = self.Data
+    local d = self.Data
 
-	assert (d[iconType])
+    assert (d[iconType])
 
-	local tdata = d[iconType]
-	tdata.Num = tdata.Num + 1
+    local tdata = d[iconType]
+    tdata.Num = tdata.Num + 1
 
-	local icon = {}
-	tdata[tdata.Num] = icon
+    local icon = {}
+    tdata[tdata.Num] = icon
 
-	icon.MapId = mapId
-	icon.X = x
-	icon.Y = y
-	icon.X2 = x2
-	icon.Y2 = y2
-	icon.Color = color
+    icon.MapId = mapId
+    icon.X = x
+    icon.Y = y
+    icon.X2 = x2
+    icon.Y2 = y2
+    icon.Color = color
 
-	return icon
+    return icon
 end
 
 ---
@@ -8611,7 +8606,7 @@ end
 -- @param tip   Tooltip string (use ~ for line breaks)
 --
 function Nx.Map:SetIconTip (icon, tip)
-	icon.Tip = tip
+    icon.Tip = tip
 end
 
 ---
@@ -8621,7 +8616,7 @@ end
 -- @param data  Any value to associate with this icon
 --
 function Nx.Map:SetIconUserData (icon, data)
-	icon.UData = data
+    icon.UData = data
 end
 
 ---
@@ -8632,8 +8627,8 @@ end
 -- @param data2  Second favorite data value
 --
 function Nx.Map:SetIconFavData (icon, data1, data2)
-	icon.FavData1 = data1
-	icon.FavData2 = data2
+    icon.FavData1 = data1
+    icon.FavData2 = data2
 end
 
 ---
@@ -8642,266 +8637,266 @@ end
 -- @return      data1, data2 values previously set
 --
 function Nx.Map:GetIconFavData (icon)
-	return icon.FavData1, icon.FavData2
+    return icon.FavData1, icon.FavData2
 end
 
 --------
 -- Update all icons
 
 function Nx.Map:UpdateIcons (drawNonGuide)
-	local c2rgb = Nx.Util_c2rgb
-	local c2rgba = Nx.Util_c2rgba
-	local d = self.Data
+    local c2rgb = Nx.Util_c2rgb
+    local c2rgba = Nx.Util_c2rgba
+    local d = self.Data
 
-	local wpScale = 1
-	local wpMin = Nx.db.profile.Map.IconScaleMin
-	if wpMin >= 0 then
-		wpScale = self.ScaleDraw * .08
-	end
-	if Nx.Map:GetMap(1).LOpts.NXMMFull then
-		return
-	end
-	for type, v in pairs (d) do
-		v.Enabled = drawNonGuide or strbyte (type) == 33	-- "!" is guide types		
-		if v.AtScale then
-			if self.ScaleDraw < v.AtScale then				
-				v.Enabled = false
-			end
-		end
-		if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) and self.CurOpts.NXInstanceMaps then
-			v.Enabled = true	
-			v.Lvl = 20
-		end
-	end
-	for k, v in pairs (d) do
+    local wpScale = 1
+    local wpMin = Nx.db.profile.Map.IconScaleMin
+    if wpMin >= 0 then
+        wpScale = self.ScaleDraw * .08
+    end
+    if Nx.Map:GetMap(1).LOpts.NXMMFull then
+        return
+    end
+    for type, v in pairs (d) do
+        v.Enabled = drawNonGuide or strbyte (type) == 33    -- "!" is guide types
+        if v.AtScale then
+            if self.ScaleDraw < v.AtScale then
+                v.Enabled = false
+            end
+        end
+        if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) and self.CurOpts.NXInstanceMaps then
+            v.Enabled = true
+            v.Lvl = 20
+        end
+    end
+    for k, v in pairs (d) do
 
---		Nx.prt ("UpdateIcons %s %s", k, v.DrawMode)
+--        Nx.prt ("UpdateIcons %s %s", k, v.DrawMode)
 
-		if v.Enabled then
+        if v.Enabled then
 
-			if v.DrawMode == "ZP" then		-- Zone point				
-				local scale = self.IconScale
-				local w = v.W * scale
-				local h = v.H * scale
-				-- Cache values outside loop for performance
-				local mapDungeonLevel = Nx.Map.DungeonLevel
-				local vLvl = v.Lvl
-				local vTex = v.Tex
-				
-				for n = 1, v.Num do
-					local vn = v[n]
-					if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then						
-						local icon = vn
-						local f = self:GetIconStatic(vLvl)
-						if self:ClipFrameZ(f, icon.X, icon.Y, w, h, 0) then							
-							f.NxTip = icon.Tip							
+            if v.DrawMode == "ZP" then        -- Zone point
+                local scale = self.IconScale
+                local w = v.W * scale
+                local h = v.H * scale
+                -- Cache values outside loop for performance
+                local mapDungeonLevel = Nx.Map.DungeonLevel
+                local vLvl = v.Lvl
+                local vTex = v.Tex
 
-							local iconTex = icon.Tex
-							if iconTex then
-								f.texture:SetTexture(iconTex)
-								if icon.Color then
-									f.texture:SetVertexColor(c2rgb(icon.Color))
-								end
-							elseif vTex then
-								f.texture:SetTexture(vTex)
-							else
-								f.texture:SetColorTexture(c2rgb(icon.Color))
-							end
-							if icon.TX1 then
-								f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
-							end
-						end
-					end
-				end
+                for n = 1, v.Num do
+                    local vn = v[n]
+                    if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then
+                        local icon = vn
+                        local f = self:GetIconStatic(vLvl)
+                        if self:ClipFrameZ(f, icon.X, icon.Y, w, h, 0) then
+                            f.NxTip = icon.Tip
 
-			elseif v.DrawMode == "WP" then		-- World point
+                            local iconTex = icon.Tex
+                            if iconTex then
+                                f.texture:SetTexture(iconTex)
+                                if icon.Color then
+                                    f.texture:SetVertexColor(c2rgb(icon.Color))
+                                end
+                            elseif vTex then
+                                f.texture:SetTexture(vTex)
+                            else
+                                f.texture:SetColorTexture(c2rgb(icon.Color))
+                            end
+                            if icon.TX1 then
+                                f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
+                            end
+                        end
+                    end
+                end
 
-				local scale = self.IconScale * v.Scale * wpScale
-				local w = max (v.W * scale, wpMin)
-				local h = max (v.H * scale, wpMin)
+            elseif v.DrawMode == "WP" then        -- World point
 
-				-- Pre-calculate visible bounds for quick culling (huge performance win for many icons)
-				local scaleDraw = self.ScaleDraw
-				local clipW = self.MapW
-				local clipH = self.MapH
-				local mapPosX = self.MapPosXDraw
-				local mapPosY = self.MapPosYDraw
-				-- Calculate world-space bounds of visible area with some margin
-				local margin = (w > h and w or h) / scaleDraw
-				local visMinX = mapPosX - clipW * 0.5 / scaleDraw - margin
-				local visMaxX = mapPosX + clipW * 0.5 / scaleDraw + margin
-				local visMinY = mapPosY - clipH * 0.5 / scaleDraw - margin
-				local visMaxY = mapPosY + clipH * 0.5 / scaleDraw + margin
+                local scale = self.IconScale * v.Scale * wpScale
+                local w = max (v.W * scale, wpMin)
+                local h = max (v.H * scale, wpMin)
 
-				local curMapId = Nx.Map:GetCurrentMapAreaID()
-				if self.Win:IsSizeMax() then
-					local myzone = curMapId
-					if (myzone == 87) or (myzone == 125) then
-						w = w / 2
-						h = h / 2
-					end
-				end
-				
-				if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) then
-					w = Nx.db.profile.Map.InstanceScale
-					h = Nx.db.profile.Map.InstanceScale
-				end
-				
-				if v.AlphaNear then
+                -- Pre-calculate visible bounds for quick culling (huge performance win for many icons)
+                local scaleDraw = self.ScaleDraw
+                local clipW = self.MapW
+                local clipH = self.MapH
+                local mapPosX = self.MapPosXDraw
+                local mapPosY = self.MapPosYDraw
+                -- Calculate world-space bounds of visible area with some margin
+                local margin = (w > h and w or h) / scaleDraw
+                local visMinX = mapPosX - clipW * 0.5 / scaleDraw - margin
+                local visMaxX = mapPosX + clipW * 0.5 / scaleDraw + margin
+                local visMinY = mapPosY - clipH * 0.5 / scaleDraw - margin
+                local visMaxY = mapPosY + clipH * 0.5 / scaleDraw + margin
 
-					local aNear = v.AlphaNear * (abs (GetTime() % .7 - .35) / .7 + .5)	-- 50% to 100% pulse
-					-- Cache values outside loop for performance
-					local mapDungeonLevel = Nx.Map.DungeonLevel
-					local vLvl = v.Lvl
-					local vTex = v.Tex
-					local vAlpha = v.Alpha
-					local plyrX = self.PlyrX
-					local plyrY = self.PlyrY
+                local curMapId = Nx.Map:GetCurrentMapAreaID()
+                if self.Win:IsSizeMax() then
+                    local myzone = curMapId
+                    if (myzone == 87) or (myzone == 125) then
+                        w = w / 2
+                        h = h / 2
+                    end
+                end
 
-					for n = 1, v.Num do
-						local vn = v[n]
-						-- Quick visibility cull before allocating frame
-						local iconX, iconY = vn.X, vn.Y
-						if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
-						if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then
-							local icon = vn
-							local f = self:GetIconStatic(vLvl)							
-							if self:ClipFrameByMapType (f, icon.X, icon.Y, w, h, 0) then								
-								f.NxTip = icon.Tip								
-								f.NXType = 3000
-								f.NXData = icon
-								local iconTex = icon.Tex
-								if iconTex then
-									-- Cache atlas lookup on first use
-									if icon._isAtlas == nil then
-										icon._isAtlas = string.find(iconTex, "atlas:") and true or false
-										if icon._isAtlas then
-											icon._atlasName = string.sub(iconTex, 7)
-										end
-									end
-									if icon._isAtlas then
-										f.texture:SetAtlas(icon._atlasName)
-									else
-										f.texture:SetTexture(iconTex)
-									end
-									if icon.Color then
-										f.texture:SetVertexColor(c2rgb(icon.Color))
-									end
-								elseif vTex then
-									f.texture:SetTexture(vTex)
-								else
-									f.texture:SetColorTexture(c2rgb(icon.Color))
-								end
-								local a = vAlpha
-								local dist = (icon.X - plyrX) ^ 2 + (icon.Y - plyrY) ^ 2
-								if dist < 306 then	-- 80 yards * 4.575 ^ 2
-									a = aNear
-								end
-								f.texture:SetVertexColor(1, 1, 1, a)
-							end
-						end
-						end -- visibility cull
-					end
-				else
-					-- Cache these values outside the loop for performance
-					local _h = 3 * (668 / 768)
-					local currentDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-					local _dungeonLevel = currentDungeonLevel > 0 and currentDungeonLevel - 1 or 0
-					local isInstanceMap = Nx.Map:IsInstanceMap(Nx.Map.RMapId)
-					local calcOffY = isInstanceMap and not self.CurOpts.NXInstanceMaps
-					local offY = calcOffY and (_h * _dungeonLevel) or 0
-					local mapDungeonLevel = Nx.Map.DungeonLevel
-					local vLvl = v.Lvl
-					local vTex = v.Tex
-					local vAlpha = v.Alpha
-					local frameLevelBase = self.Level + (vLvl or 0)
-					
-					for n = 1, v.Num do	
-						local vn = v[n]
-						-- Quick visibility cull before allocating frame
-						local iconX, iconY = vn.X, vn.Y
-						if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
-						local Level = vn.Level						
-						if (not Level and mapDungeonLevel == 0) or (Level and Level == mapDungeonLevel) then												
-							local icon = vn
-							local iconTex = icon.Tex
-							local actuallyIcon = type(iconTex) == "table"
-							local f
-							if actuallyIcon then
-								f = iconTex
-							else
-								f = self:GetIconStatic(vLvl)
-							end
-							if self:ClipFrameByMapType (f, iconX, iconY + offY, w, h, 0) then
-								f.NxTip = icon.Tip																
-								f.NXType = 3000
-								f.NXData = icon
-								if actuallyIcon then
-									f:SetFrameLevel(frameLevelBase)
-								elseif iconTex then
-									-- Cache atlas lookup on first use
-									if icon._isAtlas == nil then
-										icon._isAtlas = string.find(iconTex, "atlas:") and true or false
-										if icon._isAtlas then
-											icon._atlasName = string.sub(iconTex, 7)
-										end
-									end
-									if icon._isAtlas then
-										f.texture:SetAtlas(icon._atlasName)
-									else
-										f.texture:SetTexture(iconTex)
-									end																	
-									if icon.Color then
-										f.texture:SetVertexColor(c2rgb(icon.Color))
-									end
-								elseif vTex then
-									f.texture:SetTexture(vTex)
-								else
-									f.texture:SetColorTexture(c2rgb(icon.Color))
-								end
-								if vAlpha and not actuallyIcon then
-									f.texture:SetVertexColor(1, 1, 1, vAlpha)
-								end
-								if icon.TX1 then
-									f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
-								end
-							end
-						end
-						end -- visibility cull
-					end
-				end
-			elseif v.DrawMode == "ZR" then	-- Zone rectangle
-				local x, y, x2, y2
---				local x0, y0, x2, y2 = self:GetWorldRect (self.MapId, 0, 0, 100, 100)
+                if (self:IsInstanceMap(Nx.Map.UpdateMapID) or self:IsBattleGroundMap(Nx.Map.UpdateMapID)) then
+                    w = Nx.db.profile.Map.InstanceScale
+                    h = Nx.db.profile.Map.InstanceScale
+                end
 
-				for n = 1, v.Num do
-					if (not v[n].Level and Nx.Map.DungeonLevel == 0) or (v[n].Level and v[n].Level == Nx.Map.DungeonLevel) then				
-						local icon = v[n]
-						local f = self:GetIconStatic (v.Lvl)
---						Nx.prt ("ZR #%d %f %f %f %f", n, icon.X, icon.Y, icon.X2, icon.Y2)
+                if v.AlphaNear then
 
-						f.NxTip = icon.Tip
+                    local aNear = v.AlphaNear * (abs (GetTime() % .7 - .35) / .7 + .5)    -- 50% to 100% pulse
+                    -- Cache values outside loop for performance
+                    local mapDungeonLevel = Nx.Map.DungeonLevel
+                    local vLvl = v.Lvl
+                    local vTex = v.Tex
+                    local vAlpha = v.Alpha
+                    local plyrX = self.PlyrX
+                    local plyrY = self.PlyrY
 
-						x, y = self:GetWorldPos (icon.MapId, icon.X, icon.Y)
-						x2, y2 = self:GetWorldPos (icon.MapId, icon.X2, icon.Y2)
+                    for n = 1, v.Num do
+                        local vn = v[n]
+                        -- Quick visibility cull before allocating frame
+                        local iconX, iconY = vn.X, vn.Y
+                        if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
+                        if (not vn.Level and mapDungeonLevel == 0) or (vn.Level and vn.Level == mapDungeonLevel) then
+                            local icon = vn
+                            local f = self:GetIconStatic(vLvl)
+                            if self:ClipFrameByMapType (f, icon.X, icon.Y, w, h, 0) then
+                                f.NxTip = icon.Tip
+                                f.NXType = 3000
+                                f.NXData = icon
+                                local iconTex = icon.Tex
+                                if iconTex then
+                                    -- Cache atlas lookup on first use
+                                    if icon._isAtlas == nil then
+                                        icon._isAtlas = string.find(iconTex, "atlas:") and true or false
+                                        if icon._isAtlas then
+                                            icon._atlasName = string.sub(iconTex, 7)
+                                        end
+                                    end
+                                    if icon._isAtlas then
+                                        f.texture:SetAtlas(icon._atlasName)
+                                    else
+                                        f.texture:SetTexture(iconTex)
+                                    end
+                                    if icon.Color then
+                                        f.texture:SetVertexColor(c2rgb(icon.Color))
+                                    end
+                                elseif vTex then
+                                    f.texture:SetTexture(vTex)
+                                else
+                                    f.texture:SetColorTexture(c2rgb(icon.Color))
+                                end
+                                local a = vAlpha
+                                local dist = (icon.X - plyrX) ^ 2 + (icon.Y - plyrY) ^ 2
+                                if dist < 306 then    -- 80 yards * 4.575 ^ 2
+                                    a = aNear
+                                end
+                                f.texture:SetVertexColor(1, 1, 1, a)
+                            end
+                        end
+                        end -- visibility cull
+                    end
+                else
+                    -- Cache these values outside the loop for performance
+                    local _h = 3 * (668 / 768)
+                    local currentDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+                    local _dungeonLevel = currentDungeonLevel > 0 and currentDungeonLevel - 1 or 0
+                    local isInstanceMap = Nx.Map:IsInstanceMap(Nx.Map.RMapId)
+                    local calcOffY = isInstanceMap and not self.CurOpts.NXInstanceMaps
+                    local offY = calcOffY and (_h * _dungeonLevel) or 0
+                    local mapDungeonLevel = Nx.Map.DungeonLevel
+                    local vLvl = v.Lvl
+                    local vTex = v.Tex
+                    local vAlpha = v.Alpha
+                    local frameLevelBase = self.Level + (vLvl or 0)
 
-	--					Nx.prt ("%f %f %f %f", x, y, x2, y2)
+                    for n = 1, v.Num do
+                        local vn = v[n]
+                        -- Quick visibility cull before allocating frame
+                        local iconX, iconY = vn.X, vn.Y
+                        if iconX >= visMinX and iconX <= visMaxX and iconY >= visMinY and iconY <= visMaxY then
+                        local Level = vn.Level
+                        if (not Level and mapDungeonLevel == 0) or (Level and Level == mapDungeonLevel) then
+                            local icon = vn
+                            local iconTex = icon.Tex
+                            local actuallyIcon = type(iconTex) == "table"
+                            local f
+                            if actuallyIcon then
+                                f = iconTex
+                            else
+                                f = self:GetIconStatic(vLvl)
+                            end
+                            if self:ClipFrameByMapType (f, iconX, iconY + offY, w, h, 0) then
+                                f.NxTip = icon.Tip
+                                f.NXType = 3000
+                                f.NXData = icon
+                                if actuallyIcon then
+                                    f:SetFrameLevel(frameLevelBase)
+                                elseif iconTex then
+                                    -- Cache atlas lookup on first use
+                                    if icon._isAtlas == nil then
+                                        icon._isAtlas = string.find(iconTex, "atlas:") and true or false
+                                        if icon._isAtlas then
+                                            icon._atlasName = string.sub(iconTex, 7)
+                                        end
+                                    end
+                                    if icon._isAtlas then
+                                        f.texture:SetAtlas(icon._atlasName)
+                                    else
+                                        f.texture:SetTexture(iconTex)
+                                    end
+                                    if icon.Color then
+                                        f.texture:SetVertexColor(c2rgb(icon.Color))
+                                    end
+                                elseif vTex then
+                                    f.texture:SetTexture(vTex)
+                                else
+                                    f.texture:SetColorTexture(c2rgb(icon.Color))
+                                end
+                                if vAlpha and not actuallyIcon then
+                                    f.texture:SetVertexColor(1, 1, 1, vAlpha)
+                                end
+                                if icon.TX1 then
+                                    f.texture:SetTexCoord(icon.TX1, icon.TY1, icon.TX2, icon.TY2)
+                                end
+                            end
+                        end
+                        end -- visibility cull
+                    end
+                end
+            elseif v.DrawMode == "ZR" then    -- Zone rectangle
+                local x, y, x2, y2
+--                local x0, y0, x2, y2 = self:GetWorldRect (self.MapId, 0, 0, 100, 100)
 
-						if self:ClipFrameTL (f, x, y, x2-x, y2-y) then
-							if v.Texture then
-								f.texture:SetTexture (v.Tex)
-							else
-								f.texture:SetColorTexture (c2rgba (icon.Color))
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-	if Nx.Map:GetCurrentMapAreaID() == 85 and Nx.Map.DungeonLevel == 0 then
-		Nx.Map.DungeonLevel = 1
-	end
+                for n = 1, v.Num do
+                    if (not v[n].Level and Nx.Map.DungeonLevel == 0) or (v[n].Level and v[n].Level == Nx.Map.DungeonLevel) then
+                        local icon = v[n]
+                        local f = self:GetIconStatic (v.Lvl)
+--                        Nx.prt ("ZR #%d %f %f %f %f", n, icon.X, icon.Y, icon.X2, icon.Y2)
+
+                        f.NxTip = icon.Tip
+
+                        x, y = self:GetWorldPos (icon.MapId, icon.X, icon.Y)
+                        x2, y2 = self:GetWorldPos (icon.MapId, icon.X2, icon.Y2)
+
+    --                    Nx.prt ("%f %f %f %f", x, y, x2, y2)
+
+                        if self:ClipFrameTL (f, x, y, x2-x, y2-y) then
+                            if v.Texture then
+                                f.texture:SetTexture (v.Tex)
+                            else
+                                f.texture:SetColorTexture (c2rgba (icon.Color))
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    if Nx.Map:GetCurrentMapAreaID() == 85 and Nx.Map.DungeonLevel == 0 then
+        Nx.Map.DungeonLevel = 1
+    end
 end
 
 ------
@@ -8909,25 +8904,25 @@ end
 
 function Nx.Map:ResetIcons()
 
-	local frms = self.IconFrms
-	frms.Used = frms.Next - 1		-- Save last frame used
-	frms.Next = 1
+    local frms = self.IconFrms
+    frms.Used = frms.Next - 1        -- Save last frame used
+    frms.Next = 1
 
-	local frms = self.IconNIFrms
-	frms.Used = frms.Next - 1		-- Save last frame used
-	frms.Next = 1
+    local frms = self.IconNIFrms
+    frms.Used = frms.Next - 1        -- Save last frame used
+    frms.Next = 1
 
-	local frms = self.IconStaticFrms
-	frms.Used = frms.Next - 1		-- Save last frame used
-	frms.Next = 1
+    local frms = self.IconStaticFrms
+    frms.Used = frms.Next - 1        -- Save last frame used
+    frms.Next = 1
 
-	local data = self.TextFStrs
-	data.Used = data.Next - 1		-- Save last used
-	data.Next = 1
-	
-	local data = self.IconWQFrms
-	data.Used = data.Next - 1		-- Save last used
-	data.Next = 1
+    local data = self.TextFStrs
+    data.Used = data.Next - 1        -- Save last used
+    data.Next = 1
+
+    local data = self.IconWQFrms
+    data.Used = data.Next - 1        -- Save last used
+    data.Next = 1
 end
 
 ------
@@ -8935,35 +8930,35 @@ end
 
 function Nx.Map:HideExtraIcons()
 
-	local frms = self.IconFrms
+    local frms = self.IconFrms
 
-	for n = frms.Next, frms.Used do		-- Hide up to last frames used amount
-		frms[n]:Hide()
-	end
+    for n = frms.Next, frms.Used do        -- Hide up to last frames used amount
+        frms[n]:Hide()
+    end
 
-	local frms = self.IconNIFrms
+    local frms = self.IconNIFrms
 
-	for n = frms.Next, frms.Used do		-- Hide up to last frames used amount
-		frms[n]:Hide()
-	end
+    for n = frms.Next, frms.Used do        -- Hide up to last frames used amount
+        frms[n]:Hide()
+    end
 
-	local frms = self.IconStaticFrms
+    local frms = self.IconStaticFrms
 
-	for n = frms.Next, frms.Used do		-- Hide up to last frames used amount
-		frms[n]:Hide()
-	end
+    for n = frms.Next, frms.Used do        -- Hide up to last frames used amount
+        frms[n]:Hide()
+    end
 
-	local data = self.TextFStrs
+    local data = self.TextFStrs
 
-	for n = data.Next, data.Used do		-- Hide up to last used amount
-		data[n]:Hide()
-	end
-	
-	local data = self.IconWQFrms
+    for n = data.Next, data.Used do        -- Hide up to last used amount
+        data[n]:Hide()
+    end
 
-	for n = data.Next, data.Used do		-- Hide up to last used amount
-		data[n]:Hide()
-	end
+    local data = self.IconWQFrms
+
+    for n = data.Next, data.Used do        -- Hide up to last used amount
+        data[n]:Hide()
+    end
 end
 
 ------
@@ -8972,48 +8967,48 @@ end
 
 function Nx.Map:GetIcon (levelAdd)
 
-	local frms = self.IconFrms
-	local pos = frms.Next
+    local frms = self.IconFrms
+    local pos = frms.Next
 
-	if pos > 1500 then
-		pos = 1500	-- Too many used. Reuse
-	end
+    if pos > 1500 then
+        pos = 1500    -- Too many used. Reuse
+    end
 
-	local f = frms[pos]
-	if not f then
+    local f = frms[pos]
+    if not f then
 
-		f = CreateFrame ("Frame", "NxIcon"..pos, self.Frm)
-		frms[pos] = f
-		f.NxMap = self
+        f = CreateFrame ("Frame", "NxIcon"..pos, self.Frm)
+        frms[pos] = f
+        f.NxMap = self
 
-		f:SetScript ("OnMouseDown", self.IconOnMouseDown)
-		f:SetScript ("OnMouseUp", self.IconOnMouseUp)
-		f:SetScript ("OnEnter", self.IconOnEnter)
-		f:SetScript ("OnLeave", self.IconOnLeave)
-		f:SetScript ("OnHide", self.IconOnLeave)
+        f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+        f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+        f:SetScript ("OnEnter", self.IconOnEnter)
+        f:SetScript ("OnLeave", self.IconOnLeave)
+        f:SetScript ("OnHide", self.IconOnLeave)
 
-		f:EnableMouse (true)
+        f:EnableMouse (true)
 
-		local t = f:CreateTexture()
-		f.texture = t
-		t:SetAllPoints (f)
-		t:SetSnapToPixelGrid(false)
-		t:SetTexelSnappingBias(0)
-	end
+        local t = f:CreateTexture()
+        f.texture = t
+        t:SetAllPoints (f)
+        t:SetSnapToPixelGrid(false)
+        t:SetTexelSnappingBias(0)
+    end
 
-	f:SetFrameLevel (self.Level + (levelAdd or 0))
+    f:SetFrameLevel (self.Level + (levelAdd or 0))
 
-	f.texture:SetVertexColor (1, 1, 1, 1)
---	f.texture:SetBlendMode ("BLEND")
+    f.texture:SetVertexColor (1, 1, 1, 1)
+--    f.texture:SetBlendMode ("BLEND")
 
-	f.NxTip = nil
-	f.NXType = nil			-- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
-	f.NXData = nil
-	f.NXData2 = nil
+    f.NxTip = nil
+    f.NXType = nil            -- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
+    f.NXData = nil
+    f.NXData2 = nil
 
-	frms.Next = pos + 1
+    frms.Next = pos + 1
 
-	return f
+    return f
 end
 
 ------
@@ -9021,122 +9016,122 @@ end
 -- ret: icon frame
 
 function Nx.Map:GetIconWQ (levelAdd)
-	
-	local frms = self.IconWQFrms
-	local pos = frms.Next
 
-	if pos > 1500 then
-		pos = 1500	-- Too many used. Reuse
-	end
+    local frms = self.IconWQFrms
+    local pos = frms.Next
 
-	local f = frms[pos]
-	if not f then
+    if pos > 1500 then
+        pos = 1500    -- Too many used. Reuse
+    end
 
-		f = CreateFrame ("Button", "NxIconWQ"..pos, self.Frm)
-		frms[pos] = f
-		f.NxMap = self
+    local f = frms[pos]
+    if not f then
 
-		f:EnableMouse (true)
+        f = CreateFrame ("Button", "NxIconWQ"..pos, self.Frm)
+        frms[pos] = f
+        f.NxMap = self
 
-		local t = f:CreateTexture()
-		f.texture = t
-		t:SetAllPoints (f)
-		f.texture:SetSnapToPixelGrid(false)
-		f.texture:SetTexelSnappingBias(0)
-		
-		f:SetFlattensRenderLayers(true);
-		
-		--[[f:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-		f:SetScript("OnEnter", TaskPOI_OnEnter);
-		f:SetScript("OnLeave", TaskPOI_OnLeave);
-		f:SetScript("OnClick", TaskPOI_OnClick);]]--
+        f:EnableMouse (true)
 
-		f.Texture = f:CreateTexture(f:GetName().."Texture", "BACKGROUND");
+        local t = f:CreateTexture()
+        f.texture = t
+        t:SetAllPoints (f)
+        f.texture:SetSnapToPixelGrid(false)
+        f.texture:SetTexelSnappingBias(0)
 
-		f.Glow = f:CreateTexture(f:GetName().."Glow", "BACKGROUND", -2);
-		f.Glow:SetSize(50, 50);
-		f.Glow:SetPoint("CENTER");
-		f.Glow:SetTexture("Interface/WorldMap/UI-QuestPoi-IconGlow.tga");
-		f.Glow:SetBlendMode("ADD");
-		f.Glow:SetSnapToPixelGrid(false)
-		f.Glow:SetTexelSnappingBias(0)
-		
-		f.CriteriaMatchRing = f:CreateTexture(f:GetName().."CriteriaMatchRing", "BACKGROUND", nil, 2);
-		f.CriteriaMatchRing:SetAtlas("worldquest-emissary-ring", true)
-		f.CriteriaMatchRing:SetPoint("CENTER", 0, 0)
-		
-		f.SelectedGlow = f:CreateTexture(f:GetName().."SelectedGlow", "OVERLAY", 2);
-		f.SelectedGlow:SetBlendMode("ADD");
-		f.SelectedGlow:SetSnapToPixelGrid(false)
-		f.SelectedGlow:SetTexelSnappingBias(0)
-		
-		f.CriteriaMatchGlow = f:CreateTexture(f:GetName().."CriteriaMatchGlow", "BACKGROUND", -1);
-		f.CriteriaMatchGlow:SetAlpha(.6);
-		f.CriteriaMatchGlow:SetBlendMode("ADD");
-		f.CriteriaMatchGlow:SetSnapToPixelGrid(false)
-		f.CriteriaMatchGlow:SetTexelSnappingBias(0)
-		
-		f.SpellTargetGlow = f:CreateTexture(f:GetName().."SpellTargetGlow", "OVERLAY", 1);
-		f.SpellTargetGlow:SetAtlas("worldquest-questmarker-abilityhighlight", true);
-		f.SpellTargetGlow:SetAlpha(.6);
-		f.SpellTargetGlow:SetBlendMode("ADD");
-		f.SpellTargetGlow:SetPoint("CENTER", 0, 0);
-		f.SpellTargetGlow:SetSnapToPixelGrid(false)
-		f.SpellTargetGlow:SetTexelSnappingBias(0)
-		
-		f.Underlay = f:CreateTexture(f:GetName().."Underlay", "BACKGROUND");
-		f.Underlay:SetWidth(34);
-		f.Underlay:SetHeight(34);
-		f.Underlay:SetPoint("CENTER", 0, -1);
-		f.Underlay:SetSnapToPixelGrid(false)
-		f.Underlay:SetTexelSnappingBias(0)
-		
-		f.TimeLowFrame = CreateFrame("Frame", nil, f);
-		f.TimeLowFrame:SetSize(22, 22);
-		f.TimeLowFrame:SetPoint("CENTER", -10, -10);
-		f.TimeLowFrame.Texture = f.TimeLowFrame:CreateTexture(nil, "OVERLAY");
-		f.TimeLowFrame.Texture:SetAllPoints(f.TimeLowFrame);
-		f.TimeLowFrame.Texture:SetAtlas("worldquest-icon-clock");
-		
-		-- Set size and texture properties once on creation
-		f:SetWidth(32);
-		f:SetHeight(32);
-		f.Texture:SetWidth(28);
-		f.Texture:SetHeight(28);
-		f.Texture:SetPoint("CENTER", 0, 0);
-		f.Texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
-		f.Texture:SetSnapToPixelGrid(false)
-		f.Texture:SetTexelSnappingBias(0)
-		
-		-- Set scripts only once on creation (not every frame)
-		f:SetScript ("OnEnter", function (self) 
-			TaskPOI_OnEnter(self) 
-			GameTooltip:SetFrameStrata("TOOLTIP");
-			GameTooltip.ItemTooltip.Tooltip:SetClampedToScreen(false)
-		end)
-		f:SetScript ("OnLeave", TaskPOI_OnLeave)
-	end
-	
-	-- Only update highlight texture if it exists (rare case)
-	if f.HighlightTexture and not f.HighlightTextureSet then
-		f.HighlightTexture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
-		f.HighlightTexture:SetSnapToPixelGrid(false)
-		f.HighlightTexture:SetTexelSnappingBias(0)
-		f.HighlightTextureSet = true
-	end
+        f:SetFlattensRenderLayers(true);
 
-	f:SetFrameLevel (self.Level + (levelAdd or 0))
-	
-	--f.texture:SetVertexColor (1, 1, 1, 1)
-	
-	f.NxTip = nil
-	f.NXType = nil			-- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
-	f.NXData = nil
-	f.NXData2 = nil
-	
-	frms.Next = pos + 1
+        --[[f:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        f:SetScript("OnEnter", TaskPOI_OnEnter);
+        f:SetScript("OnLeave", TaskPOI_OnLeave);
+        f:SetScript("OnClick", TaskPOI_OnClick);]]--
 
-	return f
+        f.Texture = f:CreateTexture(f:GetName().."Texture", "BACKGROUND");
+
+        f.Glow = f:CreateTexture(f:GetName().."Glow", "BACKGROUND", -2);
+        f.Glow:SetSize(50, 50);
+        f.Glow:SetPoint("CENTER");
+        f.Glow:SetTexture("Interface/WorldMap/UI-QuestPoi-IconGlow.tga");
+        f.Glow:SetBlendMode("ADD");
+        f.Glow:SetSnapToPixelGrid(false)
+        f.Glow:SetTexelSnappingBias(0)
+
+        f.CriteriaMatchRing = f:CreateTexture(f:GetName().."CriteriaMatchRing", "BACKGROUND", nil, 2);
+        f.CriteriaMatchRing:SetAtlas("worldquest-emissary-ring", true)
+        f.CriteriaMatchRing:SetPoint("CENTER", 0, 0)
+
+        f.SelectedGlow = f:CreateTexture(f:GetName().."SelectedGlow", "OVERLAY", 2);
+        f.SelectedGlow:SetBlendMode("ADD");
+        f.SelectedGlow:SetSnapToPixelGrid(false)
+        f.SelectedGlow:SetTexelSnappingBias(0)
+
+        f.CriteriaMatchGlow = f:CreateTexture(f:GetName().."CriteriaMatchGlow", "BACKGROUND", -1);
+        f.CriteriaMatchGlow:SetAlpha(.6);
+        f.CriteriaMatchGlow:SetBlendMode("ADD");
+        f.CriteriaMatchGlow:SetSnapToPixelGrid(false)
+        f.CriteriaMatchGlow:SetTexelSnappingBias(0)
+
+        f.SpellTargetGlow = f:CreateTexture(f:GetName().."SpellTargetGlow", "OVERLAY", 1);
+        f.SpellTargetGlow:SetAtlas("worldquest-questmarker-abilityhighlight", true);
+        f.SpellTargetGlow:SetAlpha(.6);
+        f.SpellTargetGlow:SetBlendMode("ADD");
+        f.SpellTargetGlow:SetPoint("CENTER", 0, 0);
+        f.SpellTargetGlow:SetSnapToPixelGrid(false)
+        f.SpellTargetGlow:SetTexelSnappingBias(0)
+
+        f.Underlay = f:CreateTexture(f:GetName().."Underlay", "BACKGROUND");
+        f.Underlay:SetWidth(34);
+        f.Underlay:SetHeight(34);
+        f.Underlay:SetPoint("CENTER", 0, -1);
+        f.Underlay:SetSnapToPixelGrid(false)
+        f.Underlay:SetTexelSnappingBias(0)
+
+        f.TimeLowFrame = CreateFrame("Frame", nil, f);
+        f.TimeLowFrame:SetSize(22, 22);
+        f.TimeLowFrame:SetPoint("CENTER", -10, -10);
+        f.TimeLowFrame.Texture = f.TimeLowFrame:CreateTexture(nil, "OVERLAY");
+        f.TimeLowFrame.Texture:SetAllPoints(f.TimeLowFrame);
+        f.TimeLowFrame.Texture:SetAtlas("worldquest-icon-clock");
+
+        -- Set size and texture properties once on creation
+        f:SetWidth(32);
+        f:SetHeight(32);
+        f.Texture:SetWidth(28);
+        f.Texture:SetHeight(28);
+        f.Texture:SetPoint("CENTER", 0, 0);
+        f.Texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
+        f.Texture:SetSnapToPixelGrid(false)
+        f.Texture:SetTexelSnappingBias(0)
+
+        -- Set scripts only once on creation (not every frame)
+        f:SetScript ("OnEnter", function (self)
+            TaskPOI_OnEnter(self)
+            GameTooltip:SetFrameStrata("TOOLTIP");
+            GameTooltip.ItemTooltip.Tooltip:SetClampedToScreen(false)
+        end)
+        f:SetScript ("OnLeave", TaskPOI_OnLeave)
+    end
+
+    -- Only update highlight texture if it exists (rare case)
+    if f.HighlightTexture and not f.HighlightTextureSet then
+        f.HighlightTexture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas");
+        f.HighlightTexture:SetSnapToPixelGrid(false)
+        f.HighlightTexture:SetTexelSnappingBias(0)
+        f.HighlightTextureSet = true
+    end
+
+    f:SetFrameLevel (self.Level + (levelAdd or 0))
+
+    --f.texture:SetVertexColor (1, 1, 1, 1)
+
+    f.NxTip = nil
+    f.NXType = nil            -- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
+    f.NXData = nil
+    f.NXData2 = nil
+
+    frms.Next = pos + 1
+
+    return f
 end
 
 ------
@@ -9145,36 +9140,36 @@ end
 
 function Nx.Map:GetIconNI (levelAdd)
 
-	local frms = self.IconNIFrms
-	local pos = frms.Next
+    local frms = self.IconNIFrms
+    local pos = frms.Next
 
-	if pos > 1500 then
-		pos = 1500	-- Too many used. Reuse
-	end
+    if pos > 1500 then
+        pos = 1500    -- Too many used. Reuse
+    end
 
-	local f = frms[pos]
-	if not f then
+    local f = frms[pos]
+    if not f then
 
-		f = CreateFrame ("Frame", "NxIconNI"..pos, self.Frm)
-		frms[pos] = f
-		f.NxMap = self
+        f = CreateFrame ("Frame", "NxIconNI"..pos, self.Frm)
+        frms[pos] = f
+        f.NxMap = self
 
-		local t = f:CreateTexture()
-		f.texture = t
-		t:SetAllPoints (f)
-		t:SetSnapToPixelGrid(false)
-		t:SetTexelSnappingBias(0)
-	end
+        local t = f:CreateTexture()
+        f.texture = t
+        t:SetAllPoints (f)
+        t:SetSnapToPixelGrid(false)
+        t:SetTexelSnappingBias(0)
+    end
 
-	local add = levelAdd or 0
-	f:SetFrameLevel (self.Level + add)
+    local add = levelAdd or 0
+    f:SetFrameLevel (self.Level + add)
 
-	f.texture:SetVertexColor (1, 1, 1, 1)
-	f.texture:SetBlendMode ("BLEND")
+    f.texture:SetVertexColor (1, 1, 1, 1)
+    f.texture:SetBlendMode ("BLEND")
 
-	frms.Next = pos + 1
+    frms.Next = pos + 1
 
-	return f
+    return f
 end
 
 ------
@@ -9183,49 +9178,49 @@ end
 
 function Nx.Map:GetIconStatic (levelAdd)
 
-	local frms = self.IconStaticFrms
-	local pos = frms.Next
+    local frms = self.IconStaticFrms
+    local pos = frms.Next
 
-	if pos > 1500 then
-		pos = 1500	-- Too many used. Reuse
-	end
-	
-	local f = frms[pos]
-	if not f then
+    if pos > 1500 then
+        pos = 1500    -- Too many used. Reuse
+    end
 
-		f = CreateFrame ("Frame", "NxIconS"..pos, self.Frm)
-		frms[pos] = f
-		f.NxMap = self
+    local f = frms[pos]
+    if not f then
 
-		f:SetScript ("OnMouseDown", self.IconOnMouseDown)
-		f:SetScript ("OnMouseUp", self.IconOnMouseUp)
-		f:SetScript ("OnEnter", self.IconOnEnter)
-		f:SetScript ("OnLeave", self.IconOnLeave)
-		f:SetScript ("OnHide", self.IconOnLeave)
+        f = CreateFrame ("Frame", "NxIconS"..pos, self.Frm)
+        frms[pos] = f
+        f.NxMap = self
 
-		f:EnableMouse (true)
+        f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+        f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+        f:SetScript ("OnEnter", self.IconOnEnter)
+        f:SetScript ("OnLeave", self.IconOnLeave)
+        f:SetScript ("OnHide", self.IconOnLeave)
 
-		local t = f:CreateTexture()
-		f.texture = t
-		t:SetAllPoints (f)
-		t:SetSnapToPixelGrid(false)
-		t:SetTexelSnappingBias(0)
-	end
+        f:EnableMouse (true)
 
-	local add = levelAdd or 0
-	f:SetFrameLevel (self.Level + add)
+        local t = f:CreateTexture()
+        f.texture = t
+        t:SetAllPoints (f)
+        t:SetSnapToPixelGrid(false)
+        t:SetTexelSnappingBias(0)
+    end
 
-	f.texture:SetVertexColor (1, 1, 1, 1)
---	f.texture:SetBlendMode ("BLEND")
+    local add = levelAdd or 0
+    f:SetFrameLevel (self.Level + add)
 
-	f.NxTip = nil
-	f.NXType = nil			-- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
-	f.NXData = nil
-	f.NXData2 = nil
+    f.texture:SetVertexColor (1, 1, 1, 1)
+--    f.texture:SetBlendMode ("BLEND")
 
-	frms.Next = pos + 1
+    f.NxTip = nil
+    f.NXType = nil            -- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 9000+ quest
+    f.NXData = nil
+    f.NXData2 = nil
 
-	return f
+    frms.Next = pos + 1
+
+    return f
 end
 
 ------
@@ -9234,67 +9229,67 @@ end
 -- count: number of each icon type to pre-create (default 200)
 
 function Nx.Map:PreAllocateIcons (count)
-	count = count or 200
-	
-	-- Pre-allocate regular icons
-	local frms = self.IconFrms
-	for i = 1, count do
-		if not frms[i] then
-			local f = CreateFrame ("Frame", "NxIcon"..i, self.Frm)
-			frms[i] = f
-			f.NxMap = self
-			f:SetScript ("OnMouseDown", self.IconOnMouseDown)
-			f:SetScript ("OnMouseUp", self.IconOnMouseUp)
-			f:SetScript ("OnEnter", self.IconOnEnter)
-			f:SetScript ("OnLeave", self.IconOnLeave)
-			f:SetScript ("OnHide", self.IconOnLeave)
-			f:EnableMouse (true)
-			local t = f:CreateTexture()
-			f.texture = t
-			t:SetAllPoints (f)
-			t:SetSnapToPixelGrid(false)
-			t:SetTexelSnappingBias(0)
-			f:Hide()
-		end
-	end
-	
-	-- Pre-allocate non-interactive icons
-	frms = self.IconNIFrms
-	for i = 1, count do
-		if not frms[i] then
-			local f = CreateFrame ("Frame", "NxIconNI"..i, self.Frm)
-			frms[i] = f
-			f.NxMap = self
-			local t = f:CreateTexture()
-			f.texture = t
-			t:SetAllPoints (f)
-			t:SetSnapToPixelGrid(false)
-			t:SetTexelSnappingBias(0)
-			f:Hide()
-		end
-	end
-	
-	-- Pre-allocate static icons
-	frms = self.IconStaticFrms
-	for i = 1, count do
-		if not frms[i] then
-			local f = CreateFrame ("Frame", "NxIconS"..i, self.Frm)
-			frms[i] = f
-			f.NxMap = self
-			f:SetScript ("OnMouseDown", self.IconOnMouseDown)
-			f:SetScript ("OnMouseUp", self.IconOnMouseUp)
-			f:SetScript ("OnEnter", self.IconOnEnter)
-			f:SetScript ("OnLeave", self.IconOnLeave)
-			f:SetScript ("OnHide", self.IconOnLeave)
-			f:EnableMouse (true)
-			local t = f:CreateTexture()
-			f.texture = t
-			t:SetAllPoints (f)
-			t:SetSnapToPixelGrid(false)
-			t:SetTexelSnappingBias(0)
-			f:Hide()
-		end
-	end
+    count = count or 200
+
+    -- Pre-allocate regular icons
+    local frms = self.IconFrms
+    for i = 1, count do
+        if not frms[i] then
+            local f = CreateFrame ("Frame", "NxIcon"..i, self.Frm)
+            frms[i] = f
+            f.NxMap = self
+            f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+            f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+            f:SetScript ("OnEnter", self.IconOnEnter)
+            f:SetScript ("OnLeave", self.IconOnLeave)
+            f:SetScript ("OnHide", self.IconOnLeave)
+            f:EnableMouse (true)
+            local t = f:CreateTexture()
+            f.texture = t
+            t:SetAllPoints (f)
+            t:SetSnapToPixelGrid(false)
+            t:SetTexelSnappingBias(0)
+            f:Hide()
+        end
+    end
+
+    -- Pre-allocate non-interactive icons
+    frms = self.IconNIFrms
+    for i = 1, count do
+        if not frms[i] then
+            local f = CreateFrame ("Frame", "NxIconNI"..i, self.Frm)
+            frms[i] = f
+            f.NxMap = self
+            local t = f:CreateTexture()
+            f.texture = t
+            t:SetAllPoints (f)
+            t:SetSnapToPixelGrid(false)
+            t:SetTexelSnappingBias(0)
+            f:Hide()
+        end
+    end
+
+    -- Pre-allocate static icons
+    frms = self.IconStaticFrms
+    for i = 1, count do
+        if not frms[i] then
+            local f = CreateFrame ("Frame", "NxIconS"..i, self.Frm)
+            frms[i] = f
+            f.NxMap = self
+            f:SetScript ("OnMouseDown", self.IconOnMouseDown)
+            f:SetScript ("OnMouseUp", self.IconOnMouseUp)
+            f:SetScript ("OnEnter", self.IconOnEnter)
+            f:SetScript ("OnLeave", self.IconOnLeave)
+            f:SetScript ("OnHide", self.IconOnLeave)
+            f:EnableMouse (true)
+            local t = f:CreateTexture()
+            f.texture = t
+            t:SetAllPoints (f)
+            t:SetSnapToPixelGrid(false)
+            t:SetTexelSnappingBias(0)
+            f:Hide()
+        end
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -9460,116 +9455,116 @@ end
 --
 function Nx.Map:IconOnEnter(motion)
 
-	local this = self			--V4
+    local this = self            --V4
 
---	Nx.prt ("MapIconEnter %s", this:GetName() or "nil")
+--    Nx.prt ("MapIconEnter %s", this:GetName() or "nil")
 
-	local map = this.NxMap
+    local map = this.NxMap
 
-	if this.NXData then
-		if this.NXData.iconType == "!RSR" and RareScanner then
-			local rspin = this.NXData.UData
-			if rspin then
-				rspin:OnMouseEnter()
-				tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
-				tooltip:SmartAnchorTo(self)
-				this.NxTip = nil
-			end
-		end
+    if this.NXData then
+        if this.NXData.iconType == "!RSR" and RareScanner then
+            local rspin = this.NXData.UData
+            if rspin then
+                rspin:OnMouseEnter()
+                tooltip = ExtToolTip:Acquire("RsSimpleMapToolTip")
+                tooltip:SmartAnchorTo(self)
+                this.NxTip = nil
+            end
+        end
 
-		if this.NXData.iconType == "!QUE" and Questie then
-			local qpin = this.NXData.UData
-			qpin:OnMouseEnter()
-			local QuestieTooltips = QuestieLoader and QuestieLoader._modules["QuestieTooltips"]
-			local TooltipText = ""
-			if QuestieTooltips then
-				if qpin.icon and qpin.icon.data.Type == "available" then
-					local TooltipKeys = QuestieTooltips.lookupKeysByQuestId[qpin.icon.data.Id]
-					if TooltipKeys then
-						for _, TooltipKey in ipairs(TooltipKeys) do
-							local TooltipLines = QuestieTooltips.GetTooltip(TooltipKey)
-							for _, TooltipData in pairs(QuestieTooltips.lookupByKey[TooltipKey]) do
-								if TooltipData.name == qpin.icon.data.Name then
-									TooltipText = format("|cff00ff00%s", TooltipData.name)
-									if TooltipLines then
-										TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
-									end
-								end
-							end
-						end
-					end
-				else
-					if qpin.icon and qpin.icon.data.ObjectiveTargetId then
-						TooltipLines = QuestieTooltips.GetTooltip("m_" .. qpin.icon.data.ObjectiveTargetId)
-						if TooltipLines then 
-							if TooltipText == "" then
-								TooltipText = table.concat(TooltipLines, "\n")
-							else
-								TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
-							end
-						end
-					end
-				end
-				this.NxTip = TooltipText
-			end
-		end
-	end
+        if this.NXData.iconType == "!QUE" and Questie then
+            local qpin = this.NXData.UData
+            qpin:OnMouseEnter()
+            local QuestieTooltips = QuestieLoader and QuestieLoader._modules["QuestieTooltips"]
+            local TooltipText = ""
+            if QuestieTooltips then
+                if qpin.icon and qpin.icon.data.Type == "available" then
+                    local TooltipKeys = QuestieTooltips.lookupKeysByQuestId[qpin.icon.data.Id]
+                    if TooltipKeys then
+                        for _, TooltipKey in ipairs(TooltipKeys) do
+                            local TooltipLines = QuestieTooltips.GetTooltip(TooltipKey)
+                            for _, TooltipData in pairs(QuestieTooltips.lookupByKey[TooltipKey]) do
+                                if TooltipData.name == qpin.icon.data.Name then
+                                    TooltipText = format("|cff00ff00%s", TooltipData.name)
+                                    if TooltipLines then
+                                        TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
+                                    end
+                                end
+                            end
+                        end
+                    end
+                else
+                    if qpin.icon and qpin.icon.data.ObjectiveTargetId then
+                        TooltipLines = QuestieTooltips.GetTooltip("m_" .. qpin.icon.data.ObjectiveTargetId)
+                        if TooltipLines then
+                            if TooltipText == "" then
+                                TooltipText = table.concat(TooltipLines, "\n")
+                            else
+                                TooltipText = TooltipText .. "\n" .. table.concat(TooltipLines, "\n")
+                            end
+                        end
+                    end
+                end
+                this.NxTip = TooltipText
+            end
+        end
+    end
 
---	map.BackgndAlphaTarget = map.BackgndAlphaFull
+--    map.BackgndAlphaTarget = map.BackgndAlphaFull
 
-	map:BuildPlyrLists()
-	
-	--		Nx.prt ("MapIconEnter %s %s", this:GetName() or "nil", this.NxTip)
+    map:BuildPlyrLists()
 
-	local tt = GameTooltip
-	local owner = this
-	local tippos = "ANCHOR_CURSOR"
+    --        Nx.prt ("MapIconEnter %s %s", this:GetName() or "nil", this.NxTip)
 
-	if Nx.db.profile.Map.TopTooltip then
-		owner = map.Win.Frm
-		tippos = "ANCHOR_TOPLEFT"
-	end
+    local tt = GameTooltip
+    local owner = this
+    local tippos = "ANCHOR_CURSOR"
 
-	owner.NXIconFrm = this
+    if Nx.db.profile.Map.TopTooltip then
+        owner = map.Win.Frm
+        tippos = "ANCHOR_TOPLEFT"
+    end
 
---		Nx.TooltipOwner = owner
---		map.TooltipType = 2
+    owner.NXIconFrm = this
 
-	GameTooltip:SetOwner (owner, tippos, 0, 0)
-	owner["UpdateTooltip"] = Nx.Map.IconOnUpdateTooltip
+--        Nx.TooltipOwner = owner
+--        map.TooltipType = 2
 
-	local target = this.NxTarget;
-	if target then
-		local callbacks = target.TargetCallbacks;
-		if callbacks then
-			local onShow = callbacks.OnTooltipShow;
-			if onShow then
-				onShow(GameTooltip, target, this);
-			elseif onShow ~= false then
-				local str = Nx.Split ("~", format ("%s\n%s " .. L["yds"], target.TargetName or this.TrackName, shortendistance(ceil(target.dist * 4.575))));
-				Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr);
-			end
-			
-			local t = this.NXType or -1
-			if t >= 9000 then					-- Quest
-				Nx.Quest:IconOnEnter (this)
-			end
-			
-			-- If we have callbacks, we don't need to do the default behaviour.
-			return;
-		end
-	end
-	
-	if this.NxTip then
-		local str = Nx.Split ("~", this.NxTip)
-		Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
-	end
-	
-	local t = this.NXType or -1
+    GameTooltip:SetOwner (owner, tippos, 0, 0)
+    owner["UpdateTooltip"] = Nx.Map.IconOnUpdateTooltip
 
-	if t >= 9000 then					-- Quest
-		Nx.Quest:IconOnEnter (this)
-	end
+    local target = this.NxTarget;
+    if target then
+        local callbacks = target.TargetCallbacks;
+        if callbacks then
+            local onShow = callbacks.OnTooltipShow;
+            if onShow then
+                onShow(GameTooltip, target, this);
+            elseif onShow ~= false then
+                local str = Nx.Split ("~", format ("%s\n%s " .. L["yds"], target.TargetName or this.TrackName, shortendistance(ceil(target.dist * 4.575))));
+                Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr);
+            end
+
+            local t = this.NXType or -1
+            if t >= 9000 then                    -- Quest
+                Nx.Quest:IconOnEnter (this)
+            end
+
+            -- If we have callbacks, we don't need to do the default behaviour.
+            return;
+        end
+    end
+
+    if this.NxTip then
+        local str = Nx.Split ("~", this.NxTip)
+        Nx:SetTooltipText (str .. Nx.Map.PlyrNamesTipStr)
+    end
+
+    local t = this.NXType or -1
+
+    if t >= 9000 then                    -- Quest
+        Nx.Quest:IconOnEnter (this)
+    end
 end
 
 ---
@@ -9681,18 +9676,18 @@ function Nx.Map:GetText(text, levelAdd)
         fstr:SetFontObject("NxFontMap")
         fstr:SetJustifyH("LEFT")
         fstr:SetJustifyV("TOP")
-		fstr:SetHeight (100)
-		fstr:SetTextColor (1, 1, 1, 1)
-	end
+        fstr:SetHeight (100)
+        fstr:SetTextColor (1, 1, 1, 1)
+    end
 
-	fstr:SetText (text)
+    fstr:SetText (text)
 
---	local add = levelAdd or 0
---	f:SetFrameLevel (self.Level + add)
+--    local add = levelAdd or 0
+--    f:SetFrameLevel (self.Level + add)
 
-	data.Next = pos + 1
+    data.Next = pos + 1
 
-	return fstr
+    return fstr
 end
 
 --------
@@ -9700,144 +9695,144 @@ end
 
 function Nx.Map:MoveTextToIcon (fstr, icon, ox, oy)
 
-	local f = icon
-	local atPt, relTo, relPt, x, y = f:GetPoint()
+    local f = icon
+    local atPt, relTo, relPt, x, y = f:GetPoint()
 
---	Nx.prt ("Text %s %s %s", relPt, x, y)
+--    Nx.prt ("Text %s %s %s", relPt, x, y)
 
-	fstr:SetPoint ("TOPLEFT", x + ox, y - oy)
-	fstr:Show()
+    fstr:SetPoint ("TOPLEFT", x + ox, y - oy)
+    fstr:Show()
 end
 
 --------
 -- Update instance map
 
 function Nx.Map:UpdateInstanceMap()
-	
-	local mapId = self.InstMapId
-	if not mapId or not Nx.Initialized then
-		return
-	end
-	
-	local curId = Nx.Map:GetCurrentMapId()
 
-	if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
-		Nx.Map.NInstMapId = curId
-	end
-	Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
-	
-	local Map = Nx.Map
-	local winfo = Map.MapWorldInfo[mapId]
-	local info = self.InstMapInfo				-- Valid if Id not nil
-	if Map.MapWorldInfo[mapId].BaseMap then
-	  winfo = Map.MapWorldInfo[Map.MapWorldInfo[mapId].BaseMap]
-	end
---	Nx.prt ("Inst id %s", mapId)
+    local mapId = self.InstMapId
+    if not mapId or not Nx.Initialized then
+        return
+    end
 
-	if self.InstMapAtlas then
+    local curId = Nx.Map:GetCurrentMapId()
 
-		local wx = winfo.X
-		local wy = winfo.Y
+    if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
+        Nx.Map.NInstMapId = curId
+    end
+    Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
 
-		local n = 4;
-		if info then
-		--for n = 1, #info, 3 do
+    local Map = Nx.Map
+    local winfo = Map.MapWorldInfo[mapId]
+    local info = self.InstMapInfo                -- Valid if Id not nil
+    if Map.MapWorldInfo[mapId].BaseMap then
+      winfo = Map.MapWorldInfo[Map.MapWorldInfo[mapId].BaseMap]
+    end
+--    Nx.prt ("Inst id %s", mapId)
 
-			local sc = 668 / 256
-			local f = self:GetIconNI()
+    if self.InstMapAtlas then
 
-			if self:ClipFrameTL (f, wx, wy + (n - 1) * 668 / 768, sc, sc) then
-				local tex = string.gsub(info[n + 2], " ", "")
-				tex = "Interface\\AddOns\\Atlas\\Images\\" .. tex
-				f.texture:SetTexture (tex)
-			end
-		end
+        local wx = winfo.X
+        local wy = winfo.Y
 
-		self.Level = self.Level + 1
+        local n = 4;
+        if info then
+        --for n = 1, #info, 3 do
 
-	else
+            local sc = 668 / 256
+            local f = self:GetIconNI()
 
-		local wx = winfo.X
-		local wy = winfo.Y
+            if self:ClipFrameTL (f, wx, wy + (n - 1) * 668 / 768, sc, sc) then
+                local tex = string.gsub(info[n + 2], " ", "")
+                tex = "Interface\\AddOns\\Atlas\\Images\\" .. tex
+                f.texture:SetTexture (tex)
+            end
+        end
 
-		local is_n = nil
-		
-		local n = 4;
-		
-		local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
-		local textures = C_Map.GetMapArtLayerTextures(mapId, layerIndex)
-		
-		if info then
-		--for n = 1, #info, 3 do
-			local imgI = 1
+        self.Level = self.Level + 1
 
-			local offx = 0		-- info[n] * .04 * 1002 / 1024
-			local offy = 0		-- info[n + 1] * .03 * 668 / 768
+    else
 
-			for by = 0, 2 do
+        local wx = winfo.X
+        local wy = winfo.Y
 
-				for bx = 0, 3 do
+        local is_n = nil
 
-					local sc = 1
-					local f = self:GetIconNI(10)
+        local n = 4;
 
-					--Nx.prt ("Inst %s, %s %s %s %s", mapId, wx, wy, bx, by)
+        local layerIndex = WorldMapFrame:GetCanvasContainer():GetCurrentLayerIndex();
+        local textures = C_Map.GetMapArtLayerTextures(mapId, layerIndex)
 
-					if self:ClipFrameTL (f, wx + bx - offx, wy + by - offy, sc, sc) then
-					    if not is_n then is_n = n end
-						local tex = string.gsub(info[n + 2], " ", "")
-						tex = "Interface\\WorldMap\\" .. tex .. imgI
-						f.texture:SetTexture (textures[imgI])
-					end
-					imgI = imgI + 1
-				end
-			end
-		end
-		
-		if not ((Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps) then		
-			
-			Nx.Map.MouseOver = false
-			Nx.Map:GetMap(1).PlyrFrm:Hide()
-			
-			NXWorldMapUnitPositionFrame:ClearAllPoints()
-			NXWorldMapUnitPositionFrame:SetFrameLevel(40)
-			local c = NXWorldMapUnitPositionFrame
-			local f = self.NewPlrFrm
-			if not self.NewPlrFrm then 
-				f = CreateFrame ("ScrollFrame", "NewPlrFrm", self.Frm)
-				self.NewPlrFrm = f
-				f:SetFrameLevel(20)
-				f:SetFrameStrata("HIGH")
-				
-				-- RED BG FOR TESTING
-				--f.texture = f:CreateTexture()
-				--f.texture:SetAllPoints (f)
-				--f.texture:SetColorTexture (1, 0, 0, 0.2)
-			end
-			
-			c:SetParent(f)
-			c:SetSize(100,100)
-			f:SetScrollChild(c)
-			
-			--Nx.prt("%s", info[is_n + 1])
-			local w = 4 * (1002 / 1024)  -- (info[is_n + 1] * .04 * 1002 / 1024) * -1
-			local h = 3 * (668 / 768) -- (info[is_n + 1] * .03 * 668 / 768) * -1
-			local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel() > 0 and Nx.Map:GetCurrentMapDungeonLevel() -1 or 0
-			
-			local x1, y1, x2, y2 = self:ClipFrameINST (f, wx, wy + (h * dungeonLevel), w, h, true)
-			
-			--Nx.prt("%s, %s, %s, %s", x1, y1, x2, y2)
-			
-			c:SetPoint("TOPLEFT", x1 * -1, y1) -- -10, 10
-			c:SetPoint("BOTTOMRIGHT", x2 * -1, y2) -- 10, -10
-			
-			Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
-		else 
-			Nx.Map:HideNewPlrFrame()
-		end
-		
-		self.Level = self.Level + 1
-	end
+        if info then
+        --for n = 1, #info, 3 do
+            local imgI = 1
+
+            local offx = 0        -- info[n] * .04 * 1002 / 1024
+            local offy = 0        -- info[n + 1] * .03 * 668 / 768
+
+            for by = 0, 2 do
+
+                for bx = 0, 3 do
+
+                    local sc = 1
+                    local f = self:GetIconNI(10)
+
+                    --Nx.prt ("Inst %s, %s %s %s %s", mapId, wx, wy, bx, by)
+
+                    if self:ClipFrameTL (f, wx + bx - offx, wy + by - offy, sc, sc) then
+                        if not is_n then is_n = n end
+                        local tex = string.gsub(info[n + 2], " ", "")
+                        tex = "Interface\\WorldMap\\" .. tex .. imgI
+                        f.texture:SetTexture (textures[imgI])
+                    end
+                    imgI = imgI + 1
+                end
+            end
+        end
+
+        if not ((Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps) then
+
+            Nx.Map.MouseOver = false
+            Nx.Map:GetMap(1).PlyrFrm:Hide()
+
+            NXWorldMapUnitPositionFrame:ClearAllPoints()
+            NXWorldMapUnitPositionFrame:SetFrameLevel(40)
+            local c = NXWorldMapUnitPositionFrame
+            local f = self.NewPlrFrm
+            if not self.NewPlrFrm then
+                f = CreateFrame ("ScrollFrame", "NewPlrFrm", self.Frm)
+                self.NewPlrFrm = f
+                f:SetFrameLevel(20)
+                f:SetFrameStrata("HIGH")
+
+                -- RED BG FOR TESTING
+                --f.texture = f:CreateTexture()
+                --f.texture:SetAllPoints (f)
+                --f.texture:SetColorTexture (1, 0, 0, 0.2)
+            end
+
+            c:SetParent(f)
+            c:SetSize(100,100)
+            f:SetScrollChild(c)
+
+            --Nx.prt("%s", info[is_n + 1])
+            local w = 4 * (1002 / 1024)  -- (info[is_n + 1] * .04 * 1002 / 1024) * -1
+            local h = 3 * (668 / 768) -- (info[is_n + 1] * .03 * 668 / 768) * -1
+            local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel() > 0 and Nx.Map:GetCurrentMapDungeonLevel() -1 or 0
+
+            local x1, y1, x2, y2 = self:ClipFrameINST (f, wx, wy + (h * dungeonLevel), w, h, true)
+
+            --Nx.prt("%s, %s, %s, %s", x1, y1, x2, y2)
+
+            c:SetPoint("TOPLEFT", x1 * -1, y1) -- -10, 10
+            c:SetPoint("BOTTOMRIGHT", x2 * -1, y2) -- 10, -10
+
+            Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
+        else
+            Nx.Map:HideNewPlrFrame()
+        end
+
+        self.Level = self.Level + 1
+    end
 end
 
 ------------------------------------------
@@ -9847,10 +9842,10 @@ end
 -- Get a map by index
 
 function Nx.Map:GetMap (mapIndex)
-	if self.Maps then
-		return self.Maps[mapIndex]
-	end
-	assert(0, "Erroneous Map Index requested (probably by some other addon): mapIndex = " .. (mapIndex or 'missing'))
+    if self.Maps then
+        return self.Maps[mapIndex]
+    end
+    assert(0, "Erroneous Map Index requested (probably by some other addon): mapIndex = " .. (mapIndex or 'missing'))
 end
 
 --------
@@ -9858,10 +9853,10 @@ end
 
 function Nx.Map:SetTargetName (name)
 
-	local tar = self.Maps[1].Targets[1]
-	if tar then
-		tar.TargetName = name
-	end
+    local tar = self.Maps[1].Targets[1]
+    if tar then
+        tar.TargetName = name
+    end
 end
 
 --------
@@ -9869,10 +9864,10 @@ end
 
 function Nx.Map:GetTargetInfo()
 
-	local tar = self.Maps[1].Targets[1]
-	if tar then
-		return tar.TargetType, tar.TargetId
-	end
+    local tar = self.Maps[1].Targets[1]
+    if tar then
+        return tar.TargetType, tar.TargetId
+    end
 end
 
 --------
@@ -9880,10 +9875,10 @@ end
 
 function Nx.Map:GetTargetPos()
 
-	local tar = self.Maps[1].Targets[1]
-	if tar then
-		return tar.TargetX1, tar.TargetY1, tar.TargetX2, tar.TargetY2
-	end
+    local tar = self.Maps[1].Targets[1]
+    if tar then
+        return tar.TargetX1, tar.TargetY1, tar.TargetX2, tar.TargetY2
+    end
 end
 
 --------
@@ -9891,8 +9886,8 @@ end
 
 function Nx.Map:CurrentCenterMap (mapId)
 
-	local map = self.Maps[1]
-	map:CenterMap (mapId)
+    local map = self.Maps[1]
+    map:CenterMap (mapId)
 end
 
 ------------------------------------------
@@ -9903,289 +9898,289 @@ end
 
 function Nx.Map:InitTables()
 
-	local Nx = Nx
+    local Nx = Nx
 
-	local worldInfo = self.MapWorldInfo
-	Nx.MapOverlayToMapId = {}
+    local worldInfo = self.MapWorldInfo
+    Nx.MapOverlayToMapId = {}
 
-	-- Get Blizzard's alphabetical set of names
+    -- Get Blizzard's alphabetical set of names
 
-	--V403
+    --V403
 
-	if not Nx.isClassic then
-		self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
-	end
+    if not Nx.isClassic then
+        self.ZoneOverlays["lakewintergrasp"]["lakewintergrasp"] = "0,0,1024,768"
+    end
 
-	for k, v in pairs (worldInfo) do
-		local winfo = worldInfo[k]
-		if Nx.PlFactionNum == 0 and winfo.QAchievementIdA then
-			winfo.QAchievementId = winfo.QAchievementIdA				-- Copy Ally Id to generic Id
-		end
-		if Nx.PlFactionNum == 1 and winfo.QAchievementIdH then
-			winfo.QAchievementId = winfo.QAchievementIdH				-- Copy Horde Id to generic Id
-		end
-		if winfo.BaseMap then
-			Nx.Map.MapWorldInfo[k] = Nx.Map.MapWorldInfo[winfo.BaseMap]
-			Nx.Map.MapWorldInfo[k].RBaseMap = k
-			Nx.Map.MapWorldInfo[k].OBaseMap = winfo.BaseMap
-		end
-	end
-	for k, v in pairs (Nx.Zones) do
-		if worldInfo[k] then
-			local name, minLvl, maxLvl, faction, cont, entryId, ex, ey = Nx.Split ("|", v)
-			worldInfo[k].Cont = tonumber(cont)
-			worldInfo[k].Zone = k
-			local ov = worldInfo[k].Overlay
-			if ov then
-				Nx.MapOverlayToMapId[ov] = k
-			end
-		end
-	end
---	for n = 1, self.ContCnt do
---		CZ2Id[n][0] = n * 1000
---	end
+    for k, v in pairs (worldInfo) do
+        local winfo = worldInfo[k]
+        if Nx.PlFactionNum == 0 and winfo.QAchievementIdA then
+            winfo.QAchievementId = winfo.QAchievementIdA                -- Copy Ally Id to generic Id
+        end
+        if Nx.PlFactionNum == 1 and winfo.QAchievementIdH then
+            winfo.QAchievementId = winfo.QAchievementIdH                -- Copy Horde Id to generic Id
+        end
+        if winfo.BaseMap then
+            Nx.Map.MapWorldInfo[k] = Nx.Map.MapWorldInfo[winfo.BaseMap]
+            Nx.Map.MapWorldInfo[k].RBaseMap = k
+            Nx.Map.MapWorldInfo[k].OBaseMap = winfo.BaseMap
+        end
+    end
+    for k, v in pairs (Nx.Zones) do
+        if worldInfo[k] then
+            local name, minLvl, maxLvl, faction, cont, entryId, ex, ey = Nx.Split ("|", v)
+            worldInfo[k].Cont = tonumber(cont)
+            worldInfo[k].Zone = k
+            local ov = worldInfo[k].Overlay
+            if ov then
+                Nx.MapOverlayToMapId[ov] = k
+            end
+        end
+    end
+--    for n = 1, self.ContCnt do
+--        CZ2Id[n][0] = n * 1000
+--    end
 
-	-- Init for getting map id to and from name
+    -- Init for getting map id to and from name
 
---	for _, ci in ipairs (continentNums) do
+--    for _, ci in ipairs (continentNums) do
 
---		for mi, mapName in pairs (self.MapNames[ci]) do
+--        for mi, mapName in pairs (self.MapNames[ci]) do
 
---			if ci == 2 then
---				Nx.prt ("Map %s %s", mapName, self.CZ2Id[ci][mi] or "nil")
---			end
---			local mid = self.CZ2Id[ci][mi]
+--            if ci == 2 then
+--                Nx.prt ("Map %s %s", mapName, self.CZ2Id[ci][mi] or "nil")
+--            end
+--            local mid = self.CZ2Id[ci][mi]
 
---			if Nx.MapNameToId[mapName] then
---				Nx.prt ("Dup map name: %s (%s %s)", mapName, ci, mi)
---				Nx.MapNameToId[mapName .. "2"] = mid
---			else
---				Nx.MapNameToId[mapName] = mid
---			end
+--            if Nx.MapNameToId[mapName] then
+--                Nx.prt ("Dup map name: %s (%s %s)", mapName, ci, mi)
+--                Nx.MapNameToId[mapName .. "2"] = mid
+--            else
+--                Nx.MapNameToId[mapName] = mid
+--            end
 
---			if not mid then
---				Nx.prt (L["Unknown map name"] .. ": %s (%s %s)", mapName, ci, mi)
---			else
---				Nx.MapIdToName[mid] = mapName
---			end
---		end
---	end
+--            if not mid then
+--                Nx.prt (L["Unknown map name"] .. ": %s (%s %s)", mapName, ci, mi)
+--            else
+--                Nx.MapIdToName[mid] = mapName
+--            end
+--        end
+--    end
 
-	-- Localize the zone name
+    -- Localize the zone name
 
---	for id, v in pairs (Nx.Zones) do
---		local i = strfind (v, "|")
---		local name = strsub (v, 1, i - 1)
---		local data = strsub (v, i + 1)
---		Nx.Zones[id] = L[name] .. "|" .. data
---	end
+--    for id, v in pairs (Nx.Zones) do
+--        local i = strfind (v, "|")
+--        local name = strsub (v, 1, i - 1)
+--        local data = strsub (v, i + 1)
+--        Nx.Zones[id] = L[name] .. "|" .. data
+--    end
 
 -- Make world coords for each zone
---		Nx.prt ("WC %s %s %s", ci, cx, cy)
+--        Nx.prt ("WC %s %s %s", ci, cx, cy)
 
-	for n = 0, self.ContCnt do
-		for _, id in pairs (Nx.Map.MapZones[n]) do
-			local winfo = worldInfo[id]
-			if winfo then
-				local info = self.MapInfo[winfo.Cont]
-				if info then
-					if winfo.XOff then	-- Had pos offset?
-						winfo.X = winfo.X + winfo.XOff
-						winfo.Y = winfo.Y + winfo.YOff
-						winfo.XOff = nil
-						winfo.YOff = nil
-					end
-					local cx = info.X
-					local cy = info.Y
-					if winfo.X ~= nil and winfo.Y ~= nil then
-						winfo[4] = cx + winfo.X
-						winfo[5] = cy + winfo.Y
-					else
-						if n ~= nil and n ~= 0 then
-							Nx.prt("Map Error: " .. tostring(n))
-						end
-					end
-				else
-				end
-			end
-		end
-	end
+    for n = 0, self.ContCnt do
+        for _, id in pairs (Nx.Map.MapZones[n]) do
+            local winfo = worldInfo[id]
+            if winfo then
+                local info = self.MapInfo[winfo.Cont]
+                if info then
+                    if winfo.XOff then    -- Had pos offset?
+                        winfo.X = winfo.X + winfo.XOff
+                        winfo.Y = winfo.Y + winfo.YOff
+                        winfo.XOff = nil
+                        winfo.YOff = nil
+                    end
+                    local cx = info.X
+                    local cy = info.Y
+                    if winfo.X ~= nil and winfo.Y ~= nil then
+                        winfo[4] = cx + winfo.X
+                        winfo[5] = cy + winfo.Y
+                    else
+                        if n ~= nil and n ~= 0 then
+                            Nx.prt("Map Error: " .. tostring(n))
+                        end
+                    end
+                else
+                end
+            end
+        end
+    end
 
-	for _, id in pairs (Nx.Map.MapZones[90]) do
-		local winfo = worldInfo[id]
-		if winfo then
-			local info = self.MapInfo[90]
-			if info then
-				local cx = info.X
-				local cy = info.Y
-				if winfo.X ~= nil and winfo.Y ~= nil then
-					winfo[4] = cx + winfo.X
-					winfo[5] = cy + winfo.Y
-				else
-					if n ~= nil and n ~= 0 then
-						Nx.prt("Map Error: " .. tostring(n))
-					end
-				end
-				winfo.Cont = 90
-				winfo.Zone = id
-			else
-			end
-		end
-	end
+    for _, id in pairs (Nx.Map.MapZones[90]) do
+        local winfo = worldInfo[id]
+        if winfo then
+            local info = self.MapInfo[90]
+            if info then
+                local cx = info.X
+                local cy = info.Y
+                if winfo.X ~= nil and winfo.Y ~= nil then
+                    winfo[4] = cx + winfo.X
+                    winfo[5] = cy + winfo.Y
+                else
+                    if n ~= nil and n ~= 0 then
+                        Nx.prt("Map Error: " .. tostring(n))
+                    end
+                end
+                winfo.Cont = 90
+                winfo.Zone = id
+            else
+            end
+        end
+    end
 
-	--
-	for id, v in pairs (Nx.Zones) do
+    --
+    for id, v in pairs (Nx.Zones) do
 
-		local name, minLvl, maxLvl, faction, cont, entryId, ex, ey = Nx.Split ("|", v)
+        local name, minLvl, maxLvl, faction, cont, entryId, ex, ey = Nx.Split ("|", v)
 
-		-- Faction:
-		-- 0 Alliance
-		-- 1 Horde
-		-- 2 Contested
-		-- 3 Instance
-		-- 4 Unknown
+        -- Faction:
+        -- 0 Alliance
+        -- 1 Horde
+        -- 2 Contested
+        -- 3 Instance
+        -- 4 Unknown
 
-		-- Continent:
-		-- 1 Kalimdor
-		-- 2 EasternKingdoms
-		-- 3 Outland
-		-- 4 Northrend
-		-- 5 Maelstorm
-		-- 6 Pandaria
-		-- 7 Draenor
-		-- 8 Broken Isles
-		-- 9 Argus
-		-- 99 Battlegrounds
-		-- 100 Instances
+        -- Continent:
+        -- 1 Kalimdor
+        -- 2 EasternKingdoms
+        -- 3 Outland
+        -- 4 Northrend
+        -- 5 Maelstorm
+        -- 6 Pandaria
+        -- 7 Draenor
+        -- 8 Broken Isles
+        -- 9 Argus
+        -- 99 Battlegrounds
+        -- 100 Instances
 
-		if faction == "3" and cont == "5" then		-- Instance
+        if faction == "3" and cont == "5" then        -- Instance
 
-			assert (entryId)
+            assert (entryId)
 
-			if entryId == "0" then
-				Nx.prt("Instance " .. name .. " trying entryId 0")
-				entryId = "125"
-			end
+            if entryId == "0" then
+                Nx.prt("Instance " .. name .. " trying entryId 0")
+                entryId = "125"
+            end
 --[[
-			local i = strfind (name, ": ")
-			if i then
-				name = strsub (name, i + 2)
-			end
+            local i = strfind (name, ": ")
+            if i then
+                name = strsub (name, i + 2)
+            end
 --]]
 
---			Nx.prt ("Inst %s %d", name, id)
+--            Nx.prt ("Inst %s %d", name, id)
 
-			local entryZone = Nx.Zones[tonumber (entryId)]
-			local ename, _, _, entryfact, entrycont, entrybase = Nx.Split ("|", entryZone)
-			local mid = id
-			tinsert(Nx.Map.MapZones[100],id)
-			local emid = tonumber(entryId)
-			while entryfact == "3" and entrycont == "5" do
-				Nx.prt(entrybase)
-				_, _, _, entryfact, entrycont, entrybase = Nx.Split ("|", entrybase)
-			end
-			
-			if self.MapWorldInfo[mid] and self.MapWorldInfo[mid].BaseMap then
-				mid = self.MapWorldInfo[mid].BaseMap
-			end
-			if self.MapWorldInfo[mid] then			-- Adjustment exists?
-				ex = ex + self.MapWorldInfo[mid].X
-				ey = ey + self.MapWorldInfo[mid].Y
-			end
+            local entryZone = Nx.Zones[tonumber (entryId)]
+            local ename, _, _, entryfact, entrycont, entrybase = Nx.Split ("|", entryZone)
+            local mid = id
+            tinsert(Nx.Map.MapZones[100],id)
+            local emid = tonumber(entryId)
+            while entryfact == "3" and entrycont == "5" do
+                Nx.prt(entrybase)
+                _, _, _, entryfact, entrycont, entrybase = Nx.Split ("|", entrybase)
+            end
 
---			Nx.prt ("Inst %s %s, %s %s %f %f", name, mid, ename, emid or "nil", ex, ey)			
-			local x, y = self:GetWorldPos (emid, ex, ey)
+            if self.MapWorldInfo[mid] and self.MapWorldInfo[mid].BaseMap then
+                mid = self.MapWorldInfo[mid].BaseMap
+            end
+            if self.MapWorldInfo[mid] then            -- Adjustment exists?
+                ex = ex + self.MapWorldInfo[mid].X
+                ey = ey + self.MapWorldInfo[mid].Y
+            end
 
---			Nx.prt ("Inst %s %d, %d %f %f", name, mid, emid, x, y)
+--            Nx.prt ("Inst %s %s, %s %s %f %f", name, mid, ename, emid or "nil", ex, ey)
+            local x, y = self:GetWorldPos (emid, ex, ey)
 
-			local ewinfo = self.MapWorldInfo[emid]
-			if not ewinfo then
---				Nx.prt ("? %s %s", ename, emid or "nil")
-			end
+--            Nx.prt ("Inst %s %d, %d %f %f", name, mid, emid, x, y)
 
-			local winfo = {}
-			winfo.EntryMId = emid
-			winfo.Scale = 1002 / 25600 --ewinfo[1]		-- Scale
-			winfo.X = x				-- X
-			winfo.Y = y				-- Y
-			winfo[4] = x				-- X
-			winfo[5] = y				-- Y
-			winfo.Cont = entrycont
-			winfo.Zone = mid
-			winfo.Instance = true
-			self.MapWorldInfo[mid] = winfo
-		end
-	end
+            local ewinfo = self.MapWorldInfo[emid]
+            if not ewinfo then
+--                Nx.prt ("? %s %s", ename, emid or "nil")
+            end
 
-	--	DEBUG for Jamie
+            local winfo = {}
+            winfo.EntryMId = emid
+            winfo.Scale = 1002 / 25600 --ewinfo[1]        -- Scale
+            winfo.X = x                -- X
+            winfo.Y = y                -- Y
+            winfo[4] = x                -- X
+            winfo[5] = y                -- Y
+            winfo.Cont = entrycont
+            winfo.Zone = mid
+            winfo.Instance = true
+            self.MapWorldInfo[mid] = winfo
+        end
+    end
 
-	Nx.ZoneConnections = Nx["ZoneConnections"] or Nx.ZoneConnections	-- Copy unmunged data to munged data
+    --    DEBUG for Jamie
 
-	-- Init zone connections
-		for n = 0, 1999 do
-			local mapId = n
-			local winfo = worldInfo[mapId]
-			if not winfo then
-				
-			else
+    Nx.ZoneConnections = Nx["ZoneConnections"] or Nx.ZoneConnections    -- Copy unmunged data to munged data
 
-			local cons = {}
-			winfo.Connections = cons
-			if winfo.Short then
+    -- Init zone connections
+        for n = 0, 1999 do
+            local mapId = n
+            local winfo = worldInfo[mapId]
+            if not winfo then
 
-			end
-			for _, str in ipairs (Nx.ZoneConnections) do
+            else
 
-				local flags, conTime, name1, z1, x1, y1, name2, z2, x2, y2 = Nx.Split ("|",str)
+            local cons = {}
+            winfo.Connections = cons
+            if winfo.Short then
 
-				conTime = tonumber(conTime)
-				local mapId1 = tonumber(z1)
-				local mapId2 = tonumber(z2)
+            end
+            for _, str in ipairs (Nx.ZoneConnections) do
 
-				if not (mapId1 and mapId2) then
-					Nx.prt ("zone conn err %s to %s", z1 - 35, z2 - 35)
-					conTime = 0
-				end
+                local flags, conTime, name1, z1, x1, y1, name2, z2, x2, y2 = Nx.Split ("|",str)
 
-				if conTime == 1 and (mapId == mapId1 or (mapId == mapId2 and bit.band (flags, 1) == 1)) then
+                conTime = tonumber(conTime)
+                local mapId1 = tonumber(z1)
+                local mapId2 = tonumber(z2)
 
-					local cont1 = self:IdToContZone (mapId1)
-					local cont2 = self:IdToContZone (mapId2)
+                if not (mapId1 and mapId2) then
+                    Nx.prt ("zone conn err %s to %s", z1 - 35, z2 - 35)
+                    conTime = 0
+                end
 
-					if cont1 == cont2 then
+                if conTime == 1 and (mapId == mapId1 or (mapId == mapId2 and bit.band (flags, 1) == 1)) then
 
-						if mapId == mapId2 then		-- Swap?
-							mapId1, mapId2 = mapId2, mapId1
-							x1, y1, x2, y2 = x2, y2, x1, y1
-						end
+                    local cont1 = self:IdToContZone (mapId1)
+                    local cont2 = self:IdToContZone (mapId2)
 
-						local zcons = cons[mapId2] or {}
-						cons[mapId2] = zcons
+                    if cont1 == cont2 then
 
-						if x1 ~= 0 and y1 ~= 0 then	-- Specific connection? Else connects anywhere
+                        if mapId == mapId2 then        -- Swap?
+                            mapId1, mapId2 = mapId2, mapId1
+                            x1, y1, x2, y2 = x2, y2, x1, y1
+                        end
 
-							local con = {}
-							tinsert (zcons, con)
+                        local zcons = cons[mapId2] or {}
+                        cons[mapId2] = zcons
 
-							x1, y1 = self:GetWorldPos (mapId1, x1, y1)
-							x2, y2 = self:GetWorldPos (mapId2, x2, y2)
+                        if x1 ~= 0 and y1 ~= 0 then    -- Specific connection? Else connects anywhere
 
-							con.StartMapId = mapId1
-							con.StartX = x1
-							con.StartY = y1
-							con.EndMapId = mapId2
-							con.EndX = x2
-							con.EndY = y2
-							con.Dist = ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ .5
-						end
+                            local con = {}
+                            tinsert (zcons, con)
 
---					else
---						Nx.prt ("%s to %s", mapId1, mapId2)
-					end
-				end
-			end
-			end
-		end
+                            x1, y1 = self:GetWorldPos (mapId1, x1, y1)
+                            x2, y2 = self:GetWorldPos (mapId2, x2, y2)
+
+                            con.StartMapId = mapId1
+                            con.StartX = x1
+                            con.StartY = y1
+                            con.EndMapId = mapId2
+                            con.EndX = x2
+                            con.EndY = y2
+                            con.Dist = ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ .5
+                        end
+
+--                    else
+--                        Nx.prt ("%s to %s", mapId1, mapId2)
+                    end
+                end
+            end
+            end
+        end
 end
 
 --------
@@ -10193,15 +10188,15 @@ end
 -- self: not used
 
 function Nx.Map:ConnectionUnpack (str)
-	-- File needs dungeon level updates
-	local flags, typ, nam1, z1, x1, y1, nam2, z2, x2, y2 = Nx.Split ("|",str)
-	if not nam1 then
-		nam1 = ""
-	end
-	if not nam2 then
-		nam2 = ""
-	end
-	return tonumber(flags), tonumber(typ), nam1, tonumber(z1), tonumber(x1), tonumber(y1), 0, nam2, tonumber(z2), tonumber(x2), tonumber(y2), 0
+    -- File needs dungeon level updates
+    local flags, typ, nam1, z1, x1, y1, nam2, z2, x2, y2 = Nx.Split ("|",str)
+    if not nam1 then
+        nam1 = ""
+    end
+    if not nam2 then
+        nam2 = ""
+    end
+    return tonumber(flags), tonumber(typ), nam1, tonumber(z1), tonumber(x1), tonumber(y1), 0, nam2, tonumber(z2), tonumber(x2), tonumber(y2), 0
 end
 
 --------
@@ -10210,18 +10205,18 @@ end
 
 function Nx.Map:CZ2MapId (cont, zone)
 
-	if cont <= 0 then
-		return 9000
-	end
+    if cont <= 0 then
+        return 9000
+    end
 
-	return self.CZ2Id[cont][zone]
+    return self.CZ2Id[cont][zone]
 end
 
 --------
 -- Get the real player location map id without map level calculation
 
 function Nx.Map:GetRealBaseMapId()
-		return Nx.Map.UpdateMapID
+        return Nx.Map.UpdateMapID
 end
 
 --------
@@ -10229,17 +10224,17 @@ end
 -- asdf
 function Nx.Map:GetInstanceID(id)
   if Nx.Zones[tonumber(id)] then
-	local name, minLvl, maxLvl, faction, cont, entryId, entryPos = Nx.Split ("|", Nx.Zones[tonumber(id)])
-	local entryZone = Nx.Zones[tonumber (entryId)]
-	if entryZone then
-		return entryId
-	end
+    local name, minLvl, maxLvl, faction, cont, entryId, entryPos = Nx.Split ("|", Nx.Zones[tonumber(id)])
+    local entryZone = Nx.Zones[tonumber (entryId)]
+    if entryZone then
+        return entryId
+    end
   end
   return 9000
 end
 
 function Nx.Map:GetRealMapId()
-	return Nx.Map:GetCurrentMapAreaID()
+    return Nx.Map:GetCurrentMapAreaID()
 end
 
 --------
@@ -10247,83 +10242,83 @@ end
 -- Do not call Nx.Map:SetToCurrentZone() here or crash
 
 function Nx.Map:GetCurrentMapId(conv)
-	if Nx.Map.RMapId == 9000 then
-		return Nx.Map:GetCurrentMapAreaID()
-	end	
-	return Nx.Map.RMapId
+    if Nx.Map.RMapId == 9000 then
+        return Nx.Map:GetCurrentMapAreaID()
+    end
+    return Nx.Map.RMapId
 end
 
 --------
 -- Set the current using a map id
 
 function Nx.Map:SetCurrentMap (mapId)
-	if mapId then
----		Nx.prt ("Nx.Map:SetToCurrentZone %s", mapId)
-		self.BaseScale = 1
-		for n = 1, Nx.Map.ContCnt do
-			for i,j in pairs (Nx.Map.MapZones[n]) do
-				if mapId == j then
-					local cont = self.MapWorldInfo[mapId].Cont
-					local zone = self.MapWorldInfo[mapId].Zone
+    if mapId then
+---        Nx.prt ("Nx.Map:SetToCurrentZone %s", mapId)
+        self.BaseScale = 1
+        for n = 1, Nx.Map.ContCnt do
+            for i,j in pairs (Nx.Map.MapZones[n]) do
+                if mapId == j then
+                    local cont = self.MapWorldInfo[mapId].Cont
+                    local zone = self.MapWorldInfo[mapId].Zone
 
-					if not self.MapWorldInfo[mapId].City and (not cont or not zone or mapId == self:GetRealBaseMapId() or mapId == self:GetRealMapId()) then						
-						Nx.Map:SetToCurrentZone()		-- This fixes the Scarlet Enclave map selection, so we get player position						
-						--SetDungeonMapLevel (1)
-					else
---						SetMapZoom (cont, i)
-						Nx.Map:SetMapByID(mapId)						
-					end
+                    if not self.MapWorldInfo[mapId].City and (not cont or not zone or mapId == self:GetRealBaseMapId() or mapId == self:GetRealMapId()) then
+                        Nx.Map:SetToCurrentZone()        -- This fixes the Scarlet Enclave map selection, so we get player position
+                        --SetDungeonMapLevel (1)
+                    else
+--                        SetMapZoom (cont, i)
+                        Nx.Map:SetMapByID(mapId)
+                    end
 
-					return
-				end
-			end
-		end
-		if self:IsInstanceMap(mapId) then	-- Instance?
-			local aid = mapId
-			if aid then
-				self.MapId = 0				-- Force change (needed?)
-				if mapId == self:GetRealBaseMapId() then
-					Nx.Map:SetToCurrentZone()					
-				else
-					local caid = Nx.Map:GetCurrentMapAreaID()
-					if caid ~= aid then
---						Nx.prt ("SetCurrentMap dif %s", caid)
-						Nx.Map:SetMapByID (aid)						
-						--SetDungeonMapLevel (1)
-					end
-				end
-			else
-				if mapId == self:GetRealBaseMapId() then
-					self.MapId = 0				-- Force change
-					Nx.Map:SetToCurrentZone()					
-				else
-					self.MapId = mapId
-					--SetMapZoom (-1)			-- Cosmic map. Has no POIs
-				end
-			end
-		end
-		self.InstLevelSet = Nx.Map:GetCurrentMapDungeonLevel()
-	end
+                    return
+                end
+            end
+        end
+        if self:IsInstanceMap(mapId) then    -- Instance?
+            local aid = mapId
+            if aid then
+                self.MapId = 0                -- Force change (needed?)
+                if mapId == self:GetRealBaseMapId() then
+                    Nx.Map:SetToCurrentZone()
+                else
+                    local caid = Nx.Map:GetCurrentMapAreaID()
+                    if caid ~= aid then
+--                        Nx.prt ("SetCurrentMap dif %s", caid)
+                        Nx.Map:SetMapByID (aid)
+                        --SetDungeonMapLevel (1)
+                    end
+                end
+            else
+                if mapId == self:GetRealBaseMapId() then
+                    self.MapId = 0                -- Force change
+                    Nx.Map:SetToCurrentZone()
+                else
+                    self.MapId = mapId
+                    --SetMapZoom (-1)            -- Cosmic map. Has no POIs
+                end
+            end
+        end
+        self.InstLevelSet = Nx.Map:GetCurrentMapDungeonLevel()
+    end
 end
 
 --------
 -- Set the map to current zone
 
 function Nx.Map:SetToCurrentZone()
-	Nx.Map:SetMapByID(MapUtil.GetDisplayableMapForPlayer())
+    Nx.Map:SetMapByID(MapUtil.GetDisplayableMapForPlayer())
 end
 
 function Nx.Map:GetCurrentMapAreaID()
-	local displayableMapID = MapUtil.GetDisplayableMapForPlayer()
-	local mapID = Nx.Map.MouseOver and WorldMapFrame:GetMapID() or displayableMapID
+    local displayableMapID = MapUtil.GetDisplayableMapForPlayer()
+    local mapID = Nx.Map.MouseOver and WorldMapFrame:GetMapID() or displayableMapID
 
-	local _, instanceType = GetInstanceInfo() 
-	if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
-	if not Nx.isMoPClassic then
-		if mapID == 1414 then mapID = 12 end
-		if mapID == 1415 then mapID = 13 end
-	end
-	return mapID
+    local _, instanceType = GetInstanceInfo()
+    if (instanceType ~= nil and instanceType ~= "none") then mapID = displayableMapID end
+    if not Nx.isMoPClassic then
+        if mapID == 1414 then mapID = 12 end
+        if mapID == 1415 then mapID = 13 end
+    end
+    return mapID
 end
 
 --------
@@ -10331,20 +10326,20 @@ end
 
 function Nx.Map:SaveView (name)
 
-	local str = format ("%s%s", Nx.InBG or "", name)
+    local str = format ("%s%s", Nx.InBG or "", name)
 
---	Nx.prt ("Save view %s", str)
+--    Nx.prt ("Save view %s", str)
 
-	local v = self.ViewSavedData[str]
+    local v = self.ViewSavedData[str]
 
-	if not v then
-		v = {}
-		self.ViewSavedData[str] = v
-	end
+    if not v then
+        v = {}
+        self.ViewSavedData[str] = v
+    end
 
-	v.Scale = self.Scale
-	v.X = self.MapPosX
-	v.Y = self.MapPosY
+    v.Scale = self.Scale
+    v.X = self.MapPosX
+    v.Y = self.MapPosY
 end
 
 --------
@@ -10352,19 +10347,19 @@ end
 
 function Nx.Map:RestoreView (name)
 
-	local str = format ("%s%s", Nx.InBG or "", name)
+    local str = format ("%s%s", Nx.InBG or "", name)
 
---	Nx.prt ("Restore view %s", str)
+--    Nx.prt ("Restore view %s", str)
 
-	local v = self.ViewSavedData[str]
+    local v = self.ViewSavedData[str]
 
-	if v then
-		self.Scale = v.Scale
-		self.MapPosX = v.X
-		self.MapPosY = v.Y
+    if v then
+        self.Scale = v.Scale
+        self.MapPosX = v.X
+        self.MapPosY = v.Y
 
-		self.StepTime = 5
-	end
+        self.StepTime = 5
+    end
 end
 
 --------
@@ -10372,59 +10367,59 @@ end
 
 function Nx.Map:Move (x, y, scale, stepTime)
 
---	Nx.prt ("Move %s %s sc %s time %s", x, y, scale or "nil", stepTime)
+--    Nx.prt ("Move %s %s sc %s time %s", x, y, scale or "nil", stepTime)
 
-	self.MapPosX = x
-	self.MapPosY = y
+    self.MapPosX = x
+    self.MapPosY = y
 
-	if scale then
-		self.Scale = scale
-	end
+    if scale then
+        self.Scale = scale
+    end
 
-	local dist = ((self.MapPosXDraw - self.MapPosX) ^ 2 + (self.MapPosYDraw - self.MapPosY) ^ 2) ^ .5
+    local dist = ((self.MapPosXDraw - self.MapPosX) ^ 2 + (self.MapPosYDraw - self.MapPosY) ^ 2) ^ .5
 
-	local sz = max (self.MapW, self.MapH)
+    local sz = max (self.MapW, self.MapH)
 
---	Nx.prt ("Move dist %f %f val %f", sz, dist, dist * self.Scale / sz)
+--    Nx.prt ("Move dist %f %f val %f", sz, dist, dist * self.Scale / sz)
 
-	if dist * self.Scale / sz > 10 then	-- Zoomed in and a large jump?
-		stepTime = 1	-- Go fast
-	end
+    if dist * self.Scale / sz > 10 then    -- Zoomed in and a large jump?
+        stepTime = 1    -- Go fast
+    end
 
---	Nx.prt ("Move #%d %f steptime %f ", self.Tick, dist, self.StepTime)
+--    Nx.prt ("Move #%d %f steptime %f ", self.Tick, dist, self.StepTime)
 
-	local st = abs (self.StepTime)	-- Will be neg if triggered
+    local st = abs (self.StepTime)    -- Will be neg if triggered
 
-	if st > 0 and st < stepTime then		-- Already stepping? Use short time
-		stepTime = st
---		Nx.prt ("Move steptime %f", stepTime)
-	end
+    if st > 0 and st < stepTime then        -- Already stepping? Use short time
+        stepTime = st
+--        Nx.prt ("Move steptime %f", stepTime)
+    end
 
-	self.StepTime = stepTime
+    self.StepTime = stepTime
 
-	if dist < .25 then
+    if dist < .25 then
 
---		Nx.prt ("Move snap XY")
+--        Nx.prt ("Move snap XY")
 
-		self.MapPosXDraw = self.MapPosX
-		self.MapPosYDraw = self.MapPosY
-	end
+        self.MapPosXDraw = self.MapPosX
+        self.MapPosYDraw = self.MapPosY
+    end
 
-	if abs (1 / self.ScaleDraw - 1 / self.Scale) < .01 then
-		self.ScaleDraw = self.Scale
+    if abs (1 / self.ScaleDraw - 1 / self.Scale) < .01 then
+        self.ScaleDraw = self.Scale
 
---		Nx.prt ("Move snap scale")
+--        Nx.prt ("Move snap scale")
 
-		if dist < .25 then
-			self.StepTime = 0
-		end
-	end
+        if dist < .25 then
+            self.StepTime = 0
+        end
+    end
 
 --[[
-	if self.Debug then
-		local plZX, plZY = Nx.GetPlayerMapPosition ("player")
-		Nx.prt ("Move %f %f (%f %f)", x, y, plZX, plZY)
-	end
+    if self.Debug then
+        local plZX, plZY = Nx.GetPlayerMapPosition ("player")
+        Nx.prt ("Move %f %f (%f %f)", x, y, plZX, plZY)
+    end
 --]]
 end
 
@@ -10433,19 +10428,19 @@ end
 
 function Nx.Map:GotoCurrentZone()
 
---	Nx.prt ("GotoCurrentZone")
+--    Nx.prt ("GotoCurrentZone")
 
-	if self.InstanceId then
-		self:Move (self.PlyrX, self.PlyrY, 20, 15)
-	else
-		self:SetToCurrentZone()
-		local mapId = MapUtil.GetDisplayableMapForPlayer()
-		if not Nx.isMoPClassic then
-			if mapId == 1414 then mapId = 12 end
-			if mapId == 1415 then mapId = 13 end
-		end
-		self:CenterMap (mapId)
-	end
+    if self.InstanceId then
+        self:Move (self.PlyrX, self.PlyrY, 20, 15)
+    else
+        self:SetToCurrentZone()
+        local mapId = MapUtil.GetDisplayableMapForPlayer()
+        if not Nx.isMoPClassic then
+            if mapId == 1414 then mapId = 12 end
+            if mapId == 1415 then mapId = 13 end
+        end
+        self:CenterMap (mapId)
+    end
 end
 
 --------
@@ -10453,61 +10448,61 @@ end
 
 function Nx.Map:GotoPlayer()
 
---	Nx.prt ("GotoPlayer")
+--    Nx.prt ("GotoPlayer")
 
-	self:CalcTracking()
+    self:CalcTracking()
 
-	self:SetToCurrentZone()
+    self:SetToCurrentZone()
 
-	self.MoveLastX = -1
-	self.MoveLastY = -1
+    self.MoveLastX = -1
+    self.MoveLastY = -1
 end
 
 --------
 -- Center the map in view
 
 function Nx.Map:CenterMap (mapId, scale)
-	if (mapId == nil or mapId == -1) then
-		return
-	end
-	mapId = mapId or self.MapId
+    if (mapId == nil or mapId == -1) then
+        return
+    end
+    mapId = mapId or self.MapId
 
 --[[ -- Map capture
-	if 1 then
-		self:CenterMap1To1 (floor (mapId / 1000) * 1000)
-		return
-	end
+    if 1 then
+        self:CenterMap1To1 (floor (mapId / 1000) * 1000)
+        return
+    end
 --]]
 
-	if self:GetWorldZone (mapId).City then
-		scale = 1
-	end
+    if self:GetWorldZone (mapId).City then
+        scale = 1
+    end
 
-	self.MapW = self.Frm:GetWidth() - self.PadX * 2
-	self.MapH = self.Frm:GetHeight() - self.TitleH
+    self.MapW = self.Frm:GetWidth() - self.PadX * 2
+    self.MapH = self.Frm:GetHeight() - self.TitleH
 
-	local x, y = self:GetWorldPos (mapId, 50, 50)
-	local size = min (self.MapW / 1002, self.MapH / 668)
-	if self.MapW < GetScreenWidth() / 2 then
-		size = size * (scale or 1.5)
-	end
+    local x, y = self:GetWorldPos (mapId, 50, 50)
+    local size = min (self.MapW / 1002, self.MapH / 668)
+    if self.MapW < GetScreenWidth() / 2 then
+        size = size * (scale or 1.5)
+    end
 
-	local scale = size / self:GetWorldZoneScale (mapId) * 10.02
+    local scale = size / self:GetWorldZoneScale (mapId) * 10.02
 
-	self:Move (x, y, scale, 15)
+    self:Move (x, y, scale, 15)
 
---	Nx.prt ("Center #%d %f (%f %f) (%d %d)", mapId, self.Scale, self.MapPosX, self.MapPosY, self.MapW, self.MapH)
+--    Nx.prt ("Center #%d %f (%f %f) (%d %d)", mapId, self.Scale, self.MapPosX, self.MapPosY, self.MapW, self.MapH)
 end
 
 --------
 -- Center the map in view and 1 to 1 scale
 
 function Nx.Map:CenterMap1To1 (mapId)
-	self.MapPosX, self.MapPosY = self:GetWorldPos (mapId, 50, 50)
+    self.MapPosX, self.MapPosY = self:GetWorldPos (mapId, 50, 50)
 
-	self.Scale = 1002 / 100 / self:GetWorldZoneScale (mapId) * GetScreenWidth() / 1680 * 2
-	self.ScaleDraw = self.Scale
-	self.StepTime = 10
+    self.Scale = 1002 / 100 / self:GetWorldZoneScale (mapId) * GetScreenWidth() / 1680 * 2
+    self.ScaleDraw = self.Scale
+    self.StepTime = 10
 end
 
 --------
@@ -10517,138 +10512,138 @@ end
 local ContZoneCache = {}
 
 function Nx.Map:IdToContZone (mapId)
-	local info = self.MapWorldInfo[mapId]
-	if info then
-		return info.Cont or 90, info.Zone or 0
-	end
-	
-	-- Check cache first
-	if ContZoneCache[mapId] then
-		return ContZoneCache[mapId][1], ContZoneCache[mapId][2]
-	end
-	
-	-- Try to get parent map info for cities/sub-zones (cache result)
-	local mapInfo = C_Map.GetMapInfo(mapId)
-	if mapInfo and mapInfo.parentMapID then
-		info = self.MapWorldInfo[mapInfo.parentMapID]
-		if info then
-			ContZoneCache[mapId] = {info.Cont or 90, mapInfo.parentMapID}
-			return info.Cont or 90, mapInfo.parentMapID
-		end
-	end
-	
-	-- Cache the failure too
-	ContZoneCache[mapId] = {90, 0}
-	return 90, 0
+    local info = self.MapWorldInfo[mapId]
+    if info then
+        return info.Cont or 90, info.Zone or 0
+    end
+
+    -- Check cache first
+    if ContZoneCache[mapId] then
+        return ContZoneCache[mapId][1], ContZoneCache[mapId][2]
+    end
+
+    -- Try to get parent map info for cities/sub-zones (cache result)
+    local mapInfo = C_Map.GetMapInfo(mapId)
+    if mapInfo and mapInfo.parentMapID then
+        info = self.MapWorldInfo[mapInfo.parentMapID]
+        if info then
+            ContZoneCache[mapId] = {info.Cont or 90, mapInfo.parentMapID}
+            return info.Cont or 90, mapInfo.parentMapID
+        end
+    end
+
+    -- Cache the failure too
+    ContZoneCache[mapId] = {90, 0}
+    return 90, 0
 end
 
 --------
 -- Get map name from id
 
 function Nx.Map:IdToName (mapId)
-	if not mapId then
-		return ""
-	end	
-	local name = Nx.Map:GetMapNameByID(mapId)
-	if name then
-		return name
-	end
-	return "?"
+    if not mapId then
+        return ""
+    end
+    local name = Nx.Map:GetMapNameByID(mapId)
+    if name then
+        return name
+    end
+    return "?"
 end
 
 --------
 -- Get map id from name
 
 function Nx.Map:NameToId (mapName)
-	return Nx.MapNameToId[mapName]
+    return Nx.MapNameToId[mapName]
 end
 
 --------
 --
 
 function Nx.Map:IsNormalMap (mapId)
-	for i = 1,self.ContCnt do
-		for a,b in pairs(Nx.Map.MapZones[i]) do
-			if b == mapId then
-				return true
-			end
-		end
-	end
-	return false
+    for i = 1,self.ContCnt do
+        for a,b in pairs(Nx.Map.MapZones[i]) do
+            if b == mapId then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 --------
 --
 
 function Nx.Map:IsOutlandMap (mapId)
-	return self.MapWorldInfo[zone].Cont == 3
+    return self.MapWorldInfo[zone].Cont == 3
 end
 
 --------
 --
 
 function Nx.Map:IsInstanceMap (mapId)
-	if (Nx.Map:GetCurrentMapAreaID(true) == 20) then return false end
-	local winfo = Nx.Map:GetMap(1).MapWorldInfo
-	if mapId ~= 9000 and not winfo[mapId] then
-		Nx.Map:GetZoneInfo (mapId)
-	end
-	if not winfo[mapId] then
-		return false
-	end
-	if winfo[mapId].BaseMap then
-	   mapId = Nx.Map.MapWorldInfo[mapId].BaseMap
-	end	
-	if winfo[mapId].Instance then
-		return true
-	end
-	return false
+    if (Nx.Map:GetCurrentMapAreaID(true) == 20) then return false end
+    local winfo = Nx.Map:GetMap(1).MapWorldInfo
+    if mapId ~= 9000 and not winfo[mapId] then
+        Nx.Map:GetZoneInfo (mapId)
+    end
+    if not winfo[mapId] then
+        return false
+    end
+    if winfo[mapId].BaseMap then
+       mapId = Nx.Map.MapWorldInfo[mapId].BaseMap
+    end
+    if winfo[mapId].Instance then
+        return true
+    end
+    return false
 end
 
 --------
 --
 
 function Nx.Map:IsBattleGroundMap (mapId)
-	if self.MapWorldInfo[mapId] and self.MapWorldInfo[mapId].Short then
-		return true
-	else
-		return false
-	end
+    if self.MapWorldInfo[mapId] and self.MapWorldInfo[mapId].Short then
+        return true
+    else
+        return false
+    end
 end
 
 -- Cache for micro dungeon checks
 local MicroDungeonCache = {}
 
 function Nx.Map:IsMicroDungeon(mapId)
-	if MicroDungeonCache[mapId] ~= nil then
-		return MicroDungeonCache[mapId]
-	end
-	
-	local mapInfo = C_Map.GetMapInfo(mapId)
-	-- mapType 5 = Enum.UIMapType.Micro (Micro Dungeon)
-	local isMicro = mapInfo and mapInfo.mapType == 5
-	MicroDungeonCache[mapId] = isMicro or false
-	return isMicro or false
+    if MicroDungeonCache[mapId] ~= nil then
+        return MicroDungeonCache[mapId]
+    end
+
+    local mapInfo = C_Map.GetMapInfo(mapId)
+    -- mapType 5 = Enum.UIMapType.Micro (Micro Dungeon)
+    local isMicro = mapInfo and mapInfo.mapType == 5
+    MicroDungeonCache[mapId] = isMicro or false
+    return isMicro or false
 end
 
 function Nx.Map:IsScenario(mapId)
-	local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
-	if (Nx.Map:GetCurrentMapId() == mapId) then
-		if (difficultyIndex == 1) then
-			return true
-		end
-	end
-	return false
+    local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
+    if (Nx.Map:GetCurrentMapId() == mapId) then
+        if (difficultyIndex == 1) then
+            return true
+        end
+    end
+    return false
 end
 
 function Nx.Map:GCMI_OVERRIDE(mapId)
-	return mapId and Nx.Map:GetWorldZone(mapId) and Nx.Map:GetWorldZone(mapId).overrideMapWorldId or mapId
+    return mapId and Nx.Map:GetWorldZone(mapId) and Nx.Map:GetWorldZone(mapId).overrideMapWorldId or mapId
 end
 --------
 -- Get map short name (only BGs have)
 
 function Nx.Map:GetShortName (mapId)
-	return Nx.Map.MapWorldInfo[mapId].Short
+    return Nx.Map.MapWorldInfo[mapId].Short
 end
 
 --------
@@ -10656,15 +10651,15 @@ end
 -- (cont #)
 
 function Nx.Map:GetWorldContinentInfo (cont)
-	local info = self.MapInfo[cont]
-	if Nx.inBG then
-		info = self.MapInfo[90]
-	end
-	if not info then
-		return
-	end
+    local info = self.MapInfo[cont]
+    if Nx.inBG then
+        info = self.MapInfo[90]
+    end
+    if not info then
+        return
+    end
 
-	return info.Name, info.X, info.Y
+    return info.Name, info.X, info.Y
 end
 
 --------
@@ -10672,39 +10667,39 @@ end
 -- (cont #, zone #)
 
 function Nx.Map:GetWorldZoneInfo (cont, zone)
-	local org_zone = zone
-	if not cont or not zone then
-		return "unknown", 0, 0, 1002, 668
-	end
-	local name = Nx.Map:GetMapNameByID(zone) or "Unknown Zone"
---	local cont = self.MapWorldInfo[zone].Cont
-	local info = self.MapInfo[cont]
-	if not info then
-		return name, 0, 0, 1002, 668
-	end
-	if zone == 0 then
-		zone = Nx.Map.MapZones[0][cont]
-	end
-	local winfo = self.MapWorldInfo[zone]
-	if not winfo then
-		-- Use cached parent lookup (populated by GetWorldZone)
-		winfo = ParentMapCache[zone]
-		if not winfo or not next(winfo) then
-			return name, 0, 0, 1002, 668  -- Return defaults instead of nil
-		end
-	end
-	if not winfo.X then
-		return name, 0, 0, 1002, 668
-	end
-	local x = info.X + winfo.X
-	local y = info.Y + winfo.Y
-	
-	if (cont == 10 and org_zone == 0) or (cont == 11 and org_zone == 0) then
-		--winfo.Scale = (self.DebugPXOff or 1)
-	end
-	local scale = winfo.Scale * 100
+    local org_zone = zone
+    if not cont or not zone then
+        return "unknown", 0, 0, 1002, 668
+    end
+    local name = Nx.Map:GetMapNameByID(zone) or "Unknown Zone"
+--    local cont = self.MapWorldInfo[zone].Cont
+    local info = self.MapInfo[cont]
+    if not info then
+        return name, 0, 0, 1002, 668
+    end
+    if zone == 0 then
+        zone = Nx.Map.MapZones[0][cont]
+    end
+    local winfo = self.MapWorldInfo[zone]
+    if not winfo then
+        -- Use cached parent lookup (populated by GetWorldZone)
+        winfo = ParentMapCache[zone]
+        if not winfo or not next(winfo) then
+            return name, 0, 0, 1002, 668  -- Return defaults instead of nil
+        end
+    end
+    if not winfo.X then
+        return name, 0, 0, 1002, 668
+    end
+    local x = info.X + winfo.X
+    local y = info.Y + winfo.Y
 
-	return name, x, y, scale, scale / 1.5		-- x, y, w, h
+    if (cont == 10 and org_zone == 0) or (cont == 11 and org_zone == 0) then
+        --winfo.Scale = (self.DebugPXOff or 1)
+    end
+    local scale = winfo.Scale * 100
+
+    return name, x, y, scale, scale / 1.5        -- x, y, w, h
 end
 
 --------
@@ -10716,31 +10711,31 @@ local ParentMapCache = {}
 -- (id)
 
 function Nx.Map:GetWorldZone (mapId)
-	if self.MapWorldInfo[mapId] then
-		return self.MapWorldInfo[mapId]
-	end
-	
-	-- Check cache first
-	if ParentMapCache[mapId] ~= nil then
-		return ParentMapCache[mapId]
-	end
-	
-	-- Try to get parent map info for cities/sub-zones (cache result)
-	local mapInfo = C_Map.GetMapInfo(mapId)
-	if mapInfo and mapInfo.parentMapID then
-		local parentInfo = self.MapWorldInfo[mapInfo.parentMapID]
-		if parentInfo then
-			local isCityType = mapInfo.mapType == Enum.UIMapType.Zone or mapInfo.mapType == Enum.UIMapType.Orphan
-			if isCityType and parentInfo.City then
-				ParentMapCache[mapId] = parentInfo
-				return parentInfo
-			end
-		end
-	end
-	
-	-- Cache empty result too (so we don't keep looking it up)
-	ParentMapCache[mapId] = {}
-	return {}
+    if self.MapWorldInfo[mapId] then
+        return self.MapWorldInfo[mapId]
+    end
+
+    -- Check cache first
+    if ParentMapCache[mapId] ~= nil then
+        return ParentMapCache[mapId]
+    end
+
+    -- Try to get parent map info for cities/sub-zones (cache result)
+    local mapInfo = C_Map.GetMapInfo(mapId)
+    if mapInfo and mapInfo.parentMapID then
+        local parentInfo = self.MapWorldInfo[mapInfo.parentMapID]
+        if parentInfo then
+            local isCityType = mapInfo.mapType == Enum.UIMapType.Zone or mapInfo.mapType == Enum.UIMapType.Orphan
+            if isCityType and parentInfo.City then
+                ParentMapCache[mapId] = parentInfo
+                return parentInfo
+            end
+        end
+    end
+
+    -- Cache empty result too (so we don't keep looking it up)
+    ParentMapCache[mapId] = {}
+    return {}
 end
 
 --------
@@ -10748,15 +10743,15 @@ end
 -- (id)
 
 function Nx.Map:GetWorldZoneScale (mapId)
-	local winfo = self.MapWorldInfo[mapId]
-	if winfo and winfo.BaseMap then
-		winfo = self.MapWorldInfo[winfo.BaseMap]
-	end
-	if winfo and winfo.Scale then
-		return winfo.Scale
-	else
-		return 10.02
-	end
+    local winfo = self.MapWorldInfo[mapId]
+    if winfo and winfo.BaseMap then
+        winfo = self.MapWorldInfo[winfo.BaseMap]
+    end
+    if winfo and winfo.Scale then
+        return winfo.Scale
+    else
+        return 10.02
+    end
 end
 
 --------
@@ -10764,33 +10759,33 @@ end
 -- (id, x (0-100), y (0-100)
 
 function Nx.Map:GetWorldPos (mapId, mapX, mapY)
-	if mapId == 9000 then
-		return 0,0
-	end
-	local winfo = self.MapWorldInfo[mapId]
-	if winfo then
-		if winfo.BaseMap then
-			winfo = self.MapWorldInfo[winfo.BaseMap]
-		end
-		local scale = winfo.Scale						
-			if not winfo[4] or not winfo[5] then
---			Nx.prt("GetWorldErr (Not Calculated): " .. mapId)
-			return 0,0
-		end		
-		if not scale then
---			Nx.prt("GetWorldErr (Scale): " .. mapId)
-			return 0,0
-		end
+    if mapId == 9000 then
+        return 0,0
+    end
+    local winfo = self.MapWorldInfo[mapId]
+    if winfo then
+        if winfo.BaseMap then
+            winfo = self.MapWorldInfo[winfo.BaseMap]
+        end
+        local scale = winfo.Scale
+            if not winfo[4] or not winfo[5] then
+--            Nx.prt("GetWorldErr (Not Calculated): " .. mapId)
+            return 0,0
+        end
+        if not scale then
+--            Nx.prt("GetWorldErr (Scale): " .. mapId)
+            return 0,0
+        end
 
-		return	winfo[4] + mapX * scale,
-					winfo[5] + mapY * scale / 1.5
-	end
-	if mapId then
-		Nx.prtStack("GetPos Err:" .. mapId)
-	else
-		Nx.prtStack("GetPos Err")
-	end
-	return 0, 0
+        return    winfo[4] + mapX * scale,
+                    winfo[5] + mapY * scale / 1.5
+    end
+    if mapId then
+        Nx.prtStack("GetPos Err:" .. mapId)
+    else
+        Nx.prtStack("GetPos Err")
+    end
+    return 0, 0
 end
 
 --------
@@ -10799,10 +10794,10 @@ end
 
 function Nx.Map:GetWorldRect (mapId, mapX, mapY, mapX2, mapY2)
 
-	local x, y = self:GetWorldPos (mapId, mapX, mapY)
-	local x2, y2 = self:GetWorldPos (mapId, mapX2, mapY2)
+    local x, y = self:GetWorldPos (mapId, mapX, mapY)
+    local x2, y2 = self:GetWorldPos (mapId, mapX2, mapY2)
 
-	return x, y, x2, y2
+    return x, y, x2, y2
 end
 
 --------
@@ -10811,29 +10806,29 @@ end
 
 function Nx.Map:GetZonePos (mapId, worldX, worldY)
 
---	self.GetZonePosCnt = (self.GetZonePosCnt or 0) + 1
+--    self.GetZonePosCnt = (self.GetZonePosCnt or 0) + 1
 
---	Nx.prt ("WXY for map %s is %f %f", mapId, worldX, worldY)
+--    Nx.prt ("WXY for map %s is %f %f", mapId, worldX, worldY)
 
-	local winfo = self.MapWorldInfo[mapId]
+    local winfo = self.MapWorldInfo[mapId]
 
-	if winfo then
-		if winfo.Scale and winfo[4] and winfo[5] then
-			local scale = winfo.Scale
-				return	(worldX - winfo[4]) / scale,
-						(worldY - winfo[5]) / scale * 1.5
-		else
-			return 0,0
-		end
---		local x = (worldX - info.X - winfo[2]) / scale
---		local y = (worldY - info.Y - winfo[3]) / scale * 1.5
+    if winfo then
+        if winfo.Scale and winfo[4] and winfo[5] then
+            local scale = winfo.Scale
+                return    (worldX - winfo[4]) / scale,
+                        (worldY - winfo[5]) / scale * 1.5
+        else
+            return 0,0
+        end
+--        local x = (worldX - info.X - winfo[2]) / scale
+--        local y = (worldY - info.Y - winfo[3]) / scale * 1.5
 
---		Nx.prt ("XY %f %f %f", x, y, scale)
+--        Nx.prt ("XY %f %f %f", x, y, scale)
 
---		return x, y
-	end
+--        return x, y
+    end
 
-	return 0, 0
+    return 0, 0
 end
 
 --------
@@ -10843,15 +10838,15 @@ end
 --[[
 function Nx.Map:GetContFromPos (worldX, worldY)
 
-	if worldY < -2050 then
-		return 3
-	end
+    if worldY < -2050 then
+        return 3
+    end
 
-	if worldX > 2200 then
-		return 2
-	end
+    if worldX > 2200 then
+        return 2
+    end
 
-	return 1
+    return 1
 end
 --]]
 
@@ -10859,9 +10854,9 @@ end
 -- Convert frame (top left) to zone positions
 
 function Nx.Map:FramePosToZonePos (x, y)
-	x = x / (self.MapW - self.PadX) * 100
-	y = y / (self.MapH - self.TitleH) * 100
-	return x, y
+    x = x / (self.MapW - self.PadX) * 100
+    y = y / (self.MapH - self.TitleH) * 100
+    return x, y
 end
 
 
@@ -10869,9 +10864,9 @@ end
 -- Convert frame (top left) to world positions
 
 function Nx.Map:FramePosToWorldPos (x, y)
-	x = self.MapPosX + (x - self.PadX - self.MapW / 2) / 10.02 / self.MapScale	
-	y = self.MapPosY + (y - self.TitleH - self.MapH / 2) / 10.02 / self.MapScale	
-	return x, y
+    x = self.MapPosX + (x - self.PadX - self.MapW / 2) / 10.02 / self.MapScale
+    y = self.MapPosY + (y - self.TitleH - self.MapH / 2) / 10.02 / self.MapScale
+    return x, y
 end
 
 
@@ -10890,40 +10885,40 @@ end
 --
 function Nx.Map:AddTarget (target)
 
-	assert (target)
-	assert (target.TargetX1)
-	
-	self.UpdateTrackingDelay = 0
+    assert (target)
+    assert (target.TargetX1)
 
-	local sbt = self.ScaleBeforeTarget
+    self.UpdateTrackingDelay = 0
 
---	if self.ScaleBeforeTarget then
---		self.Scale = self.ScaleBeforeTarget
-		self.ScaleBeforeTarget = false
---	end
+    local sbt = self.ScaleBeforeTarget
 
-	if not target.keep then
-		self:ClearTargets()
-	end
+--    if self.ScaleBeforeTarget then
+--        self.Scale = self.ScaleBeforeTarget
+        self.ScaleBeforeTarget = false
+--    end
 
-	self.ScaleBeforeTarget = sbt or not next (self.Targets) and Nx.db.profile.Map.RestoreScaleAfterTrack and self.Scale
+    if not target.keep then
+        self:ClearTargets()
+    end
 
-	tinsert (self.Targets, target)
-	
-	if not target.MapId then target.MapId = self.MapId; end
-	target.TargetMX = (target.TargetX1 + target.TargetX2) * .5		-- Mid point
-	target.TargetMY = (target.TargetY1 + target.TargetY2) * .5
+    self.ScaleBeforeTarget = sbt or not next (self.Targets) and Nx.db.profile.Map.RestoreScaleAfterTrack and self.Scale
 
-	local i = self.TargetNextUniqueId
-	target.UniqueId = i
-	self.TargetNextUniqueId = i + 1
+    tinsert (self.Targets, target)
 
-	if Nx.Notes then
-		local zx, zy = self:GetZonePos (target.MapId, target.TargetMX, target.TargetMY)
-		Nx.Notes:Record (target.keep and "Target" or "TargetS", target.TargetName, target.MapId, zx, zy)
-	end
+    if not target.MapId then target.MapId = self.MapId; end
+    target.TargetMX = (target.TargetX1 + target.TargetX2) * .5        -- Mid point
+    target.TargetMY = (target.TargetY1 + target.TargetY2) * .5
 
-	return target
+    local i = self.TargetNextUniqueId
+    target.UniqueId = i
+    self.TargetNextUniqueId = i + 1
+
+    if Nx.Notes then
+        local zx, zy = self:GetZonePos (target.MapId, target.TargetMX, target.TargetMY)
+        Nx.Notes:Record (target.keep and "Target" or "TargetS", target.TargetName, target.MapId, zx, zy)
+    end
+
+    return target
 end
 
 
@@ -10942,19 +10937,19 @@ end
 -- @return        The target table
 --
 function Nx.Map:SetTarget (typ, x1, y1, x2, y2, tex, id, name, keep, mapId)
-	-- This is a legacy function, for more extensibility, use the Nx.Map:AddTarget (target) function instead
-	return self:AddTarget({
-		MapId = mapId,
-		TargetType = typ,
-		TargetX1 = x1,
-		TargetY1 = y1,
-		TargetX2 = x2,
-		TargetY2 = y2,
-		TargetTex = tex,
-		TargetId = id,
-		TargetName = name,
-		keep = keep,
-	});
+    -- This is a legacy function, for more extensibility, use the Nx.Map:AddTarget (target) function instead
+    return self:AddTarget({
+        MapId = mapId,
+        TargetType = typ,
+        TargetX1 = x1,
+        TargetY1 = y1,
+        TargetX2 = x2,
+        TargetY2 = y2,
+        TargetTex = tex,
+        TargetId = id,
+        TargetName = name,
+        keep = keep,
+    });
 end
 
 ---
@@ -10965,28 +10960,28 @@ end
 --
 function Nx.Map:ClearTargets (matchType)
 
-	if matchType then
-		local tar = self.Targets[1]
-		if tar then
-			if tar.TargetType ~= matchType then
-				return
-			end
-		end
-	end
+    if matchType then
+        local tar = self.Targets[1]
+        if tar then
+            if tar.TargetType ~= matchType then
+                return
+            end
+        end
+    end
 
-	self.Targets = {}
-	self.Tracking = {}
+    self.Targets = {}
+    self.Tracking = {}
 
-	if self.LOpts.NXAutoScaleOn and self.ScaleBeforeTarget then
+    if self.LOpts.NXAutoScaleOn and self.ScaleBeforeTarget then
 
---		Nx.prt ("ScaleBeforeTarget trigger %s", matchType or "nil")
---		self.Scale = self.ScaleBeforeTarget
+--        Nx.prt ("ScaleBeforeTarget trigger %s", matchType or "nil")
+--        self.Scale = self.ScaleBeforeTarget
 
-		self:GotoPlayer()		-- Map won't move if cursor on it
-		self:Move (self.PlyrX, self.PlyrY, self.ScaleBeforeTarget, 30)
-	end
+        self:GotoPlayer()        -- Map won't move if cursor on it
+        self:Move (self.PlyrX, self.PlyrY, self.ScaleBeforeTarget, 30)
+    end
 
-	self.ScaleBeforeTarget = false
+    self.ScaleBeforeTarget = false
 end
 
 ---
@@ -10995,14 +10990,14 @@ end
 --
 function Nx.Map:ClearTarget (uniqueId)
 
-	self.Tracking = {}
+    self.Tracking = {}
 
-	local tar, i = self:FindTarget (uniqueId)
+    local tar, i = self:FindTarget (uniqueId)
 
-	if tar then
---		Nx.prt ("ClearTarget %s %s", uniqueId, i)
-		tremove (self.Targets, i)
-	end
+    if tar then
+--        Nx.prt ("ClearTarget %s %s", uniqueId, i)
+        tremove (self.Targets, i)
+    end
 
 end
 
@@ -11013,10 +11008,10 @@ end
 --
 function Nx.Map:FindTarget (uniqueId)
     for n, tar in ipairs (self.Targets) do
-		if tar.UniqueId == uniqueId then
-			return tar, n
-		end
-	end
+        if tar.UniqueId == uniqueId then
+            return tar, n
+        end
+    end
 end
 
 ---
@@ -11026,12 +11021,12 @@ end
 --
 function Nx.Map:ChangeTargetOrder (srcI, dstI)
 
-	srcI = srcI >= 0 and srcI or #self.Targets	-- -1 for last target
+    srcI = srcI >= 0 and srcI or #self.Targets    -- -1 for last target
 
-	local t = tremove (self.Targets, srcI)
-	tinsert (self.Targets, dstI, t)
+    local t = tremove (self.Targets, srcI)
+    tinsert (self.Targets, dstI, t)
 
-	self.Tracking = {}
+    self.Tracking = {}
 end
 
 ---
@@ -11040,17 +11035,17 @@ end
 --
 function Nx.Map:ReverseTargets()
 
-	local tar = self.Targets
-	local n2 = #tar
+    local tar = self.Targets
+    local n2 = #tar
 
-	for n = 1, n2 / 2 do
-		local a = tar[n]
-		tar[n] = tar[n2]
-		tar[n2] = a
-		n2 = n2 - 1
-	end
+    for n = 1, n2 / 2 do
+        local a = tar[n]
+        tar[n] = tar[n2]
+        tar[n2] = a
+        n2 = n2 - 1
+    end
 
-	self.Tracking = {}
+    self.Tracking = {}
 end
 
 ---
@@ -11066,10 +11061,10 @@ end
 --
 function Nx.Map:SetTargetXY (mid, zx, zy, name, keep, tex)
 if Nx.Quest and Nx.Quest.Watch then
-	Nx.Quest.Watch:ClearAutoTarget()
+    Nx.Quest.Watch:ClearAutoTarget()
 end
-	local wx, wy = self:GetWorldPos (mid, zx, zy)
-	return self:SetTarget ("Goto", wx, wy, wx, wy, tex, nil, name or "", keep, mid)
+    local wx, wy = self:GetWorldPos (mid, zx, zy)
+    return self:SetTarget ("Goto", wx, wy, wx, wy, tex, nil, name or "", keep, mid)
 end
 
 --------
@@ -11077,32 +11072,32 @@ end
 
 function Nx.Map:SetTargetAtClick()
 if Nx.Quest and Nx.Quest.Watch then
-	Nx.Quest.Watch:ClearAutoTarget()
+    Nx.Quest.Watch:ClearAutoTarget()
 end
-	local wx, wy
-	if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
-		local _x, _y = self:FramePosToZonePos (self.ClickFrmX, self.ClickFrmY)
-		wx, wy = self:GetWorldPos(self.MapId, _x, _y)
-	else
-		wx,wy = self:FramePosToWorldPos (self.ClickFrmX, self.ClickFrmY)
-	end
-	local zx, zy = self:GetZonePos (self.MapId, wx, wy)
-	local str = format (L["Goto %.0f, %.0f"], zx, zy)
+    local wx, wy
+    if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
+        local _x, _y = self:FramePosToZonePos (self.ClickFrmX, self.ClickFrmY)
+        wx, wy = self:GetWorldPos(self.MapId, _x, _y)
+    else
+        wx,wy = self:FramePosToWorldPos (self.ClickFrmX, self.ClickFrmY)
+    end
+    local zx, zy = self:GetZonePos (self.MapId, wx, wy)
+    local str = format (L["Goto %.0f, %.0f"], zx, zy)
 
-	self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, str, IsShiftKeyDown())
+    self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, str, IsShiftKeyDown())
 end
 
 function Nx.Map:SetTargetAtStr (str, keep)
 
-	local mId, zx, zy, desc = self:ParseTargetStr (str)
-	if mId then
-		local wx, wy = self:GetWorldPos (mId, zx, zy)
-		local str = format ("%.0f, %.0f", zx, zy)
-		if desc then
-			str = desc
-		end
-		self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, str, keep, mId)
-	end
+    local mId, zx, zy, desc = self:ParseTargetStr (str)
+    if mId then
+        local wx, wy = self:GetWorldPos (mId, zx, zy)
+        local str = format ("%.0f, %.0f", zx, zy)
+        if desc then
+            str = desc
+        end
+        self:SetTarget ("Goto", wx, wy, wx, wy, nil, nil, str, keep, mId)
+    end
 end
 
 --------
@@ -11111,87 +11106,87 @@ end
 
 function Nx.Map:ParseTargetStr (str)
 
---	Nx.prt (str)
+--    Nx.prt (str)
 
---	local str = gsub (strlower (str), ",", " ")
+--    local str = gsub (strlower (str), ",", " ")
 
-	local zone
-	local zx, zy
-	local desc
+    local zone
+    local zx, zy
+    local desc
 
-	for s in gmatch (str, "%S+") do
-		if not zx and strsub(s,#s,#s) == "," then
-			s = strsub(s,0,#s - 1)			
-		end
-		local i = tonumber (s)
-		if i then
-			if zx then
-				zy = zy or i
-			else
-				zx = i
-			end
-		else
-			if zx and zy then
-				if desc then
-					desc = desc .. " " .. s
-				else
-					desc = s
-				end
-			else
-				s = strlower(s)
-				if zone then
-					zone = zone .. " " .. s
-				else
-					zone = s
-				end
-			end
-		end
-	end
+    for s in gmatch (str, "%S+") do
+        if not zx and strsub(s,#s,#s) == "," then
+            s = strsub(s,0,#s - 1)
+        end
+        local i = tonumber (s)
+        if i then
+            if zx then
+                zy = zy or i
+            else
+                zx = i
+            end
+        else
+            if zx and zy then
+                if desc then
+                    desc = desc .. " " .. s
+                else
+                    desc = s
+                end
+            else
+                s = strlower(s)
+                if zone then
+                    zone = zone .. " " .. s
+                else
+                    zone = s
+                end
+            end
+        end
+    end
 
-	local mid = Nx.Map.UpdateMapID
+    local mid = Nx.Map.UpdateMapID
 
-	if zone then		
-		mid = nil
-		local cont = 0
-		local curmid = Nx.Map:GetCurrentMapAreaID()				
-		
-		for contN = 1, Nx.Map.ContCnt do		
-			local doesExist = string.find(zone, ":" .. string.lower(Nx.Map.MapInfo[contN].Name))			
-			if doesExist then
-				zone = string.sub(zone,0,doesExist-1)
-				cont = contN
-			end
-		end
-		
-		for id, zonedesc in pairs (Nx.Zones) do
-			local name = strlower (string.gsub (zonedesc, "|.*", ""))
-			if name == zone or string.sub (name, 1, #zone) == zone then
-				if (cont > 0) and Nx.Map.MapWorldInfo[id].Cont == cont then
-					mid = id
-				elseif (cont == 0) then
-					if not mid or math.abs(mid - curmid) > math.abs(mid - id) then
-						mid = id
-					end				
-				end			
-			end
-		end
+    if zone then
+        mid = nil
+        local cont = 0
+        local curmid = Nx.Map:GetCurrentMapAreaID()
 
-		if not mid then			
-			if cont ~= 0 then
-				Nx.prt("zone %s not found on continent %s",zone,Nx.Map.MapInfo[cont].Name)
-			else
-				Nx.prt ("zone %s not found", zone)
-			end
-			return
-		end
-	end
+        for contN = 1, Nx.Map.ContCnt do
+            local doesExist = string.find(zone, ":" .. string.lower(Nx.Map.MapInfo[contN].Name))
+            if doesExist then
+                zone = string.sub(zone,0,doesExist-1)
+                cont = contN
+            end
+        end
 
-	if not zx or not zy then
-		Nx.prt ("zone coordinate error")
-		return
-	end
+        for id, zonedesc in pairs (Nx.Zones) do
+            local name = strlower (string.gsub (zonedesc, "|.*", ""))
+            if name == zone or string.sub (name, 1, #zone) == zone then
+                if (cont > 0) and Nx.Map.MapWorldInfo[id].Cont == cont then
+                    mid = id
+                elseif (cont == 0) then
+                    if not mid or math.abs(mid - curmid) > math.abs(mid - id) then
+                        mid = id
+                    end
+                end
+            end
+        end
 
-	return mid, zx, zy, desc
+        if not mid then
+            if cont ~= 0 then
+                Nx.prt("zone %s not found on continent %s",zone,Nx.Map.MapInfo[cont].Name)
+            else
+                Nx.prt ("zone %s not found", zone)
+            end
+            return
+        end
+    end
+
+    if not zx or not zy then
+        Nx.prt ("zone coordinate error")
+        return
+    end
+
+    return mid, zx, zy, desc
 end
 
 -------------------------------------------------------------------------------
@@ -11211,64 +11206,64 @@ end
 --
 function Nx:TTAddWaypoint (mid, zx, zy, opt)
 
-	local map = Nx.Map:GetMap (1)
-	
-	if Nx.Quest and Nx.Quest.Watch then
-		Nx.Quest.Watch:ClearAutoTarget()
-	end
-	
-	local TargetCallbacks;
-	local callbacks = opt.callbacks;
-	if callbacks then
-		TargetCallbacks = {};
-		
-		local onclick = callbacks.world.onclick or callbacks.minimap.onclick;
-		if onclick then
-			TargetCallbacks.OnClick = function(target, f)
-				pcall(onclick, "onclick", tooltip, target.UniqueId, target.dist);
-			end;
-		else
-			TargetCallbacks.OnClick = false;
-		end
-		
-		local onupdate = callbacks.world.tooltip_update or callbacks.minimap.tooltip_update;
-		if onupdate then
-			TargetCallbacks.OnTooltipUpdate = function(tooltip, target, f)
-				pcall(onupdate, "tooltip_update", tooltip, target.UniqueId, target.dist);
-			end;
-		else
-			TargetCallbacks.OnTooltipUpdate = false;
-		end
-		
-		local onshow = callbacks.world.tooltip_show or callbacks.minimap.tooltip_show;
-		if onshow then
-			TargetCallbacks.OnTooltipShow = function(tooltip, target, f)
-				pcall(onshow, "tooltip_show", tooltip, target.UniqueId, target.dist);
-			end;
-		else
-			TargetCallbacks.OnTooltipShow = false;
-		end
-	end
-	
-	local wx, wy = map:GetWorldPos (mid, zx * 100, zy * 100)
-	local tar = map:AddTarget({
-		MapId = mid,
-		TargetType = "Goto",
-		TargetX1 = wx,
-		TargetY1 = wy,
-		TargetX2 = wx,
-		TargetY2 = wy,
-		TargetDisplayID = opt.worldmap_displayID or opt.minimap_displayID,
-		TargetTex = opt.worldmap_icon or opt.minimap_icon,
-		--TargetId = nil,	-- Not used
-		TargetName = opt.title or "",
-		TargetCallbacks = TargetCallbacks,
-		keep = true,
-	});
+    local map = Nx.Map:GetMap (1)
 
-	map:ChangeTargetOrder (-1, 1)
+    if Nx.Quest and Nx.Quest.Watch then
+        Nx.Quest.Watch:ClearAutoTarget()
+    end
 
-	return tar.UniqueId
+    local TargetCallbacks;
+    local callbacks = opt.callbacks;
+    if callbacks then
+        TargetCallbacks = {};
+
+        local onclick = callbacks.world.onclick or callbacks.minimap.onclick;
+        if onclick then
+            TargetCallbacks.OnClick = function(target, f)
+                pcall(onclick, "onclick", tooltip, target.UniqueId, target.dist);
+            end;
+        else
+            TargetCallbacks.OnClick = false;
+        end
+
+        local onupdate = callbacks.world.tooltip_update or callbacks.minimap.tooltip_update;
+        if onupdate then
+            TargetCallbacks.OnTooltipUpdate = function(tooltip, target, f)
+                pcall(onupdate, "tooltip_update", tooltip, target.UniqueId, target.dist);
+            end;
+        else
+            TargetCallbacks.OnTooltipUpdate = false;
+        end
+
+        local onshow = callbacks.world.tooltip_show or callbacks.minimap.tooltip_show;
+        if onshow then
+            TargetCallbacks.OnTooltipShow = function(tooltip, target, f)
+                pcall(onshow, "tooltip_show", tooltip, target.UniqueId, target.dist);
+            end;
+        else
+            TargetCallbacks.OnTooltipShow = false;
+        end
+    end
+
+    local wx, wy = map:GetWorldPos (mid, zx * 100, zy * 100)
+    local tar = map:AddTarget({
+        MapId = mid,
+        TargetType = "Goto",
+        TargetX1 = wx,
+        TargetY1 = wy,
+        TargetX2 = wx,
+        TargetY2 = wy,
+        TargetDisplayID = opt.worldmap_displayID or opt.minimap_displayID,
+        TargetTex = opt.worldmap_icon or opt.minimap_icon,
+        --TargetId = nil,    -- Not used
+        TargetName = opt.title or "",
+        TargetCallbacks = TargetCallbacks,
+        keep = true,
+    });
+
+    map:ChangeTargetOrder (-1, 1)
+
+    return tar.UniqueId
 end
 
 ---
@@ -11277,8 +11272,8 @@ end
 -- @param editbox   Calling editbox (unused)
 --
 function Nx:TTWayCmd(msg,editbox)
-	local map = Nx.Map:GetMap(1)
-	map:SetTargetAtStr (msg, true)
+    local map = Nx.Map:GetMap(1)
+    map:SetTargetAtStr (msg, true)
 end
 
 ---
@@ -11296,14 +11291,14 @@ end
 --
 function Nx:TTAddZWaypoint (cont, zone, zx, zy, name, _persist, _minimap, _world, callbackT)
 
-	local map = Nx.Map:GetMap (1)
-	local mid = map:GetCurrentMapId()
+    local map = Nx.Map:GetMap (1)
+    local mid = map:GetCurrentMapId()
 
-	if cont and zone then
-		mid = map:CZ2MapId (cont, zone)
-	end
+    if cont and zone then
+        mid = map:CZ2MapId (cont, zone)
+    end
 
-	return Nx:TTSetTarget (mid, zx, zy, name, callbackT)
+    return Nx:TTSetTarget (mid, zx, zy, name, callbackT)
 end
 
 ---
@@ -11313,11 +11308,11 @@ end
 -- @return      Default callbacks table structure
 --
 function Nx:TTDefaultCallbacks(opts)
-	return {
-		minimap = {},
-		world = {},
-		distance = {},
-	}
+    return {
+        minimap = {},
+        world = {},
+        distance = {},
+    }
 end
 
 ---
@@ -11326,7 +11321,7 @@ end
 -- @return  Always 0
 --
 function Nx:TTSetClosestWaypoint()
-	return 0	-- Do nothing, but at least return the expected data format.
+    return 0    -- Do nothing, but at least return the expected data format.
 end
 
 ---
@@ -11341,7 +11336,7 @@ end
 --
 function Nx:TTSetCustomWaypoint (cont, zone, zx, zy, callbackT)
 
-	return Nx:TTAddZWaypoint (cont, zone, zx, zy, "", false, nil, nil, callbackT)
+    return Nx:TTAddZWaypoint (cont, zone, zx, zy, "", false, nil, nil, callbackT)
 end
 
 ---
@@ -11355,10 +11350,10 @@ end
 --
 function Nx:TTSetCustomMFWaypoint (aid, _floor, zx, zy, opts)
 
-	zx = zx * 100
-	zy = zy * 100
+    zx = zx * 100
+    zy = zy * 100
 
-	return Nx:TTSetTarget (aid, zx, zy, opts["title"], opts["callbacks"])
+    return Nx:TTSetTarget (aid, zx, zy, opts["title"], opts["callbacks"])
 end
 
 
@@ -11374,32 +11369,32 @@ end
 --
 function Nx:TTSetTarget (mid, zx, zy, name, callbackT)
 
---	Nx.prt ("TTSetTarget %s %s %s %s", name or "nil", mid or "nil", zx, zy)
+--    Nx.prt ("TTSetTarget %s %s %s %s", name or "nil", mid or "nil", zx, zy)
 
-	local map = Nx.Map:GetMap (1)
-	local tar = map:SetTargetXY (mid, zx, zy, name, true)
+    local map = Nx.Map:GetMap (1)
+    local tar = map:SetTargetXY (mid, zx, zy, name, true)
 
-	map:ChangeTargetOrder (-1, 1)
+    map:ChangeTargetOrder (-1, 1)
 
-	if callbackT and callbackT["distance"] then
+    if callbackT and callbackT["distance"] then
 
-		local d = 99999
-		local f
+        local d = 99999
+        local f
 
-		for dist, func in pairs (callbackT["distance"]) do
-			if dist < d then
-				d = dist
-				f = func
-			end
-		end
+        for dist, func in pairs (callbackT["distance"]) do
+            if dist < d then
+                d = dist
+                f = func
+            end
+        end
 
-		tar.Radius = d
-		tar.RadiusFunc = f
+        tar.Radius = d
+        tar.RadiusFunc = f
 
---		Nx.prt (" R %s", d)
-	end
+--        Nx.prt (" R %s", d)
+    end
 
-	return tar.UniqueId
+    return tar.UniqueId
 end
 
 ---
@@ -11408,8 +11403,8 @@ end
 --
 function Nx:TTRemoveWaypoint (id)
 
-	local map = Nx.Map:GetMap (1)
-	map:ClearTarget (id)
+    local map = Nx.Map:GetMap (1)
+    map:ClearTarget (id)
 end
 
 ---
@@ -11421,12 +11416,12 @@ end
 --
 function Nx:TTSetCrazyArrow (id, dist, str)
 
-	local map = Nx.Map:GetMap (1)
-	local tar = map:FindTarget (id)
-	if tar then
-		tar.Radius = dist
-		tar.TargetName = str
-	end
+    local map = Nx.Map:GetMap (1)
+    local tar = map:FindTarget (id)
+    if tar then
+        tar.Radius = dist
+        tar.TargetName = str
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -11439,8 +11434,8 @@ end
 -- @return  Boolean indicating minimap ownership
 --
 function Nx.MapMinimapOwned()
-	local map = Nx.Map:GetMap (1)
-	return map.MMOwn
+    local map = Nx.Map:GetMap (1)
+    return map.MMOwn
 end
 
 ---
@@ -11450,7 +11445,7 @@ end
 --
 function Nx.MapInitIconType (iconType, drawMode)
     local map = Nx.Map:GetMap (1)
-	map:InitIconType (iconType, drawMode)
+    map:InitIconType (iconType, drawMode)
 end
 
 ---
@@ -11464,12 +11459,12 @@ end
 --
 function Nx.MapAddIconPoint (iconType, mapName, x, y, texture, level)
     local map = Nx.Map:GetMap (1)
-	local mapId = Nx.MapNameToId[mapName]
+    local mapId = Nx.MapNameToId[mapName]
 
-	if mapId then
-		local wx, wy = map:GetWorldPos (mapId, x, y)
-		map:AddIconPt (iconType, wx, wy, level, nil, texture)
-	end
+    if mapId then
+        local wx, wy = map:GetWorldPos (mapId, x, y)
+        map:AddIconPt (iconType, wx, wy, level, nil, texture)
+    end
 end
 
 ---
@@ -11489,40 +11484,40 @@ end
 --
 function Nx.MapAddIcon (name, mapId, x, y, level, tip, texture, tx1, ty1, tx2, ty2)
     if not Nx.CustomIcons then
-		Nx.CustomIcons = {}
-	end
-	local map = Nx.Map:GetMap(1)
-	if not Nx.CustomIcons[mapId] then
-		Nx.CustomIcons[mapId] = {}
-	end
-	local wx, wy = map:GetWorldPos (mapId, x, y)
-	Nx.CustomIcons[mapId][name] = {}
-	Nx.CustomIcons[mapId][name].x = wx
-	Nx.CustomIcons[mapId][name].y = wy
-	Nx.CustomIcons[mapId][name].Level = level
-	Nx.CustomIcons[mapId][name].tip = tip
-	Nx.CustomIcons[mapId][name].texture = texture
-	if tx1 and ty1 and tx2 and ty2 then
-		Nx.CustomIcons[mapId][name].tx1 = tx1
-		Nx.CustomIcons[mapId][name].ty1 = ty1
-		Nx.CustomIcons[mapId][name].tx2 = tx2
-		Nx.CustomIcons[mapId][name].ty2 = ty2
-	end
-	local CurMapId = map:GetCurrentMapId()
-	if not Nx.db.char.Map.ShowCustom then
-		return
-	end
-	if tx1 then
-		local icon = map:AddIconPt("!CUSTOM",wx, wy, level, "FF0000", texture, tx1, ty1, tx2, ty2)
-		if tip then
-			map:SetIconTip(icon,tip)
-		end
-	else
-		local icon = map:AddIconPt("!CUSTOM",wx, wy, level, "FF0000", texture)
-		if tip then
-			map:SetIconTip(icon,tip)
-		end
-	end
+        Nx.CustomIcons = {}
+    end
+    local map = Nx.Map:GetMap(1)
+    if not Nx.CustomIcons[mapId] then
+        Nx.CustomIcons[mapId] = {}
+    end
+    local wx, wy = map:GetWorldPos (mapId, x, y)
+    Nx.CustomIcons[mapId][name] = {}
+    Nx.CustomIcons[mapId][name].x = wx
+    Nx.CustomIcons[mapId][name].y = wy
+    Nx.CustomIcons[mapId][name].Level = level
+    Nx.CustomIcons[mapId][name].tip = tip
+    Nx.CustomIcons[mapId][name].texture = texture
+    if tx1 and ty1 and tx2 and ty2 then
+        Nx.CustomIcons[mapId][name].tx1 = tx1
+        Nx.CustomIcons[mapId][name].ty1 = ty1
+        Nx.CustomIcons[mapId][name].tx2 = tx2
+        Nx.CustomIcons[mapId][name].ty2 = ty2
+    end
+    local CurMapId = map:GetCurrentMapId()
+    if not Nx.db.char.Map.ShowCustom then
+        return
+    end
+    if tx1 then
+        local icon = map:AddIconPt("!CUSTOM",wx, wy, level, "FF0000", texture, tx1, ty1, tx2, ty2)
+        if tip then
+            map:SetIconTip(icon,tip)
+        end
+    else
+        local icon = map:AddIconPt("!CUSTOM",wx, wy, level, "FF0000", texture)
+        if tip then
+            map:SetIconTip(icon,tip)
+        end
+    end
 end
 
 ---
@@ -11532,18 +11527,18 @@ end
 --
 function Nx.MapRemoveIcon (name, mapNum)
     if not Nx.CustomIcons then
-		return
-	end
-	local mapId = Nx.NxzoneToMapId[mapNum]
-	if not Nx.CustomIcons[mapId] then
-		return
-	end
-	if not Nx.CustomIcons[mapId][name] then
-		return
-	end
-	Nx.CustomIcons[mapId][name] = nil
-	local map = Nx.Map:GetMap (1)
-	map:Update(1)
+        return
+    end
+    local mapId = Nx.NxzoneToMapId[mapNum]
+    if not Nx.CustomIcons[mapId] then
+        return
+    end
+    if not Nx.CustomIcons[mapId][name] then
+        return
+    end
+    Nx.CustomIcons[mapId][name] = nil
+    local map = Nx.Map:GetMap (1)
+    map:Update(1)
 end
 
 ---
@@ -11558,11 +11553,11 @@ end
 --
 function Nx.MapAddIconRect (iconType, mapName, x, y, x2, y2, color)
     local map = Nx.Map:GetMap (1)
-	local mapId = Nx.MapNameToId[mapName]
+    local mapId = Nx.MapNameToId[mapName]
 
-	if mapId then
-		map:AddIconRect (iconType, mapId, x, y, x2, y2, color)
-	end
+    if mapId then
+        map:AddIconRect (iconType, mapId, x, y, x2, y2, color)
+    end
 end
 
 ---
@@ -11572,7 +11567,7 @@ end
 --
 function Nx.MapSetIconTip (icon, tip)
     local map = Nx.Map:GetMap (1)
-	map:SetIconTip (icon, tip)
+    map:SetIconTip (icon, tip)
 end
 
 ---
@@ -11582,10 +11577,10 @@ end
 function Nx.NXMapKeyTargetSkip()
     local self = Nx.Map:GetMap (1)
 
-	local tar = self.Targets[1]
-	if tar then
-		tar.Radius = 999999999999
-	end
+    local tar = self.Targets[1]
+    if tar then
+        tar.Radius = 999999999999
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -11602,36 +11597,36 @@ function Nx.Map.Dock:Create()
 
 --PAIDS!
 
-	if Nx.Free then
-		return
-	end
+    if Nx.Free then
+        return
+    end
 
-	self.UpdateMod = 100		-- Prevent error
+    self.UpdateMod = 100        -- Prevent error
 
-	if not Nx.db.profile.MiniMap.ButOwn then
-		return
-	end
+    if not Nx.db.profile.MiniMap.ButOwn then
+        return
+    end
 
-	-- Create Window
+    -- Create Window
 
-	Nx.Window:SetCreateFade (1, 0)
+    Nx.Window:SetCreateFade (1, 0)
 
-	local win = Nx.Window:Create ("NxMapDock", nil, nil, nil, 1, 1, nil, true)
-	self.Win = win
+    local win = Nx.Window:Create ("NxMapDock", nil, nil, nil, 1, 1, nil, true)
+    self.Win = win
 
-	win:SetBGAlpha (0, 1)
+    win:SetBGAlpha (0, 1)
 
 
-	win:CreateButtons()
-	win:InitLayoutData (nil, 100045, -.08, 45, 50, 2)
+    win:CreateButtons()
+    win:InitLayoutData (nil, 100045, -.08, 45, 50, 2)
 
-	win.Frm:SetToplevel (true)
+    win.Frm:SetToplevel (true)
 
-	self:UpdateOptions()
+    self:UpdateOptions()
 
-	self.InitPending = true
+    self.InitPending = true
 
-	DockMinimapScan = Nx:ScheduleTimer(self.MinimapOwnInit,3,self)
+    DockMinimapScan = Nx:ScheduleTimer(self.MinimapOwnInit,3,self)
 
 --PAIDE!
 end
@@ -11643,100 +11638,100 @@ end
 --
 function Nx.Map.Dock:MinimapOwnInit()
 
-	self.InitPending = nil
+    self.InitPending = nil
 
-	local map = Nx.Map:GetMap (1)
-	local mm = _G["Minimap"]
+    local map = Nx.Map:GetMap (1)
+    local mm = _G["Minimap"]
 
-	local mmOwnerNames = {
-		"NXMiniMapBut","GameTimeFrame","TimeManagerClockButton","MiniMapWorldMapButton","MiniMapMailFrame","MiniMapTracking","MiniMapVoiceChatFrame","QueueStatusMinimapButton","MiniMapInstanceDifficulty","GarrisonLandingPageMinimapButton","MiniMapLFGFrame",
-	}
+    local mmOwnerNames = {
+        "NXMiniMapBut","GameTimeFrame","TimeManagerClockButton","MiniMapWorldMapButton","MiniMapMailFrame","MiniMapTracking","MiniMapVoiceChatFrame","QueueStatusMinimapButton","MiniMapInstanceDifficulty","GarrisonLandingPageMinimapButton","MiniMapLFGFrame",
+    }
 
-	local f = _G["MinimapBackdrop"]	-- Add so it gets ignored
-	map.MMOwnedFrms[f] = 0
+    local f = _G["MinimapBackdrop"]    -- Add so it gets ignored
+    map.MMOwnedFrms[f] = 0
 
-	self.MMFrms = {}
+    self.MMFrms = {}
 
-	for k, name in ipairs (mmOwnerNames) do
-		local f = _G[name]
-		if f then
+    for k, name in ipairs (mmOwnerNames) do
+        local f = _G[name]
+        if f then
 
-			map.MMOwnedFrms[f] = 0
-			tinsert (self.MMFrms, f)
+            map.MMOwnedFrms[f] = 0
+            tinsert (self.MMFrms, f)
 
-			f:SetParent (self.Win.Frm)
+            f:SetParent (self.Win.Frm)
 
-			if name == "MiniMapTracking" then
-				f:Show()
-			end
-		end
-	end
+            if name == "MiniMapTracking" then
+                f:Show()
+            end
+        end
+    end
 
-	-- Scan all frames
+    -- Scan all frames
 
-	local texnames = { ["Interface\\AddOns\\CT_Core\\Images\\minimapIcon"] = 1, }
+    local texnames = { ["Interface\\AddOns\\CT_Core\\Images\\minimapIcon"] = 1, }
 
-	local mapf = map.Frm
-	local winf = self.Win.Frm
+    local mapf = map.Frm
+    local winf = self.Win.Frm
 
-	local found = {}
+    local found = {}
 
-	local f = EnumerateFrames()
-	while f do
+    local f = EnumerateFrames()
+    while f do
 
-		if not f:IsObjectType ("Model") then
---		if f:IsShown() and not f:IsObjectType ("Model") then
-			
-			if pcall(f.GetPoint, f) then
-				local pt, relTo = f:GetPoint()
-				if relTo == mm then
+        if not f:IsObjectType ("Model") then
+--        if f:IsShown() and not f:IsObjectType ("Model") then
 
-					local parent = f:GetParent()
-					if parent ~= mm and parent ~= mapf then
-	--					Nx.prtFrame ("Dock Scan", f)
-						found[f] = 1
-					end
-				end
-			end
+            if pcall(f.GetPoint, f) then
+                local pt, relTo = f:GetPoint()
+                if relTo == mm then
 
-			local reg = { f:GetRegions() }
-			for k, v in ipairs (reg) do
-				if v and v.GetObjectType then
-					local okType, objType = pcall(v.GetObjectType, v)
-					if okType and objType == "Texture" then
-						v:SetSnapToPixelGrid(false)
-						v:SetTexelSnappingBias(0)
-						local tname = v:GetTexture()
-						if tname and texnames[tname] then
-							found[f] = 1
-							break
-						end
-					end
-				end
-			end
-		end
+                    local parent = f:GetParent()
+                    if parent ~= mm and parent ~= mapf then
+    --                    Nx.prtFrame ("Dock Scan", f)
+                        found[f] = 1
+                    end
+                end
+            end
 
-		f = EnumerateFrames (f)
-	end
+            local reg = { f:GetRegions() }
+            for k, v in ipairs (reg) do
+                if v and v.GetObjectType then
+                    local okType, objType = pcall(v.GetObjectType, v)
+                    if okType and objType == "Texture" then
+                        v:SetSnapToPixelGrid(false)
+                        v:SetTexelSnappingBias(0)
+                        local tname = v:GetTexture()
+                        if tname and texnames[tname] then
+                            found[f] = 1
+                            break
+                        end
+                    end
+                end
+            end
+        end
 
-	-- Add found frames to list
+        f = EnumerateFrames (f)
+    end
 
-	for f in pairs (found) do
+    -- Add found frames to list
 
-		if not map.MMOwnedFrms[f] then
-			map.MMOwnedFrms[f] = 0
-			tinsert (self.MMFrms, f)
-			f:SetParent (winf)
-		end
-	end
+    for f in pairs (found) do
 
-	map.Win:Show (map.StartupShown)
+        if not map.MMOwnedFrms[f] then
+            map.MMOwnedFrms[f] = 0
+            tinsert (self.MMFrms, f)
+            f:SetParent (winf)
+        end
+    end
 
-	Nx.Map:MinimapButtonShowUpdate()
+    map.Win:Show (map.StartupShown)
 
-	if Nx.db.profile.Debug.DebugDock then
-		Nx.prt ("DockScan %s", #self.MMFrms)
-	end
+    Nx.Map:MinimapButtonShowUpdate()
+
+    if Nx.db.profile.Debug.DebugDock then
+        Nx.prt ("DockScan %s", #self.MMFrms)
+    end
 end
 
 ---
@@ -11744,14 +11739,14 @@ end
 --
 function Nx.Map.Dock:UpdateOptions()
 
-	local win = self.Win
-	if win then
+    local win = self.Win
+    if win then
 
-		local lock = win:IsLocked()
-		win:SetBGAlpha (0, lock and 0 or 1)
+        local lock = win:IsLocked()
+        win:SetBGAlpha (0, lock and 0 or 1)
 
-		self.UpdateMod = 1
-	end
+        self.UpdateMod = 1
+    end
 end
 
 ---
@@ -11761,151 +11756,151 @@ end
 --
 function Nx.Map.Dock:MinimapDetachFrms()
 
-	if Nx.Map:GetMap (1).Frm.NxMap.Tick % self.UpdateMod ~= 0 then
-		return
-	end
+    if Nx.Map:GetMap (1).Frm.NxMap.Tick % self.UpdateMod ~= 0 then
+        return
+    end
 
-	if not self.Win then
-		return
-	end
+    if not self.Win then
+        return
+    end
 
-	self.UpdateMod = 30
+    self.UpdateMod = 30
 
-	if Nx.db.profile.Debug.DebugDock then
-		Nx.prt ("Dock %s", #self.MMFrms)
-	end
+    if Nx.db.profile.Debug.DebugDock then
+        Nx.prt ("Dock %s", #self.MMFrms)
+    end
 
-	local mm = _G["Minimap"]
-	local mmClock = _G["TimeManagerClockButton"]
-	local win = self.Win
-	local winf = win.Frm
-	local butLvl = winf:GetFrameLevel() + 1
-	local cLvl = butLvl + 1
-	local setCLvls = Nx.Util_SetChildLevels
-	local strata = winf:GetFrameStrata()
+    local mm = _G["Minimap"]
+    local mmClock = _G["TimeManagerClockButton"]
+    local win = self.Win
+    local winf = win.Frm
+    local butLvl = winf:GetFrameLevel() + 1
+    local cLvl = butLvl + 1
+    local setCLvls = Nx.Util_SetChildLevels
+    local strata = winf:GetFrameStrata()
 
-	local mini = Nx.db.profile.MiniMap.ButWinMinimize
+    local mini = Nx.db.profile.MiniMap.ButWinMinimize
 
-	local cx, cy = win:GetClientOffset()
-	local cw, ch = win:GetSize()
+    local cx, cy = win:GetClientOffset()
+    local cw, ch = win:GetSize()
 
-	local columnCnt = mini and 1 or Nx.db.profile.MiniMap.ButColumns		-- max (floor (cw / 30), 1)
-	local columnStart = 0
-	local columnEnd = columnCnt - 1
+    local columnCnt = mini and 1 or Nx.db.profile.MiniMap.ButColumns        -- max (floor (cw / 30), 1)
+    local columnStart = 0
+    local columnEnd = columnCnt - 1
 
-	local colAdd = 1
-	local spacing = Nx.db.profile.MiniMap.ButSpacing
-	local yAdd = spacing
-	local y = cy + 6
+    local colAdd = 1
+    local spacing = Nx.db.profile.MiniMap.ButSpacing
+    local yAdd = spacing
+    local y = cy + 6
 
-	local s = Nx.db.profile.MiniMap.ButCorner
-	if s == "TopRight" or s == "BottomRight" then
-		columnEnd = -columnEnd
---		columnStart, columnEnd = columnEnd, columnStart
-		colAdd = -1
-	end
-	if s == "BottomLeft" or s == "BottomRight" then
-		yAdd = -yAdd
-		y = cy - 6
-	end
+    local s = Nx.db.profile.MiniMap.ButCorner
+    if s == "TopRight" or s == "BottomRight" then
+        columnEnd = -columnEnd
+--        columnStart, columnEnd = columnEnd, columnStart
+        colAdd = -1
+    end
+    if s == "BottomLeft" or s == "BottomRight" then
+        yAdd = -yAdd
+        y = cy - 6
+    end
 
-	local column = columnStart
-	local borderSize = win:GetBorderSize()
-	local baseX = borderSize + 17
-	local baseY = y
-	local incRow
+    local column = columnStart
+    local borderSize = win:GetBorderSize()
+    local baseX = borderSize + 17
+    local baseY = y
+    local incRow
 
---	if IsAltKeyDown() then return end
+--    if IsAltKeyDown() then return end
 
-	for n, f in ipairs (self.MMFrms) do
+    for n, f in ipairs (self.MMFrms) do
 
-		if f:IsVisible() then
+        if f:IsVisible() then
 
-			local w = f:GetWidth()
-			if w > 0 then
+            local w = f:GetWidth()
+            if w > 0 then
 
-				local sc = 32 / max (w, 32)
+                local sc = 32 / max (w, 32)
 
-				if incRow then
-					incRow = false
-					column = columnStart
-					y = y + yAdd
-				end
+                if incRow then
+                    incRow = false
+                    column = columnStart
+                    y = y + yAdd
+                end
 
-				if mini and n > 1 then
-					column = 0
-					y = baseY
-					butLvl = 1
-					cLvl = 1
-					sc = .1
-				end
+                if mini and n > 1 then
+                    column = 0
+                    y = baseY
+                    butLvl = 1
+                    cLvl = 1
+                    sc = .1
+                end
 
-				local x = baseX + column * spacing
+                local x = baseX + column * spacing
 
-				f:SetParent (winf)
-				f:ClearAllPoints()
+                f:SetParent (winf)
+                f:ClearAllPoints()
 
-				if f == mmClock then
-					sc = sc * 1.5
---					f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc - 3, -y / sc + 3)
-				end
+                if f == mmClock then
+                    sc = sc * 1.5
+--                    f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc - 3, -y / sc + 3)
+                end
 
-				f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc, -y / sc)
+                f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc, -y / sc)
 
---				if f == mmt then
---					sc = .82
---					f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc - 3, -y / sc + 3)
---				end
+--                if f == mmt then
+--                    sc = .82
+--                    f:SetPoint ("CENTER", winf, "TOPLEFT", x / sc - 3, -y / sc + 3)
+--                end
 
-				f:SetScale (sc)
+                f:SetScale (sc)
 
-				f:SetFrameStrata (strata)
-				f:SetFrameLevel (butLvl)
-				setCLvls (f, cLvl)
+                f:SetFrameStrata (strata)
+                f:SetFrameLevel (butLvl)
+                setCLvls (f, cLvl)
 --[[
-				if IsControlKeyDown() then
-					Nx.prt ("MMFrms #%d %s %s", n, f:GetName() or "nil", w)
-					Nx.prtFrame ("", f)
-				end
+                if IsControlKeyDown() then
+                    Nx.prt ("MMFrms #%d %s %s", n, f:GetName() or "nil", w)
+                    Nx.prtFrame ("", f)
+                end
 --]]
-				if column == columnEnd then
-					incRow = true
-				end
+                if column == columnEnd then
+                    incRow = true
+                end
 
-				column = column + colAdd
-			end
+                column = column + colAdd
+            end
 
-		elseif f:IsShown() then		-- Strange? Fixes Outfitter Minimap button not drawing
+        elseif f:IsShown() then        -- Strange? Fixes Outfitter Minimap button not drawing
 
---			Nx.prt ("Frm vis error %s", f:GetName() or "nil")
-			f:Show()
-		end
-	end
+--            Nx.prt ("Frm vis error %s", f:GetName() or "nil")
+            f:Show()
+        end
+    end
 
-	if not win.MovSizing then
---		local h = min (ch, cy - y)
+    if not win.MovSizing then
+--        local h = min (ch, cy - y)
 
-		local x = winf:GetLeft()
-		if not InCombatLockdown() then
-			win:SetSize (34, 11)
-		end
-	end
+        local x = winf:GetLeft()
+        if not InCombatLockdown() then
+            win:SetSize (34, 11)
+        end
+    end
 
-	-- Debug
+    -- Debug
 
 --[[
 
-	if IsControlKeyDown() then
+    if IsControlKeyDown() then
 
-		local frms = {}
+        local frms = {}
 
-		for n, f in ipairs (self.MMFrms) do
-			if frms[f] then
-				Nx.prt ("Dup frm %s #%s", f:GetName() or "nil", n)
-			end
-			frms[f] = n
-		end
-	end
+        for n, f in ipairs (self.MMFrms) do
+            if frms[f] then
+                Nx.prt ("Dup frm %s #%s", f:GetName() or "nil", n)
+            end
+            frms[f] = n
+        end
+    end
 --]]
 end
 
@@ -11921,25 +11916,25 @@ end
 --
 function Nx.Map:RouteGathers()
 
-	local points = {}
-	local cnt = self:GetIconCnt ("!Ga")
+    local points = {}
+    local cnt = self:GetIconCnt ("!Ga")
 
-	for n = 1, cnt do
-		local wx, wy = self:GetIconPt ("!Ga", n)
-		local x, y = self:GetZonePos (self.MapId, wx, wy)
+    for n = 1, cnt do
+        local wx, wy = self:GetIconPt ("!Ga", n)
+        local x, y = self:GetZonePos (self.MapId, wx, wy)
 
-		local pt = {}
-		tinsert (points, pt)
-		pt.X = x
-		pt.Y = y
-	end
+        local pt = {}
+        tinsert (points, pt)
+        pt.X = x
+        pt.Y = y
+    end
 
-	self:RouteMerge (points)
+    self:RouteMerge (points)
 
-	local route = self:Route (points)
-	if route then
-		self:RouteToTargets (route, false)
-	end
+    local route = self:Route (points)
+    if route then
+        self:RouteToTargets (route, false)
+    end
 end
 
 ---
@@ -11949,23 +11944,23 @@ end
 function Nx.Map:RouteTargets()
     local points = {}
 
-	for n, tar in ipairs (self.Targets) do
+    for n, tar in ipairs (self.Targets) do
 
-		local wx = tar.TargetMX
-		local wy = tar.TargetMY
-		local x, y = self:GetZonePos (self.MapId, wx, wy)
+        local wx = tar.TargetMX
+        local wy = tar.TargetMY
+        local x, y = self:GetZonePos (self.MapId, wx, wy)
 
-		local pt = {}
-		tinsert (points, pt)
-		pt.Name = tar.TargetName
-		pt.X = x
-		pt.Y = y
-	end
+        local pt = {}
+        tinsert (points, pt)
+        pt.Name = tar.TargetName
+        pt.X = x
+        pt.Y = y
+    end
 
-	local route = self:Route (points)
-	if route then
-		self:RouteToTargets (route)
-	end
+    local route = self:Route (points)
+    if route then
+        self:RouteToTargets (route)
+    end
 end
 
 ---
@@ -11974,9 +11969,9 @@ end
 --
 function Nx.Map:RouteQuests (points)
     local route = self:Route (points)
-	if route then
-		self:RouteToTargets (route, false)
-	end
+    if route then
+        self:RouteToTargets (route, false)
+    end
 end
 
 ---
@@ -11986,88 +11981,88 @@ end
 --
 function Nx.Map:RouteMerge (points)
 
-	local radius = Nx.db.profile.Route.MergeRadius
+    local radius = Nx.db.profile.Route.MergeRadius
 
-	if #points < 2 or radius < 1 then
-		return
-	end
+    if #points < 2 or radius < 1 then
+        return
+    end
 
-	local tm = GetTime()
+    local tm = GetTime()
 
-	sort (points, function (a, b) return a.X < b.X end)
+    sort (points, function (a, b) return a.X < b.X end)
 
---	for n, pt in ipairs (points) do
---		Nx.prt ("%s %s", n, pt.X)
---	end
+--    for n, pt in ipairs (points) do
+--        Nx.prt ("%s %s", n, pt.X)
+--    end
 
-	radius = radius / Nx.Map:GetWorldZoneScale (self.MapId) / 4.575
---	Nx.prt ("rad %s", radius)
+    radius = radius / Nx.Map:GetWorldZoneScale (self.MapId) / 4.575
+--    Nx.prt ("rad %s", radius)
 
-	local radiusSq = radius ^ 2	-- Yards to world space squared
+    local radiusSq = radius ^ 2    -- Yards to world space squared
 
-	local startCnt = #points
-	local merged = true
+    local startCnt = #points
+    local merged = true
 
-	while merged do
+    while merged do
 
-		merged = false
+        merged = false
 
-		local close = 999999999
-		local closeI1
-		local closeI2
+        local close = 999999999
+        local closeI1
+        local closeI2
 
-		for n1, pt1 in ipairs (points) do
+        for n1, pt1 in ipairs (points) do
 
---			local done
+--            local done
 
-			for n2 = n1 + 1, #points do
+            for n2 = n1 + 1, #points do
 
-				local pt2 = points[n2]
+                local pt2 = points[n2]
 
-				if pt2.X - pt1.X > radius then
---					Nx.prt ("done %s %s", pt1.X, pt2.X)
---					done = true
-					break
-				end
+                if pt2.X - pt1.X > radius then
+--                    Nx.prt ("done %s %s", pt1.X, pt2.X)
+--                    done = true
+                    break
+                end
 
-				local d = (pt1.X - pt2.X) ^ 2 + ((pt1.Y - pt2.Y) / 1.5) ^ 2
-				if d < close then
-					close = d
-					closeI1 = n1
-					closeI2 = n2
+                local d = (pt1.X - pt2.X) ^ 2 + ((pt1.Y - pt2.Y) / 1.5) ^ 2
+                if d < close then
+                    close = d
+                    closeI1 = n1
+                    closeI2 = n2
 --[[
-					if d ^ .5 < radius * .5 then	-- Close enough? Early out
-						Nx.prt ("%s + %s, %s", n1, n2, d ^ .5)
-						done = true
-						break
-					end
+                    if d ^ .5 < radius * .5 then    -- Close enough? Early out
+                        Nx.prt ("%s + %s, %s", n1, n2, d ^ .5)
+                        done = true
+                        break
+                    end
 --]]
-				end
-			end
+                end
+            end
 
---			if done then
---				break
---			end
-		end
+--            if done then
+--                break
+--            end
+        end
 
-		if close ^ .5 < radius then
+        if close ^ .5 < radius then
 
---			Nx.prt (" + %s %s", closeI1, closeI2)
+--            Nx.prt (" + %s %s", closeI1, closeI2)
 
-			local pt1 = points[closeI1]
-			local pt2 = points[closeI2]
+            local pt1 = points[closeI1]
+            local pt2 = points[closeI2]
 
-			pt1.X = (pt1.X + pt2.X) * .5		-- Average
-			pt1.Y = (pt1.Y + pt2.Y) * .5
+            pt1.X = (pt1.X + pt2.X) * .5        -- Average
+            pt1.Y = (pt1.Y + pt2.Y) * .5
 
-			tremove (points, closeI2)
-			merged = true
+            tremove (points, closeI2)
+            merged = true
 
-			sort (points, function (a, b) return a.X < b.X end)
-		end
-	end
+            sort (points, function (a, b) return a.X < b.X end)
+        end
+    end
 
-	Nx.prt ("Merged %s in %.1f secs", startCnt - #points, GetTime() - tm)
+    Nx.prt ("Merged %s in %.1f secs", startCnt - #points, GetTime() - tm)
 end
 
 ---
@@ -12078,115 +12073,115 @@ end
 --
 function Nx.Map:Route (points)
 
-	if #points == 0 then
-		return
-	end
+    if #points == 0 then
+        return
+    end
 
-	-- Test
+    -- Test
 
-	local tm = GetTime()
+    local tm = GetTime()
 --[[
-	local blks = 20
-	local scale = 5
+    local blks = 20
+    local scale = 5
 
-	local points = {}
-	for n = 0, 399 do
-		local pt = {}
-		points[n + 1] = pt
-		pt.X = n % blks * scale + floor (n / 7) % 2 * 3
-		pt.Y = floor (n / blks) * scale + floor (n / 3) % 2 * 4
---		pt.X = random (1, 20)
---		pt.Y = random (1, 20)
-	end
+    local points = {}
+    for n = 0, 399 do
+        local pt = {}
+        points[n + 1] = pt
+        pt.X = n % blks * scale + floor (n / 7) % 2 * 3
+        pt.Y = floor (n / blks) * scale + floor (n / 3) % 2 * 4
+--        pt.X = random (1, 20)
+--        pt.Y = random (1, 20)
+    end
 --]]
 
-	--
+    --
 
-	local route = {}
+    local route = {}
 
-	for n, pt in ipairs (points) do
-		pt.Y = pt.Y / 1.5		-- Make Y same units as X
-	end
+    for n, pt in ipairs (points) do
+        pt.Y = pt.Y / 1.5        -- Make Y same units as X
+    end
 
-	-- Nearest neighbor
+    -- Nearest neighbor
 
-	if #points > 1 then
+    if #points > 1 then
 
-		local x = points[1].X
-		local y = points[1].Y
-		if x == points[#points].X and y == points[#points].Y then	-- End same as start?
-			tremove (points)
-		end
-	end
+        local x = points[1].X
+        local y = points[1].Y
+        if x == points[#points].X and y == points[#points].Y then    -- End same as start?
+            tremove (points)
+        end
+    end
 
-	local x, y = self:GetZonePos (self.MapId, self.PlyrX, self.PlyrY)
-	y = y / 1.5
+    local x, y = self:GetZonePos (self.MapId, self.PlyrX, self.PlyrY)
+    y = y / 1.5
 
-	while #points > 0 do
+    while #points > 0 do
 
-		local closeDist = 999999999
-		local closeI
+        local closeDist = 999999999
+        local closeI
 
-		for n, pt in ipairs (points) do
+        for n, pt in ipairs (points) do
 
-			local dist = (x - pt.X) ^ 2 + (y - pt.Y) ^ 2
-			if dist < closeDist then
-				closeDist = dist
-				closeI = n
-			end
-		end
+            local dist = (x - pt.X) ^ 2 + (y - pt.Y) ^ 2
+            if dist < closeDist then
+                closeDist = dist
+                closeI = n
+            end
+        end
 
-		local pt = tremove (points, closeI)
+        local pt = tremove (points, closeI)
 
-		local r = {}
-		tinsert (route, r)
-		r.Name = pt.Name
-		r.X = pt.X
-		r.Y = pt.Y
-		r.Weight = pt.Weight or 1
+        local r = {}
+        tinsert (route, r)
+        r.Name = pt.Name
+        r.X = pt.X
+        r.Y = pt.Y
+        r.Weight = pt.Weight or 1
 
-		x = pt.X
-		y = pt.Y
-	end
+        x = pt.X
+        y = pt.Y
+    end
 
-	-- Add first node at end if needed for loop
+    -- Add first node at end if needed for loop
 
-	local x = route[1].X
-	local y = route[1].Y
+    local x = route[1].X
+    local y = route[1].Y
 
-	if x ~= route[#route].X or y ~= route[#route].Y then
+    if x ~= route[#route].X or y ~= route[#route].Y then
 
---		Nx.prt ("%f %f %f %f", x, route[#route].X, y, route[#route].Y)
+--        Nx.prt ("%f %f %f %f", x, route[#route].X, y, route[#route].Y)
 
-		local r = {}
-		r.X = x
-		r.Y = y
-		tinsert (route, r)
-	end
+        local r = {}
+        r.X = x
+        r.Y = y
+        tinsert (route, r)
+    end
 
-	-- Calc length (sets node distances)
+    -- Calc length (sets node distances)
 
-	local len = self:RouteLen (route)
---	Nx.prt ("Route len %s, %s secs", len, GetTime() - tm)
+    local len = self:RouteLen (route)
+--    Nx.prt ("Route len %s, %s secs", len, GetTime() - tm)
 
-	-- Optimize .517 secs on 400
+    -- Optimize .517 secs on 400
 
-	for n = 1, 5 do
-		local swap = self:RouteOptimize (route)
---		local len = self:RouteLen (route)
---		Nx.prt ("Route opt #%s len %s, %s secs", #route, len, GetTime() - tm)
-		if not swap then
-			break
-		end
-	end
+    for n = 1, 5 do
+        local swap = self:RouteOptimize (route)
+--        local len = self:RouteLen (route)
+--        Nx.prt ("Route opt #%s len %s, %s secs", #route, len, GetTime() - tm)
+        if not swap then
+            break
+        end
+    end
 
-	-- Show info
+    -- Show info
 
-	local scale = self:GetWorldZoneScale (self.MapId)
-	local len = self:RouteLen (route)
-	Nx.prt ("Routed %s nodes, %d yards in %.1f secs", #route, len * scale * 4.575, GetTime() - tm)
+    local scale = self:GetWorldZoneScale (self.MapId)
+    local len = self:RouteLen (route)
+    Nx.prt ("Routed %s nodes, %d yards in %.1f secs", #route, len * scale * 4.575, GetTime() - tm)
 
-	return route
+    return route
 end
 
 ---
@@ -12196,23 +12191,23 @@ end
 --
 function Nx.Map:GetZoneAchievement (always)
 
-	local mId = Nx.Map:GetCurrentMapId()
---	local mId = Map:GetRealMapId()
-	if not Nx.Map.MapWorldInfo[mId] then
-		return
-	end
-	local a = Nx.Map.MapWorldInfo[mId].QAchievementId
-	--[[if a then
+    local mId = Nx.Map:GetCurrentMapId()
+--    local mId = Map:GetRealMapId()
+    if not Nx.Map.MapWorldInfo[mId] then
+        return
+    end
+    local a = Nx.Map.MapWorldInfo[mId].QAchievementId
+    --[[if a then
 
-		local id, name, _, done = GetAchievementInfo (a)
-		if always or not done then
-			if GetAchievementNumCriteria(a) > 0 then
-				local _, _, done, cnt, need = GetAchievementCriteriaInfo (a, 1)
-				local col = done and "|cff808080" or "|cff8080ff"
-				return format ("%s%s %d/%d", col, name, cnt, need)
-			end
-		end
-	end]]--
+        local id, name, _, done = GetAchievementInfo (a)
+        if always or not done then
+            if GetAchievementNumCriteria(a) > 0 then
+                local _, _, done, cnt, need = GetAchievementCriteriaInfo (a, 1)
+                local col = done and "|cff808080" or "|cff8080ff"
+                return format ("%s%s %d/%d", col, name, cnt, need)
+            end
+        end
+    end]]--
 end
 
 ---
@@ -12222,21 +12217,21 @@ end
 -- @param targetIcon  Optional texture for target icons (false for none)
 --
 function Nx.Map:RouteToTargets (route, targetIcon)
-	if Nx.Quest and Nx.Quest.Watch then
-		Nx.Quest.Watch:ClearAutoTarget()
-	end
-	local mapId = self.MapId
+    if Nx.Quest and Nx.Quest.Watch then
+        Nx.Quest.Watch:ClearAutoTarget()
+    end
+    local mapId = self.MapId
 
-	for n, r in ipairs (route) do
+    for n, r in ipairs (route) do
 
-		local wx, wy = self:GetWorldPos (mapId, r.X, r.Y * 1.5)
-		local s = format ("Route%s (%s) %s", n, #route - n + 1, r.Name or "")
-		local tar = self:SetTarget ("Route", wx, wy, wx, wy, targetIcon, nil, s, n ~= 1)
+        local wx, wy = self:GetWorldPos (mapId, r.X, r.Y * 1.5)
+        local s = format ("Route%s (%s) %s", n, #route - n + 1, r.Name or "")
+        local tar = self:SetTarget ("Route", wx, wy, wx, wy, targetIcon, nil, s, n ~= 1)
 
-		tar.Radius = Nx.db.profile.Route.GatherRadius
+        tar.Radius = Nx.db.profile.Route.GatherRadius
 
---		self:SetTargetXY (mapId, r.X, r.Y * 1.5, "r" .. n, true)
-	end
+--        self:SetTargetXY (mapId, r.X, r.Y * 1.5, "r" .. n, true)
+    end
 end
 
 ---
@@ -12247,17 +12242,17 @@ end
 --
 function Nx.Map:RouteLen (route)
 
-	local len = 0
+    local len = 0
 
-	for n = 1, #route - 1 do
-		local r1 = route[n]
-		local r2 = route[n + 1]
-		r1.Dist = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5
-		len = len + r1.Dist
---		Nx.prt ("Route %s len %s", n, ((x - r.X) ^ 2 + (y - r.Y) ^ 2) ^ .5)
-	end
+    for n = 1, #route - 1 do
+        local r1 = route[n]
+        local r2 = route[n + 1]
+        r1.Dist = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5
+        len = len + r1.Dist
+--        Nx.prt ("Route %s len %s", n, ((x - r.X) ^ 2 + (y - r.Y) ^ 2) ^ .5)
+    end
 
-	return len
+    return len
 end
 
 ---
@@ -12268,61 +12263,61 @@ end
 --
 function Nx.Map:RouteOptimize (route)
 
-	local swap
+    local swap
 
 ---[[ 1394.4788 len
-	for len = #route - 2, 2, -1 do
+    for len = #route - 2, 2, -1 do
 
-		for n = 1, #route - len - 1 do
+        for n = 1, #route - len - 1 do
 
-			local r1 = route[n]
-			local r2 = route[n + 1]
-			local n2 = n + len
-			local r3 = route[n2]
-			local r4 = route[n2 + 1]
+            local r1 = route[n]
+            local r2 = route[n + 1]
+            local n2 = n + len
+            local r3 = route[n2]
+            local r4 = route[n2 + 1]
 
-			if r1.Dist + r3.Dist >
-				((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5 then
+            if r1.Dist + r3.Dist >
+                ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5 then
 
-				self:RouteSwap (route, n + 1, len)
+                self:RouteSwap (route, n + 1, len)
 
---				local dist1 = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5 + ((r3.X - r4.X) ^ 2 + (r3.Y - r4.Y) ^ 2) ^ .5
---				local dist2 = ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5
---				Nx.prt ("Route %s swap %s %s %s", len, n, dist1 or 0, dist2 or 0)
+--                local dist1 = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5 + ((r3.X - r4.X) ^ 2 + (r3.Y - r4.Y) ^ 2) ^ .5
+--                local dist2 = ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5
+--                Nx.prt ("Route %s swap %s %s %s", len, n, dist1 or 0, dist2 or 0)
 
-				swap = true
-			end
-		end
-	end
+                swap = true
+            end
+        end
+    end
 --]]
 
---[[	Little slower
-	for last = #route - 1, 2, -1 do
+--[[    Little slower
+    for last = #route - 1, 2, -1 do
 
-		for n = 1, last - 2 do
+        for n = 1, last - 2 do
 
-			local r1 = route[n]
-			local r2 = route[n + 1]
-			local n2 = last
-			local r3 = route[n2]
-			local r4 = route[n2 + 1]
+            local r1 = route[n]
+            local r2 = route[n + 1]
+            local n2 = last
+            local r3 = route[n2]
+            local r4 = route[n2 + 1]
 
-			if r1.Dist + r3.Dist >
-				((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5 then
+            if r1.Dist + r3.Dist >
+                ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5 then
 
-				self:RouteSwap (route, n + 1, last - n)
+                self:RouteSwap (route, n + 1, last - n)
 
---				local dist1 = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5 + ((r3.X - r4.X) ^ 2 + (r3.Y - r4.Y) ^ 2) ^ .5
---				local dist2 = ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5
-				Nx.prt ("Route %s swap %s %s %s", last - n, n, dist1 or 0, dist2 or 0)
+--                local dist1 = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5 + ((r3.X - r4.X) ^ 2 + (r3.Y - r4.Y) ^ 2) ^ .5
+--                local dist2 = ((r1.X - r3.X) ^ 2 + (r1.Y - r3.Y) ^ 2) ^ .5 + ((r2.X - r4.X) ^ 2 + (r2.Y - r4.Y) ^ 2) ^ .5
+                Nx.prt ("Route %s swap %s %s %s", last - n, n, dist1 or 0, dist2 or 0)
 
-				swap = true
-			end
-		end
-	end
+                swap = true
+            end
+        end
+    end
 --]]
 
-	return swap
+    return swap
 end
 
 ---
@@ -12334,44 +12329,44 @@ end
 --
 function Nx.Map:RouteSwap (route, first, len)
 
-	-- 1 2 3 4 5 6 7 8	Before (3, +4)
-	-- 1 2 6 5 4 3 7 8	After
+    -- 1 2 3 4 5 6 7 8    Before (3, +4)
+    -- 1 2 6 5 4 3 7 8    After
 
-	local last = first + len - 1
-	local stop = first + floor (len / 2) - 1
+    local last = first + len - 1
+    local stop = first + floor (len / 2) - 1
 
---[[	Loop unroll does not help
-	local loops = floor (len / 2)
+--[[    Loop unroll does not help
+    local loops = floor (len / 2)
 
---	if loops > 1 then
+--    if loops > 1 then
 
---		Nx.prt ("Route swap loops %s", loops)
+--        Nx.prt ("Route swap loops %s", loops)
 
-		if loops % 2 ~= 0 then
-			route[first], route[last] = route[last], route[first]
-			first = first + 1
-			last = last - 1
-		end
+        if loops % 2 ~= 0 then
+            route[first], route[last] = route[last], route[first]
+            first = first + 1
+            last = last - 1
+        end
 
-		for n = first, stop, 2 do
-			route[n], route[last] = route[last], route[n]
-			route[n+1], route[last-1] = route[last-1], route[n+1]
-			last = last - 2
-		end
-	else
+        for n = first, stop, 2 do
+            route[n], route[last] = route[last], route[n]
+            route[n+1], route[last-1] = route[last-1], route[n+1]
+            last = last - 2
+        end
+    else
 --]]
 
-	local n2 = last
-	for n = first, stop do
-		route[n], route[n2] = route[n2], route[n]
-		n2 = n2 - 1
-	end
+    local n2 = last
+    for n = first, stop do
+        route[n], route[n2] = route[n2], route[n]
+        n2 = n2 - 1
+    end
 
-	for n = first - 1, last do
-		local r1 = route[n]
-		local r2 = route[n + 1]
-		r1.Dist = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5
-	end
+    for n = first - 1, last do
+        local r1 = route[n]
+        local r2 = route[n + 1]
+        r1.Dist = ((r1.X - r2.X) ^ 2 + (r1.Y - r2.Y) ^ 2) ^ .5
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -12388,38 +12383,38 @@ end
 --
 function Nx.Map:UnpackLocPtRelative (str, loc)
 
-	local cnt
-	local ox, oy = Nx.Map:UnpackLocPtOff (str, loc)
+    local cnt
+    local ox, oy = Nx.Map:UnpackLocPtOff (str, loc)
 
-	ox = ox - 50
-	oy = oy - 50
+    ox = ox - 50
+    oy = oy - 50
 
-	for n = 1, GetNumBattlefieldVehicles() do
+    for n = 1, GetNumBattlefieldVehicles() do
 
-		local x, y, unitName, possessed, typ, dir, player = GetBattlefieldVehicleInfo (n, Nx.Map:GetCurrentMapId())
-		if x and not player then
+        local x, y, unitName, possessed, typ, dir, player = GetBattlefieldVehicleInfo (n, Nx.Map:GetCurrentMapId())
+        if x and not player then
 
-			if typ == Nx.AirshipType then
-				cnt = 1
+            if typ == Nx.AirshipType then
+                cnt = 1
 
-				dir = dir / PI * 180
-				oy = oy / 1.5
-				ox, oy = ox * cos (dir) + oy * sin (dir), (ox * -sin (dir) + oy * cos (dir)) * 1.5
-				ox = x * 100 + ox
-				oy = y * 100 + oy
+                dir = dir / PI * 180
+                oy = oy / 1.5
+                ox, oy = ox * cos (dir) + oy * sin (dir), (ox * -sin (dir) + oy * cos (dir)) * 1.5
+                ox = x * 100 + ox
+                oy = y * 100 + oy
 
---				Nx.prt ("%s Airship %s %s %s", name, typ, ox, oy)
-				break
-			end
-		end
-	end
+--                Nx.prt ("%s Airship %s %s %s", name, typ, ox, oy)
+                break
+            end
+        end
+    end
 
-	if not cnt then
-		ox = ox + 62
-		oy = oy + 42
-	end
+    if not cnt then
+        ox = ox + 62
+        oy = oy + 42
+    end
 
-	return ox, oy
+    return ox, oy
 end
 
 ---
@@ -12431,19 +12426,19 @@ end
 --
 function Nx.Map:UnpackLoc (locStr, off)
 
-	local isPt = strbyte (locStr, off) <= 33		-- Space or !
+    local isPt = strbyte (locStr, off) <= 33        -- Space or !
 
-	if isPt then
+    if isPt then
 
-		local x1, x2, y1, y2 = strbyte (locStr, 1 + off, 4 + off)
-		return	((x1 - 35) * 221 + (x2 - 35)) / 100,
-					((y1 - 35) * 221 + (y2 - 35)) / 100
-	end
+        local x1, x2, y1, y2 = strbyte (locStr, 1 + off, 4 + off)
+        return    ((x1 - 35) * 221 + (x2 - 35)) / 100,
+                    ((y1 - 35) * 221 + (y2 - 35)) / 100
+    end
 
-	local x, y, w, h = strbyte (locStr, 0 + off, 3 + off)
+    local x, y, w, h = strbyte (locStr, 0 + off, 3 + off)
 
-	return	(x - 35) * .5,		-- * 100 / 200, Optimised
-				(y - 35) * .5		-- * 100 / 200
+    return    (x - 35) * .5,        -- * 100 / 200, Optimised
+                (y - 35) * .5        -- * 100 / 200
 
 end
 
@@ -12454,12 +12449,12 @@ end
 --
 function Nx.Map:UnpackLocRect (locStr)
 
-	local x, y, w, h = strbyte (locStr, 1, 4)
+    local x, y, w, h = strbyte (locStr, 1, 4)
 
-	return	(x - 35) * .5,		-- * 100 / 200	Optimised
-				(y - 35) * .5,		-- * 100 / 200
-				(w - 35) * 5.01,	-- * 1002 / 200,
-				(h - 35) * 3.34	-- * 668 / 200
+    return    (x - 35) * .5,        -- * 100 / 200    Optimised
+                (y - 35) * .5,        -- * 100 / 200
+                (w - 35) * 5.01,    -- * 1002 / 200,
+                (h - 35) * 3.34    -- * 668 / 200
 end
 
 ---
@@ -12468,9 +12463,9 @@ end
 -- @return        x, y coordinates (0-100 range, 0.01 precision)
 --
 function Nx.Map:UnpackLocPt (locStr)
-	local x1, x2, y1, y2 = strbyte (locStr, 1, 4)
-	return	((x1 - 35) * 221 + (x2 - 35)) / 100,
-				((y1 - 35) * 221 + (y2 - 35)) / 100
+    local x1, x2, y1, y2 = strbyte (locStr, 1, 4)
+    return    ((x1 - 35) * 221 + (x2 - 35)) / 100,
+                ((y1 - 35) * 221 + (y2 - 35)) / 100
 end
 
 ---
@@ -12481,9 +12476,9 @@ end
 --
 function Nx.Map:UnpackLocPtOff (locStr, off)
 
-	local x1, x2, y1, y2 = strbyte (locStr, off, 3 + off)
-	return	((x1 - 35) * 221 + (x2 - 35)) / 100,
-				((y1 - 35) * 221 + (y2 - 35)) / 100
+    local x1, x2, y1, y2 = strbyte (locStr, off, 3 + off)
+    return    ((x1 - 35) * 221 + (x2 - 35)) / 100,
+                ((y1 - 35) * 221 + (y2 - 35)) / 100
 end
 
 ---
@@ -12492,19 +12487,19 @@ end
 -- @return     description, zone, offset (or just description if no location)
 --
 function Nx.Map:UnpackObjective (obj)
-	if not obj then
-		return
-	end
+    if not obj then
+        return
+    end
 
-	local i = strbyte (obj) - 35 + 1
-	local desc = strsub (obj, 2, i)
+    local i = strbyte (obj) - 35 + 1
+    local desc = strsub (obj, 2, i)
 
-	if #obj == i then
-		return desc
-	end
+    if #obj == i then
+        return desc
+    end
 
-	local zone = strbyte (obj, i + 1) - 35
-	return desc, zone, i + 2
+    local zone = strbyte (obj, i + 1) - 35
+    return desc, zone, i + 2
 end
 -------------------------------------------------------------------------------
 -- DEBUG/TEST CODE
@@ -12517,21 +12512,21 @@ end
 --
 function Nx.Map:VehicleDumpPos()
 
-	-- Right Reaver guard .431 -.701  -359
+    -- Right Reaver guard .431 -.701  -359
 
-	for n = 1, GetNumBattlefieldVehicles() do
+    for n = 1, GetNumBattlefieldVehicles() do
 
-		local x, y, unitName, possessed, typ, dir, player = GetBattlefieldVehicleInfo (n, Nx.Map:GetCurrentMapId())
-		if x and not player then
+        local x, y, unitName, possessed, typ, dir, player = GetBattlefieldVehicleInfo (n, Nx.Map:GetCurrentMapId())
+        if x and not player then
 
-			local xo = self.PlyrRZX - x * 100
-			local yo = (self.PlyrRZY - y * 100) / 1.5
-			dir = dir / PI * -180
-			xo, yo = xo * cos (dir) + yo * sin (dir), (xo * -sin (dir) + yo * cos (dir)) * 1.5
+            local xo = self.PlyrRZX - x * 100
+            local yo = (self.PlyrRZY - y * 100) / 1.5
+            dir = dir / PI * -180
+            xo, yo = xo * cos (dir) + yo * sin (dir), (xo * -sin (dir) + yo * cos (dir)) * 1.5
 
-			Nx.prt ("#%s %s %f %f %.3f %s", n, unitName or "nil", xo, yo, dir or -1, typ or "no type")
-		end
-	end
+            Nx.prt ("#%s %s %f %f %.3f %s", n, unitName or "nil", xo, yo, dir or -1, typ or "no type")
+        end
+    end
 end
 
 ---
@@ -12539,34 +12534,34 @@ end
 -- Clears textures and hides encounter journal buttons
 --
 function Nx.Map.RestoreWorldMap()
-	if not Nx.Map.WMDF then
-		return
-	end
-	
-	--[[local layers = C_Map.GetMapArtLayers(Nx.Map.RMapId)
-	local layerInfo = layers[1]
-	local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
-	
-	for i=1, cols do
-	  for j=1, rows do
-		local index = (j - 1) * cols + i
-		Nx.Map.WMDT[index]:SetTexture(nil)	
-	  end
-	end]]--
-	
-	foreach(Nx.Map.WMDT, function (k, v)
-		Nx.Map.WMDT[k]:SetTexture(nil)	
-	end)
-	
-	Nx.Map.WMDF:Hide()
-	local index = 1
-	local bossButton = _G["NXEJMapButton"..index]	
-	while bossButton do
-		bossButton:Hide()
-		index = index + 1
-		bossButton = _G["NXEJMapButton"..index]
-	end	
-	--Nx.Map.NInstMapId = nil
+    if not Nx.Map.WMDF then
+        return
+    end
+
+    --[[local layers = C_Map.GetMapArtLayers(Nx.Map.RMapId)
+    local layerInfo = layers[1]
+    local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
+
+    for i=1, cols do
+      for j=1, rows do
+        local index = (j - 1) * cols + i
+        Nx.Map.WMDT[index]:SetTexture(nil)
+      end
+    end]]--
+
+    foreach(Nx.Map.WMDT, function (k, v)
+        Nx.Map.WMDT[k]:SetTexture(nil)
+    end)
+
+    Nx.Map.WMDF:Hide()
+    local index = 1
+    local bossButton = _G["NXEJMapButton"..index]
+    while bossButton do
+        bossButton:Hide()
+        index = index + 1
+        bossButton = _G["NXEJMapButton"..index]
+    end
+    --Nx.Map.NInstMapId = nil
 end
 
 ---
@@ -12574,109 +12569,109 @@ end
 -- Creates texture tiles and positions them to display zone map
 -- Also handles player position frame setup
 --
-function Nx.Map.MoveWorldMap()	
-	local curId = Nx.Map:GetCurrentMapId()
-	if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
-		Nx.Map.NInstMapId = curId
-	end
-	Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
-	
-	local mapInfo = C_Map.GetMapInfo(curId)
-	if not mapInfo.name then
-		return
-	end	
-	local layers = C_Map.GetMapArtLayers(curId)
-	local layerInfo = layers[1]
-	local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
-	
-	if not Nx.Map.WMDF then
-		Nx.Map.WMDF = CreateFrame("Frame", "WMDF")		
-		Nx.Map.WMDF:SetFrameStrata("BACKGROUND")
-		Nx.Map.WMDT = {}
-		Nx.Map.EJMB = {}
-		for i = 1,cols do
-			for j = 1, rows do
-		    	local index = (j - 1) * cols + i 			 
-				Nx.Map.WMDT[index] = Nx.Map.WMDF:CreateTexture("WMDT" .. index)
-			end
-		end		
-		Nx.Map.WMDT[1]:SetPoint("TOPLEFT")
-		Nx.Map.WMDT[2]:SetPoint("TOPLEFT","WMDT1","TOPRIGHT")
-		Nx.Map.WMDT[3]:SetPoint("TOPLEFT","WMDT2","TOPRIGHT")
-		Nx.Map.WMDT[4]:SetPoint("TOPLEFT","WMDT3","TOPRIGHT")
-		Nx.Map.WMDT[5]:SetPoint("TOPLEFT","WMDT1","BOTTOMLEFT")
-		Nx.Map.WMDT[6]:SetPoint("TOPLEFT","WMDT5","TOPRIGHT")
-		Nx.Map.WMDT[7]:SetPoint("TOPLEFT","WMDT6","TOPRIGHT")
-		Nx.Map.WMDT[8]:SetPoint("TOPLEFT","WMDT7","TOPRIGHT")
-		Nx.Map.WMDT[9]:SetPoint("TOPLEFT","WMDT5","BOTTOMLEFT")
-		Nx.Map.WMDT[10]:SetPoint("TOPLEFT","WMDT9","TOPRIGHT")
-		Nx.Map.WMDT[11]:SetPoint("TOPLEFT","WMDT10","TOPRIGHT")
-		Nx.Map.WMDT[12]:SetPoint("TOPLEFT","WMDT11","TOPRIGHT")
-	end
-	Nx.Map.WMDF:SetParent(Nx.Map:GetMap(1).Frm)
-	Nx.Map.WMDF:SetFrameLevel(20)
-	Nx.Map.WMDF:SetWidth(Nx.Map:GetMap(1).MapW)
-	Nx.Map.WMDF:SetHeight(Nx.Map:GetMap(1).MapH)
-	Nx.Map.WMDF:Show()
-	
-	local textures = C_Map.GetMapArtLayerTextures(curId,1)
-	
-	for i=1, 12 do
-		Nx.Map.WMDT[i]:SetWidth(Nx.Map.WMDF:GetWidth() / 3.9)		
-		Nx.Map.WMDT[i]:SetHeight(Nx.Map.WMDF:GetHeight() / 2.6)
-		Nx.Map.WMDT[i]:SetTexture(textures[i])
-	end	
-	Nx.Map.WMDF:SetAllPoints()
-	NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
-	NXWorldMapUnitPositionFrame:SetAllPoints()
-	NXWorldMapUnitPositionFrame:SetFrameLevel(40)
-	Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
-	
---[[	local numEncounters = 0;
-	if Nx.db.char.Map.ShowRaidBoss then
-		local width = Nx.Map.WMDF:GetWidth();
-		local height = Nx.Map.WMDF:GetHeight();
+function Nx.Map.MoveWorldMap()
+    local curId = Nx.Map:GetCurrentMapId()
+    if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
+        Nx.Map.NInstMapId = curId
+    end
+    Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
 
-	    local mapEncounters = C_EncounterJournal.GetCurrentMapEncounters(WorldMapFrame.fromJournal);
-		if ( mapEncounters ) then
-			numEncounters = #mapEncounters;
-			for index, mapEncounterInfo in ipairs(mapEncounters) do
-				local bossButton = _G["NXEJMapButton"..index]
-				if not bossButton then -- create button
-					bossButton = CreateFrame("Button", "NXEJMapButton"..index, Nx.Map.WMDF, "EncounterMapButtonTemplate");				
-				end
+    local mapInfo = C_Map.GetMapInfo(curId)
+    if not mapInfo.name then
+        return
+    end
+    local layers = C_Map.GetMapArtLayers(curId)
+    local layerInfo = layers[1]
+    local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
 
-				local name, description, encounterID, rootSectionID, link, instanceID = EJ_GetEncounterInfo(mapEncounterInfo.encounterID);
-				bossButton.instanceID = instanceID;
-				bossButton.encounterID = encounterID;
-				bossButton.tooltipTitle = name;
-				bossButton.tooltipText = description;
-				bossButton:SetPoint("CENTER", Nx.Map.WMDF, "BOTTOMLEFT", mapEncounterInfo.mapX*width, mapEncounterInfo.mapY*height);
-				bossButton:SetFrameStrata("HIGH");
-				local _, _, _, displayInfo = EJ_GetCreatureInfo(1, encounterID);
-				bossButton.displayInfo = displayInfo;
-				bossButton:SetWidth(Nx.db.profile.Map.InstanceBossSize);
-				bossButton:SetHeight(Nx.db.profile.Map.InstanceBossSize);
-				if ( displayInfo ) then
-					SetPortraitTexture(bossButton.bgImage, displayInfo);
-					bossButton.bgImage:SetWidth(Nx.db.profile.Map.InstanceBossSize / 1.3);
-					bossButton.bgImage:SetHeight(Nx.db.profile.Map.InstanceBossSize / 1.3);
-				else
-					bossButton.bgImage:SetTexture("DoesNotExist");
-				end			
-				bossButton:Show();
-			end
-		end
-	end	
+    if not Nx.Map.WMDF then
+        Nx.Map.WMDF = CreateFrame("Frame", "WMDF")
+        Nx.Map.WMDF:SetFrameStrata("BACKGROUND")
+        Nx.Map.WMDT = {}
+        Nx.Map.EJMB = {}
+        for i = 1,cols do
+            for j = 1, rows do
+                local index = (j - 1) * cols + i
+                Nx.Map.WMDT[index] = Nx.Map.WMDF:CreateTexture("WMDT" .. index)
+            end
+        end
+        Nx.Map.WMDT[1]:SetPoint("TOPLEFT")
+        Nx.Map.WMDT[2]:SetPoint("TOPLEFT","WMDT1","TOPRIGHT")
+        Nx.Map.WMDT[3]:SetPoint("TOPLEFT","WMDT2","TOPRIGHT")
+        Nx.Map.WMDT[4]:SetPoint("TOPLEFT","WMDT3","TOPRIGHT")
+        Nx.Map.WMDT[5]:SetPoint("TOPLEFT","WMDT1","BOTTOMLEFT")
+        Nx.Map.WMDT[6]:SetPoint("TOPLEFT","WMDT5","TOPRIGHT")
+        Nx.Map.WMDT[7]:SetPoint("TOPLEFT","WMDT6","TOPRIGHT")
+        Nx.Map.WMDT[8]:SetPoint("TOPLEFT","WMDT7","TOPRIGHT")
+        Nx.Map.WMDT[9]:SetPoint("TOPLEFT","WMDT5","BOTTOMLEFT")
+        Nx.Map.WMDT[10]:SetPoint("TOPLEFT","WMDT9","TOPRIGHT")
+        Nx.Map.WMDT[11]:SetPoint("TOPLEFT","WMDT10","TOPRIGHT")
+        Nx.Map.WMDT[12]:SetPoint("TOPLEFT","WMDT11","TOPRIGHT")
+    end
+    Nx.Map.WMDF:SetParent(Nx.Map:GetMap(1).Frm)
+    Nx.Map.WMDF:SetFrameLevel(20)
+    Nx.Map.WMDF:SetWidth(Nx.Map:GetMap(1).MapW)
+    Nx.Map.WMDF:SetHeight(Nx.Map:GetMap(1).MapH)
+    Nx.Map.WMDF:Show()
 
-	WorldMapFrame.hasBosses = numEncounters > 0;
-	index = numEncounters + 1;	
-	local bossButton = _G["NXEJMapButton"..index];
-	while bossButton do
-		bossButton:Hide();
-		index = index + 1;
-		bossButton = _G["NXEJMapButton"..index];
-	end	]]--
+    local textures = C_Map.GetMapArtLayerTextures(curId,1)
+
+    for i=1, 12 do
+        Nx.Map.WMDT[i]:SetWidth(Nx.Map.WMDF:GetWidth() / 3.9)
+        Nx.Map.WMDT[i]:SetHeight(Nx.Map.WMDF:GetHeight() / 2.6)
+        Nx.Map.WMDT[i]:SetTexture(textures[i])
+    end
+    Nx.Map.WMDF:SetAllPoints()
+    NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
+    NXWorldMapUnitPositionFrame:SetAllPoints()
+    NXWorldMapUnitPositionFrame:SetFrameLevel(40)
+    Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
+
+--[[    local numEncounters = 0;
+    if Nx.db.char.Map.ShowRaidBoss then
+        local width = Nx.Map.WMDF:GetWidth();
+        local height = Nx.Map.WMDF:GetHeight();
+
+        local mapEncounters = C_EncounterJournal.GetCurrentMapEncounters(WorldMapFrame.fromJournal);
+        if ( mapEncounters ) then
+            numEncounters = #mapEncounters;
+            for index, mapEncounterInfo in ipairs(mapEncounters) do
+                local bossButton = _G["NXEJMapButton"..index]
+                if not bossButton then -- create button
+                    bossButton = CreateFrame("Button", "NXEJMapButton"..index, Nx.Map.WMDF, "EncounterMapButtonTemplate");
+                end
+
+                local name, description, encounterID, rootSectionID, link, instanceID = EJ_GetEncounterInfo(mapEncounterInfo.encounterID);
+                bossButton.instanceID = instanceID;
+                bossButton.encounterID = encounterID;
+                bossButton.tooltipTitle = name;
+                bossButton.tooltipText = description;
+                bossButton:SetPoint("CENTER", Nx.Map.WMDF, "BOTTOMLEFT", mapEncounterInfo.mapX*width, mapEncounterInfo.mapY*height);
+                bossButton:SetFrameStrata("HIGH");
+                local _, _, _, displayInfo = EJ_GetCreatureInfo(1, encounterID);
+                bossButton.displayInfo = displayInfo;
+                bossButton:SetWidth(Nx.db.profile.Map.InstanceBossSize);
+                bossButton:SetHeight(Nx.db.profile.Map.InstanceBossSize);
+                if ( displayInfo ) then
+                    SetPortraitTexture(bossButton.bgImage, displayInfo);
+                    bossButton.bgImage:SetWidth(Nx.db.profile.Map.InstanceBossSize / 1.3);
+                    bossButton.bgImage:SetHeight(Nx.db.profile.Map.InstanceBossSize / 1.3);
+                else
+                    bossButton.bgImage:SetTexture("DoesNotExist");
+                end
+                bossButton:Show();
+            end
+        end
+    end
+
+    WorldMapFrame.hasBosses = numEncounters > 0;
+    index = numEncounters + 1;
+    local bossButton = _G["NXEJMapButton"..index];
+    while bossButton do
+        bossButton:Hide();
+        index = index + 1;
+        bossButton = _G["NXEJMapButton"..index];
+    end    ]]--
 end
 
 -------------------------------------------------------------------------------

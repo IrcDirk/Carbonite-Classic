@@ -1,10 +1,10 @@
-			
+
 if not Nx.Units2Quests then
-	Nx.Units2Quests = {}
+    Nx.Units2Quests = {}
 end
 
 function Nx.Units2Quests:Data()
-	
+
 local Units2Quests={
 [1] = '339,1|339,4|341,2|342,3',
 [2] = '9723,2',
@@ -5245,21 +5245,21 @@ local Units2Quests={
 [40001] = '9663,3',
 [40446] = "12930,2",
 }
-		
-	return Units2Quests
+
+    return Units2Quests
 end
-	
+
 function Nx.Units2Quests:Load()
-	local Units2Quests = Nx.Units2Quests:Data()
-	local count = 0
-	for key,val in pairs(Units2Quests) do
-		Nx.Units2Quests[key] = val
-		count = count + 1
-	end
-	Units2Quests = {}
-	return count
+    local Units2Quests = Nx.Units2Quests:Data()
+    local count = 0
+    for key,val in pairs(Units2Quests) do
+        Nx.Units2Quests[key] = val
+        count = count + 1
+    end
+    Units2Quests = {}
+    return count
 end
 
 function Nx.Units2Quests:Clear()
-	Units2Quests = {}
-end			
+    Units2Quests = {}
+end

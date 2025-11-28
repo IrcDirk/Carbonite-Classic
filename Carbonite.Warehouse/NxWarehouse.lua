@@ -1,8 +1,7 @@
-﻿---------------------------------------------------------------------------------------
--- NxWarehouse - Warehouse inventory tracker
+﻿-------------------------------------------------------------------------------
+-- NxWarehouse - Warehouse Inventory Tracker
 -- Copyright 2007-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,87 +17,135 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
--------------------------------------------------------------------------------
--- Tables
+-- MODULE INITIALIZATION
 -------------------------------------------------------------------------------
 
 local _G = getfenv(0)
 
+-- Create the AceAddon for the Warehouse module
 CarboniteWarehouse = LibStub("AceAddon-3.0"):NewAddon("CarboniteWarehouse", "AceEvent-3.0", "AceComm-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Warehouse", true)
 
+-- Guild bank communication library for syncing
 local GuildBank = LibStub("LibGuildBankComm-1.0")
 
-Nx.VERSIONWare			= .15				-- Warehouse data
+-------------------------------------------------------------------------------
+-- VERSION AND NAMESPACE
+-------------------------------------------------------------------------------
 
--- Keybindings
+Nx.VERSIONWare = .15                    -- Warehouse data version
+
+-------------------------------------------------------------------------------
+-- KEYBINDING DEFINITIONS
+-------------------------------------------------------------------------------
+
 BINDING_HEADER_CarboniteWarehouse = "|cffc0c0ff" .. L["Carbonite Warehouse"] .. "|r"
-BINDING_NAME_NxTOGGLEWAREHOUSE	= L["NxTOGGLEWAREHOUSE"]
+BINDING_NAME_NxTOGGLEWAREHOUSE = L["NxTOGGLEWAREHOUSE"]
 
-function GetContainerItemInfo (bag, slot)
-	local containerInfo = C_Container.GetContainerItemInfo (bag, slot)
-	if containerInfo then 
-		return containerInfo.iconFileID, containerInfo.stackCount, containerInfo.isLocked, containerInfo.quality, containerInfo.isReadable, containerInfo.hasLoot, containerInfo.hyperlink, containerInfo.isFiltered, containerInfo.hasNoValue, containerInfo.itemID, containerInfo.isBound
-	end
-	return nil
+-------------------------------------------------------------------------------
+-- API COMPATIBILITY
+-- Wrapper for container item info API changes
+-------------------------------------------------------------------------------
+
+function GetContainerItemInfo(bag, slot)
+    local containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+    if containerInfo then
+        return containerInfo.iconFileID, containerInfo.stackCount, containerInfo.isLocked,
+               containerInfo.quality, containerInfo.isReadable, containerInfo.hasLoot,
+               containerInfo.hyperlink, containerInfo.isFiltered, containerInfo.hasNoValue,
+               containerInfo.itemID, containerInfo.isBound
+    end
+    return nil
 end
 
+-------------------------------------------------------------------------------
+-- DEFAULT OPTIONS
+-- Default profile settings for warehouse module
+-------------------------------------------------------------------------------
+
 local defaults = {
-	profile = {
-		Warehouse = {
-			WarehouseFont = "Friz",
-			WarehouseFontSize = 11,
-			WarehouseFontSpacing = 6,
-			Enable = true,
-			SellTesting = false,
-			SellVerbose = false,
-			SellGreys = false,
-			SellWhites = false,
-			SellWhitesiLVL = false,
-			SellWhitesiLVLValue = 600,
-			SellGreens = false,
-			SellGreensBOP = false,
-			SellGreensBOE = false,
-			SellGreensiLVL = false,
-			SellGreensiLVLValue = 600,			
-			SellBlues = false,
-			SellBluesiLVL = false,
-			SellBluesiLVLValue = 600,			
-			SellBluesBOP = false,
-			SellBluesBOE = false,
-			SellPurps = false,
-			SellPurpsiLVL = false,
-			SellPurpsiLVLValue = 600,			
-			SellPurpsBOP = false,
-			SellPurpsBOE = false,
-			SellList = false,
-			SellingList = {},
-			RepairAuto = false,
-			RepairGuild = false,
-			AddTooltip = true,
-			TooltipIgnore = true,
-			IgnoreList = {},			
-			ShowGold = false,
-		},
-	},
+    profile = {
+        Warehouse = {
+            -- Font settings
+            WarehouseFont = "Friz",
+            WarehouseFontSize = 11,
+            WarehouseFontSpacing = 6,
+            -- General settings
+            Enable = true,
+            AddTooltip = true,                  -- Add warehouse info to tooltips
+            TooltipIgnore = true,               -- Use ignore list for tooltips
+            IgnoreList = {},                    -- Items to ignore in tooltips
+            ShowGold = false,                   -- Show gold in character list
+            -- Auto sell settings
+            SellTesting = false,                -- Test mode (don't actually sell)
+            SellVerbose = false,                -- Show what was sold
+            SellGreys = false,                  -- Sell grey items
+            SellWhites = false,                 -- Sell white items
+            SellWhitesiLVL = false,             -- Use iLevel filter for whites
+            SellWhitesiLVLValue = 600,          -- Max iLevel for white sell
+            SellGreens = false,                 -- Sell green items
+            SellGreensBOP = false,              -- Sell BOP greens
+            SellGreensBOE = false,              -- Sell BOE greens
+            SellGreensiLVL = false,             -- Use iLevel filter for greens
+            SellGreensiLVLValue = 600,          -- Max iLevel for green sell
+            SellBlues = false,                  -- Sell blue items
+            SellBluesiLVL = false,              -- Use iLevel filter for blues
+            SellBluesiLVLValue = 600,           -- Max iLevel for blue sell
+            SellBluesBOP = false,               -- Sell BOP blues
+            SellBluesBOE = false,               -- Sell BOE blues
+            SellPurps = false,                  -- Sell purple items
+            SellPurpsiLVL = false,              -- Use iLevel filter for purples
+            SellPurpsiLVLValue = 600,           -- Max iLevel for purple sell
+            SellPurpsBOP = false,               -- Sell BOP purples
+            SellPurpsBOE = false,               -- Sell BOE purples
+            SellList = false,                   -- Use sell list
+            SellingList = {},                   -- Items to auto-sell
+            -- Auto repair settings
+            RepairAuto = false,                 -- Auto repair gear
+            RepairGuild = false,                -- Use guild funds first
+        },
+    },
 }
 
+-- Warehouse module namespace
 Nx.Warehouse = {}
 
-local CurrencyArray = {61,81,241,361,384,385,391,393,394,395,396,397,398,399,400,401,402,416,515,614,615,676,677,697,698,738,752,754,766,777,789,810,821,823,824,828,829,910,944,980,994,999,1008,1017,1020,1101,1129,1149,1154,1155,1166,1171,1172,1173,1174,1191,1220,1226,1268,1273,1275,1299,1314,1324,1325,1342,1355,1356,1357,1379,1416,1501,1506,1508,1533}
+-------------------------------------------------------------------------------
+-- CURRENCY TRACKING
+-- Array of currency IDs to track
+-------------------------------------------------------------------------------
+
+local CurrencyArray = {
+    61, 81, 241, 361, 384, 385, 391, 393, 394, 395, 396, 397, 398, 399, 400,
+    401, 402, 416, 515, 614, 615, 676, 677, 697, 698, 738, 752, 754, 766, 777,
+    789, 810, 821, 823, 824, 828, 829, 910, 944, 980, 994, 999, 1008, 1017,
+    1020, 1101, 1129, 1149, 1154, 1155, 1166, 1171, 1172, 1173, 1174, 1191,
+    1220, 1226, 1268, 1273, 1275, 1299, 1314, 1324, 1325, 1342, 1355, 1356,
+    1357, 1379, 1416, 1501, 1506, 1508, 1533
+}
+
+-------------------------------------------------------------------------------
+-- OPTIONS CONFIGURATION
+-- AceConfig options table for warehouse module settings
+-------------------------------------------------------------------------------
 
 local warehouseopts
+
+---
+-- Get or create warehouse options configuration
+-- @return  Warehouse options table for AceConfig
+--
 local function WarehouseOptions()
-	if not warehouseopts then
-		warehouseopts = {					
-			type = "group",
-			name = L["Warehouse Options"],
-			childGroups = "tab",
-			args = {
+    if not warehouseopts then
+        warehouseopts = {
+            type = "group",
+            name = L["Warehouse Options"],
+            childGroups = "tab",
+            args = {
 				main = {
 					order = 1,
 					name = L["Warehouse"],
@@ -763,10 +810,18 @@ local function WarehouseOptions()
 			},
 		}
 	end
-	Nx.Opts:AddToProfileMenu(L["Warehouse"],5,Nx.wdb)
-	return warehouseopts
+    Nx.Opts:AddToProfileMenu(L["Warehouse"], 5, Nx.wdb)
+    return warehouseopts
 end
 
+-------------------------------------------------------------------------------
+-- MODULE INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- AceAddon initialization callback
+-- Sets up database, events, button types, and tooltip hooks
+--
 function CarboniteWarehouse:OnInitialize()
 	if not Nx.Initialized then
 		CarbWHInit = Nx:ScheduleTimer(CarboniteWarehouse.OnInitialize,1)
@@ -901,6 +956,18 @@ function CarboniteWarehouse:OnInitialize()
 	end
 end
 
+-------------------------------------------------------------------------------
+-- GUILD BANK SYNCHRONIZATION
+-- Callbacks for LibGuildBankComm synchronization
+-------------------------------------------------------------------------------
+
+---
+-- Handle guild bank page sync from another player
+-- @param event      Event name
+-- @param sender     Sending player
+-- @param page       Bank page number
+-- @param guildName  Guild name
+--
 function CarboniteWarehouse:OnPageSync(event, sender, page, guildName)
 	local ware = Nx.wdb.profile.WarehouseData
 	local rn = GetRealmName()
@@ -920,6 +987,13 @@ function CarboniteWarehouse:OnPageSync(event, sender, page, guildName)
 	guild["Tab" .. page]["ScanTime"] = time()
 end
 
+---
+-- Handle guild bank money sync from another player
+-- @param event      Event name
+-- @param sender     Sending player
+-- @param newFunds   New fund amount
+-- @param guildName  Guild name
+--
 function CarboniteWarehouse:OnMoneySync(event, sender, newFunds, guildName)
 	local ware = Nx.wdb.profile.WarehouseData
 	local rn = GetRealmName()
@@ -930,6 +1004,13 @@ function CarboniteWarehouse:OnMoneySync(event, sender, newFunds, guildName)
 	guild["Money"] = newFunds	
 end
 
+---
+-- Handle guild bank tab info sync from another player
+-- @param event      Event name
+-- @param sender     Sending player
+-- @param numTabs    Number of tabs
+-- @param guildName  Guild name
+--
 function CarboniteWarehouse:OnTabSync(event, sender, numTabs, guildName)
 	local ware = Nx.wdb.profile.WarehouseData
 	local rn = GetRealmName()
@@ -947,6 +1028,14 @@ function CarboniteWarehouse:OnTabSync(event, sender, numTabs, guildName)
 	end
 end
 
+-------------------------------------------------------------------------------
+-- DATA CONVERSION
+-- Migrate warehouse data from old format to new
+-------------------------------------------------------------------------------
+
+---
+-- Convert warehouse data from main db to warehouse db
+--
 function Nx.Warehouse:ConvertData()
 	if not Nx.wdb.global then
 		Nx.wdb.global = {}
@@ -1091,6 +1180,18 @@ function Nx.Warehouse:ConvertData()
 	end
 end
 
+-------------------------------------------------------------------------------
+-- EVENT HANDLING
+-- Central event dispatcher for warehouse events
+-------------------------------------------------------------------------------
+
+---
+-- Main event handler for warehouse events
+-- @param event  Event name
+-- @param arg1   First event argument
+-- @param arg2   Second event argument
+-- @param arg3   Third event argument
+--
 function CarboniteWarehouse:EventHandler(event, arg1, arg2, arg3)	
 	if event == "BAG_UPDATE" then
 		Nx.Warehouse:OnBag_update()
@@ -1149,7 +1250,18 @@ function CarboniteWarehouse:EventHandler(event, arg1, arg2, arg3)
 	end
 end
 
-function Nx.Warehouse:OnTime_played_msg (event, arg1, arg2)
+-------------------------------------------------------------------------------
+-- EVENT CALLBACKS
+-- Individual event handler functions
+-------------------------------------------------------------------------------
+
+---
+-- Handle TIME_PLAYED_MSG event
+-- @param event  Event name
+-- @param arg1   Total time played
+-- @param arg2   Time this level
+--
+function Nx.Warehouse:OnTime_played_msg(event, arg1, arg2)
 	Nx.Warehouse.TimePlayed = arg1
 	if Nx.RequestTime == false then
 		Nx.prt("Total Time Played: " .. Nx.Util_SecondsToDays(arg1))
@@ -1185,25 +1297,34 @@ function Nx.Warehouse:OnUnit_spellcast_succeeded (event, arg1, arg2, arg3)
 	end
 end
 
+-------------------------------------------------------------------------------
+-- WAREHOUSE INITIALIZATION
+-- Setup warehouse data structures and UI resources
+-------------------------------------------------------------------------------
+
+---
+-- Initialize the warehouse system
+-- Sets up data version, class icons, inventory names, and tooltip scanner
+--
 function Nx.Warehouse:Init()
-	local ware = Nx.wdb.profile.WarehouseData
+    local ware = Nx.wdb.profile.WarehouseData
 
-	if not ware or ware.Version < Nx.VERSIONWare then
+    -- Check and upgrade data version if needed
+    if not ware or ware.Version < Nx.VERSIONWare then
+        if ware then
+            Nx.prt("Reset old warehouse data %f", ware.Version)
+        end
 
-		if ware then
-			Nx.prt ("Reset old warehouse data %f", ware.Version)
-		end
+        ware = {}
+        Nx.wdb.profile.WarehouseData = ware
+        ware.Version = Nx.VERSIONWare
+    end
 
-		ware = {}
-		Nx.wdb.profile.WarehouseData = ware
-		ware.Version = Nx.VERSIONWare
-	end
+    self.Enabled = Nx.wdb.profile.Warehouse.Enable
+    self.SkillRiding = 0
 
-	self.Enabled = Nx.wdb.profile.Warehouse.Enable
-
-	self.SkillRiding = 0
-
-	self.ClassIcons = {
+    -- Class icons for character list display
+    self.ClassIcons = {
 		["Druid"] = "Ability_Druid_Maul",
 		["Hunter"] = "INV_Weapon_Bow_07",
 		["Mage"] = "INV_Staff_13",
@@ -1245,9 +1366,15 @@ function Nx.Warehouse:Init()
 end
 
 -------------------------------------------------------------------------------
--- Debug print
+-- LOGIN AND CHARACTER DATA
 -------------------------------------------------------------------------------
 
+---
+-- Handle player login event
+-- Records character data and guild information
+-- @param event  Event name
+-- @param arg1   Event argument
+--
 function Nx.Warehouse:Login(event, arg1)
 	local ch = Nx.Warehouse.CurCharacter
 	Nx.Warehouse:RecordCharacterLogin()
@@ -1263,16 +1390,25 @@ function Nx.Warehouse:Login(event, arg1)
 	end
 end
 
-function Nx.Warehouse:prtdb (...)
-	if self.Debug then
-		Nx.prt (...)
-	end
+---
+-- Debug print function
+-- Only prints if debug mode is enabled
+--
+function Nx.Warehouse:prtdb(...)
+    if self.Debug then
+        Nx.prt(...)
+    end
 end
 
 -------------------------------------------------------------------------------
--- Create warehouse window
+-- WAREHOUSE WINDOW
+-- Create and manage the warehouse UI window
 -------------------------------------------------------------------------------
 
+---
+-- Create the warehouse window
+-- Sets up window, lists, edit box, and menus
+--
 function Nx.Warehouse:Create()
 	self.SelectedChar = 1
 --	self.SelectedProf = nil
@@ -1355,9 +1491,13 @@ function Nx.Warehouse:Create()
 end
 
 -------------------------------------------------------------------------------
--- Create menu
+-- CONTEXT MENUS
+-- Create warehouse context menus
 -------------------------------------------------------------------------------
 
+---
+-- Create the context menus for character and item lists
+--
 function Nx.Warehouse:CreateMenu()
 
 	local menu = Nx.Menu:Create (self.List.Frm, 250)
@@ -1481,17 +1621,19 @@ function Nx.Warehouse:Menu_OnSortBySlot (item)
 end
 
 -------------------------------------------------------------------------------
--- Show or hide
+-- WINDOW VISIBILITY
 -------------------------------------------------------------------------------
 
+---
+-- Keybinding handler to toggle warehouse window
+--
 function Nx:NXWarehouseKeyToggleShow()
-	Nx.Warehouse:ToggleShow()
+    Nx.Warehouse:ToggleShow()
 end
 
--------------------------------------------------------------------------------
--- Show or hide window
--------------------------------------------------------------------------------
-
+---
+-- Toggle the warehouse window visibility
+--
 function Nx.Warehouse:ToggleShow()
 
 	if not self.Win then
@@ -3555,13 +3697,12 @@ function Nx.Warehouse:RecordCharacterSkills()
 end
 
 -------------------------------------------------------------------------------
-
---PAIDS!
-
--------------------------------------------------------------------------------
--- Skill update
+-- TRADE SKILL TRACKING
 -------------------------------------------------------------------------------
 
+---
+-- Handle trade skill update event
+--
 function Nx.Warehouse.OnTrade_skill_update()
 
 	local self = Nx.Warehouse	
@@ -3589,9 +3730,12 @@ end
 --]]
 
 -------------------------------------------------------------------------------
--- Record profession
+-- PROFESSION RECORDING
 -------------------------------------------------------------------------------
 
+---
+-- Record profession recipes and links
+--
 function Nx.Warehouse:RecordProfession()
 
 --	Nx.prt ("Rec #skills %s", GetNumTradeSkills())
@@ -3634,10 +3778,20 @@ function Nx.Warehouse:RecordProfession()
 	end
 end
 
-function Nx.Warehouse:OnButToggleWarehouse (but)
-	Nx.Warehouse:ToggleShow()
+---
+-- Button callback to toggle warehouse window
+--
+function Nx.Warehouse:OnButToggleWarehouse(but)
+    Nx.Warehouse:ToggleShow()
 end
 
+-------------------------------------------------------------------------------
+-- CHARACTER DATA MANAGEMENT
+-------------------------------------------------------------------------------
+
+---
+-- Initialize warehouse data for current character
+--
 function Nx.Warehouse:InitWarehouseCharacter()
 	local chars = Nx.wdb.global.Characters
 	local fullName = Nx:GetRealmCharName()
@@ -3649,6 +3803,10 @@ function Nx.Warehouse:InitWarehouseCharacter()
 	ch["Profs"] = ch["Profs"] or {}		-- Professions	
 end
 
+---
+-- Record character data at login
+-- Captures initial state of money, XP, honor, etc.
+--
 function Nx.Warehouse:RecordCharacterLogin()
 	local ch = self.CurCharacter
 	ch["LTime"] = time()
@@ -3667,6 +3825,10 @@ function Nx.Warehouse:RecordCharacterLogin()
 	Nx.Warehouse:RecordCurrency()
 end
 
+---
+-- Record current character data
+-- Updates position, level, money, and experience
+--
 function Nx.Warehouse:RecordCharacter()
 	local ch = self.CurCharacter
 	local map = Nx.Map:GetMap (1)
@@ -3692,6 +3854,9 @@ function Nx.Warehouse:RecordCharacter()
 	ch["XPRest"] = GetXPExhaustion() or 0
 end
 
+---
+-- Record all tracked currencies for current character
+--
 function Nx.Warehouse:RecordCurrency()
 	local ch = self.CurCharacter
 	ch["Currency"] = {}
@@ -3704,7 +3869,6 @@ function Nx.Warehouse:RecordCurrency()
 	end	
 end
 
---PAIDE!
-
 -------------------------------------------------------------------------------
--- EOF
+-- END OF FILE
+-------------------------------------------------------------------------------

@@ -1,8 +1,7 @@
----------------------------------------------------------------------------------------
--- Carbonite UI code
+-------------------------------------------------------------------------------
+-- Carbonite UI Code
 -- Copyright 2007-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,885 +17,1011 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------
+-- LOCAL VARIABLES
+-------------------------------------------------------------------------------
+
+-- Windows that need initialization after login
 local NotInitializedWins = {}
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
+-- Frames to hide when ESC is pressed
 local HideFramesOnEsc = {}
+
+-- Compatibility for GetMouseFocus API changes
 local GetMouseFoci = GetMouseFoci or GetMouseFocus
 
+-------------------------------------------------------------------------------
+-- UI INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- Initialize all UI components
+-- Sets up quality colors and initializes all UI modules
+--
 function Nx:UIInit()
+    -- Build quality color lookup table (Poor to Artifact)
+    local qc = {}
+    self.QualityColors = qc
 
-	local qc = {}
-	self.QualityColors = qc
+    for n = 0, 8 do        -- Blizzard max is currently 7
+        local r, g, b, hex = C_Item.GetItemQualityColor (n)
+        qc[n] = hex
+    end
 
-	for n = 0, 8 do		-- Blizz max is currently 7
-		local r, g, b, hex = C_Item.GetItemQualityColor (n)
-		qc[n] = hex
-	end
+    qc[1] = "|cffe7e7e7"    -- Dim the white (Common quality)
 
-	qc[1] = "|cffe7e7e7"		-- Dim the white
+    -- Initialize UI subsystems in order
+    Nx.Font:Init()
+    Nx.Skin:Init()
 
-	Nx.Font:Init()
-	Nx.Skin:Init()
+    Nx.Menu:Init()
+    Nx.Window:Init()
 
-	Nx.Menu:Init()
-	Nx.Window:Init()
-
-	Nx.Button:Init()
-	Nx.List:Init()
-	Nx.DropDown:Init()
-	Nx.ToolBar:Init()
-
---	Nx.GList:Init()
+    Nx.Button:Init()
+    Nx.List:Init()
+    Nx.DropDown:Init()
+    Nx.ToolBar:Init()
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- STRING UTILITY FUNCTIONS
+-------------------------------------------------------------------------------
 
-function Nx.strpos (haystack, needle, offset) 
-  --local pattern = string.format("(%s)", needle)
-  local i       = string.find (haystack, needle, (offset or 0), true)
-  
-  return (i ~= nil and i or false)
+---
+-- Find position of needle in haystack string
+-- @param haystack  String to search in
+-- @param needle    String to search for
+-- @param offset    Starting position (optional)
+-- @return          Position index or false if not found
+--
+function Nx.strpos (haystack, needle, offset)
+    local i = string.find (haystack, needle, (offset or 0), true)
+    return (i ~= nil and i or false)
 end
 
+---
+-- Print current call stack for debugging
+-- @param str  Label for the stack trace
+--
 function Nx.prtStack (str)
-	local s = debugstack (2, 3, 2)
-	s = gsub (s, "Interface\\AddOns\\", "")
-	Nx.prtD ("%s: %s", str, s)
+    local s = debugstack (2, 3, 2)
+    s = gsub (s, "Interface\\AddOns\\", "")
+    Nx.prtD ("%s: %s", str, s)
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- ARRAY UTILITY FUNCTIONS
+-------------------------------------------------------------------------------
 
-function Nx.ArrayConcat(...) 
-	local t = {}
-	for n = 1,select("#",...) do
-		local arg = select(n,...)
-		if type(arg)=="table" then
-			for _,v in ipairs(arg) do
-				v._type = n
-				t[#t+1] = v
-			end
-		else
-			t[#t+1] = arg
-		end
-	end
-	return t
+---
+-- Concatenate multiple arrays into one
+-- Tags each element with its source array index
+-- @param ...  Variable number of arrays
+-- @return     Combined array
+--
+function Nx.ArrayConcat(...)
+    local t = {}
+    for n = 1, select("#", ...) do
+        local arg = select(n, ...)
+        if type(arg) == "table" then
+            for _, v in ipairs(arg) do
+                v._type = n
+                t[#t + 1] = v
+            end
+        else
+            t[#t + 1] = arg
+        end
+    end
+    return t
 end
 
--- Optimized version that reuses an existing table (avoids garbage collection)
-function Nx.ArrayConcatReuse(reuse, ...) 
-	wipe(reuse)
-	for n = 1, select("#", ...) do
-		local arg = select(n, ...)
-		if type(arg) == "table" then
-			for _, v in ipairs(arg) do
-				v._type = n
-				reuse[#reuse + 1] = v
-			end
-		else
-			reuse[#reuse + 1] = arg
-		end
-	end
-	return reuse
+---
+-- Concatenate arrays reusing an existing table (reduces garbage collection)
+-- @param reuse  Table to reuse
+-- @param ...    Variable number of arrays
+-- @return       The reused table with combined data
+--
+function Nx.ArrayConcatReuse(reuse, ...)
+    wipe(reuse)
+    for n = 1, select("#", ...) do
+        local arg = select(n, ...)
+        if type(arg) == "table" then
+            for _, v in ipairs(arg) do
+                v._type = n
+                reuse[#reuse + 1] = v
+            end
+        else
+            reuse[#reuse + 1] = arg
+        end
+    end
+    return reuse
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SOCIAL UTILITY FUNCTIONS
+-------------------------------------------------------------------------------
 
+---
+-- Check if a player name is on the friend list
+-- @param name  Player name to check
+-- @return      true if player is a friend
+--
 function Nx.IsFriend(name)
-	for i = 1, C_FriendList.GetNumFriends() do
-		local finfo = C_FriendList.GetFriendInfoByIndex (i)
-		if finfo.name == name then
-		   return true
-		end
-   end
+    for i = 1, C_FriendList.GetNumFriends() do
+        local finfo = C_FriendList.GetFriendInfoByIndex(i)
+        if finfo.name == name then
+            return true
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Chat printing
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CHAT PRINTING FUNCTIONS
+-- Debug and message output to chat frames
+-------------------------------------------------------------------------------
 
+---
+-- Get list of available chat frame names
+-- @return  Sorted array of chat frame names
+--
 function Nx:prtGetChatFrames()
+    local t = {}
 
-	local t = {}
+    for n = 1, 10 do
+        local cfrm = _G["ChatFrame" .. n]
+        if cfrm and cfrm["name"] then
+            tinsert(t, cfrm["name"])
+        end
+    end
 
-	for n = 1, 10 do
-		local cfrm = _G["ChatFrame" .. n]
-		if cfrm and cfrm["name"] then
-			tinsert (t, cfrm["name"])
---			Nx.prt ("cfrm %s %s", n, cfrm["name"] or "nil")
-		end
-	end
-
-	sort (t)
-
---	Nx.prtVar ("", t)
-
-	return t
+    sort(t)
+    return t
 end
 
+---
+-- Set the chat frame to use for Carbonite messages
+-- Uses the frame specified in options, or defaults to DEFAULT_CHAT_FRAME
+--
 function Nx:prtSetChatFrame()
-	Nx.prtChatFrm = DEFAULT_CHAT_FRAME
-	for n = 1, 10 do
-		local cfrm = _G["ChatFrame" .. n]
-		if cfrm then
-			if cfrm["name"] == Nx.db.profile.General.ChatMsgFrm then
-				Nx.prtChatFrm = cfrm
-			end
-		end
-	end
+    Nx.prtChatFrm = DEFAULT_CHAT_FRAME
+    for n = 1, 10 do
+        local cfrm = _G["ChatFrame" .. n]
+        if cfrm then
+            if cfrm["name"] == Nx.db.profile.General.ChatMsgFrm then
+                Nx.prtChatFrm = cfrm
+            end
+        end
+    end
 end
 
-function Nx.prt (...)
-	local args = {...}
-	local i = 1
-	-- replace missing/erroneous placeholders
-	function replace_placeholders(placeholder, item)
-		i = i + 1
-		--if (args[i] == nil) then
-		--	return '[missing argument]'
-		--end
-		if item ~= 's' and item ~= 'q' then
-			if type(args[i]) == 'string' and string.match(args[i], '^[.0-9]+$') then
-				return placeholder
-			elseif type(args[i]) ~= 'number' then
-				return '[not a number]'
-			end
-		end
-		return placeholder
-	end
-	args[1] = string.gsub((args[1] or 'nil'), '(%%[0-9.]*([cdeEfgGioqsuxX]))', replace_placeholders)
-	
-	-- convert boolean and nil to string
-	for n = 1, #args do
-		if n > 1 then
-			if type(args[n]) == 'boolean' or type(args[n]) == 'nil' then
-				args[n] = tostring(args[n])
-			end
-		end
-	end
-	
-	local f = Nx.prtChatFrm or DEFAULT_CHAT_FRAME
-	f:AddMessage ("|cffff0000[" .. Nx.TXTBLUE..L["Carbonite"].."|cffff0000] |cffffffff".. format (unpack(args)), 1, 1, 1)
+---
+-- Print formatted message to chat with Carbonite prefix
+-- Handles format string validation and type conversion
+-- @param ...  Format string followed by arguments
+--
+function Nx.prt(...)
+    local args = {...}
+    local i = 1
+
+    -- Replace missing/erroneous placeholders with safe values
+    local function replace_placeholders(placeholder, item)
+        i = i + 1
+        if item ~= 's' and item ~= 'q' then
+            if type(args[i]) == 'string' and string.match(args[i], '^[.0-9]+$') then
+                return placeholder
+            elseif type(args[i]) ~= 'number' then
+                return '[not a number]'
+            end
+        end
+        return placeholder
+    end
+    args[1] = string.gsub((args[1] or 'nil'), '(%%[0-9.]*([cdeEfgGioqsuxX]))', replace_placeholders)
+
+    -- Convert boolean and nil to string for safe output
+    for n = 1, #args do
+        if n > 1 then
+            if type(args[n]) == 'boolean' or type(args[n]) == 'nil' then
+                args[n] = tostring(args[n])
+            end
+        end
+    end
+
+    local f = Nx.prtChatFrm or DEFAULT_CHAT_FRAME
+    f:AddMessage("|cffff0000[" .. Nx.TXTBLUE .. L["Carbonite"] .. "|cffff0000] |cffffffff" .. format(unpack(args)), 1, 1, 1)
 end
 
-function Nx.prtraw (msg)
-	local f = Nx.prtChatFrm or DEFAULT_CHAT_FRAME
---	msg = debugstack(2,3,2)
-	f:AddMessage (Nx.TXTBLUE..L["Carbonite"].." |cffffffff".. msg, 1, 1, 1)
+---
+-- Print raw message without formatting
+-- @param msg  Message string
+--
+function Nx.prtraw(msg)
+    local f = Nx.prtChatFrm or DEFAULT_CHAT_FRAME
+    f:AddMessage(Nx.TXTBLUE .. L["Carbonite"] .. " |cffffffff" .. msg, 1, 1, 1)
 end
 
-function Nx.prtError (msg, ...)
-	UIErrorsFrame:AddMessage (format (msg, ...), 1, 1, 0)
+---
+-- Print error message to UI error frame (center screen)
+-- @param msg  Format string
+-- @param ...  Format arguments
+--
+function Nx.prtError(msg, ...)
+    UIErrorsFrame:AddMessage(format(msg, ...), 1, 1, 0)
 end
 
--- Debug print
-function Nx.prtD (...)
-	if Nx.DebugOn then
-		Nx.prt (...)
-	end
+---
+-- Print debug message (only when debug mode is on)
+-- @param ...  Format string and arguments
+--
+function Nx.prtD(...)
+    if Nx.DebugOn then
+        Nx.prt(...)
+    end
 end
 
-function Nx.prtCtrl (msg, ...)
-	if Nx.DebugOn and IsControlKeyDown() then
-		Nx.prt (msg, ...)
-	end
+---
+-- Print debug message when CTRL key is held
+-- @param msg  Format string
+-- @param ...  Format arguments
+--
+function Nx.prtCtrl(msg, ...)
+    if Nx.DebugOn and IsControlKeyDown() then
+        Nx.prt(msg, ...)
+    end
 end
 
-function Nx.prtTable (msg, s)
+---
+-- Print table contents for debugging
+-- @param msg  Label message
+-- @param s    Table to print
+--
+function Nx.prtTable(msg, s)
+    Nx.prt(msg .. " Table: " .. type(s))
 
-	Nx.prt (msg.." Table: "..type (s))
-
-	if type (s) == "table" then
-		for k, v in pairs (s) do
-			if type (v) ~= "table" then
-				Nx.prtVar (" "..k, v)
-			else
-				Nx.prt (" "..k.." table")
-			end
-		end
-	end
+    if type(s) == "table" then
+        for k, v in pairs(s) do
+            if type(v) ~= "table" then
+                Nx.prtVar(" " .. k, v)
+            else
+                Nx.prt(" " .. k .. " table")
+            end
+        end
+    end
 end
 
-function Nx.prtVar (msg, v)
+---
+-- Print variable with type-appropriate formatting
+-- @param msg  Label message
+-- @param v    Variable to print
+--
+function Nx.prtVar(msg, v)
+    local prt = Nx.prt
 
-	local prt = Nx.prt
-
-	if v == nil then
-		prt (msg.." nil")
-	elseif type (v) == "boolean" then
-		prt (msg.." "..tostring (v))
-	elseif type (v) == "number" then
-		prt (format ("%s #%d (0x%x)", msg, v, v))
-	elseif type (v) == "string" then
-		local s = gsub (v, "%%", "%%%%")
-		prt (msg.. " '" .. s .."'")
-	elseif type (v) == "table" then
-		Nx.prtTable (msg, v)
-	else
-		prt (msg.." ? "..tostring (v))
-	end
+    if v == nil then
+        prt(msg .. " nil")
+    elseif type(v) == "boolean" then
+        prt(msg .. " " .. tostring(v))
+    elseif type(v) == "number" then
+        prt(format("%s #%d (0x%x)", msg, v, v))
+    elseif type(v) == "string" then
+        local s = gsub(v, "%%", "%%%%")
+        prt(msg .. " '" .. s .. "'")
+    elseif type(v) == "table" then
+        Nx.prtTable(msg, v)
+    else
+        prt(msg .. " ? " .. tostring(v))
+    end
 end
 
-function Nx.prtStrHex (msg, str)
+---
+-- Print string as hex bytes
+-- @param msg  Label message
+-- @param str  String to print as hex
+--
+function Nx.prtStrHex(msg, str)
+    local prt = Nx.prt
+    prt(msg .. ":")
 
-	local prt = Nx.prt
-	prt (msg..":")
-
-	for n = 1, #str, 4 do
-
-		local s = ""
-
-		for n2 = n, min (#str, n + 3) do
-			s = s .. format (" %x", strbyte (str, n2))
-		end
-
-		prt (s)
-	end
+    for n = 1, #str, 4 do
+        local s = ""
+        for n2 = n, min(#str, n + 3) do
+            s = s .. format(" %x", strbyte(str, n2))
+        end
+        prt(s)
+    end
 end
 
-function Nx.prtFrame (msg, frm)
+---
+-- Print frame information for debugging
+-- @param msg  Label message
+-- @param frm  Frame to inspect
+--
+function Nx.prtFrame(msg, frm)
+    local prt = Nx.prt
+    local parent = frm:GetParent()
 
-	local prt = Nx.prt
-	local parent = frm:GetParent()
+    prt(msg .. L[" Frame: %s Shown%d Vis%d P>%s"], frm:GetName() or "nil",
+        frm:IsShown() or 0, frm:IsVisible() or 0, parent and parent:GetName() or "nil")
+    prt(L[" EScale %f, Lvl %f"], frm:GetEffectiveScale(), frm:GetFrameLevel())
+    prt(L[" LR %f, %f"], frm:GetLeft() or -999, frm:GetRight() or -999)
+    prt(L[" BT %f, %f"], frm:GetBottom() or -999, frm:GetTop() or -999)
 
---	prt (msg.." Frame: %s", frm:GetName() or "nil")
-
-	prt (msg..L[" Frame: %s Shown%d Vis%d P>%s"], frm:GetName() or "nil",
-			frm:IsShown() or 0, frm:IsVisible() or 0, parent and parent:GetName() or "nil")
-	prt (L[" EScale %f, Lvl %f"], frm:GetEffectiveScale(), frm:GetFrameLevel())
-	prt (L[" LR %f, %f"], frm:GetLeft() or -999, frm:GetRight() or -999)
-	prt (L[" BT %f, %f"], frm:GetBottom() or -999, frm:GetTop() or -999)
-
-	local reg = { frm:GetRegions() }
-	for n, o in ipairs (reg) do
-
-		local str = ""
-		if o:IsObjectType ("Texture") then
-			str = o:GetTexture()
-		end
-		prt ("  %d %s: %s", n, o:GetObjectType(), str)
-	end
+    local reg = { frm:GetRegions() }
+    for n, o in ipairs(reg) do
+        local str = ""
+        if o:IsObjectType("Texture") then
+            str = o:GetTexture()
+        end
+        prt("  %d %s: %s", n, o:GetObjectType(), str)
+    end
 end
 
-function Nx.prtFrameChildren (msg, frm, lvl)
+---
+-- Print frame children recursively for debugging
+-- @param msg  Label message (nil for recursive calls)
+-- @param frm  Frame to inspect
+-- @param lvl  Recursion level (optional)
+--
+function Nx.prtFrameChildren(msg, frm, lvl)
+    local prt = Nx.prt
+    lvl = lvl or 1
 
-	local prt = Nx.prt
+    if msg then
+        prt(format("FrameChildren (%s)", msg))
+    end
 
-	lvl = lvl or 1
+    local pad = ""
+    for n = 1, lvl do
+        pad = pad .. " "
+    end
 
-	if msg then
-		prt (format ("FrameChildren (%s)", msg))
-	end
+    local ch = { frm:GetChildren() }
 
-	local pad = ""
+    for n = 1, #ch do
+        local c = ch[n]
 
-	for n = 1, lvl do
-		pad = pad.." "
-	end
-
-	local ch = { frm:GetChildren() }
-
-	for n = 1, #ch do
-
-		local c = ch[n]
-
-		if c:IsObjectType ("Frame") then
-
-			prt (L["%s#%d %s ID%s (%s) show%d l%d x%d y%d"], pad, n, c:GetName() or "nil",
-				c:GetID() or "nil", c:GetObjectType(),
-				c:IsShown() or 0, frm:GetFrameLevel(),
-				c:GetLeft() or -99999, c:GetTop() or -99999
-				)
-
-
-			Nx.prtFrameChildren (nil, c, lvl + 1)
-		end
-	end
+        if c:IsObjectType("Frame") then
+            prt(L["%s#%d %s ID%s (%s) show%d l%d x%d y%d"], pad, n, c:GetName() or "nil",
+                c:GetID() or "nil", c:GetObjectType(),
+                c:IsShown() or 0, frm:GetFrameLevel(),
+                c:GetLeft() or -99999, c:GetTop() or -99999
+            )
+            Nx.prtFrameChildren(nil, c, lvl + 1)
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- STRING MANIPULATION UTILITIES
+-------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
--- Make the first letter a cap and the rest lower case
----------------------------------------------------------------------------------------
-
-function Nx.Util_CapStr (str)
-	return strupper (strsub (str, 1, 1)) .. strlower (strsub (str, 2))
+---
+-- Capitalize first letter, lowercase the rest
+-- @param str  Input string
+-- @return     Capitalized string
+--
+function Nx.Util_CapStr(str)
+    return strupper(strsub(str, 1, 1)) .. strlower(strsub(str, 2))
 end
 
-function Nx.Util_CleanName (name)
-	name = Nx.Util_CapStr (name)
-	name = gsub (name, "[~%^]", "")
-	return name
+---
+-- Clean a name by capitalizing and removing special characters
+-- @param name  Input name
+-- @return      Cleaned name
+--
+function Nx.Util_CleanName(name)
+    name = Nx.Util_CapStr(name)
+    name = gsub(name, "[~%^]", "")
+    return name
 end
 
----------------------------------------------------------------------------------------
--- Count table entries
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- TABLE UTILITY FUNCTIONS
+-------------------------------------------------------------------------------
 
-function Nx.Util_tcount (t)
-
-	local n = 0
-	if t then
-		for k, v in pairs (t) do
-			n = n + 1
-		end
-	end
-
-	return n
+---
+-- Count entries in a table (works with non-sequential keys)
+-- @param t  Table to count
+-- @return   Number of entries
+--
+function Nx.Util_tcount(t)
+    local n = 0
+    if t then
+        for k, v in pairs(t) do
+            n = n + 1
+        end
+    end
+    return n
 end
 
-function Nx.Util_tcountrecurse (t)
-
-	local n = 0
-	if t then
-		for k, v in pairs (t) do
-			n = n + 1
-			if type (v) == "table" then
-				n = n + Nx.Util_tcountrecurse (v)
-			end
-		end
-	end
-
-	return n
+---
+-- Count entries recursively including nested tables
+-- @param t  Table to count
+-- @return   Total number of entries
+--
+function Nx.Util_tcountrecurse(t)
+    local n = 0
+    if t then
+        for k, v in pairs(t) do
+            n = n + 1
+            if type(v) == "table" then
+                n = n + Nx.Util_tcountrecurse(v)
+            end
+        end
+    end
+    return n
 end
 
----------------------------------------------------------------------------------------
--- Copy table entries recursively
----------------------------------------------------------------------------------------
+---
+-- Deep copy a table recursively
+-- @param t  Table to copy
+-- @return   New table with copied data
+--
+function Nx.Util_TCopyRecurse(t)
+    local tc = {}
 
-function Nx.Util_TCopyRecurse (t)
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            tc[k] = Nx.Util_TCopyRecurse(v)
+        else
+            tc[k] = v
+        end
+    end
 
-	local tc = {}
-
-	for k, v in pairs (t) do
-		if type (v) == "table" then
-			tc[k] = Nx.Util_TCopyRecurse (v)
-		else
-			tc[k] = v
-		end
-	end
-
-	return tc
+    return tc
 end
 
----------------------------------------------------------------------------------------
--- Find item index in table
--- (table, search item)
----------------------------------------------------------------------------------------
-
-function Nx.Util_TFindItemI (t, item)
-
-	for i, v in ipairs (t) do
-		if v == item then
-			return i
-		end
-	end
+---
+-- Find index of item in array
+-- @param t     Array to search
+-- @param item  Item to find
+-- @return      Index or nil if not found
+--
+function Nx.Util_TFindItemI(t, item)
+    for i, v in ipairs(t) do
+        if v == item then
+            return i
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Move a indexed table index lower or higher
--- (table, index, not nil to move to lower index)
----------------------------------------------------------------------------------------
-
-function Nx.Util_TMoveI (t, i, low)
-
-	if low then
-		if i > 1 then
-			t[i-1], t[i] = t[i], t[i-1]
-			return i - 1
-		end
-	else
-		if i < #t then
-			t[i+1], t[i] = t[i], t[i+1]
-			return i + 1
-		end
-	end
+---
+-- Move array element up or down by index
+-- @param t    Array
+-- @param i    Index to move
+-- @param low  true to move toward index 1
+-- @return     New index or nil if not moved
+--
+function Nx.Util_TMoveI(t, i, low)
+    if low then
+        if i > 1 then
+            t[i - 1], t[i] = t[i], t[i - 1]
+            return i - 1
+        end
+    else
+        if i < #t then
+            t[i + 1], t[i] = t[i], t[i + 1]
+            return i + 1
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Move a indexed table item lower or higher
--- (table, match item, not nil to move to lower index)
----------------------------------------------------------------------------------------
-
-function Nx.Util_TMoveItem (t, item, low)
-
-	for i, v in ipairs (t) do
-		if v == item then
-			if low then
-				if i > 1 then
-					t[i-1], t[i] = t[i], t[i-1]
-					return i - 1
-				end
-			else
-				if i < #t then
-					t[i+1], t[i] = t[i], t[i+1]
-					return i + 1
-				end
-			end
-			return
-		end
-	end
+---
+-- Move array element up or down by value
+-- @param t     Array
+-- @param item  Item to move
+-- @param low   true to move toward index 1
+-- @return      New index or nil if not moved
+--
+function Nx.Util_TMoveItem(t, item, low)
+    for i, v in ipairs(t) do
+        if v == item then
+            if low then
+                if i > 1 then
+                    t[i - 1], t[i] = t[i], t[i - 1]
+                    return i - 1
+                end
+            else
+                if i < #t then
+                    t[i + 1], t[i] = t[i], t[i + 1]
+                    return i + 1
+                end
+            end
+            return
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Serialize a table to a string
----------------------------------------------------------------------------------------
+---
+-- Serialize a table to a Lua-parseable string
+-- @param t  Table to serialize
+-- @return   String representation
+--
+function Nx.Util_t2strRecurse(t)
+    local str = ""
 
-function Nx.Util_t2strRecurse (t)
+    if t then
+        str = "{"
 
-	local str = ""
+        for k, v in pairs(t) do
+            local kStr = k
 
-	if t then
+            if type(k) == "string" then
+                kStr = format("\"%s\"", k)
+            end
 
-		str = "{"
+            if type(v) == "table" then
+                str = str .. format("[%s]=%s,", kStr, Nx.Util_t2strRecurse(v))
+            elseif type(v) == "string" then
+                str = str .. format("[%s]=\"%s\",", kStr, v)
+            else
+                str = str .. format("[%s]=%s,", kStr, v)
+            end
+        end
 
-		for k, v in pairs (t) do
+        str = str .. "}"
+    end
 
-			local kStr = k
-
-			if type (k) == "string" then
-				kStr = format ("\"%s\"", k)
-			end
-
-			if type (v) == "table" then
-				str = str .. format ("[%s]=%s,", kStr, Nx.Util_t2strRecurse (v))
-
-			elseif type (v) == "string" then
-				str = str .. format ("[%s]=\"%s\",", kStr, v)
-
-			else
-				str = str .. format ("[%s]=%s,", kStr, v)
-			end
-		end
-
-		str = str .. "}"
-	end
-
-	return str
+    return str
 end
 
----------------------------------------------------------------------------------------
--- Convert hex color number to R G B A floats (0-1)
--- (RRGGBBAA number)
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- COLOR CONVERSION UTILITIES
+-- Convert between color formats (string, RGBA, hex)
+-------------------------------------------------------------------------------
 
+---
+-- Convert decimal number to hexadecimal string
+-- @param input  Decimal number
+-- @return       Hex string (minimum 2 characters)
+--
 function Nx.Util_dec2hex(input)
-	local base,key,output,remainder=16,"0123456789ABCDEF","",0
-	while input>0 do			
-		input,remainder=floor(input/base), mod(input,base)+1
-		output=strsub(key,remainder,remainder)..output
-	end
-	
-	return output..strrep("0", 2 - strlen(output))
+    local base, key, output, remainder = 16, "0123456789ABCDEF", "", 0
+    while input > 0 do
+        input, remainder = floor(input / base), mod(input, base) + 1
+        output = strsub(key, remainder, remainder) .. output
+    end
+    return output .. strrep("0", 2 - strlen(output))
 end
 
-function Nx.Util_str2rgba (colors)
-	local arr = { Nx.Split("|",colors) }
-	return tonumber(arr[1]), tonumber(arr[2]), tonumber(arr[3]), tonumber(arr[4])
+---
+-- Parse "R|G|B|A" string to RGBA floats
+-- @param colors  Color string in "R|G|B|A" format (0-1 range)
+-- @return        r, g, b, a values
+--
+function Nx.Util_str2rgba(colors)
+    local arr = { Nx.Split("|", colors) }
+    return tonumber(arr[1]), tonumber(arr[2]), tonumber(arr[3]), tonumber(arr[4])
 end
 
-function Nx.Util_str2rgb (colors)
-	local arr = { Nx.Split("|",colors) }
-	return tonumber(arr[1]), tonumber(arr[2]), tonumber(arr[3])
+---
+-- Parse "R|G|B" string to RGB floats
+-- @param colors  Color string in "R|G|B" format
+-- @return        r, g, b values
+--
+function Nx.Util_str2rgb(colors)
+    local arr = { Nx.Split("|", colors) }
+    return tonumber(arr[1]), tonumber(arr[2]), tonumber(arr[3])
 end
 
----------------------------------------------------------------------------------------
--- Convert hex color number to alpha float (0-1)
--- (RRGGBBAA number)
----------------------------------------------------------------------------------------
-
-function Nx.Util_str2a (colors)
-	local arr = { Nx.Split("|",colors) }
-	return arr[4]
+---
+-- Extract alpha value from "R|G|B|A" string
+-- @param colors  Color string
+-- @return        Alpha value
+--
+function Nx.Util_str2a(colors)
+    local arr = { Nx.Split("|", colors) }
+    return arr[4]
 end
 
----------------------------------------------------------------------------------------
--- Convert hex color number to color string
--- (RGBA number)
----------------------------------------------------------------------------------------
-
-function Nx.Util_str2colstr (colors)
-	local arr = { Nx.Split("|",colors) }
-	return format ("|c%02x%02x%02x%02x",arr[4]*255,arr[1]*255,arr[2]*255,arr[3]*255)
+---
+-- Convert "R|G|B|A" string to WoW color escape code
+-- @param colors  Color string in "R|G|B|A" format
+-- @return        "|cAARRGGBB" format string
+--
+function Nx.Util_str2colstr(colors)
+    local arr = { Nx.Split("|", colors) }
+    return format("|c%02x%02x%02x%02x", arr[4] * 255, arr[1] * 255, arr[2] * 255, arr[3] * 255)
 end
 
----------------------------------------------------------------------------------------
--- Convert color table
----------------------------------------------------------------------------------------
+---
+-- Convert Blizzard color table to color escape codes
+-- @param colors  Table of {r, g, b} color entries
+-- @return        Table of "|cffRRGGBB" strings
+--
+function Nx.Util_coltrgb2colstr(colors)
+    local t = {}
 
-function Nx.Util_coltrgb2colstr (colors)
+    for k, v in pairs(colors) do
+        t[k] = format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
+    end
 
-	local t = {}
-
-	for k, v in pairs (colors) do
-		t[k] = format ("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
-	end
-
-	return t
+    return t
 end
 
----------------------------------------------------------------------------------------
--- Step a value to the target value by a step
--- ret new value
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- VALUE INTERPOLATION
+-------------------------------------------------------------------------------
 
-function Nx.Util_StepValue (value, target, step)
+---
+-- Step a value toward a target by a fixed amount
+-- @param value   Current value
+-- @param target  Target value
+-- @param step    Step size per call
+-- @return        New value (clamped to target)
+--
+function Nx.Util_StepValue(value, target, step)
+    if value < target then
+        value = value + step
+        if value > target then
+            value = target
+        end
+    elseif value > target then
+        value = value - step
+        if value < target then
+            value = target
+        end
+    end
 
-	if value < target then
-		value = value + step
-		if value > target then
-			value = target
-		end
-
-	elseif value > target then
-		value = value - step
-		if value < target then
-			value = target
-		end
-	end
-
-	return value
+    return value
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- FRAME MOUSE UTILITIES
+-------------------------------------------------------------------------------
+
+---
 -- Check if mouse is over a frame
--- (frame)
--- ret XY offsets from bottom left corner or nil if not over
----------------------------------------------------------------------------------------
+-- @param frm  Frame to check
+-- @return     x, y offsets from bottom-left, or nil if not over
+--
+function Nx.Util_IsMouseOver(frm)
+    -- Safety check: frame must exist and be shown
+    if not frm or not frm:IsShown() then
+        return nil
+    end
 
-function Nx.Util_IsMouseOver (frm)
-	-- Safety check: frame must exist and be shown
-	if not frm or not frm:IsShown() then
-		return nil
-	end
+    local left = frm:GetLeft()
+    local right = frm:GetRight()
+    local top = frm:GetTop()
+    local bottom = frm:GetBottom()
 
-	local left = frm:GetLeft()
-	local right = frm:GetRight()
-	local top = frm:GetTop()
-	local bottom = frm:GetBottom()
-	
-	-- Safety check: frame bounds must be valid (can be nil if frame not positioned)
-	if not left or not right or not top or not bottom then
-		return nil
-	end
+    -- Safety check: frame bounds must be valid
+    if not left or not right or not top or not bottom then
+        return nil
+    end
 
-	local x, y = GetCursorPosition()
-	local scale = frm:GetEffectiveScale()
-	if scale == 0 then scale = 1 end  -- Avoid division by zero
-	
-	x = x / scale
-	y = y / scale
+    local x, y = GetCursorPosition()
+    local scale = frm:GetEffectiveScale()
+    if scale == 0 then scale = 1 end  -- Avoid division by zero
 
-	if x >= left and x <= right and y >= bottom and y <= top then
-		return x - left, y - bottom
-	end
+    x = x / scale
+    y = y / scale
+
+    if x >= left and x <= right and y >= bottom and y <= top then
+        return x - left, y - bottom
+    end
 end
 
----------------------------------------------------------------------------------------
--- Get mouse position relative to a frame
--- (frame)
--- ret XY offsets from bottom left corner
----------------------------------------------------------------------------------------
+---
+-- Get mouse position clamped to frame bounds
+-- @param frm  Frame to clamp to
+-- @return     x, y offsets from bottom-left (clamped)
+--
+function Nx.Util_GetMouseClampedXY(frm)
+    -- Safety check: frame must exist
+    if not frm then
+        return 0, 0
+    end
 
-function Nx.Util_GetMouseClampedXY (frm)
-	-- Safety check: frame must exist
-	if not frm then
-		return 0, 0
-	end
+    local left = frm:GetLeft()
+    local right = frm:GetRight()
+    local top = frm:GetTop()
+    local bottom = frm:GetBottom()
 
-	local left = frm:GetLeft()
-	local right = frm:GetRight()
-	local top = frm:GetTop()
-	local bottom = frm:GetBottom()
-	
-	-- Safety check: frame bounds must be valid
-	if not left or not right or not top or not bottom then
-		return 0, 0
-	end
+    -- Safety check: frame bounds must be valid
+    if not left or not right or not top or not bottom then
+        return 0, 0
+    end
 
-	local x, y = GetCursorPosition()
-	local scale = frm:GetEffectiveScale()
-	if scale == 0 then scale = 1 end
-	
-	x = x / scale
-	y = y / scale
+    local x, y = GetCursorPosition()
+    local scale = frm:GetEffectiveScale()
+    if scale == 0 then scale = 1 end
 
-	x = max (x, left)
-	x = min (x, right)
-	y = max (y, bottom)
-	y = min (y, top)
+    x = x / scale
+    y = y / scale
 
-	return x - left, y - bottom
+    x = max(x, left)
+    x = min(x, right)
+    y = max(y, bottom)
+    y = min(y, top)
+
+    return x - left, y - bottom
 end
 
----------------------------------------------------------------------------------------
--- Clamp frame to screen
--- (frame)
--- ret XY offsets from bottom left corner
----------------------------------------------------------------------------------------
+---
+-- Snap frame position to screen edges and action bars
+-- @param frm  Frame to snap
+--
+function Nx.Util_SnapToScreen(frm)
+    -- Safety check
+    if not frm then
+        return
+    end
 
-function Nx.Util_SnapToScreen (frm)
-	-- Safety check
-	if not frm then
-		return
-	end
+    local sw = GetScreenWidth()
+    local sh = GetScreenHeight()
 
-	local sw = GetScreenWidth()
-	local sh = GetScreenHeight()
+    local atPt, relTo, relPt, x, y = frm:GetPoint()
+    if not x or not y then
+        return
+    end
 
-	local atPt, relTo, relPt, x, y = frm:GetPoint()
-	if not x or not y then
-		return
-	end
+    local sc = frm:GetScale()
+    if not sc or sc == 0 then sc = 1 end
 
-	local sc = frm:GetScale()
-	if not sc or sc == 0 then sc = 1 end
-	
-	local l = frm:GetLeft()
-	local r = frm:GetRight()
-	local t = frm:GetTop()
-	local b = frm:GetBottom()
-	
-	-- Safety check: frame bounds must be valid
-	if not l or not r or not t or not b then
-		return
-	end
-	
-	l = l * sc
-	r = r * sc
-	t = t * sc
-	b = b * sc
+    local l = frm:GetLeft()
+    local r = frm:GetRight()
+    local t = frm:GetTop()
+    local b = frm:GetBottom()
 
-	local dist = 4
+    -- Safety check: frame bounds must be valid
+    if not l or not r or not t or not b then
+        return
+    end
 
-	if abs (l - 0) < dist then
-		x = x - l / sc
-	end
+    l = l * sc
+    r = r * sc
+    t = t * sc
+    b = b * sc
 
-	if abs (r - sw) < dist then
-		x = x - (r - sw) / sc
-	end
+    local dist = 4  -- Snap distance threshold
 
-	if MultiBarLeft and MultiBarLeft:IsVisible() then
-		local ml = MultiBarLeft:GetLeft()
-		if ml and abs (r - ml) < dist then
-			x = x - (r - ml) / sc
-		end
-	end
+    -- Snap to left edge
+    if abs(l - 0) < dist then
+        x = x - l / sc
+    end
 
-	if MultiBarRight and MultiBarRight:IsVisible() then
-		local ml = MultiBarRight:GetLeft()
-		if ml and abs (r - ml) < dist then
-			x = x - (r - ml) / sc
-		end
-	end
+    -- Snap to right edge
+    if abs(r - sw) < dist then
+        x = x - (r - sw) / sc
+    end
 
-	if abs (b - 0) < dist then
-		y = y - b / sc
-	end
+    -- Snap to left action bar
+    if MultiBarLeft and MultiBarLeft:IsVisible() then
+        local ml = MultiBarLeft:GetLeft()
+        if ml and abs(r - ml) < dist then
+            x = x - (r - ml) / sc
+        end
+    end
 
-	if abs (t - sh) < dist then
-		y = y - (t - sh) / sc
-	end
+    -- Snap to right action bar
+    if MultiBarRight and MultiBarRight:IsVisible() then
+        local ml = MultiBarRight:GetLeft()
+        if ml and abs(r - ml) < dist then
+            x = x - (r - ml) / sc
+        end
+    end
 
-	frm:SetPoint (atPt, x, y)
+    -- Snap to bottom edge
+    if abs(b - 0) < dist then
+        y = y - b / sc
+    end
 
-	return nil
+    -- Snap to top edge
+    if abs(t - sh) < dist then
+        y = y - (t - sh) / sc
+    end
+
+    frm:SetPoint(atPt, x, y)
+    return nil
 end
 
----------------------------------------------------------------------------------------
--- Recursively set child levels
----------------------------------------------------------------------------------------
+---
+-- Recursively set frame levels on child frames
+-- @param frm  Parent frame
+-- @param lvl  Frame level to start at
+--
+function Nx.Util_SetChildLevels(frm, lvl)
+    if frm:GetNumChildren() > 0 then
+        local ch = { frm:GetChildren() }
 
-function Nx.Util_SetChildLevels (frm, lvl)
+        for n, chf in pairs(ch) do
+            chf:SetFrameLevel(lvl)
 
-	if frm:GetNumChildren() > 0 then
-
-		local ch = { frm:GetChildren() }
-
-		for n, chf in pairs (ch) do
-
-			chf:SetFrameLevel (lvl)
-
-			if chf:GetNumChildren() > 0 then
-				Nx.Util_SetChildLevels (chf, lvl + 1)
-			end
-		end
-	end
+            if chf:GetNumChildren() > 0 then
+                Nx.Util_SetChildLevels(chf, lvl + 1)
+            end
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Get a string from a money value
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- MONEY AND TIME FORMATTING
+-------------------------------------------------------------------------------
 
-function Nx.Util_GetMoneyStr (money)
+---
+-- Format copper value as gold/silver/copper string
+-- @param money  Amount in copper
+-- @return       Formatted string like "1g 23s 45c"
+--
+function Nx.Util_GetMoneyStr(money)
+    if not money then
+        return "|cffff4040?"
+    end
 
-	if not money then
-		return "|cffff4040?"
-	end
+    if money == 0 then
+        return "0"
+    end
 
-	if money == 0 then
-		return "0"
-	end
+    local pre = money > 0 and "" or "-"
+    money = abs(money)
 
-	local pre = money > 0 and "" or "-"
+    local str = ""
 
-	money = abs (money)
+    -- Gold
+    local g = floor(money / 10000)
+    if g > 0 then
+        str = format(L["|cffffff00%dg"], g)
+    end
 
-	local str = ""
+    -- Silver
+    local s = mod(floor(money / 100), 100)
+    if s > 0 then
+        str = format(L["%s |cffbfbfbf%ds"], str, s)
+    end
 
-	local g = floor (money / 10000)
-	if g > 0 then
-		str = format (L["|cffffff00%dg"], g)
-	end
+    -- Copper
+    local c = mod(money, 100)
+    if c > 0 then
+        str = format(L["%s |cff7f7f00%dc"], str, c)
+    end
 
-	local s = mod (floor (money / 100), 100)
-	if s > 0 then
-		str = format (L["%s |cffbfbfbf%ds"], str, s)
-	end
-
-	local c = mod (money, 100)
-	if c > 0 then
-		str = format (L["%s |cff7f7f00%dc"], str, c)
-	end
-
-	return pre .. strtrim (str)
+    return pre .. strtrim(str)
 end
 
----------------------------------------------------------------------------------------
--- Get a string from a seconds
----------------------------------------------------------------------------------------
+---
+-- Format seconds as human-readable elapsed time
+-- @param seconds  Time in seconds
+-- @return         Formatted string (days, hours, or mins)
+--
+function Nx.Util_GetTimeElapsedStr(seconds)
+    local secs = seconds
+    local mins = secs / 60 % 60
+    local hours = secs / 3600
 
-function Nx.Util_GetTimeElapsedStr (seconds)
+    if hours > 24 then
+        return format(L["%.1f days"], hours / 24)
+    elseif hours >= 1 then
+        return format(L["%.1f hours"], hours)
+    end
 
-	local secs = seconds
-	local mins = secs / 60 % 60
-	local hours = secs / 3600
-
-	if hours > 24 then
-		return format (L["%.1f days"], hours / 24)
-
-	elseif hours >= 1 then
-		return format (L["%.1f hours"], hours)
-	end
-
-	return format (L["%d mins"], mins)
+    return format(L["%d mins"], mins)
 end
 
-function Nx.Util_SecondsToDays (seconds)
-	fdays = math.floor(seconds/86400)
-	fhours = math.floor((bit.mod(seconds,86400))/3600)
-	fminutes = math.floor(bit.mod((bit.mod(seconds,86400)),3600)/60)
-	fseconds = math.floor(bit.mod(bit.mod((bit.mod(seconds,86400)),3600),60))
-	return fdays.." days, "..fhours.." hours, "..fminutes.." minutes, "..fseconds.." seconds"
+---
+-- Format seconds as full days/hours/minutes/seconds string
+-- @param seconds  Time in seconds
+-- @return         Formatted string "X days, Y hours, Z minutes, W seconds"
+--
+function Nx.Util_SecondsToDays(seconds)
+    local fdays = math.floor(seconds / 86400)
+    local fhours = math.floor((bit.mod(seconds, 86400)) / 3600)
+    local fminutes = math.floor(bit.mod((bit.mod(seconds, 86400)), 3600) / 60)
+    local fseconds = math.floor(bit.mod(bit.mod((bit.mod(seconds, 86400)), 3600), 60))
+    return fdays .. " days, " .. fhours .. " hours, " .. fminutes .. " minutes, " .. fseconds .. " seconds"
 end
 
-
----------------------------------------------------------------------------------------
--- Get a string from a seconds in 00:00 minute:second format
----------------------------------------------------------------------------------------
-
-function Nx.Util_GetTimeElapsedMinSecStr (seconds)
-	return format ("%d:%02d", seconds / 60 % 60, seconds % 60)
+---
+-- Format seconds as MM:SS timer string
+-- @param seconds  Time in seconds
+-- @return         Formatted string "M:SS"
+--
+function Nx.Util_GetTimeElapsedMinSecStr(seconds)
+    return format("%d:%02d", seconds / 60 % 60, seconds % 60)
 end
 
----------------------------------------------------------------------------------------
--- Nan to Zero conversion
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- NUMERIC UTILITIES
+-------------------------------------------------------------------------------
 
-function Nx.Util_NanToZero (somevar)
-	if value == math.huge or somevar == -math.huge then return 0 end
-	
-	return (somevar ~= somevar and 0 or somevar)
+---
+-- Convert NaN or infinity to zero
+-- @param somevar  Value to check
+-- @return         Zero if NaN/infinity, otherwise the original value
+--
+function Nx.Util_NanToZero(somevar)
+    if somevar == math.huge or somevar == -math.huge then
+        return 0
+    end
+    return (somevar ~= somevar and 0 or somevar)
 end
 
----------------------------------------------------------------------------------------
--- Parse text and set for tooltip
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- TOOLTIP UTILITIES
+-------------------------------------------------------------------------------
 
-function Nx:SetTooltipText (str)
+---
+-- Parse and set tooltip text with special formatting
+-- Handles items (!), quests (@), enchants (#), and multi-line text
+-- @param str  Text to display (may include special prefixes)
+--
+function Nx:SetTooltipText(str)
+    -- Handle item links (prefix: !)
+    if strbyte(str) == 33 then
+        local link, s = Nx.Split("^", str)
 
-	if strbyte (str) == 33 then		-- ! (item)
+        if not s or #s < 1 or IsAltKeyDown() then
+            str = strsub(link, 2)
+            Nx.Item:ShowTooltip(str, true)
+            return
+        end
 
---		Nx.prt ("Item %s", str)
+        str = s
 
-		local link, s = Nx.Split ("^", str)
+    -- Handle quest links (prefix: @)
+    elseif strbyte(str) == 64 then
+        str = "quest:" .. strsub(str, 2)
+        Nx.Item:ShowTooltip(str, true)
+        return
 
-		if not s or #s < 1 or IsAltKeyDown() then
-			str = strsub (link, 2)
-			Nx.Item:ShowTooltip (str, true)
-			return
-		end
+    -- Handle enchant links (prefix: #)
+    elseif strbyte(str) == 35 then
+        str = strsub(str, 2)
+        GameTooltip:SetHyperlink(str)
+        GameTooltip_ShowCompareItem()
+        return
+    end
 
-		str = s
+    -- Handle multi-line text
+    local s1, s2 = strfind(str, "\n")
+    if s1 then
+        local t = { Nx.Split("\n", str) }
 
-	elseif strbyte (str) == 64 then		-- @ (quest)
+        GameTooltip:SetText(t[1], 1, 1, 1, 1, true)  -- First line with wrap
+        tremove(t, 1)
 
-		str = "quest:" .. strsub (str, 2)
-		Nx.Item:ShowTooltip (str, true)
-		return
+        for _, line in ipairs(t) do
+            -- Check for tab-separated double columns
+            local s1, s2 = Nx.Split("\t", line)
+            if s2 then
+                GameTooltip:AddDoubleLine(s1, s2, 1, 1, 1, 1, 1, 1)
+            else
+                GameTooltip:AddLine(line, 1, 1, 1, true)  -- Wrap text
+            end
+        end
 
-	elseif strbyte (str) == 35 then		-- # (enchant)
-
-		str = strsub (str, 2)
---		Nx.prt (str)
-		GameTooltip:SetHyperlink (str)
-		GameTooltip_ShowCompareItem()
-		return
-	end
-
-	local s1, s2 = strfind (str, "\n")
-	if s1 then
-
-		local t = { Nx.Split ("\n", str) }
-
-		GameTooltip:SetText (t[1], 1, 1, 1, 1, true)			-- Wrap text
-		tremove (t, 1)
-
-		for _, line in ipairs (t) do
-
-			local s1, s2 = Nx.Split ("\t", line)
-			if s2 then
-				GameTooltip:AddDoubleLine (s1, s2, 1, 1, 1, 1, 1, 1)
-			else
-				GameTooltip:AddLine (line, 1, 1, 1, true)	-- Wrap text
-			end
-		end
-
---[[
-		local s = strsub (str, 1, s1 - 1)
---		Nx.prt ("Tool %s", s)
-		GameTooltip:SetText (s, 1, 1, 1, 1, true)
-
-		s = strsub (str, s2 + 1)
-		GameTooltip:AddLine (s, 1, 1, 1, true)
---]]
-		GameTooltip:Show()
-
-	else
-		GameTooltip:SetText (str, 1, 1, 1, 1, true)			-- Wrap text
-	end
+        GameTooltip:Show()
+    else
+        GameTooltip:SetText(str, 1, 1, 1, 1, true)  -- Single line with wrap
+    end
 end
 
----------------------------------------------------------------------------------------
--- Play a sound file if sounds enabled
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SOUND UTILITIES
+-------------------------------------------------------------------------------
 
-function Nx:PlaySoundFile (file)
-
-	if GetCVar ("Sound_EnableSFX") ~= "0" then
-		PlaySoundFile (file)
-	end
+---
+-- Play a sound file if sound effects are enabled
+-- @param file  Sound file path
+--
+function Nx:PlaySoundFile(file)
+    if GetCVar("Sound_EnableSFX") ~= "0" then
+        PlaySoundFile(file)
+    end
 end
 
+-------------------------------------------------------------------------------
+-- FONT SYSTEM
+-- Manages font objects and shared media integration
+-------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
--- Font stuff
----------------------------------------------------------------------------------------
-
+---
+-- Initialize font system
+-- Creates font objects for different UI elements
+--
 function Nx.Font:Init()
 
 	self.Inited = true
@@ -1044,10 +1169,14 @@ function Nx.Font:Update()
 	Nx.Window:AdjustAll()
 end
 
----------------------------------------------------------------------------------------
--- Skin stuff
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SKIN SYSTEM
+-- Manages visual themes for windows and UI elements
+-------------------------------------------------------------------------------
 
+---
+-- Initialize skin system with predefined themes
+--
 function Nx.Skin:Init()
 
 	Nx.Skins = {
@@ -1229,10 +1358,15 @@ function Nx.Skin:GetTex (txName)
 	return self.Path .. txName
 end
 
----------------------------------------------------------------------------------------
--- Window - A frame with a title and borders that can be moved and resized
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- WINDOW SYSTEM
+-- Creates and manages movable, resizable windows with borders and titles
+-------------------------------------------------------------------------------
 
+---
+-- Initialize window system
+-- Sets up window layout data and creates window context menu
+--
 function Nx.Window:Init()
 
 	local wd = Nx:GetData ("Win")
@@ -3494,8 +3628,14 @@ Nx.Button.TypeData = {
 
 ---------------------------------------------------------------------------------------
 --
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- BUTTON SYSTEM
+-- Creates and manages interactive button controls
+-------------------------------------------------------------------------------
 
+---
+-- Initialize button system with type definitions
+--
 function Nx.Button:Init()
 
 	local f = CreateFrame ("Frame", nil, UIParent, "BackdropTemplate")
@@ -4350,8 +4490,13 @@ end
 --]]
 
 -------------------------------------------------------------------------------
--- Menus
+-- MENU SYSTEM
+-- Creates context menus and popup menus
+-------------------------------------------------------------------------------
 
+---
+-- Initialize menu system
+--
 function Nx.Menu:Init()
 
 	self.Menus = {}		-- All created menus
@@ -5109,6 +5254,14 @@ Nx.List.FontNames = {
 }
 --]]
 
+-------------------------------------------------------------------------------
+-- LIST SYSTEM
+-- Creates scrollable list controls with columns and selection
+-------------------------------------------------------------------------------
+
+---
+-- Initialize list system
+--
 function Nx.List:Init()
 
 	local ldata = Nx:GetData ("List")
@@ -6649,9 +6802,14 @@ function Nx.List:OnSlider (slider, pos)
 end
 
 ---------------------------------------------------------------------------------------
--- Drop down
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- DROPDOWN SYSTEM
+-- Creates dropdown selection controls
+-------------------------------------------------------------------------------
 
+---
+-- Initialize dropdown system
+--
 function Nx.DropDown:Init()
 
 	-- Create Window
@@ -6986,9 +7144,14 @@ function Nx.TabBar:OnBut (but, id, click)
 end
 
 ---------------------------------------------------------------------------------------
--- Tool Bar
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- TOOLBAR SYSTEM
+-- Creates customizable toolbars with buttons
+-------------------------------------------------------------------------------
 
+---
+-- Initialize toolbar system
+--
 function Nx.ToolBar:Init()
 
 	local data = Nx:GetDataToolBar()
@@ -7351,10 +7514,20 @@ end
 
 ---------------------------------------------------------------------------------------
 -- Create
--- (parent, "H" or "V", bar size, top or left offset of bar)
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SLIDER SYSTEM
+-- Creates scrollbar/slider controls for lists and value adjustment
+-------------------------------------------------------------------------------
 
-function Nx.Slider:Create (parentFrm, typ, size, tlOff)
+---
+-- Create a new slider control
+-- @param parentFrm  Parent frame
+-- @param typ        "H" for horizontal, "V" for vertical
+-- @param size       Bar size (width or height)
+-- @param tlOff      Top or left offset
+-- @return           Slider instance
+--
+function Nx.Slider:Create(parentFrm, typ, size, tlOff)
 
 --	if 1 then return end
 
@@ -7665,12 +7838,19 @@ function Nx.Slider:DoUpdate()
 	end
 end
 
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
--- Create graph
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- GRAPH SYSTEM
+-- Creates interactive bar graphs for data visualization
+-------------------------------------------------------------------------------
 
-function Nx.Graph:Create (width, height, parentFrm)
+---
+-- Create a new graph control
+-- @param width      Graph width in pixels
+-- @param height     Graph height in pixels
+-- @param parentFrm  Parent frame
+-- @return           Graph instance
+--
+function Nx.Graph:Create(width, height, parentFrm)
 
 	local c2rgba = Nx.Util_str2rgba
 
@@ -8013,5 +8193,6 @@ function NxWatchListItem_OnUpdate(self, elapsed)
 	end
 end
 
----------------------------------------------------------------------------------------
---EOF
+-------------------------------------------------------------------------------
+-- END OF FILE
+-------------------------------------------------------------------------------

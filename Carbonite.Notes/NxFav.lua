@@ -1,8 +1,7 @@
-﻿---------------------------------------------------------------------------------------
--- NxFav - Favorites window
+﻿-------------------------------------------------------------------------------
+-- NxFav - Favorites/Notes Window
 -- Copyright 2008-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,60 +17,89 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- VERSION AND MODULE INITIALIZATION
+-------------------------------------------------------------------------------
 
-Nx.VERSIONFAV			= .16				-- Favorite data
+-- Data version for favorites/notes format
+Nx.VERSIONFAV = .16
 
+-- Notes module namespace
 Nx.Notes = {}
 
+-- Create the AceAddon for the Notes module
 CarboniteNotes = LibStub("AceAddon-3.0"):NewAddon("CarboniteNotes", "AceTimer-3.0", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Notes", true)
 
--- Keybindings
-BINDING_HEADER_CarboniteNotes	= "|cffc0c0ff" .. L["Carbonite Notes"] .. "|r"
-BINDING_NAME_NxTOGGLEFAV	= L["NxTOGGLEFAV"]
+-------------------------------------------------------------------------------
+-- KEYBINDING DEFINITIONS
+-------------------------------------------------------------------------------
 
+BINDING_HEADER_CarboniteNotes = "|cffc0c0ff" .. L["Carbonite Notes"] .. "|r"
+BINDING_NAME_NxTOGGLEFAV = L["NxTOGGLEFAV"]
+
+-------------------------------------------------------------------------------
+-- LOCAL VARIABLES
+-------------------------------------------------------------------------------
+
+-- Storage for notes from other addons
 local addonNotes = {}
 
+-------------------------------------------------------------------------------
+-- DEFAULT OPTIONS
+-- Default settings for notes module
+-------------------------------------------------------------------------------
+
 local defaults = {
-	profile = {
-		Notes = {
-			ShowMap = true,
-			HandyNotes = true,
-			HandyNotesSize = 15,
-			RareScanner = true,
-			RareScannerSize = 32,
-			Questie = false,
-			QuestieSE = false,
-			QuestieSize = 32,
-		},
-		Addons = {
-		},
-	}
+    profile = {
+        Notes = {
+            ShowMap = true,           -- Show user notes on map
+            HandyNotes = true,        -- Show HandyNotes integration
+            HandyNotesSize = 15,      -- HandyNotes icon size
+            RareScanner = true,       -- Show RareScanner integration
+            RareScannerSize = 32,     -- RareScanner icon size
+            Questie = false,          -- Show Questie quest objectives
+            QuestieSE = false,        -- Show Questie available quests
+            QuestieSize = 32,         -- Questie icon size
+        },
+        Addons = {
+        },
+    }
 }
 
+-------------------------------------------------------------------------------
+-- OPTIONS CONFIGURATION
+-- AceConfig options for notes module
+-------------------------------------------------------------------------------
+
 local notesoptions
+
+---
+-- Get or create notes options configuration
+-- @return  Notes options table
+--
 local function notesConfig()
-	if not notesoptions then
-		notesoptions = {
-			type = "group",
-			name = L["Note Options"],
-			args = {
-				notemap = {
-					order = 1,
-					type = "toggle",
-					width = "full",
-					name = L["Show Notes On Map"],
-					desc = L["Shows your notes on the carbonite map"],
-					get = function()
-						return Nx.fdb.profile.Notes.ShowMap
-					end,
-					set = function()
-						Nx.fdb.profile.Notes.ShowMap = not Nx.fdb.profile.Notes.ShowMap
-					end,
-				},
+    if not notesoptions then
+        notesoptions = {
+            type = "group",
+            name = L["Note Options"],
+            args = {
+                -- Show notes on map toggle
+                notemap = {
+                    order = 1,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Show Notes On Map"],
+                    desc = L["Shows your notes on the carbonite map"],
+                    get = function()
+                        return Nx.fdb.profile.Notes.ShowMap
+                    end,
+                    set = function()
+                        Nx.fdb.profile.Notes.ShowMap = not Nx.fdb.profile.Notes.ShowMap
+                    end,
+                },
 				handy = {
 					order = 2,
 					type = "toggle",
@@ -246,142 +274,220 @@ local function notesConfig()
 					end,
 				},
 
-			},
-		}
-	end
-	Nx.Opts:AddToProfileMenu(L["Notes"],4,Nx.fdb)
-	return notesoptions
+            },
+        }
+    end
+    Nx.Opts:AddToProfileMenu(L["Notes"], 4, Nx.fdb)
+    return notesoptions
 end
 
+-------------------------------------------------------------------------------
+-- MODULE INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- AceAddon initialization callback
+-- Sets up database, registers menus, and integrates with Carbonite
+--
 function CarboniteNotes:OnInitialize()
-	if not Nx.Initialized then
-		CarbNotesInit = Nx:ScheduleTimer(CarboniteNotes.OnInitialize,1)
-		return
-	end
-	Nx.fdb = LibStub("AceDB-3.0"):New("NXNotes",defaults, true)	
-	Nx.Notes:Init()
-	CarboniteNotes:RegisterComm("carbmodule",Nx.Notes.OnChat_msg_addon)
-	local function func()
-		Nx.Notes:ToggleShow()
-	end
-	Nx.Button.TypeData["MapFav"] = {
-		Up = "$INV_Torch_Lit",
-		SizeUp = 22,
-		SizeDn = 22,
-	}
-	Nx.NXMiniMapBut.Menu:AddItem(0, L["Show Notes"], func, Nx.NXMiniMapBut)
-	tinsert (Nx.ModuleUpdateIcon,"Notes")
-	tinsert (Nx.BarData,{"MapFav", L["-Notes-"], Nx.Notes.OnButToggleFav, false })
-	Nx.Map.Maps[1]:CreateToolBar()
-	Nx.Map.Maps[1].Menu:AddItem (0, L["Add Note"], Nx.Notes.Menu_OnAddNote, Nx.Map.Maps[1])
-	Nx.Map.Maps[1].GIconMenu:AddItem (0, L["Add Note"], Nx.Notes.Menu_OnAddNote, Nx.Map.Maps[1])
-	Nx:AddToConfig("Notes Module",notesConfig(),L["Notes Module"])
-	tinsert(Nx.BrokerMenuTemplate,{ text = L["Toggle Notes"], func = function() Nx.Notes:ToggleShow() end })
+    -- Wait for main Carbonite addon to initialize
+    if not Nx.Initialized then
+        CarbNotesInit = Nx:ScheduleTimer(CarboniteNotes.OnInitialize, 1)
+        return
+    end
+
+    -- Initialize the database
+    Nx.fdb = LibStub("AceDB-3.0"):New("NXNotes", defaults, true)
+    Nx.Notes:Init()
+
+    -- Register addon communication channel
+    CarboniteNotes:RegisterComm("carbmodule", Nx.Notes.OnChat_msg_addon)
+
+    -- Define button type for map toolbar
+    local function func()
+        Nx.Notes:ToggleShow()
+    end
+    Nx.Button.TypeData["MapFav"] = {
+        Up = "$INV_Torch_Lit",
+        SizeUp = 22,
+        SizeDn = 22,
+    }
+
+    -- Add to minimap button menu
+    Nx.NXMiniMapBut.Menu:AddItem(0, L["Show Notes"], func, Nx.NXMiniMapBut)
+
+    -- Register for icon updates
+    tinsert(Nx.ModuleUpdateIcon, "Notes")
+
+    -- Add toolbar button data
+    tinsert(Nx.BarData, {"MapFav", L["-Notes-"], Nx.Notes.OnButToggleFav, false})
+
+    -- Add context menu items to map
+    Nx.Map.Maps[1]:CreateToolBar()
+    Nx.Map.Maps[1].Menu:AddItem(0, L["Add Note"], Nx.Notes.Menu_OnAddNote, Nx.Map.Maps[1])
+    Nx.Map.Maps[1].GIconMenu:AddItem(0, L["Add Note"], Nx.Notes.Menu_OnAddNote, Nx.Map.Maps[1])
+
+    -- Register with Carbonite options
+    Nx:AddToConfig("Notes Module", notesConfig(), L["Notes Module"])
+
+    -- Add to broker menu
+    tinsert(Nx.BrokerMenuTemplate, { text = L["Toggle Notes"], func = function() Nx.Notes:ToggleShow() end })
 end
 
+-------------------------------------------------------------------------------
+-- ADDON COMMUNICATION
+-------------------------------------------------------------------------------
+
+---
+-- Handle incoming addon messages
+-- @param msg     Message string
+-- @param dist    Distribution type
+-- @param target  Target player
+--
 function Nx.Notes:OnChat_msg_addon(msg, dist, target)
-	local ssplit = { strsplit("|",msg) }
-	if ssplit[1] == "CMD" then
-		if ssplit[2] == "note" then
-			Nx.Notes:SetNoteAtStr (ssplit[3])
-		end
-	end
+    local ssplit = { strsplit("|", msg) }
+    if ssplit[1] == "CMD" then
+        if ssplit[2] == "note" then
+            Nx.Notes:SetNoteAtStr(ssplit[3])
+        end
+    end
 end
 
+-------------------------------------------------------------------------------
+-- NOTES INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- Initialize the notes module
+-- Sets up data version, folders, and available icons
+--
 function Nx.Notes:Init()
+    local fav = Nx.fdb.profile.Notes
 
-	local fav = Nx.fdb.profile.Notes
+    -- Check and upgrade data version if needed
+    if not fav or not fav.Version or fav.Version < Nx.VERSIONFAV then
+        if fav and fav.Version then
+            Nx.prt(L["Reset old notes data"] .. " %f", fav.Version)
+        end
 
-	if not fav or not fav.Version or fav.Version < Nx.VERSIONFAV then
+        fav = {}
+        Nx.fdb.profile.Notes = fav
+        fav.Version = Nx.VERSIONFAV
+    end
 
-		if fav and fav.Version then
-			Nx.prt (L["Reset old notes data"] .. " %f", fav.Version)
-		end
+    -- Initialize state
+    self.Folders = Nx.GetFav()
+    self.PrevQuestiePins = 0
+    self.PrevRSPins = 0
 
-		fav = {}
-		Nx.fdb.profile.Notes = fav
-		fav.Version = Nx.VERSIONFAV
-	end
+    -- Available note icons (raid markers, minimap icons, etc.)
+    self.NoteIcons = {
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",   -- Star
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",   -- Circle
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_3",   -- Diamond
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_4",   -- Triangle
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_5",   -- Moon
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_6",   -- Square
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_7",   -- Cross
+        "Interface\\TargetingFrame\\UI-RaidTargetingIcon_8",   -- Skull
+        "Interface\\Minimap\\Tracking\\Auctioneer",
+        "Interface\\Minimap\\Tracking\\Banker",
+        "Interface\\Minimap\\Tracking\\BattleMaster",
+        "Interface\\Minimap\\Tracking\\FlightMaster",
+        "Interface\\Minimap\\Tracking\\Innkeeper",
+        "Interface\\Minimap\\Tracking\\Mailbox",
+        "Interface\\Minimap\\Tracking\\Repair",
+        "Interface\\Minimap\\Tracking\\StableMaster",
+        "Interface\\Minimap\\Tracking\\Class",
+        "Interface\\Minimap\\Tracking\\Profession",
+        "Interface\\Minimap\\Tracking\\TrivialQuests",
+        "Interface\\Minimap\\Tracking\\Ammunition",
+        "Interface\\Minimap\\Tracking\\Food",
+        "Interface\\Minimap\\Tracking\\Poisons",
+        "Interface\\Minimap\\Tracking\\Reagents",
+        "Interface\\TargetingFrame\\UI-PVP-Alliance",
+        "Interface\\TargetingFrame\\UI-PVP-Horde",
+        "Interface\\TargetingFrame\\UI-PVP-FFA",
+        "Interface\\PVPFrame\\PVP-ArenaPoints-Icon",
+        "Interface\\Icons\\Spell_Arcane_PortalDalaran",
+    }
 
-
-	self.Folders = Nx.GetFav()
-	self.PrevQuestiePins = 0
-	self.PrevRSPins = 0
-	self.NoteIcons = {
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_3",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_4",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_5",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_6",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_7",
-	"Interface\\TargetingFrame\\UI-RaidTargetingIcon_8",
-	"Interface\\Minimap\\Tracking\\Auctioneer",
-	"Interface\\Minimap\\Tracking\\Banker",
-	"Interface\\Minimap\\Tracking\\BattleMaster",
-	"Interface\\Minimap\\Tracking\\FlightMaster",
-	"Interface\\Minimap\\Tracking\\Innkeeper",
-	"Interface\\Minimap\\Tracking\\Mailbox",
-	"Interface\\Minimap\\Tracking\\Repair",
-	"Interface\\Minimap\\Tracking\\StableMaster",
-	"Interface\\Minimap\\Tracking\\Class",
-	"Interface\\Minimap\\Tracking\\Profession",
-	"Interface\\Minimap\\Tracking\\TrivialQuests",
-	"Interface\\Minimap\\Tracking\\Ammunition",
-	"Interface\\Minimap\\Tracking\\Food",
-	"Interface\\Minimap\\Tracking\\Poisons",
-	"Interface\\Minimap\\Tracking\\Reagents",
-	"Interface\\TargetingFrame\\UI-PVP-Alliance",
-	"Interface\\TargetingFrame\\UI-PVP-Horde",
-	"Interface\\TargetingFrame\\UI-PVP-FFA",
-	"Interface\\PVPFrame\\PVP-ArenaPoints-Icon",
-	"Interface\\Icons\\Spell_Arcane_PortalDalaran",
-	}
-	
-	CarboniteNotes:RegisterEvent("LOOT_CLOSED", function() Nx.Notes:Update(); end )
+    -- Update notes when loot window closes (for gathering tracking)
+    CarboniteNotes:RegisterEvent("LOOT_CLOSED", function() Nx.Notes:Update() end)
 end
 
-function Nx.Notes:GetIconInline (index)
-	local file = self.NoteIcons[index]
-	return format ("|T%s:16|t", file)
+-------------------------------------------------------------------------------
+-- ICON HELPERS
+-------------------------------------------------------------------------------
+
+---
+-- Get inline texture string for an icon
+-- @param index  Icon index
+-- @return       Texture escape string
+--
+function Nx.Notes:GetIconInline(index)
+    local file = self.NoteIcons[index]
+    return format("|T%s:16|t", file)
 end
 
-function Nx.Notes:GetIconFile (index)
-	return self.NoteIcons[index]
+---
+-- Get icon file path
+-- @param index  Icon index
+-- @return       File path string
+--
+function Nx.Notes:GetIconFile(index)
+    return self.NoteIcons[index]
 end
 
--- xpcall safecall implementation
+-------------------------------------------------------------------------------
+-- SAFECALL IMPLEMENTATION
+-- Protected function calls for addon compatibility
+-------------------------------------------------------------------------------
+
 local xpcall = xpcall
 
 local function errorhandler(err)
-	return geterrorhandler()(err)
+    return geterrorhandler()(err)
 end
 
+---
+-- Safely call a function with error handling
+-- Used for optional callbacks that may not exist
+-- @param func  Function to call (or nil)
+-- @param ...   Arguments to pass
+-- @return      Function result or nil
+--
 local function safecall(func, ...)
-	-- we check to see if the func is passed is actually a function here and don't error when it isn't
-	-- this safecall is used for optional functions like OnEnter OnLeave etc. When they are not
-	-- present execution should continue without hinderance
-	if type(func) == "function" then
-		return xpcall(func, errorhandler, ...)
-	end
+    if type(func) == "function" then
+        return xpcall(func, errorhandler, ...)
+    end
 end
+
+-------------------------------------------------------------------------------
+-- HANDYNOTES PIN HANDLERS
+-- Mouse event handlers for HandyNotes integration
+-------------------------------------------------------------------------------
 
 local handypin = {}
 
 function handypin:OnEnter(motion)
-	WorldMapBlobFrame:SetScript("OnUpdate", nil)
-	safecall(HandyNotes.plugins[self.pluginName].OnEnter, self, self.mapFile, self.coord)
+    WorldMapBlobFrame:SetScript("OnUpdate", nil)
+    safecall(HandyNotes.plugins[self.pluginName].OnEnter, self, self.mapFile, self.coord)
 end
 
 function handypin:OnLeave(motion)
-	WorldMapBlobFrame:SetScript("OnUpdate", WorldMapBlobFrame_OnUpdate)
-	safecall(HandyNotes.plugins[self.pluginName].OnLeave, self, self.mapFile, self.coord)
+    WorldMapBlobFrame:SetScript("OnUpdate", WorldMapBlobFrame_OnUpdate)
+    safecall(HandyNotes.plugins[self.pluginName].OnLeave, self, self.mapFile, self.coord)
 end
 
----------------------------------------------------------------------------------------
--- Create favorites window
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- FAVORITES WINDOW CREATION
+-------------------------------------------------------------------------------
 
+---
+-- Create the favorites/notes window
+-- Sets up window, buttons, lists, and menus
+--
 function Nx.Notes:Create()
 
 	self.Side = 1
@@ -465,13 +571,20 @@ function Nx.Notes:Create()
 	self.List:FullUpdate()
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- RECORDING FUNCTIONS
+-- Record locations and notes while exploring
+-------------------------------------------------------------------------------
 
-function Nx.Notes:But_OnRecord (but)
-	self:SetRecord (but:GetPressed())
+function Nx.Notes:But_OnRecord(but)
+    self:SetRecord(but:GetPressed())
 end
 
-function Nx.Notes:SetRecord (on)
+---
+-- Enable or disable recording mode
+-- @param on  true to enable recording
+--
+function Nx.Notes:SetRecord(on)
 
 	local but = self.RecBut
 
@@ -552,10 +665,14 @@ function Nx.Notes:But_OnItemDel()
 	self:Update()
 end
 
----------------------------------------------------------------------------------------
--- Create menu
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- CONTEXT MENUS
+-- Create folder/item context menus
+-------------------------------------------------------------------------------
 
+---
+-- Create the folder and item context menus
+--
 function Nx.Notes:CreateMenu()
 
 	local menu = Nx.Menu:Create (self.List.Frm, 250)
@@ -781,18 +898,20 @@ function Nx.Notes:SetIconAccept (name, sel)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Show or hide
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- WINDOW VISIBILITY
+-------------------------------------------------------------------------------
 
+---
+-- Keybinding handler to toggle notes window
+--
 function Nx:NXFavKeyToggleShow()
-	Nx.Notes:ToggleShow()
+    Nx.Notes:ToggleShow()
 end
 
----------------------------------------------------------------------------------------
--- Show or hide
----------------------------------------------------------------------------------------
-
+---
+-- Toggle the notes window visibility
+--
 function Nx.Notes:ToggleShow()
 
 	if not self.Win then
@@ -806,22 +925,34 @@ function Nx.Notes:ToggleShow()
 	end
 end
 
----------------------------------------------------------------------------------------
--- Handle item list filter edit box
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- EDIT BOX HANDLING
+-------------------------------------------------------------------------------
 
-function Nx.Notes:OnEditBox (editbox, message)
+---
+-- Handle filter edit box changes
+-- @param editbox  Edit box frame
+-- @param message  Event message
+--
+function Nx.Notes:OnEditBox(editbox, message)
 
 	if message == "Changed" then
 		self:Update()
 	end
 end
 
----------------------------------------------------------------------------------------
--- On list events
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- LIST EVENT HANDLERS
+-------------------------------------------------------------------------------
 
-function Nx.Notes:OnListEvent (eventName, sel, val2, click)
+---
+-- Handle folder list events (selection, context menu, etc.)
+-- @param eventName  Event type
+-- @param sel        Selected index
+-- @param val2       Additional value
+-- @param click      Click info
+--
+function Nx.Notes:OnListEvent(eventName, sel, val2, click)
 
 	-- Nx.prt ("Notes list event "..eventName)
 
@@ -875,11 +1006,14 @@ function Nx.Notes:OnListEvent (eventName, sel, val2, click)
 	end
 end
 
----------------------------------------------------------------------------------------
--- On item list events
----------------------------------------------------------------------------------------
-
-function Nx.Notes:OnItemListEvent (eventName, sel, val2, click)
+---
+-- Handle item list events (selection, context menu, etc.)
+-- @param eventName  Event type
+-- @param sel        Selected index
+-- @param val2       Additional value
+-- @param click      Click info
+--
+function Nx.Notes:OnItemListEvent(eventName, sel, val2, click)
 
 --	Nx.prt ("List event "..eventName)
 
@@ -911,10 +1045,15 @@ function Nx.Notes:OnItemListEvent (eventName, sel, val2, click)
 	self:Update()
 end
 
----------------------------------------------------------------------------------------
--- Update Fav
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- UPDATE FUNCTIONS
+-- Refresh lists and display
+-------------------------------------------------------------------------------
 
+---
+-- Update the favorites window
+-- Refreshes both folder and item lists
+--
 function Nx.Notes:Update()
 
 	self.Draw = false		-- Force map to update icons
@@ -1075,22 +1214,26 @@ function Nx.Notes:UpdateItems (selectI)
 	list:Update()
 end
 
----------------------------------------------------------------------------------------
--- Select current favorite
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SELECTION AND NAVIGATION
+-------------------------------------------------------------------------------
 
+---
+-- Select the current favorite in the list
+--
 function Nx.Notes:SelectCur()
 
 	self.List:SendUserSelect()
 	self:SelectItems (1)
 end
 
----------------------------------------------------------------------------------------
--- Get the parent of the item
--- (item, folder to start search or nil for root)
----------------------------------------------------------------------------------------
-
-function Nx.Notes:GetParent (item, folder)
+---
+-- Get the parent folder of an item
+-- @param item    Item to find parent for
+-- @param folder  Starting folder (nil for root)
+-- @return        Parent folder or nil
+--
+function Nx.Notes:GetParent(item, folder)
 
 	folder = folder or self.Folders
 
@@ -1110,12 +1253,13 @@ function Nx.Notes:GetParent (item, folder)
 	end
 end
 
----------------------------------------------------------------------------------------
+---
 -- Find a folder by name
--- (name)
----------------------------------------------------------------------------------------
-
-function Nx.Notes:FindFolder (name, parent)
+-- @param name    Folder name to find
+-- @param parent  Parent folder to search (nil for root)
+-- @return        Folder table or nil
+--
+function Nx.Notes:FindFolder(name, parent)
 
 	parent = parent or self.Folders
 
@@ -1129,12 +1273,14 @@ function Nx.Notes:FindFolder (name, parent)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Find a favorite by a variable name
--- (name)
----------------------------------------------------------------------------------------
-
-function Nx.Notes:FindFav (val, varName, parent)
+---
+-- Find a favorite by a variable value
+-- @param val      Value to match
+-- @param varName  Variable name to check
+-- @param parent   Parent folder (nil for root)
+-- @return         Favorite table or nil
+--
+function Nx.Notes:FindFav(val, varName, parent)
 
 	parent = parent or self.Folders
 
@@ -1148,12 +1294,13 @@ function Nx.Notes:FindFav (val, varName, parent)
 	end
 end
 
----------------------------------------------------------------------------------------
+---
+-- Open all folders leading to a favorite
+-- @param item    Favorite item
+-- @param folder  Starting folder (nil for root)
+-- @return        Index in the folder
 --
--- (item)
----------------------------------------------------------------------------------------
-
-function Nx.Notes:OpenFoldersToFav (item, folder)
+function Nx.Notes:OpenFoldersToFav(item, folder)
 
 	folder = folder or self.Folders
 
@@ -1175,12 +1322,14 @@ function Nx.Notes:OpenFoldersToFav (item, folder)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Find the index where an item would be in list
--- (item)
----------------------------------------------------------------------------------------
-
-function Nx.Notes:FindListI (item, folder, index)
+---
+-- Find the list index of an item
+-- @param item    Item to find
+-- @param folder  Starting folder (nil for root)
+-- @param index   Current index (internal)
+-- @return        List index (negative if not found)
+--
+function Nx.Notes:FindListI(item, folder, index)
 
 	folder = folder or self.Folders
 	index = index or 1
@@ -1338,11 +1487,11 @@ function Nx.Notes:SetItemName (index, name)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Select items in item list
----------------------------------------------------------------------------------------
-
-function Nx.Notes:SelectItems (index)
+---
+-- Select an item in the item list
+-- @param index  Item index to select
+--
+function Nx.Notes:SelectItems(index)
 
 	if self.CurFav then
 
@@ -1358,9 +1507,21 @@ function Nx.Notes:SelectItems (index)
 	end
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- NOTE RECORDING
+-- Record notes, targets, and locations
+-------------------------------------------------------------------------------
 
-function Nx.Notes:Record (typ, name, id, x, y, level)
+---
+-- Record a note or target at the current location
+-- @param typ    Type ("Note", "TargetS", "Target")
+-- @param name   Note name
+-- @param id     Map ID
+-- @param x      X coordinate
+-- @param y      Y coordinate
+-- @param level  Dungeon level (optional)
+--
+function Nx.Notes:Record(typ, name, id, x, y, level)
 	if self.InUpdateTarget then
 		return
 	end
@@ -1481,11 +1642,15 @@ function Nx.Notes:SetNoteAtStr (str)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Show note in window
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- ICON NOTE DISPLAY
+-------------------------------------------------------------------------------
 
-function Nx.Notes:ShowIconNote (icon)
+---
+-- Show a note's details in the window when clicked on map
+-- @param icon  Map icon that was clicked
+--
+function Nx.Notes:ShowIconNote(icon)
 
 	local fav, index = Nx.Map:GetIconFavData (icon)
 
@@ -1556,10 +1721,15 @@ function Nx.Notes:UpdateTargets()
 	end
 end
 
----------------------------------------------------------------------------------------
---
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- MAP ICON UPDATES
+-- Draw note icons on the Carbonite map
+-------------------------------------------------------------------------------
 
+---
+-- Update all note icons on the map
+-- Includes user notes and addon integrations
+--
 function Nx.Notes:UpdateIcons()
 	local Map = Nx.Map
 	local map = Map:GetMap (1)
@@ -1666,19 +1836,29 @@ function Nx.Notes:UpdateIcons()
 	end
 end
 
--- Tracking for HandyNotes (simple map/level check instead of hash)
+-------------------------------------------------------------------------------
+-- HANDYNOTES INTEGRATION
+-- Display HandyNotes pins on Carbonite map
+-------------------------------------------------------------------------------
+
+-- Cache for tracking map/level changes
 Nx.Notes.HandyNotesLastMapId = nil
 Nx.Notes.HandyNotesLastLevel = nil
 
--- Reusable temp frame for tooltip extraction (avoids creating frames in loops)
+-- Reusable temp frame for tooltip extraction (avoids garbage collection)
 local handyTempFrame = nil
+
 local function GetHandyTempFrame()
-	if not handyTempFrame then
-		handyTempFrame = CreateFrame("Frame", "CarbHandyTemp", UIParent)
-	end
-	return handyTempFrame
+    if not handyTempFrame then
+        handyTempFrame = CreateFrame("Frame", "CarbHandyTemp", UIParent)
+    end
+    return handyTempFrame
 end
 
+---
+-- Update HandyNotes icons on the map
+-- @param mapId  Current map ID
+--
 function Nx.Notes:HandyNotes(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.HandyNotes and HandyNotes) then
@@ -1772,10 +1952,19 @@ function Nx.Notes:HandyNotes(mapId)
 	end
 end
 
--- Tracking for RareScanner dirty detection
+-------------------------------------------------------------------------------
+-- RARESCANNER INTEGRATION
+-- Display RareScanner pins on Carbonite map
+-------------------------------------------------------------------------------
+
+-- Cache for dirty detection
 Nx.Notes.RSCache = Nx.Notes.RSCache or {}
 Nx.Notes.RSLastMapId = nil
 
+---
+-- Update RareScanner icons on the map
+-- @param mapId  Current map ID
+--
 function Nx.Notes:RareScanner(mapId)
 	local map = Nx.Map:GetMap (1)
 	if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
@@ -1859,10 +2048,19 @@ function Nx.Notes:RareScanner(mapId)
 end
 
 
--- Tracking for Questie dirty detection
+-------------------------------------------------------------------------------
+-- QUESTIE INTEGRATION
+-- Display Questie quest objective pins on Carbonite map
+-------------------------------------------------------------------------------
+
+-- Cache for dirty detection
 Nx.Notes.QuestieCache = Nx.Notes.QuestieCache or {}
 Nx.Notes.QuestieLastMapId = nil
 
+---
+-- Update Questie icons on the map
+-- @param mapId  Current map ID
+--
 function Nx.Notes:Questie(mapId)
 	local map = Nx.Map:GetMap (1)
 
@@ -1925,40 +2123,67 @@ function Nx.Notes:Questie(mapId)
 end
 
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- BUTTON AND MENU HANDLERS
+-------------------------------------------------------------------------------
 
-function Nx.Notes:OnButToggleFav (but)
-	Nx.Notes:ToggleShow()
+function Nx.Notes:OnButToggleFav(but)
+    Nx.Notes:ToggleShow()
 end
 
----------------------------------------------------------------------------------------
--- Get Favorite data
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- DATA ACCESS
+-------------------------------------------------------------------------------
 
+---
+-- Get the favorites data table
+-- @return  Favorites/notes profile data
+--
 function Nx:GetFav()
-	return Nx.fdb.profile.Notes
+    return Nx.fdb.profile.Notes
 end
 
+---
+-- Menu handler to add a note at click location
+--
 function Nx.Notes:Menu_OnAddNote()
-	local map = Nx.Map:GetMap (1)
-	local mId = map.RMapId
-	local wx, wy = self:FramePosToWorldPos (self.ClickFrmX, self.ClickFrmY)
-	local zx, zy = self:GetZonePos (mId, wx, wy)
-	local level = map.DungeonLevel
-	Nx.Notes:AddNote ("?", mId, zx, zy, level)
+    local map = Nx.Map:GetMap(1)
+    local mId = map.RMapId
+    local wx, wy = self:FramePosToWorldPos(self.ClickFrmX, self.ClickFrmY)
+    local zx, zy = self:GetZonePos(mId, wx, wy)
+    local level = map.DungeonLevel
+    Nx.Notes:AddNote("?", mId, zx, zy, level)
 end
 
-function Nx.Notes:AddNote (name, id, x, y, level)
-		Nx.Notes:Record ("Note", name, id, x, y, level)
+---
+-- Add a note at the specified location
+-- @param name   Note name
+-- @param id     Map ID
+-- @param x      X coordinate
+-- @param y      Y coordinate
+-- @param level  Dungeon level (optional)
+--
+function Nx.Notes:AddNote(name, id, x, y, level)
+    Nx.Notes:Record("Note", name, id, x, y, level)
 end
 
-function Nx.Notes:AddonNote(folder,name,icon,id,x,y)
-	if not addonNotes[folder] then
-		addonNotes[folder] = {}
-		addonNotes[folder]["notes"] = {}
-	end
-	addonNotes[folder]["notes"][name] = icon .. "|" .. id .. "|" .. x .. "|" .. y
+---
+-- Register a note from another addon
+-- @param folder  Folder name for the addon
+-- @param name    Note name
+-- @param icon    Icon index
+-- @param id      Map ID
+-- @param x       X coordinate
+-- @param y       Y coordinate
+--
+function Nx.Notes:AddonNote(folder, name, icon, id, x, y)
+    if not addonNotes[folder] then
+        addonNotes[folder] = {}
+        addonNotes[folder]["notes"] = {}
+    end
+    addonNotes[folder]["notes"][name] = icon .. "|" .. id .. "|" .. x .. "|" .. y
 end
--- Nx.Notes:AddonNote("Test2","Test",4,301,33.3,33.3)
----------------------------------------------------------------------------------------
--- EOF
+
+-------------------------------------------------------------------------------
+-- END OF FILE
+-------------------------------------------------------------------------------

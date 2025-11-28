@@ -1,8 +1,7 @@
----------------------------------------------------------------------------------------
--- NxOptions - Options
+-------------------------------------------------------------------------------
+-- NxOptions - Options Configuration
 -- Copyright 2007-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,290 +17,362 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
--- Tables
+-- LIBRARY IMPORTS
+-- Ace3 configuration libraries for options panel
+-------------------------------------------------------------------------------
 
-local AceConfig 	= LibStub("AceConfig-3.0")
-local AceConfigReg 	= LibStub("AceConfigRegistry-3.0")
-local AceConfigDialog 	= LibStub("AceConfigDialog-3.0")
+local AceConfig         = LibStub("AceConfig-3.0")
+local AceConfigReg      = LibStub("AceConfigRegistry-3.0")
+local AceConfigDialog   = LibStub("AceConfigDialog-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
+-- Configuration tables for modular addon support
 local modular_config = {}
 
+-- Profiles configuration table (lazy initialized)
 local profiles
 
+-------------------------------------------------------------------------------
+-- PROFILE CONFIGURATION
+-- Manages AceDB profile options for Carbonite and modules
+-------------------------------------------------------------------------------
+
+---
+-- Get or create the profiles configuration table
+-- @return  Profiles options table for AceConfig
+--
 local function profilesConfig()
-	if not profiles then
-		profiles = {
-			type = "group",
-			name = L["Profiles"],
-			childGroups	= "tab",
-			args = {
-				main = {
-					type = "group",
-					name = L["Main"],
-					order = 1,
-					args = {},
-				},
-			},
-		}
-	end
-	profiles.args.main.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Nx.db)
-	return profiles
+    if not profiles then
+        profiles = {
+            type = "group",
+            name = L["Profiles"],
+            childGroups = "tab",
+            args = {
+                main = {
+                    type = "group",
+                    name = L["Main"],
+                    order = 1,
+                    args = {},
+                },
+            },
+        }
+    end
+    profiles.args.main.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Nx.db)
+    return profiles
 end
 
-function Nx.Opts:AddToProfileMenu(ProfileName,ProfileOrder,ProfileDB)
-	if not profiles then
-		return
-	end
-	profiles.args[ProfileName] = {
-		type = "group",
-		name = ProfileName,
-		order = ProfileOrder,
-		args = {},
-	}
-	profiles.args[ProfileName].args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(ProfileDB)
+---
+-- Add a module's profile options to the profile menu
+-- @param ProfileName   Display name for the profile tab
+-- @param ProfileOrder  Order in the tab list
+-- @param ProfileDB     AceDB database for the module
+--
+function Nx.Opts:AddToProfileMenu(ProfileName, ProfileOrder, ProfileDB)
+    if not profiles then
+        return
+    end
+    profiles.args[ProfileName] = {
+        type = "group",
+        name = ProfileName,
+        order = ProfileOrder,
+        args = {},
+    }
+    profiles.args[ProfileName].args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(ProfileDB)
 end
 
+-------------------------------------------------------------------------------
+-- MAIN CONFIGURATION
+-- Root configuration table with addon info and credits
+-------------------------------------------------------------------------------
+
+-- Main config table (lazy initialized)
 local config
 
+---
+-- Get or create the main configuration table
+-- Includes addon info, credits, and all sub-modules
+-- @return  Main options table for AceConfig
+--
 local function mainConfig()
-	if not config then
-		config = {
-			type = "group",
-			name = "Carbonite Classic",
-			args = {
-				main = {
-					order = 1,
-					type = "group",
-					name = L["Main Options"],
-					args = {
-						title = {
-							type = "description",
-							name = L["\nCarbonite is a full featured, powerful map addon providing a versitile easy to use google style map which either can replace or work with the current blizzard maps.\n\nThrough modules it can also be expanded to do even more to help make your game easier."] ..
-								"\n\n\n|cff9999ff" .. L["Release Version"] .. ": |cffd700ff" .. Nx.VERMAJOR .. "." .. (Nx.VERMINOR*10) .. " Build " .. Nx.BUILD .. "\n" ..
-								"|cff9999ff" .. L["Maintained by"] .. ": |cffd700ffIrcDirk\n" ..
-								"|cff9999ff" .. L["Website"] .. ": |cffd700ffhttps://github.com/IrcDirk/Carbonite-Classic\n"..
-								"\n"..
-								"|cd700ffff" .. L["For support, please visit the forums for Carbonite on WoW Interface or Curse/Twitch."] .. "\n"..
-								"|cd700ffff" .. L["Special thanks to"] .. ": \n\n"..
-								"|cff9999ff" .. L["Rythal for hard work in all those years"] .. "\n" ..
-								"|cff9999ff" .. L["Cirax for Carbonite2 Logo"] .. "\n" ..
-								"|cff9999ff" .. L["ircdirk & atl77 for Quest Database updates"] .. "\n" ..
-								"|cff9999ff" .. L["nelegalno for many cleanups, api fixes"] .. "\n" ..
-								"|cff9999ff" .. L["Naharis for quest watchlist fixes"] .. "\n" ..
-								"|cff9999ff" .. L["JimJoBlue for guide location updates"] .. "\n" ..
-								"|cff9999ff" .. L["Localization Efforts By:"] .. "\n" ..
-								"|cff9999ff" .. L["frFR - powerstrk"] .. "\n" ..
-								"|cff9999ff" .. L["deDE - atl77 & samyonair"] .. "\n" ..
-								"|cff9999ff" .. L["itIT - ThorwaldOdin"] .. "\n" ..
-								"|cff9999ff" .. L["ruRU - NotDead"] .. "\n" ..
-								"|cff9999ff" .. L["zhCN - Raka-loah"] .. "\n" ..
-								"|cff9999ff" .. L["zhTW - kc305chen"] .. "\n",
-						},
-					},
-				},
-			},
-		}
-		for k, v in pairs(modular_config) do
-			config.args[k] = (type(v) == "function") and v() or v
-		end
-	end
-  return config
+    if not config then
+        config = {
+            type = "group",
+            name = "Carbonite Classic",
+            args = {
+                main = {
+                    order = 1,
+                    type = "group",
+                    name = L["Main Options"],
+                    args = {
+                        -- Addon description and credits display
+                        title = {
+                            type = "description",
+                            name = L["\nCarbonite is a full featured, powerful map addon providing a versitile easy to use google style map which either can replace or work with the current blizzard maps.\n\nThrough modules it can also be expanded to do even more to help make your game easier."] ..
+                                "\n\n\n|cff9999ff" .. L["Release Version"] .. ": |cffd700ff" .. Nx.VERMAJOR .. "." .. (Nx.VERMINOR * 10) .. " Build " .. Nx.BUILD .. "\n" ..
+                                "|cff9999ff" .. L["Maintained by"] .. ": |cffd700ffIrcDirk\n" ..
+                                "|cff9999ff" .. L["Website"] .. ": |cffd700ffhttps://github.com/IrcDirk/Carbonite-Classic\n" ..
+                                "\n" ..
+                                "|cd700ffff" .. L["For support, please visit the forums for Carbonite on WoW Interface or Curse/Twitch."] .. "\n" ..
+                                "|cd700ffff" .. L["Special thanks to"] .. ": \n\n" ..
+                                "|cff9999ff" .. L["Rythal for hard work in all those years"] .. "\n" ..
+                                "|cff9999ff" .. L["Cirax for Carbonite2 Logo"] .. "\n" ..
+                                "|cff9999ff" .. L["ircdirk & atl77 for Quest Database updates"] .. "\n" ..
+                                "|cff9999ff" .. L["nelegalno for many cleanups, api fixes"] .. "\n" ..
+                                "|cff9999ff" .. L["Naharis for quest watchlist fixes"] .. "\n" ..
+                                "|cff9999ff" .. L["JimJoBlue for guide location updates"] .. "\n" ..
+                                "|cff9999ff" .. L["Localization Efforts By:"] .. "\n" ..
+                                "|cff9999ff" .. L["frFR - powerstrk"] .. "\n" ..
+                                "|cff9999ff" .. L["deDE - atl77 & samyonair"] .. "\n" ..
+                                "|cff9999ff" .. L["itIT - ThorwaldOdin"] .. "\n" ..
+                                "|cff9999ff" .. L["ruRU - NotDead"] .. "\n" ..
+                                "|cff9999ff" .. L["zhCN - Raka-loah"] .. "\n" ..
+                                "|cff9999ff" .. L["zhTW - kc305chen"] .. "\n",
+                        },
+                    },
+                },
+            },
+        }
+        -- Merge in modular addon configurations
+        for k, v in pairs(modular_config) do
+            config.args[k] = (type(v) == "function") and v() or v
+        end
+    end
+    return config
 end
+
+-------------------------------------------------------------------------------
+-- BATTLEGROUND OPTIONS
+-------------------------------------------------------------------------------
 
 local battlegrounds
+
+---
+-- Get or create battleground options configuration
+-- @return  Battleground options table
+--
 local function BGConfig()
-	if not battlegrounds then
-		battlegrounds = {
-			type = "group",
-			name = L["Battlegrounds"],
-			args = {
-				bgstats = {
-					type = "toggle",
-					name = L["Show Battleground Stats"],
-					width = "full",
-					desc = L["Turns on or off displaying your battleground k/d and honor gained in chat during a match."],
-					get = function()
-						return Nx.db.profile.Battleground.ShowStats
-					end,
-					set = function()
-						Nx.db.profile.Battleground.ShowStats = not Nx.db.profile.Battleground.ShowStats
-					end,
-				},
-			},
-		}
-	end
-	return battlegrounds
+    if not battlegrounds then
+        battlegrounds = {
+            type = "group",
+            name = L["Battlegrounds"],
+            args = {
+                bgstats = {
+                    type = "toggle",
+                    name = L["Show Battleground Stats"],
+                    width = "full",
+                    desc = L["Turns on or off displaying your battleground k/d and honor gained in chat during a match."],
+                    get = function()
+                        return Nx.db.profile.Battleground.ShowStats
+                    end,
+                    set = function()
+                        Nx.db.profile.Battleground.ShowStats = not Nx.db.profile.Battleground.ShowStats
+                    end,
+                },
+            },
+        }
+    end
+    return battlegrounds
 end
+
+-------------------------------------------------------------------------------
+-- GENERAL OPTIONS
+-- Login behavior, chat settings, camera, UI appearance
+-------------------------------------------------------------------------------
 
 local general
+
+---
+-- Get or create general options configuration
+-- @return  General options table
+--
 local function generalOptions()
-	if not general then
-		general = {
-			type = "group",
-			name = L["General Options"],
-			args = {
-				loginMsg = {
-					order = 1,
-					type = "toggle",
-					width = "full",
-					name = L["Show Login Message"],
-					desc = L["When Enabled, displays the Carbonite loading messages in chat."],
-					get = function()
-						return Nx.db.profile.General.LoginHideVer
-					end,
-					set = function()
-						Nx.db.profile.General.LoginHideVer = not Nx.db.profile.General.LoginHideVer
-					end,
-				},
-				loginWin = {
-					order = 2,
-					type = "toggle",
-					width = "full",
-					name = L["Show Login Graphic"],
-					desc = L["When Enabled, displays the Carbonite graphic during initialization."] .. "\n",
-					get = function()
-						return Nx.db.profile.General.TitleOff
-					end,
-					set = function()
-						Nx.db.profile.General.TitleOff = not Nx.db.profile.General.TitleOff
-					end,
-				},
-				loginSnd = {
-					order = 3,
-					type = "toggle",
-					width = "full",
-					name = L["Play Login Sound"],
-					desc = L["When Enabled, plays a sound when Carbonite is loaded."],
-					get = function()
-						return Nx.db.profile.General.TitleSoundOn
-					end,
-					set = function()
-						Nx.db.profile.General.TitleSoundOn = not Nx.db.profile.General.TitleSoundOn
-					end,
-				},
-				spacer1 = {
-					order = 4,
-					type = "description",
-					name = "\n",
-				},
-				chatWindow = {
-					order = 5,
-					type = "select",
-					name = L["Default Chat Channel"],
-					desc = L["Allows selection of which chat window to display Carbonite messages"],
-					get	= function()
-						local vals = Nx.Opts:CalcChoices("Chat")
-						for a,b in pairs(vals) do
-							if (b == Nx.db.profile.General.ChatMsgFrm) then
-								return a
-							end
-						end
-						return ""
-					end,
-					set	= function(info, name)
-						local vals = Nx.Opts:CalcChoices("Chat")
-						Nx.db.profile.General.ChatMsgFrm = vals[name]
-						Nx.Opts:NXCmdUIChange()
-					end,
-					values	= function()
-						return Nx.Opts:CalcChoices("Chat")
-					end,
-				},
-				spacer2 = {
-					order = 6,
-					type = "description",
-					name = "\n",
-				},
-				maxCamera = {
-					order = 7,
-					type = "toggle",
-					width = "full",
-					name = L["Force Max Camera Distance"] .. "\n",
-					desc = L["When enabled, sets the max camera distance higher then Blizzards options normally allows."],
-					get = function()
-						return Nx.db.profile.General.CameraForceMaxDist
-					end,
-					set = function()
-						Nx.db.profile.General.CameraForceMaxDist = not Nx.db.profile.General.CameraForceMaxDist
-						Nx.Opts:NXCmdCamForceMaxDist()
-					end,
-				},
-				hideGriff = {
-					order = 8,
-					type = "toggle",
-					width = "full",
-					name = L["Hide Action Bar Gryphon Graphics"],
-					desc = L["Attempts to hide the two gryphons on your action bar."],
-					get = function()
-						return Nx.db.profile.General.GryphonsHide
-					end,
-					set = function()
-						Nx.db.profile.General.GryphonsHide = not Nx.db.profile.General.GryphonsHide
-						Nx.Opts:NXCmdGryphonsUpdate()
-					end,
-				},
-			},
-		}
-	end
-	return general
+    if not general then
+        general = {
+            type = "group",
+            name = L["General Options"],
+            args = {
+                -- Login message toggle
+                loginMsg = {
+                    order = 1,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Show Login Message"],
+                    desc = L["When Enabled, displays the Carbonite loading messages in chat."],
+                    get = function()
+                        return Nx.db.profile.General.LoginHideVer
+                    end,
+                    set = function()
+                        Nx.db.profile.General.LoginHideVer = not Nx.db.profile.General.LoginHideVer
+                    end,
+                },
+                -- Login graphic toggle
+                loginWin = {
+                    order = 2,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Show Login Graphic"],
+                    desc = L["When Enabled, displays the Carbonite graphic during initialization."] .. "\n",
+                    get = function()
+                        return Nx.db.profile.General.TitleOff
+                    end,
+                    set = function()
+                        Nx.db.profile.General.TitleOff = not Nx.db.profile.General.TitleOff
+                    end,
+                },
+                -- Login sound toggle
+                loginSnd = {
+                    order = 3,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Play Login Sound"],
+                    desc = L["When Enabled, plays a sound when Carbonite is loaded."],
+                    get = function()
+                        return Nx.db.profile.General.TitleSoundOn
+                    end,
+                    set = function()
+                        Nx.db.profile.General.TitleSoundOn = not Nx.db.profile.General.TitleSoundOn
+                    end,
+                },
+                spacer1 = {
+                    order = 4,
+                    type = "description",
+                    name = "\n",
+                },
+                -- Chat window selection
+                chatWindow = {
+                    order = 5,
+                    type = "select",
+                    name = L["Default Chat Channel"],
+                    desc = L["Allows selection of which chat window to display Carbonite messages"],
+                    get = function()
+                        local vals = Nx.Opts:CalcChoices("Chat")
+                        for a, b in pairs(vals) do
+                            if (b == Nx.db.profile.General.ChatMsgFrm) then
+                                return a
+                            end
+                        end
+                        return ""
+                    end,
+                    set = function(info, name)
+                        local vals = Nx.Opts:CalcChoices("Chat")
+                        Nx.db.profile.General.ChatMsgFrm = vals[name]
+                        Nx.Opts:NXCmdUIChange()
+                    end,
+                    values = function()
+                        return Nx.Opts:CalcChoices("Chat")
+                    end,
+                },
+                spacer2 = {
+                    order = 6,
+                    type = "description",
+                    name = "\n",
+                },
+                -- Camera distance override
+                maxCamera = {
+                    order = 7,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Force Max Camera Distance"] .. "\n",
+                    desc = L["When enabled, sets the max camera distance higher then Blizzards options normally allows."],
+                    get = function()
+                        return Nx.db.profile.General.CameraForceMaxDist
+                    end,
+                    set = function()
+                        Nx.db.profile.General.CameraForceMaxDist = not Nx.db.profile.General.CameraForceMaxDist
+                        Nx.Opts:NXCmdCamForceMaxDist()
+                    end,
+                },
+                -- Gryphon graphics toggle
+                hideGriff = {
+                    order = 8,
+                    type = "toggle",
+                    width = "full",
+                    name = L["Hide Action Bar Gryphon Graphics"],
+                    desc = L["Attempts to hide the two gryphons on your action bar."],
+                    get = function()
+                        return Nx.db.profile.General.GryphonsHide
+                    end,
+                    set = function()
+                        Nx.db.profile.General.GryphonsHide = not Nx.db.profile.General.GryphonsHide
+                        Nx.Opts:NXCmdGryphonsUpdate()
+                    end,
+                },
+            },
+        }
+    end
+    return general
 end
 
+-------------------------------------------------------------------------------
+-- MAP OPTIONS
+-- Main map display, behavior, tooltips, icons, mouse bindings
+-------------------------------------------------------------------------------
+
 local map
-local function mapConfig ()
-	if not map then
-		map = {
-			type = "group",
-			name = L["Map Options"],
-			childGroups	= "tab",
-			args = {
-				mainMap = {
-					order = 1,
-					type = "group",
-					name = L["Map Options"],
-					args = {
-						maxMap = {
-							order = 1,
-							type = "toggle",
-							width = "full",
-							name = L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] .. "\n",
-							desc = L["When enabled, pressing 'M' will maximize the carbonite map instead of opening the world map."],
-							get = function()
-								return Nx.db.profile.Map.MaxOverride
-							end,
-							set = function()
-								Nx.db.profile.Map.MaxOverride = not Nx.db.profile.Map.MaxOverride
-							end,
-						},
-						Compatibility = {
-							order = 2,
-							type = "toggle",
-							width = "full",
-							name = L["Enable Combat Compatibility Mode"],
-							desc = L["When Enabled, Carbonite will performe combat checks before any map/window functions. This eliminates other UI's from causing protected mode errors."],
-							get = function()
-								return Nx.db.profile.Map.Compatibility
-							end,
-							set = function()
-								Nx.db.profile.Map.Compatibility = not Nx.db.profile.Map.Compatibility
-							end,
-						},
-						hidecombat = {
-							order = 3,
-							type = "toggle",
-							width = "full",
-							name = L["Hide Map In Combat"],
-							desc = L["If large map is open when you enter combat attempts to hide it."],
-							get = function()
-								return Nx.db.profile.Map.HideCombat
-							end,
-							set = function()
-								Nx.db.profile.Map.HideCombat = not Nx.db.profile.Map.HideCombat
-							end,
-						},
+
+---
+-- Get or create map options configuration
+-- Contains tabs for: Main Map, Minimap, Button Frame, Icons
+-- @return  Map options table
+--
+local function mapConfig()
+    if not map then
+        map = {
+            type = "group",
+            name = L["Map Options"],
+            childGroups = "tab",
+            args = {
+                -- Main map options tab
+                mainMap = {
+                    order = 1,
+                    type = "group",
+                    name = L["Map Options"],
+                    args = {
+                        -- Use Carbonite instead of Blizzard map
+                        maxMap = {
+                            order = 1,
+                            type = "toggle",
+                            width = "full",
+                            name = L["Use Carbonite Map instead of Blizzards (Alt-M will open world map)"] .. "\n",
+                            desc = L["When enabled, pressing 'M' will maximize the carbonite map instead of opening the world map."],
+                            get = function()
+                                return Nx.db.profile.Map.MaxOverride
+                            end,
+                            set = function()
+                                Nx.db.profile.Map.MaxOverride = not Nx.db.profile.Map.MaxOverride
+                            end,
+                        },
+                        -- Combat compatibility mode
+                        Compatibility = {
+                            order = 2,
+                            type = "toggle",
+                            width = "full",
+                            name = L["Enable Combat Compatibility Mode"],
+                            desc = L["When Enabled, Carbonite will performe combat checks before any map/window functions. This eliminates other UI's from causing protected mode errors."],
+                            get = function()
+                                return Nx.db.profile.Map.Compatibility
+                            end,
+                            set = function()
+                                Nx.db.profile.Map.Compatibility = not Nx.db.profile.Map.Compatibility
+                            end,
+                        },
+                        -- Hide map in combat
+                        hidecombat = {
+                            order = 3,
+                            type = "toggle",
+                            width = "full",
+                            name = L["Hide Map In Combat"],
+                            desc = L["If large map is open when you enter combat attempts to hide it."],
+                            get = function()
+                                return Nx.db.profile.Map.HideCombat
+                            end,
+                            set = function()
+                                Nx.db.profile.Map.HideCombat = not Nx.db.profile.Map.HideCombat
+                            end,
+                        },
 						centerMap = {
 							order = 4,
 							type = "toggle",
@@ -1508,13 +1579,23 @@ local function mapConfig ()
 	return map
 end
 
+-------------------------------------------------------------------------------
+-- FONT OPTIONS
+-- Font face, size, and spacing settings for UI text
+-------------------------------------------------------------------------------
+
 local font
+
+---
+-- Get or create font options configuration
+-- @return  Font options table
+--
 local function fontConfig()
-	if not font then
-		font = {
-			type = "group",
-			name = L["Font Options"],
-			args = {
+    if not font then
+        font = {
+            type = "group",
+            name = L["Font Options"],
+            args = {
 				SmallFont = {
 					order = 1,
 					type = "select",
@@ -1816,14 +1897,24 @@ local function fontConfig()
 	return font
 end
 
+-------------------------------------------------------------------------------
+-- GUIDE AND GATHER OPTIONS
+-- Vendor recording, gathering node settings, and data import/export
+-------------------------------------------------------------------------------
+
 local guidegather
-local function guidegatherConfig ()
-	if not guidegather then
-		guidegather = {
-			type = "group",
-			name = L["Guide Options"],
-			childGroups	= "tab",
-			args = {
+
+---
+-- Get or create guide and gather options configuration
+-- @return  Guide/Gather options table
+--
+local function guidegatherConfig()
+    if not guidegather then
+        guidegather = {
+            type = "group",
+            name = L["Guide Options"],
+            childGroups = "tab",
+            args = {
 				guideOpts = {
 					order = 1,
 					type = "group",
@@ -3869,14 +3960,23 @@ local function guidegatherConfig ()
 	return guidegather
 end
 
+-------------------------------------------------------------------------------
+-- MENU OPTIONS
+-- Context menu positioning settings
+-------------------------------------------------------------------------------
+
 local menuoptions
 
+---
+-- Get or create menu options configuration
+-- @return  Menu options table
+--
 local function menuConfig()
-	if not menuoptions then
-		menuoptions = {
-			type = "group",
-			name = L["Menu Options"],
-			args = {
+    if not menuoptions then
+        menuoptions = {
+            type = "group",
+            name = L["Menu Options"],
+            args = {
 				menuCenterX = {
 					order = 1,
 					type = "toggle",
@@ -3909,13 +4009,23 @@ local function menuConfig()
 	return menuoptions
 end
 
+-------------------------------------------------------------------------------
+-- COMMUNICATION/PRIVACY OPTIONS
+-- Settings for sharing position with friends/guild
+-------------------------------------------------------------------------------
+
 local commoptions
+
+---
+-- Get or create communication options configuration
+-- @return  Communication options table
+--
 local function commConfig()
-	if not commoptions then
-		commoptions = {
-			type = "group",
-			name = L["Privacy Options"],
-			args = {
+    if not commoptions then
+        commoptions = {
+            type = "group",
+            name = L["Privacy Options"],
+            args = {
 				commLTF = {
 					order = 1,
 					type = "toggle",
@@ -4001,12 +4111,22 @@ local function commConfig()
 	return commoptions
 end
 
+-------------------------------------------------------------------------------
+-- SKIN OPTIONS
+-- Window theme, border color, and background color settings
+-------------------------------------------------------------------------------
+
 local skinoptions
+
+---
+-- Get or create skin options configuration
+-- @return  Skin options table
+--
 local function skinConfig()
-	if not skinoptions then
-		skinoptions = {
-			type = "group",
-			name = L["Skin Options"],
+    if not skinoptions then
+        skinoptions = {
+            type = "group",
+            name = L["Skin Options"],
 			args = {
 				SkinSelect = {
 					order = 1,
@@ -4098,14 +4218,23 @@ local function skinConfig()
 	return skinoptions
 end
 
+-------------------------------------------------------------------------------
+-- TRACKING HUD OPTIONS
+-- Waypoint arrow and HUD display settings
+-------------------------------------------------------------------------------
+
 local trackoptions
 
+---
+-- Get or create tracking HUD options configuration
+-- @return  Tracking options table
+--
 local function trackConfig()
-	if not trackoptions then
-		trackoptions = {
-			type = "group",
-			name = L["Tracking Options"],
-			args = {
+    if not trackoptions then
+        trackoptions = {
+            type = "group",
+            name = L["Tracking Options"],
+            args = {
 				hideHUD = {
 					order = 1,
 					type = "toggle",
@@ -4382,53 +4511,74 @@ function Nx:SetupConfig()
 	AceConfig:RegisterOptionsTable("Carbonite", mainConfig)
 	Nx.optionsFrame = AceConfigDialog:AddToBlizOptions("Carbonite", "Carbonite",nil,"main")
 	Nx:AddToConfig("General",generalOptions(),L["General"])
-	Nx:AddToConfig("Battlegrounds", BGConfig(), L["Battlegrounds"])
-	Nx:AddToConfig("Fonts",fontConfig(),L["Fonts"])
-	Nx:AddToConfig("Guide & Gather", guidegatherConfig(),L["Guide & Gather"])
-	Nx:AddToConfig("Maps",mapConfig(),L["Maps"])
-	Nx:AddToConfig("Menus",menuConfig(),L["Menus"])
-	Nx:AddToConfig("Privacy",commConfig(),L["Privacy"])
-	Nx:AddToConfig("Profiles",profilesConfig(),L["Profiles"])
-	Nx:AddToConfig("Skin",skinConfig(),L["Skin"])
-	Nx:AddToConfig("Tracking HUD",trackConfig(),L["Tracking HUD"])
+    -- Register all config sections with Blizzard options
+    Nx:AddToConfig("Battlegrounds", BGConfig(), L["Battlegrounds"])
+    Nx:AddToConfig("Fonts", fontConfig(), L["Fonts"])
+    Nx:AddToConfig("Guide & Gather", guidegatherConfig(), L["Guide & Gather"])
+    Nx:AddToConfig("Maps", mapConfig(), L["Maps"])
+    Nx:AddToConfig("Menus", menuConfig(), L["Menus"])
+    Nx:AddToConfig("Privacy", commConfig(), L["Privacy"])
+    Nx:AddToConfig("Profiles", profilesConfig(), L["Profiles"])
+    Nx:AddToConfig("Skin", skinConfig(), L["Skin"])
+    Nx:AddToConfig("Tracking HUD", trackConfig(), L["Tracking HUD"])
 end
 
+---
+-- Add a configuration table to Blizzard options
+-- @param name          Internal config name
+-- @param optionsTable  AceConfig options table
+-- @param displayName   Display name in options panel
+--
 function Nx:AddToConfig(name, optionsTable, displayName)
-	modular_config[name] = optionsTable
-	Nx.optionsFrame[name] = AceConfigDialog:AddToBlizOptions("Carbonite", displayName, "Carbonite", name)
+    modular_config[name] = optionsTable
+    Nx.optionsFrame[name] = AceConfigDialog:AddToBlizOptions("Carbonite", displayName, "Carbonite", name)
 end
 
+---
+-- Get profiles options table
+-- @return  AceDBOptions profiles table
+--
 local function giveProfiles()
-	return LibStub("AceDBOptions-3.0"):GetOptionsTable(Nx.db)
+    return LibStub("AceDBOptions-3.0"):GetOptionsTable(Nx.db)
 end
+
+-------------------------------------------------------------------------------
+-- SOUND DATA
+-- Sound file paths for notifications
+-------------------------------------------------------------------------------
 
 Nx.OptsDataSounds = {
-	"Interface\\AddOns\\Carbonite\\Snd\\QuestComplete.ogg",
-	"Sound\\Creature\\Peon\\PeonBuildingComplete1.ogg",
-	"Sound\\Character\\Scourge\\ScourgeVocalMale\\UndeadMaleCongratulations02.ogg",
-	"Sound\\Character\\Human\\HumanVocalFemale\\HumanFemaleCongratulations01.ogg",
-	"Sound\\Character\\Dwarf\\DwarfVocalMale\\DwarfMaleCongratulations04.ogg",
-	"Sound\\Character\\Gnome\\GnomeVocalMale\\GnomeMaleCongratulations03.ogg",
-	"Sound\\Creature\\Tauren\\TaurenYes3.ogg",
-	"Sound\\Creature\\UndeadMaleWarriorNPC\\UndeadMaleWarriorNPCGreeting01.ogg",
+    "Interface\\AddOns\\Carbonite\\Snd\\QuestComplete.ogg",
+    "Sound\\Creature\\Peon\\PeonBuildingComplete1.ogg",
+    "Sound\\Character\\Scourge\\ScourgeVocalMale\\UndeadMaleCongratulations02.ogg",
+    "Sound\\Character\\Human\\HumanVocalFemale\\HumanFemaleCongratulations01.ogg",
+    "Sound\\Character\\Dwarf\\DwarfVocalMale\\DwarfMaleCongratulations04.ogg",
+    "Sound\\Character\\Gnome\\GnomeVocalMale\\GnomeMaleCongratulations03.ogg",
+    "Sound\\Creature\\Tauren\\TaurenYes3.ogg",
+    "Sound\\Creature\\UndeadMaleWarriorNPC\\UndeadMaleWarriorNPCGreeting01.ogg",
 }
 
+-- Sound file IDs for modern WoW sound system
 Nx.OptsDataSoundsIDs = {
-	"Interface\\AddOns\\Carbonite\\Snd\\QuestComplete.ogg", -- Interface so no conversion needed
-	558132,
-	542775,
-	540654,
-	540042,
-	540512,
-	561484,
-	563198,
+    "Interface\\AddOns\\Carbonite\\Snd\\QuestComplete.ogg",  -- Interface path, no conversion needed
+    558132,
+    542775,
+    540654,
+    540042,
+    540512,
+    561484,
+    563198,
 }
 
 -------------------------------------------------------------------------------
+-- OPTIONS INITIALIZATION
+-- Setup and initialization functions
+-------------------------------------------------------------------------------
 
---------
--- Init options data. Called before UI init
-
+---
+-- Initialize options data
+-- Called before UI init to set up choice tables
+--
 function Nx.Opts:Init()
 
 	self.ChoicesAnchor = {
@@ -4591,57 +4741,75 @@ function Nx.Opts:Create()
 	self:Update()
 end
 
---------
+-------------------------------------------------------------------------------
+-- COMMAND FUNCTIONS
+-- Functions called when options are changed
+-------------------------------------------------------------------------------
 
+---
+-- Import favorites from Cartographer addon
+--
 function Nx.Opts:NXCmdFavCartImport()
-	Nx.Notes:CartImportNotes()
+    Nx.Notes:CartImportNotes()
 end
 
+---
+-- Apply font changes to all UI elements
+--
 function Nx.Opts:NXCmdFontChange()
-	Nx.Font:Update()
+    Nx.Font:Update()
 end
 
+---
+-- Apply camera distance override if enabled
+--
 function Nx.Opts:NXCmdCamForceMaxDist()
-
---	Nx.prt ("Cam %s", GetCVar ("cameraDistanceMaxFactor"))
-
-	if Nx.db.profile.General.CameraForceMaxDist then
-		SetCVar ("cameraDistanceMaxZoomFactor", 2.6)
-	end
+    if Nx.db.profile.General.CameraForceMaxDist then
+        SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+    end
 end
 
+---
+-- Show or hide action bar gryphon graphics
+--
 function Nx.Opts:NXCmdGryphonsUpdate()
-	if Nx.db.profile.General.GryphonsHide then
-		MainMenuBarLeftEndCap:Hide()
-		MainMenuBarRightEndCap:Hide()
-	else
-		MainMenuBarLeftEndCap:Show()
-		MainMenuBarRightEndCap:Show()
-	end
+    if Nx.db.profile.General.GryphonsHide then
+        MainMenuBarLeftEndCap:Hide()
+        MainMenuBarRightEndCap:Hide()
+    else
+        MainMenuBarLeftEndCap:Show()
+        MainMenuBarRightEndCap:Show()
+    end
 end
 
+---
+-- Delete all herbalism gather locations (with confirmation)
+--
 function Nx.Opts:NXCmdDeleteHerb()
-
-	local function func()
-		Nx:GatherDeleteHerb()
-	end
-	Nx:ShowMessage (L["Delete Herbalism Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
+    local function func()
+        Nx:GatherDeleteHerb()
+    end
+    Nx:ShowMessage(L["Delete Herbalism Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
 end
 
+---
+-- Delete all mining gather locations (with confirmation)
+--
 function Nx.Opts:NXCmdDeleteMine()
-
-	local function func()
-		Nx:GatherDeleteMine()
-	end
-	Nx:ShowMessage (L["Delete Mining Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
+    local function func()
+        Nx:GatherDeleteMine()
+    end
+    Nx:ShowMessage(L["Delete Mining Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
 end
 
+---
+-- Delete all misc gather locations (with confirmation)
+--
 function Nx.Opts:NXCmdDeleteMisc()
-
-	local function func()
-		Nx:GatherDeleteMisc()
-	end
-	Nx:ShowMessage (L["Delete Misc Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
+    local function func()
+        Nx:GatherDeleteMisc()
+    end
+    Nx:ShowMessage(L["Delete Misc Gather Locations"] .. "?", L["Delete"], func, L["Cancel"])
 end
 
 function Nx.Opts:NXCmdImportCarbHerb()
@@ -4906,9 +5074,15 @@ function Nx.Opts:OnListEvent (eventName, sel, val2)
 	self:Update()
 end
 
---------
--- Update options
+-------------------------------------------------------------------------------
+-- LIST UPDATE FUNCTIONS
+-- Update options list display
+-------------------------------------------------------------------------------
 
+---
+-- Update the options list display
+-- Refreshes list items based on current page selection
+--
 function Nx.Opts:Update()
 
 	local opts = self.Opts
@@ -5123,10 +5297,19 @@ function Nx.Opts.EditSAccept (str, item)
 	end
 end
 
---------
--- Calc
+-------------------------------------------------------------------------------
+-- CHOICE CALCULATION
+-- Get available choices for dropdown options
+-------------------------------------------------------------------------------
 
-function Nx.Opts:CalcChoices (name, mode, val)
+---
+-- Calculate available choices for a dropdown option
+-- @param name  Choice type (FontFace, Skins, Anchor, etc.)
+-- @param mode  Operation mode (Inc, Get)
+-- @param val   Current value (for increment mode)
+-- @return      Table of choices or single value
+--
+function Nx.Opts:CalcChoices(name, mode, val)
 
 	if name == "FontFace" then
 
@@ -5186,10 +5369,17 @@ function Nx.Opts:CalcChoices (name, mode, val)
 	end
 end
 
---------
--- Parse var
+-------------------------------------------------------------------------------
+-- VARIABLE PARSING AND ACCESS
+-- Parse, get, and set option variables
+-------------------------------------------------------------------------------
 
-function Nx.Opts:ParseVar (varName)
+---
+-- Parse a variable definition string
+-- @param varName  Variable name
+-- @return         Type, value state, texture (for buttons)
+--
+function Nx.Opts:ParseVar(varName)
 
 	local data = Nx.OptsVars[varName]
 	local scope, typ, val, a1 = Nx.Split ("~", data)
@@ -5234,10 +5424,12 @@ function Nx.Opts:ParseVar (varName)
 	return typ
 end
 
---------
--- Get
-
-function Nx.Opts:GetVar (varName)
+---
+-- Get a variable value
+-- @param varName  Variable name
+-- @return         Current value
+--
+function Nx.Opts:GetVar(varName)
 
 	local data = Nx.OptsVars[varName]
 	if data then
@@ -5258,10 +5450,12 @@ function Nx.Opts:GetVar (varName)
 	end
 end
 
---------
--- Set
-
-function Nx.Opts:SetVar (varName, val)
+---
+-- Set a variable value
+-- @param varName  Variable name
+-- @param val      New value
+--
+function Nx.Opts:SetVar(varName, val)
 
 --	Nx.prtVar ("Set " .. varName, val)
 
@@ -5303,4 +5497,5 @@ function Nx.Opts:SetVar (varName, val)
 end
 
 -------------------------------------------------------------------------------
--- EOF
+-- END OF FILE
+-------------------------------------------------------------------------------

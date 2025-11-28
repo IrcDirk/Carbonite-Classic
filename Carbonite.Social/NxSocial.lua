@@ -1,8 +1,7 @@
----------------------------------------------------------------------------------------
--- NxSocial - Social Window (friends, guild)
+-------------------------------------------------------------------------------
+-- NxSocial - Social Window (Friends, Guild, Punks)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,103 +17,141 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
--- Init
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- MODULE INITIALIZATION
+-------------------------------------------------------------------------------
 
 local _G = getfenv(0)
 
-Nx.VERSIONSOCIAL		= .2				-- Social data
-Nx.Social = {}
-Nx.Social.List = {}
-Nx.Social.PunksHUD = {}
-Nx.Social.TeamHUD = {}
-Nx.Social.Cols = {}
+-- Version and module namespaces
+Nx.VERSIONSOCIAL = .2                   -- Social data version
 
+-- Module namespaces
+Nx.Social = {}                          -- Main social module
+Nx.Social.List = {}                     -- Social list management
+Nx.Social.PunksHUD = {}                 -- Punk tracking HUD
+Nx.Social.TeamHUD = {}                  -- Team member HUD
+Nx.Social.Cols = {}                     -- Color storage
+
+-- Create the AceAddon for the Social module
 CarboniteSocial = LibStub("AceAddon-3.0"):NewAddon("CarboniteSocial", "AceTimer-3.0", "AceEvent-3.0", "AceComm-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Social", true)
 
--- Use C_FriendList.GetFriendInfo or C_FriendList.GetFriendInfoByIndex instead
+-------------------------------------------------------------------------------
+-- API COMPATIBILITY WRAPPERS
+-- Functions to bridge old API calls to new C_FriendList API
+-------------------------------------------------------------------------------
+
+---
+-- Get friend information by name or index
+-- Wraps C_FriendList.GetFriendInfo/GetFriendInfoByIndex
+-- @param friend  Friend name (string) or index (number)
+-- @return name, level, className, area, connected, chatFlag, notes
+--
 function GetFriendInfo(friend)
-	local info;
-	if type(friend) == "number" then
-		info = C_FriendList.GetFriendInfoByIndex(friend);
-	elseif type(friend) == "string" then
-		info = C_FriendList.GetFriendInfo(friend);
-	end
+    local info
+    if type(friend) == "number" then
+        info = C_FriendList.GetFriendInfoByIndex(friend)
+    elseif type(friend) == "string" then
+        info = C_FriendList.GetFriendInfo(friend)
+    end
 
-	if info then
-		local chatFlag = "";
-		if info.dnd then
-			chatFlag = CHAT_FLAG_DND;
-		elseif info.afk then
-			chatFlag = CHAT_FLAG_AFK;
-		end
-		return info.name,
-			info.level,
-			info.className,
-			info.area,
-			info.connected,
-			chatFlag,
-			info.notes;
-			--info.rafLinkType ~= Enum.RafLinkType.None,
-			--info.guid;
-	end
+    if info then
+        local chatFlag = ""
+        if info.dnd then
+            chatFlag = CHAT_FLAG_DND
+        elseif info.afk then
+            chatFlag = CHAT_FLAG_AFK
+        end
+        return info.name,
+            info.level,
+            info.className,
+            info.area,
+            info.connected,
+            chatFlag,
+            info.notes
+    end
 end
 
--- Use C_FriendList.SetSelectedFriend instead
-SetSelectedFriend = C_FriendList.SetSelectedFriend;
+-- Direct API wrapper for selecting a friend
+SetSelectedFriend = C_FriendList.SetSelectedFriend
 
--- Use C_FriendList.RemoveFriend or C_FriendList.RemoveFriendByIndex instead
+---
+-- Remove a friend by name or index
+-- Wraps C_FriendList.RemoveFriend/RemoveFriendByIndex
+-- @param friend  Friend name (string) or index (number)
+--
 function RemoveFriend(friend)
-	if type(friend) == "number" then
-		C_FriendList.RemoveFriendByIndex(friend);
-	elseif type(friend) == "string" then
-		C_FriendList.RemoveFriend(friend);
-	end
+    if type(friend) == "number" then
+        C_FriendList.RemoveFriendByIndex(friend)
+    elseif type(friend) == "string" then
+        C_FriendList.RemoveFriend(friend)
+    end
 end
+
+-------------------------------------------------------------------------------
+-- DEFAULT OPTIONS
+-- Default profile settings for the social module
+-------------------------------------------------------------------------------
 
 local defaults = {
-	profile = {
-		Social = {
-			MapShowPunks = true,
-			PunkAreaColor = ".125|.05|.05|1",
-			PunkAreaSize = 80,
-			PunkBGAreaColor = "24|.141|.141|1",
-			PunkBGAreaSize = 60,
-			PunkIconColor = "1|.5|.5|1",
-			PunkMAreaColor = ".09|.44|.09|1",
-			PunkMAreaSize = 200,
-			PunkMAlertText = true,
-			PunkMAlertSnd = true,
-			PunkShowInSafeArea = false,
-			PunkNewLocalWarnChat = true,
-			PunkNewLocalWarnSnd = false,
-			PunkShowInBG = true,
-			PunkTWinTitle = "Punks:",
-			PunkTWinHide = false,
-			PunkTWinLock = false,
-			PunkTWinMaxButs = 5,
-			SocialEnable = true,
-			PunkEnable = true,
-			TeamTWinEnable = false,
-			TeamTWinHide = true,
-			TeamTWinMaxButs = 15,
-		},
-	},
+    profile = {
+        Social = {
+            -- General settings
+            SocialEnable = true,                -- Enable enhanced social window
+            PunkEnable = true,                  -- Enable punk tracking system
+            -- Punk map display
+            MapShowPunks = true,                -- Show punks on map
+            PunkAreaColor = ".125|.05|.05|1",   -- Color of punk area circle
+            PunkAreaSize = 80,                  -- Size of punk area on map
+            PunkIconColor = "1|.5|.5|1",        -- Color of punk icon
+            PunkShowInSafeArea = false,         -- Show punks in sanctuaries
+            -- Other players' punk detection
+            PunkMAreaColor = ".09|.44|.09|1",   -- Color for others' detected punks
+            PunkMAreaSize = 200,                -- Size of others' punk area
+            PunkMAlertText = true,              -- Show text for others' punks
+            PunkMAlertSnd = true,               -- Play sound for others' punks
+            -- Local punk detection
+            PunkNewLocalWarnChat = true,        -- Show chat message for new punks
+            PunkNewLocalWarnSnd = false,        -- Play sound for new punks
+            -- Battleground punk settings
+            PunkShowInBG = true,                -- Show punks in battlegrounds
+            PunkBGAreaColor = "24|.141|.141|1", -- BG punk area color
+            PunkBGAreaSize = 60,                -- BG punk area size
+            -- Punk window settings
+            PunkTWinTitle = "Punks:",           -- Punk window title
+            PunkTWinHide = false,               -- Hide punk window
+            PunkTWinLock = false,               -- Lock punk window
+            PunkTWinMaxButs = 5,                -- Max punk target buttons
+            -- Team HUD settings
+            TeamTWinEnable = false,             -- Enable team HUD
+            TeamTWinHide = true,                -- Hide team window
+            TeamTWinMaxButs = 15,               -- Max team member buttons
+        },
+    },
 }
 
+-------------------------------------------------------------------------------
+-- OPTIONS CONFIGURATION
+-- AceConfig options table for social module settings
+-------------------------------------------------------------------------------
+
 local socialoptions
+
+---
+-- Get or create social options configuration
+-- @return  Social options table for AceConfig
+--
 local function socialConfig()
-	if not socialoptions then
-		socialoptions = {
-			type = "group",
-			name = L["Social Options"],
-			childGroups	= "tab",
-			args = {
+    if not socialoptions then
+        socialoptions = {
+            type = "group",
+            name = L["Social Options"],
+            childGroups = "tab",
+            args = {
 				socialWin = {
 					order = 1,
 					type = "group",
@@ -503,10 +540,18 @@ local function socialConfig()
 			},
 		}
 	end
-	Nx.Opts:AddToProfileMenu(L["Social"],5,Nx.scdb)
-	return socialoptions
+    Nx.Opts:AddToProfileMenu(L["Social"], 5, Nx.scdb)
+    return socialoptions
 end
 
+-------------------------------------------------------------------------------
+-- MODULE INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- AceAddon initialization callback
+-- Sets up database, events, and hooks for social module
+--
 function CarboniteSocial:OnInitialize()
 	if not Nx.Initialized then
 		CarbSocialInit = Nx:ScheduleTimer(CarboniteSocial.OnInitialize,1)
@@ -548,7 +593,18 @@ function CarboniteSocial:OnInitialize()
 	Nx.Social:SetCols()
 end
 
-function Nx.Social:OnChat_msg_addon(msg,dist,target)
+-------------------------------------------------------------------------------
+-- ADDON COMMUNICATION
+-- Handle inter-addon messages
+-------------------------------------------------------------------------------
+
+---
+-- Process addon communication messages
+-- @param msg     Message received
+-- @param dist    Distribution channel
+-- @param target  Message target
+--
+function Nx.Social:OnChat_msg_addon(msg, dist, target)
 	if msg == "PUNK_DECODE" then
 		Nx.Social:DecodeComRcvPunks (Nx.pTEMPname, Nx.pTEMPinfo, Nx.pTEMPmsg)
 	elseif msg == "LIST_UPDATE" then
@@ -556,6 +612,10 @@ function Nx.Social:OnChat_msg_addon(msg,dist,target)
 	end
 end
 
+---
+-- Initialize color values from profile settings
+-- Parses color strings into RGB values for map drawing
+--
 function Nx.Social:SetCols()
 	Nx.Social.Cols["areaR"], Nx.Social.Cols["areaG"], Nx.Social.Cols["areaB"] = Nx.Util_str2rgba (Nx.scdb.profile.Social.PunkAreaColor)
 	Nx.Social.Cols["iconR"], Nx.Social.Cols["iconG"], Nx.Social.Cols["iconB"], Nx.Social.Cols["iconA"] = Nx.Util_str2rgba (Nx.scdb.profile.Social.PunkIconColor)
@@ -563,7 +623,17 @@ function Nx.Social:SetCols()
 	Nx.Social.Cols["areaBGR"], Nx.Social.Cols["areaBGG"], Nx.Social.Cols["areaBGB"] = Nx.Util_str2rgba (Nx.scdb.profile.Social.PunkBGAreaColor)
 end
 
-function CarboniteSocial:On_Event(event,...)
+-------------------------------------------------------------------------------
+-- EVENT HANDLING
+-------------------------------------------------------------------------------
+
+---
+-- Handle periodic update events
+-- Updates punk and team HUDs, detects enemy players
+-- @param event  Event name
+-- @param ...    Event arguments
+--
+function CarboniteSocial:On_Event(event, ...)
 	if event == "PLAYER_ENTERING_WORLD" or event == "FORCE_UPDATE" then
 		Nx.Social.PunksHUD:Update()
 		Nx.Social.TeamHUD:Update()
@@ -596,6 +666,14 @@ function CarboniteSocial:On_Event(event,...)
 	end
 end
 
+-------------------------------------------------------------------------------
+-- SOCIAL SYSTEM INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- Initialize the social system
+-- Sets up punk tracking, HUDs, and UI hooks
+--
 function Nx.Social:Init()
 	self.List.Sorted = {}
 	if Nx.scdb.profile.Social.SocialEnable then
@@ -673,6 +751,13 @@ function Nx.Social:Init()
 	Nx.Window:SetAttribute("NxPunkHUD","L",Nx.scdb.profile.Social.PunkTWinLock)
 end
 
+---
+-- Event handler for registered events
+-- @param event  Event name
+-- @param arg1   First event argument
+-- @param arg2   Second event argument
+-- @param arg3   Third event argument
+--
 function CarboniteSocial:EventHandler(event, arg1, arg2, arg3)
 	if event == "PLAYER_REGEN_DISABLED" then
 		Nx.Social:PreCombatHide()
@@ -688,7 +773,16 @@ function Nx.Social.Hook (v)
 end
 --]]
 
-function Nx.Social:ShowUIPanel (frame)
+-------------------------------------------------------------------------------
+-- UI PANEL MANAGEMENT
+-- Control visibility of social window and FriendsFrame integration
+-------------------------------------------------------------------------------
+
+---
+-- Hook for ShowUIPanel to integrate with Carbonite social window
+-- @param frame  Frame being shown
+--
+function Nx.Social:ShowUIPanel(frame)
 
 	if not GameMenuFrame:IsShown() and not self.NoShow then
 
@@ -770,7 +864,11 @@ function Nx.Social:ShowUIPanel (frame)
 	end
 end
 
-function Nx.Social:HideUIPanel (frame)
+---
+-- Hook for HideUIPanel to integrate with Carbonite social window
+-- @param frame  Frame being hidden
+--
+function Nx.Social:HideUIPanel(frame)
 
 	if self.Win then
 
@@ -787,8 +885,10 @@ function Nx.Social:HideUIPanel (frame)
 	end
 end
 
----------------------------------------------------------------------------------------
-
+---
+-- Restore FriendsFrame to default state
+-- Reparents to UIParent and shows Blizzard tabs
+--
 function Nx.Social:RestoreFriendsFrame()
 
 	local ff = FriendsFrame
@@ -814,11 +914,15 @@ function Nx.Social:RestoreFriendsFrame()
 	end
 end
 
----------------------------------------------------------------------------------------
--- Open window
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- WINDOW VISIBILITY
+-------------------------------------------------------------------------------
 
-function Nx.Social:Show (on)
+---
+-- Show or hide the social window
+-- @param on  True to show, false to hide
+--
+function Nx.Social:Show(on)
 
 	self:Create()
 
@@ -827,10 +931,10 @@ function Nx.Social:Show (on)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Hide window. Used before combat lockdown
----------------------------------------------------------------------------------------
-
+---
+-- Hide social window before combat lockdown
+-- Prevents taint issues in raids
+--
 function Nx.Social:PreCombatHide()
 
 	if self.Win then
@@ -847,10 +951,14 @@ function Nx.Social:PreCombatHide()
 	end
 end
 
----------------------------------------------------------------------------------------
--- Create window
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SOCIAL WINDOW CREATION
+-------------------------------------------------------------------------------
 
+---
+-- Create the social window
+-- Sets up window, tab bar, FriendsFrame integration, and list
+--
 function Nx.Social:Create()
 	if not Nx.scdb.profile.Social.SocialEnable then
 		return
@@ -941,16 +1049,22 @@ function Nx.Social:Create()
 	bar:Select (selected)					-- Select after list is created
 end
 
----------------------------------------------------------------------------------------
-
-function Nx.Social:OnWin (typ)
+---
+-- Window event callback
+-- @param typ  Event type ("Close", etc.)
+--
+function Nx.Social:OnWin(typ)
 
 	if typ == "Close" then
 		self:HideUIPanel (FriendsFrame)
 	end
 end
 
-function Nx.Social:OnFriendListUpdate (event)
+---
+-- Handle friend list update events
+-- @param event  Event name
+--
+function Nx.Social:OnFriendListUpdate(event)
 
 --[[
 	Nx.prt ("OnFriendListUpdate %s", event)
@@ -964,8 +1078,10 @@ function Nx.Social:OnFriendListUpdate (event)
 	Nx.Social.List:Update()
 end
 
----------------------------------------------------------------------------------------
-
+---
+-- Periodic update for social window
+-- Handles window frame level management
+--
 function Nx.Social:OnUpdate()
 
 	if self.Win then
@@ -985,9 +1101,17 @@ function Nx.Social:OnUpdate()
 	end
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- TAB BAR MANAGEMENT
+-------------------------------------------------------------------------------
 
-function Nx.Social.PanelTemplates_SetTab (frame, index)
+---
+-- Hook for PanelTemplates_SetTab
+-- Syncs Blizzard tab selection with Carbonite tab bar
+-- @param frame  Frame receiving tab change
+-- @param index  New tab index
+--
+function Nx.Social.PanelTemplates_SetTab(frame, index)
 
 	local self = Nx.Social
 	local ff = FriendsFrame
@@ -1001,9 +1125,14 @@ function Nx.Social.PanelTemplates_SetTab (frame, index)
 	end
 end
 
----------------------------------------------------------------------------------------
-
-function Nx.Social:OnTabBar (index, click, inSetTab)
+---
+-- Tab bar selection callback
+-- Handles switching between Pals, Punks, and Blizzard tabs
+-- @param index     Selected tab index
+-- @param click     Click type
+-- @param inSetTab  True if called from SetTab
+--
+function Nx.Social:OnTabBar(index, click, inSetTab)
 
 	if self.InOnTabBar then
 --		Nx.prt ("OnTabBar %s in tab bar", index)
@@ -1064,7 +1193,11 @@ function Nx.Social:OnTabBar (index, click, inSetTab)
 --	Nx.prt ("OnTabBar %s done", index)
 end
 
-function Nx.Social:ShowBlizzTabs (show)
+---
+-- Show or hide Blizzard's FriendsFrame tabs
+-- @param show  True to show, false to hide
+--
+function Nx.Social:ShowBlizzTabs(show)
 
 	for n = 1, 10 do
 		local tabf = _G["FriendsFrameTab" .. n]
@@ -1078,10 +1211,15 @@ function Nx.Social:ShowBlizzTabs (show)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Create social list
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SOCIAL LIST
+-- Manages the list of pals, punks, and communication data
+-------------------------------------------------------------------------------
 
+---
+-- Create the social list
+-- Sets up list control and context menus
+--
 function Nx.Social.List:Create()
 
 	local win = Nx.Social.Win
@@ -1253,6 +1391,9 @@ function Nx.Social.List:Create()
 
 end
 
+---
+-- Set frame levels for proper layering
+--
 function Nx.Social.List:SetLevels()
 
 	local win = Nx.Social.Win
@@ -1276,6 +1417,13 @@ function Nx.Social.List:SetLevels()
 --	Nx.prt ("Lev3 "..wf:GetFrameLevel().." "..ff:GetFrameLevel())
 end
 
+-------------------------------------------------------------------------------
+-- MENU CALLBACKS
+-------------------------------------------------------------------------------
+
+---
+-- Menu callback to set the person who owns a character
+--
 function Nx.Social.List:Menu_OnSetPerson()
 
 	if self.MenuSelName then
@@ -1284,7 +1432,12 @@ function Nx.Social.List:Menu_OnSetPerson()
 	end
 end
 
-function Nx.Social.List.SetPersonAccept (person, friend)
+---
+-- Callback when person name is accepted
+-- @param person  Person name entered
+-- @param friend  Friend name
+--
+function Nx.Social.List.SetPersonAccept(person, friend)
 
 	person = Nx.Util_CleanName (person)
 	local list = Nx.Social.List
@@ -1292,12 +1445,18 @@ function Nx.Social.List.SetPersonAccept (person, friend)
 	list:Update()
 end
 
+---
+-- Menu callback to add selected pal as friend
+--
 function Nx.Social.List:Menu_OnMakePalFriend()
 	if self.MenuSelName then
 		C_FriendList.AddFriend (self.MenuSelName)
 	end
 end
 
+---
+-- Menu callback to add all pals as friends
+--
 function Nx.Social.List:Menu_OnMakePalsFriends()
 
 	local pal = Nx:GetSocial ("Pal")
@@ -1311,6 +1470,9 @@ function Nx.Social.List:Menu_OnMakePalsFriends()
 	end
 end
 
+---
+-- Menu callback to add a punk
+--
 function Nx.Social.List:Menu_OnPunkAdd()
 
 	local name = UnitName ("target")
@@ -1323,13 +1485,24 @@ function Nx.Social.List:Menu_OnPunkAdd()
 	end
 end
 
-function Nx.Social.List.PunkAddAccept (name, list)
+---
+-- Callback when punk name is accepted
+-- @param name  Punk name entered
+-- @param list  List object
+--
+function Nx.Social.List.PunkAddAccept(name, list)
 
 	list:PunkAdd (name)
 	list:Update()
 end
 
-function Nx.Social.List:PunkAdd (name, level, class)
+---
+-- Add a punk to the permanent list
+-- @param name   Punk name
+-- @param level  Punk level (optional)
+-- @param class  Punk class (optional)
+--
+function Nx.Social.List:PunkAdd(name, level, class)
 
 	local punks = Nx:GetSocial ("Pk")
 	name = Nx.Util_CleanName (name)
@@ -1343,6 +1516,9 @@ function Nx.Social.List:PunkAdd (name, level, class)
 	punks[name] = format ("%s~%s~%s", time(), level or "", class or "")
 end
 
+---
+-- Menu callback to remove a punk
+--
 function Nx.Social.List:Menu_OnPunkRemove()
 	if self.MenuSelName then
 		local punks = Nx:GetSocial ("Pk")
@@ -1351,6 +1527,9 @@ function Nx.Social.List:Menu_OnPunkRemove()
 	end
 end
 
+---
+-- Menu callback to set a note on a punk
+--
 function Nx.Social.List:Menu_OnPunkSetNote()
 
 	if self.MenuSelName then
@@ -1365,7 +1544,12 @@ function Nx.Social.List:Menu_OnPunkSetNote()
 	end
 end
 
-function Nx.Social.List.PunkSetNote (text, list)
+---
+-- Callback when punk note is entered
+-- @param text  Note text
+-- @param list  List object
+--
+function Nx.Social.List.PunkSetNote(text, list)
 
 	local punks = Nx:GetSocial ("Pk")
 	local punk = punks[list.MenuPunkName]
@@ -1374,11 +1558,18 @@ function Nx.Social.List.PunkSetNote (text, list)
 	list:Update()
 end
 
----------------------------------------------------------------------------------------
--- On list control updates
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- LIST EVENT HANDLING
+-------------------------------------------------------------------------------
 
-function Nx.Social.List:OnListEvent (eventName, sel, val2, click)
+---
+-- Handle list control events
+-- @param eventName  Event name (select, menu, etc.)
+-- @param sel        Selected index
+-- @param val2       Additional value
+-- @param click      Click type
+--
+function Nx.Social.List:OnListEvent(eventName, sel, val2, click)
 
 	local name = self.List:ItemGetData (sel)
 	self.SelName = name
@@ -1419,7 +1610,12 @@ function Nx.Social.List:OnListEvent (eventName, sel, val2, click)
 	end
 end
 
-function Nx.Social.List:FindFriendI (friend)
+---
+-- Find friend index by name
+-- @param friend  Friend name to find
+-- @return  Friend index or nil
+--
+function Nx.Social.List:FindFriendI(friend)
 
 	local cnt = C_FriendList.GetNumFriends()
 	for n = 1, cnt do
@@ -1432,13 +1628,16 @@ function Nx.Social.List:FindFriendI (friend)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Find person who has friend
--- (friend name)
--- ret person name
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- PAL DATA MANAGEMENT
+-------------------------------------------------------------------------------
 
-function Nx.Social.List:FindFriendPerson (friend)
+---
+-- Find the person who owns a friend character
+-- @param friend  Friend character name
+-- @return  Person name or nil
+--
+function Nx.Social.List:FindFriendPerson(friend)
 
 	local pal = Nx:GetSocial ("Pal")
 
@@ -1451,7 +1650,12 @@ function Nx.Social.List:FindFriendPerson (friend)
 	end
 end
 
-function Nx.Social.List:SetPersonFriend (person, friend)
+---
+-- Associate a friend with a person
+-- @param person  Person name
+-- @param friend  Friend character name
+--
+function Nx.Social.List:SetPersonFriend(person, friend)
 
 	self:ClrFriend (friend)
 
@@ -1463,11 +1667,11 @@ function Nx.Social.List:SetPersonFriend (person, friend)
 	friends[friend] = ""
 end
 
----------------------------------------------------------------------------------------
--- Clear friend from all persons
----------------------------------------------------------------------------------------
-
-function Nx.Social.List:ClrFriend (friend)
+---
+-- Remove a friend from all persons
+-- @param friend  Friend character name to remove
+--
+function Nx.Social.List:ClrFriend(friend)
 
 	local pal = Nx:GetSocial ("Pal")
 
@@ -1484,6 +1688,14 @@ function Nx.Social.List:ClrFriend (friend)
 	end
 end
 
+-------------------------------------------------------------------------------
+-- LIST UPDATE
+-------------------------------------------------------------------------------
+
+---
+-- Update the social list display
+-- Shows pals, punks, or communication data based on selected tab
+--
 function Nx.Social.List:Update()
 
 --	Nx.prt ("SocialListUpdate")
@@ -1768,11 +1980,18 @@ function Nx.Social.List:Update()
 	list:Update()
 end
 
----------------------------------------------------------------------------------------
--- Punks management
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- PUNK MANAGEMENT
+-- Handle punk detection, tracking, and communication
+-------------------------------------------------------------------------------
 
-function Nx.Social:DecodeComRcvPunks (finderName, info, punksStr)
+---
+-- Decode punk data received from another Carbonite user
+-- @param finderName  Name of player who found punks
+-- @param info        Location info (MId, X, Y, T)
+-- @param punksStr    Encoded punk string
+--
+function Nx.Social:DecodeComRcvPunks(finderName, info, punksStr)
 
 --	Nx.prt ("%s: %s %s %s", finderName, punksStr, info.X, info.Y)
 	if not punksStr or #punksStr < 1 then
@@ -1810,11 +2029,14 @@ function Nx.Social:DecodeComRcvPunks (finderName, info, punksStr)
 	Nx.TEMPmsg = nil
 end
 
----------------------------------------------------------------------------------------
--- Add a punk we detected ourselves
----------------------------------------------------------------------------------------
-
-function Nx.Social:AddLocalPunk (name, plyrNear, level, class)
+---
+-- Add a punk that we detected locally
+-- @param name      Punk name
+-- @param plyrNear  Nearby player name (for position)
+-- @param level     Punk level
+-- @param class     Punk class
+--
+function Nx.Social:AddLocalPunk(name, plyrNear, level, class)
 
 --	Nx.prt ("AddLocalPunk %s", name)
 	if Nx.scdb.profile.Social.PunkEnable then
@@ -1889,9 +2111,16 @@ function Nx.Social:AddLocalPunk (name, plyrNear, level, class)
 	end
 end
 
----------------------------------------------------------------------------------------
-
-function Nx.Social:GetPunk (name, plyrNear, mId, x, y)
+---
+-- Get or create a punk entry in the active punks list
+-- @param name      Punk name
+-- @param plyrNear  Nearby player name
+-- @param mId       Map ID
+-- @param x         X position
+-- @param y         Y position
+-- @return  Punk data table
+--
+function Nx.Social:GetPunk(name, plyrNear, mId, x, y)
 	if Nx.scdb.profile.Social.PunkEnable then
 	local punk = self.PunksActive[name]
 	if not punk then
@@ -1952,8 +2181,10 @@ function Nx.Social:GetPunk (name, plyrNear, mId, x, y)
 	end
 end
 
----------------------------------------------------------------------------------------
-
+---
+-- Timer callback for punk updates
+-- Calculates punk expiration and updates list
+--
 function Nx.Social:OnUpdateTimer()
 
 	if not Nx.scdb.profile.Social.PunkEnable then
@@ -1969,10 +2200,10 @@ function Nx.Social:OnUpdateTimer()
 	end
 end
 
----------------------------------------------------------------------------------------
--- Update punks data
----------------------------------------------------------------------------------------
-
+---
+-- Calculate punk expiration and cleanup
+-- Removes expired punks from active list
+--
 function Nx.Social:CalcPunks()
 
 	local punks = self.Punks
@@ -1995,11 +2226,16 @@ function Nx.Social:CalcPunks()
 	end
 end
 
----------------------------------------------------------------------------------------
--- Update map icons (called by map)
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- MAP ICON RENDERING
+-------------------------------------------------------------------------------
 
-function Nx.Social:UpdateIcons (map)
+---
+-- Update punk icons on the map
+-- Called by map during icon drawing phase
+-- @param map  Map object
+--
+function Nx.Social:UpdateIcons(map)
 	if Nx.scdb.profile.Social.PunkEnable then
 		if Nx.Tick % 120 == 4 then
 			self:CalcPunks()
@@ -2137,11 +2373,15 @@ function Nx.Social:UpdateIcons (map)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Goto a named punk
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- PUNK NAVIGATION
+-------------------------------------------------------------------------------
 
-function Nx.Social:GotoPunk (name)
+---
+-- Set navigation target to a punk's location
+-- @param name  Punk name
+--
+function Nx.Social:GotoPunk(name)
 	local punk = self.PunksActive[name]
 	if punk.MId < 1000 then --- WORK AROUND
 		if punk then
@@ -2154,11 +2394,12 @@ function Nx.Social:GotoPunk (name)
 	end
 end
 
----------------------------------------------------------------------------------------
--- Get a named punks paste info
----------------------------------------------------------------------------------------
-
-function Nx.Social:GetPunkPasteInfo (name)
+---
+-- Get formatted punk info for pasting
+-- @param name  Punk name
+-- @return  Formatted string with punk info
+--
+function Nx.Social:GetPunkPasteInfo(name)
 
 	local punk = self.PunksActive[name]
 	if punk then
@@ -2171,11 +2412,15 @@ function Nx.Social:GetPunkPasteInfo (name)
 	return ""
 end
 
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
--- Create punk HUD
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- PUNKS HUD
+-- Target buttons for detected punks
+-------------------------------------------------------------------------------
 
+---
+-- Create the punks HUD window
+-- Creates secure target buttons for punk targeting
+--
 function Nx.Social.PunksHUD:Create()
 
 	self.Punks = {}
@@ -2253,11 +2498,11 @@ function Nx.Social.PunksHUD:Create()
 
 end
 
----------------------------------------------------------------------------------------
--- SecureTemplates Click handler
--- self is button frame
----------------------------------------------------------------------------------------
-
+---
+-- SecureTemplate click handler for punk buttons
+-- Shift+click adds punk to permanent list
+-- Regular click removes from HUD
+--
 function Nx.Social.PunksHUD:Click()
 
 	local but = self
@@ -2271,9 +2516,11 @@ function Nx.Social.PunksHUD:Click()
 	end
 end
 
----------------------------------------------------------------------------------------
-
-function Nx.Social.PunksHUD:Add (name)
+---
+-- Add a punk to the HUD
+-- @param name  Punk name
+--
+function Nx.Social.PunksHUD:Add(name)
 
 --PAIDS!
 
@@ -2305,9 +2552,11 @@ function Nx.Social.PunksHUD:Add (name)
 --PAIDE!
 end
 
----------------------------------------------------------------------------------------
-
-function Nx.Social.PunksHUD:Remove (name)
+---
+-- Remove a punk from the HUD
+-- @param name  Punk name
+--
+function Nx.Social.PunksHUD:Remove(name)
 
 --PAIDS!
 
@@ -2324,8 +2573,10 @@ function Nx.Social.PunksHUD:Remove (name)
 --PAIDE!
 end
 
----------------------------------------------------------------------------------------
-
+---
+-- Update the punks HUD display
+-- Updates button states and text
+--
 function Nx.Social.PunksHUD:Update()
 
 --PAIDS!
@@ -2432,11 +2683,15 @@ function Nx.Social.PunksHUD:Update()
 --PAIDE!
 end
 
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
--- Create group HUD
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- TEAM HUD
+-- Target buttons for party/raid members
+-------------------------------------------------------------------------------
 
+---
+-- Create the team HUD window
+-- Creates secure target buttons for team targeting
+--
 function Nx.Social.TeamHUD:Create()
 
 	if not Nx.scdb.profile.Social.TeamTWinEnable then
@@ -2538,8 +2793,10 @@ function Nx.Social.TeamHUD:Create()
 --PAIDE!
 end
 
----------------------------------------------------------------------------------------
-
+---
+-- Update the team HUD display
+-- Shows nearby team members sorted by distance
+--
 function Nx.Social.TeamHUD:Update()
 
 --PAIDS!
@@ -2736,7 +2993,17 @@ function Nx.Social.TeamHUD:Update()
 --PAIDE!
 end
 
-function Nx.Social.PShowUIPanel (frame)
+-------------------------------------------------------------------------------
+-- UI PANEL HOOKS
+-- Hooks for Blizzard UI panel functions
+-------------------------------------------------------------------------------
+
+---
+-- Hook for ShowUIPanel
+-- Redirects FriendsFrame to Carbonite social window
+-- @param frame  Frame being shown
+--
+function Nx.Social.PShowUIPanel(frame)
 	if frame then
 		if frame == _G["FriendsFrame"] and Nx.scdb.profile.Social.SocialEnable then
 			Nx.Social:ShowUIPanel (frame)
@@ -2748,7 +3015,11 @@ function Nx.Social.PShowUIPanel (frame)
 	end
 end
 
-function Nx.Social.PHideUIPanel (frame)
+---
+-- Hook for HideUIPanel
+-- @param frame  Frame being hidden
+--
+function Nx.Social.PHideUIPanel(frame)
 	if frame then
 		if frame == _G["FriendsFrame"] and Nx.scdb.profile.Social.SocialEnable then
 			Nx.Social:HideUIPanel (frame)
@@ -2756,6 +3027,10 @@ function Nx.Social.PHideUIPanel (frame)
 	end
 end
 
+---
+-- Hook for CloseWindows
+-- Hides social window when Esc pressed
+--
 function Nx.Social.PCloseWindows()
 	if not InCombatLockdown() then
 		Nx.Social:HideUIPanel (_G["FriendsFrame"])		-- Causing taint in BGs
@@ -2763,25 +3038,39 @@ function Nx.Social.PCloseWindows()
 end
 
 
----------------------------------------------------------------------------------------
--- Get Social data
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- DATA ACCESS
+-------------------------------------------------------------------------------
 
-function Nx:GetSocial (typ)
+---
+-- Get social data table for current realm
+-- @param typ  Data type ("Pal", "Pk", "PkAct")
+-- @return  Data table
+--
+function Nx:GetSocial(typ)
 	local rn = GetRealmName()
 	return Nx.scdb.profile.SocialData[rn][typ]
 end
 
----------------------------------------------------------------------------------------
--- Clear Social data
----------------------------------------------------------------------------------------
-
-function Nx:ClearSocial (typ)
+---
+-- Clear social data table for current realm
+-- @param typ  Data type to clear
+--
+function Nx:ClearSocial(typ)
 	local rn = GetRealmName()
 	Nx.scdb.profile.SocialData[rn][typ] = {}
 end
 
-function CarboniteSocial:OnCombat_log_event_unfiltered (event, ...)
+-------------------------------------------------------------------------------
+-- COMBAT LOG PROCESSING
+-------------------------------------------------------------------------------
+
+---
+-- Process combat log events to detect enemy players
+-- @param event  Event name
+-- @param ...    Combat log event info
+--
+function CarboniteSocial:OnCombat_log_event_unfiltered(event, ...)
 	local timestamp, event, hideCaster, sId, sName, sFlags, sFlags2, dId, dName, dFlags, dFlags = CombatLogGetCurrentEventInfo()
 
 	if sName and bit.band (sFlags, 0x440) == 0x440 then
@@ -2808,5 +3097,6 @@ function CarboniteSocial:OnCombat_log_event_unfiltered (event, ...)
 	end
 end
 
----------------------------------------------------------------------------------------
--- EOF
+-------------------------------------------------------------------------------
+-- END OF FILE
+-------------------------------------------------------------------------------

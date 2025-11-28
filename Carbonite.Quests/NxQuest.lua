@@ -1,8 +1,7 @@
----------------------------------------------------------------------------------------
--- NxQuest - Quest stuff
+-------------------------------------------------------------------------------
+-- NxQuest - Quest Module
 -- Copyright 2007-2012 Carbon Based Creations, LLC
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -18,227 +17,285 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
--- Quest General
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- QUEST MODULE INITIALIZATION
+-------------------------------------------------------------------------------
 
 local _G = getfenv(0)
 
+-- Create the AceAddon for the Quest module
 CarboniteQuest = LibStub("AceAddon-3.0"):NewAddon("Carbonite.Quest", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite.Quest", true)
 
-Nx.VERSIONQOPTS		= .21				-- Quest options
-Nx.VERSIONCAP		= .80
-Nx.Quest = {}
-Nx.Quest.List = {}
-Nx.Quest.AcceptPool = {}
-Nx.Quest.Watch = {}
-Nx.Quest.WQList = {}
-Nx.Quest.Cols = {}
-Nx.Quests = {}
-Nx.qdb = {}
-Nx.Quest.Tick = 0
-Nx.QInit = false
-Nx.Quest.Custom = {}
-Nx.Quest.OldMap = 0
--- Keybindings
-BINDING_HEADER_CarboniteQuests	= "|cffc0c0ff" .. L["Carbonite Quests"] .. "|r"
-BINDING_NAME_NxTOGGLEWATCHMINI	= L["NxTOGGLEWATCHMINI"]
-BINDING_NAME_NxWATCHUSEITEM	= L["NxWATCHUSEITEM"]
+-------------------------------------------------------------------------------
+-- VERSION AND MODULE NAMESPACES
+-------------------------------------------------------------------------------
+
+Nx.VERSIONQOPTS = .21                   -- Quest options data version
+Nx.VERSIONCAP = .80                     -- Capture data version
+
+-- Quest module namespaces
+Nx.Quest = {}                           -- Main quest module
+Nx.Quest.List = {}                      -- Quest list window
+Nx.Quest.AcceptPool = {}                -- Quest acceptance pool
+Nx.Quest.Watch = {}                     -- Quest watch window
+Nx.Quest.WQList = {}                    -- World quest list
+Nx.Quest.Cols = {}                      -- Color settings
+Nx.Quests = {}                          -- Quest database
+Nx.qdb = {}                             -- Quest profile database
+Nx.Quest.Tick = 0                       -- Update tick counter
+Nx.QInit = false                        -- Initialization flag
+Nx.Quest.Custom = {}                    -- Custom quest data
+Nx.Quest.OldMap = 0                     -- Previous map ID
+
+-------------------------------------------------------------------------------
+-- KEYBINDING DEFINITIONS
+-------------------------------------------------------------------------------
+
+BINDING_HEADER_CarboniteQuests = "|cffc0c0ff" .. L["Carbonite Quests"] .. "|r"
+BINDING_NAME_NxTOGGLEWATCHMINI = L["NxTOGGLEWATCHMINI"]
+BINDING_NAME_NxWATCHUSEITEM = L["NxWATCHUSEITEM"]
+
+-------------------------------------------------------------------------------
+-- CLASSIC COMPATIBILITY
+-- Stub functions for Classic WoW where retail APIs don't exist
+-------------------------------------------------------------------------------
 
 local IsClassic = select(4, GetBuildInfo()) < 60000
 
 if IsClassic then
-	function GetQuestLogCriteriaSpell()
-	  return
-	end
+    function GetQuestLogCriteriaSpell()
+        return
+    end
 
-	function ProcessQuestLogRewardFactions()
-	  return
-	end
+    function ProcessQuestLogRewardFactions()
+        return
+    end
 
-	function GetQuestLogPortraitGiver()
-	  return
-	end
+    function GetQuestLogPortraitGiver()
+        return
+    end
 
-	function GetQuestLogRewardSkillPoints()
-	  return 0
-	end
+    function GetQuestLogRewardSkillPoints()
+        return 0
+    end
 
-	function GetQuestLogRewardArtifactXP()
-	  return 0
-	end
+    function GetQuestLogRewardArtifactXP()
+        return 0
+    end
 end
 
-CQUEST_TEMPLATE_LOG = { questLog = true, chooseItems = nil, contentWidth = 285,
-	canHaveSealMaterial = false, sealXOffset = 160, sealYOffset = -6,
-	elements = {
-		QuestInfo_ShowTitle, 5, -10,
-		QuestInfo_ShowDescriptionText, 0, -5,
-		QuestInfo_ShowSeal, 0, 0,
-		QuestInfo_ShowObjectives, 0, -10,
-		QuestInfo_ShowObjectivesHeader, 0, -15,
-		QuestInfo_ShowObjectivesText, 0, -5,
-		QuestInfo_ShowSpecialObjectives, 0, -10,
-		QuestInfo_ShowGroupSize, 0, -10,
-		QuestInfo_ShowRewards, 0, -15,
-		QuestInfo_ShowSpacer, 0, -15,
-	}
+-------------------------------------------------------------------------------
+-- QUEST LOG TEMPLATE
+-- Template for displaying quest details in the quest log
+-------------------------------------------------------------------------------
+
+CQUEST_TEMPLATE_LOG = {
+    questLog = true,
+    chooseItems = nil,
+    contentWidth = 285,
+    canHaveSealMaterial = false,
+    sealXOffset = 160,
+    sealYOffset = -6,
+    elements = {
+        QuestInfo_ShowTitle, 5, -10,
+        QuestInfo_ShowDescriptionText, 0, -5,
+        QuestInfo_ShowSeal, 0, 0,
+        QuestInfo_ShowObjectives, 0, -10,
+        QuestInfo_ShowObjectivesHeader, 0, -15,
+        QuestInfo_ShowObjectivesText, 0, -5,
+        QuestInfo_ShowSpecialObjectives, 0, -10,
+        QuestInfo_ShowGroupSize, 0, -10,
+        QuestInfo_ShowRewards, 0, -15,
+        QuestInfo_ShowSpacer, 0, -15,
+    }
 }
 
 CBQUEST_TEMPLATE = CQUEST_TEMPLATE_LOG
 CBQUEST_TEMPLATE.canHaveSealMaterial = nil
 
+-------------------------------------------------------------------------------
+-- DEFAULT OPTIONS
+-- Default profile settings for quest module
+-------------------------------------------------------------------------------
+
 local defaults = {
-	profile = {
-		Quest = {
-			QuestFont = "Friz",
-			QuestFontSize = 10,
-			QuestFontSpacing = 1,
-			Enable = true,
-			AddTooltip = true,
-			AutoAccept = false,
-			AutoTurnIn = false,
-			AutoTurnInAC = false,
-			BroadcastQChanges = true,
-			BroadcastQChangesNum = 999,
-			DetailBC = ".75|.75|.44|1",
-			DetailTC = ".125|.06|.03|1",
-			DetailScale = .95,
-			HCheckCompleted = false,
-			maxLoadLevel = false,
-			LevelsToLoad = 10,
-			MapQuestGiversHighLevel = Nx.MaxPlayerLevel,
-			MapQuestGiversLowLevel = 1,
-			MapShowWatchAreas = true,
-			MapWatchAreaAlpha = "1|1|1|.4",
-			MapWatchAreaGfx = "Solid",
-			MapWatchAreaTrackColor = ".7|.7|.7|.5",
-			MapWatchAreaHoverColor = "1|1|1|.6",
-			MapWatchColorPerQ = true,
-			MapWatchColorCnt = 12,
-			MapWatchC1 = "1|0|0|1",
-			MapWatchC2 = "0|1|0|1",
-			MapWatchC3 = ".2|.2|1|1",
-			MapWatchC4 = "1|1|0|1",
-			MapWatchC5 = "0|1|1|1",
-			MapWatchC6 = "1|0|1|1",
-			MapWatchC7 = "1|.5|0|1",
-			MapWatchC8 = "0|1|.5|1",
-			MapWatchC9 = ".5|.066|1|1",
-			MapWatchC10 = ".5|1|0|1",
-			MapWatchC11 = "0|.5|1|1",
-			MapWatchC12 = "1|0|.5|1",
-			PartyShare = true,
-			ShowDailyCount = true,
-			ShowDailyReset = true,
-			ShowId = false,
-			ShowLinkExtra = true,
-			SideBySide = true,
-			UseAltLKey = false,
-			SndPlayCompleted = true,
-			Snd1 = true,
-			Snd2 = false,
-			Snd3 = false,
-			Snd4 = false,
-			Snd5 = false,
-			Snd6 = false,
-			Snd7 = false,
-			Snd8 = false,
-			Load0 = true,	-- dailies
-			Load1 = true,	--  1 - 10
-			Load2 = true,	-- 11 - 20
-			Load3 = true,	-- 21 - 30
-			Load4 = true,	-- 31 - 40
-			Load5 = true,	-- 41 - 50
-			Load6 = true,	-- 51 - 60
-			Load7 = (Nx.MaxPlayerLevel > 60),   -- 61 - 70
-			Load8 = (Nx.MaxPlayerLevel > 70),   -- 71 - 80
-			Load9 = (Nx.MaxPlayerLevel > 80),   -- 81 - 85
-			Load10 = (Nx.MaxPlayerLevel > 85),  -- 86 - 90
-			Load11 = (Nx.MaxPlayerLevel > 90), -- 91 - 100
-			Load12 = (Nx.MaxPlayerLevel > 100), -- 101 - 110
-			ScrollIMG = true,
-		},
-		QuestWatch = {
-			AchTrack = true,
-			AchZoneShow = true,
-			AddNew = true,
-			AddChanged = true,
-			BGColor = "0|0|0|.4",
-			BlizzModify = true,
-			BonusBar = false,
-			BonusTask = true,
-			ChalTrack = true,
-			FadeAll = false,
-			FixedSize = true,
-			GrowUp = false,
-			HideBlizz = true,
-			HideDoneObj = false,
-			HideRaid = false,
-			ItemAlpha = "1|1|1|.6",
-			ItemScale = 10,
-			KeyUseItem = "",
-			OCntFirst = false,
-			OMaxLen = 60,
-			RefreshTimer = 500,
-			RemoveComplete = false,
-			ScenTrack = true,
-			ShowClose = false,
-			ShowDist = true,
-			ShowPerColor = false,
-			CompleteColor = "1|.82|0|1",
-			IncompleteColor = ".75|.6|0|1",
-			OCompleteColor = "1|1|1|1",
-			OIncompleteColor = ".8|.8|.8|1",
-			Sync = true,
-			WatchFont = "Arial",
-			WatchFontSize = 11,
-			WatchFontSpacing = 2,
-		},
-		WQList = {
-			showgear = true,
-			showap = true,
-			showorder = true,
-			showgold = true,
-			showother = true,
-			showpvp = true,
-			showbounty = false,
-			sortmode = 1,
-			zoneonly = false,
-			showfaronis = true,
-			showdreamweaver = true,
-			showhighmountain = true,
-			showlegionfall = true,
-			showargussian = true,
-			shownightfallen = true,
-			showwardens = true,
-			showkirintor = true,
-			showarmyoflight = true,
-			showvalarjar = true,
-			bountycolor = true,
-		},
-	},
+    profile = {
+        -- Quest window options
+        Quest = {
+            QuestFont = "Friz",                         -- Quest list font
+            QuestFontSize = 10,                         -- Font size
+            QuestFontSpacing = 1,                       -- Line spacing
+            Enable = true,                              -- Enable quest module
+            AddTooltip = true,                          -- Add quest info to tooltips
+            AutoAccept = false,                         -- Auto-accept quests
+            AutoTurnIn = false,                         -- Auto-turn-in quests
+            AutoTurnInAC = false,                       -- Auto-turn-in self-completion
+            BroadcastQChanges = true,                   -- Broadcast quest progress
+            BroadcastQChangesNum = 999,                 -- Broadcast threshold
+            DetailBC = ".75|.75|.44|1",                 -- Detail background color
+            DetailTC = ".125|.06|.03|1",                -- Detail text color
+            DetailScale = .95,                          -- Detail window scale
+            HCheckCompleted = false,                    -- Check completed on login
+            maxLoadLevel = false,                       -- Load by level threshold
+            LevelsToLoad = 10,                          -- Level threshold
+            MapQuestGiversHighLevel = Nx.MaxPlayerLevel, -- Max quest giver level
+            MapQuestGiversLowLevel = 1,                 -- Min quest giver level
+            MapShowWatchAreas = true,                   -- Show watched areas on map
+            MapWatchAreaAlpha = "1|1|1|.4",             -- Watch area alpha
+            MapWatchAreaGfx = "Solid",                  -- Watch area graphic
+            MapWatchAreaTrackColor = ".7|.7|.7|.5",    -- Tracked area color
+            MapWatchAreaHoverColor = "1|1|1|.6",       -- Hover area color
+            MapWatchColorPerQ = true,                   -- Unique color per quest
+            MapWatchColorCnt = 12,                      -- Number of watch colors
+            -- Watch area colors (12 distinct colors)
+            MapWatchC1 = "1|0|0|1",                    -- Red
+            MapWatchC2 = "0|1|0|1",                    -- Green
+            MapWatchC3 = ".2|.2|1|1",                  -- Blue
+            MapWatchC4 = "1|1|0|1",                    -- Yellow
+            MapWatchC5 = "0|1|1|1",                    -- Cyan
+            MapWatchC6 = "1|0|1|1",                    -- Magenta
+            MapWatchC7 = "1|.5|0|1",                   -- Orange
+            MapWatchC8 = "0|1|.5|1",                   -- Spring green
+            MapWatchC9 = ".5|.066|1|1",                -- Purple
+            MapWatchC10 = ".5|1|0|1",                  -- Lime
+            MapWatchC11 = "0|.5|1|1",                  -- Sky blue
+            MapWatchC12 = "1|0|.5|1",                  -- Pink
+            PartyShare = true,                          -- Share quest progress
+            ShowDailyCount = true,                      -- Show daily quest count
+            ShowDailyReset = true,                      -- Show daily reset time
+            ShowId = false,                             -- Show quest ID
+            ShowLinkExtra = true,                       -- Show extra link info
+            SideBySide = true,                          -- Side by side layout
+            UseAltLKey = false,                         -- Use Alt-L keybind
+            SndPlayCompleted = true,                    -- Play completion sound
+            -- Sound options
+            Snd1 = true,                                -- Sound 1 enabled
+            Snd2 = false,
+            Snd3 = false,
+            Snd4 = false,
+            Snd5 = false,
+            Snd6 = false,
+            Snd7 = false,
+            Snd8 = false,
+            -- Quest database loading by level range
+            Load0 = true,                               -- Dailies/special
+            Load1 = true,                               -- Levels 1-10
+            Load2 = true,                               -- Levels 11-20
+            Load3 = true,                               -- Levels 21-30
+            Load4 = true,                               -- Levels 31-40
+            Load5 = true,                               -- Levels 41-50
+            Load6 = true,                               -- Levels 51-60
+            Load7 = (Nx.MaxPlayerLevel > 60),           -- Levels 61-70
+            Load8 = (Nx.MaxPlayerLevel > 70),           -- Levels 71-80
+            Load9 = (Nx.MaxPlayerLevel > 80),           -- Levels 81-85
+            Load10 = (Nx.MaxPlayerLevel > 85),          -- Levels 86-90
+            Load11 = (Nx.MaxPlayerLevel > 90),          -- Levels 91-100
+            Load12 = (Nx.MaxPlayerLevel > 100),         -- Levels 101-110
+            ScrollIMG = true,                           -- Use scroll image
+        },
+
+        -- Quest watch window options
+        QuestWatch = {
+            AchTrack = true,                            -- Track achievements
+            AchZoneShow = true,                         -- Show zone achievements
+            AddNew = true,                              -- Auto-watch new quests
+            AddChanged = true,                          -- Auto-watch changed quests
+            BGColor = "0|0|0|.4",                       -- Background color
+            BlizzModify = true,                         -- Modify Blizzard watch
+            BonusBar = false,                           -- Show progress bars
+            BonusTask = true,                           -- Show bonus tasks
+            ChalTrack = true,                           -- Track challenge modes
+            FadeAll = false,                            -- Fade entire window
+            FixedSize = true,                           -- Fixed window size
+            GrowUp = false,                             -- Grow upward
+            HideBlizz = true,                           -- Hide Blizzard watch
+            HideDoneObj = false,                        -- Hide done objectives
+            HideRaid = false,                           -- Hide in raids
+            ItemAlpha = "1|1|1|.6",                     -- Item button alpha
+            ItemScale = 10,                             -- Item button scale
+            KeyUseItem = "",                            -- Use item keybind
+            OCntFirst = false,                          -- Count first
+            OMaxLen = 60,                               -- Max objective length
+            RefreshTimer = 500,                         -- Refresh delay (ms)
+            RemoveComplete = false,                     -- Remove completed
+            ScenTrack = true,                           -- Track scenarios
+            ShowClose = false,                          -- Show close button
+            ShowDist = true,                            -- Show distance
+            ShowPerColor = false,                       -- Color by progress
+            CompleteColor = "1|.82|0|1",                -- Complete quest color
+            IncompleteColor = ".75|.6|0|1",             -- Incomplete quest color
+            OCompleteColor = "1|1|1|1",                 -- Complete objective color
+            OIncompleteColor = ".8|.8|.8|1",            -- Incomplete objective color
+            Sync = true,                                -- Sync with Blizzard
+            WatchFont = "Arial",                        -- Watch font
+            WatchFontSize = 11,                         -- Watch font size
+            WatchFontSpacing = 2,                       -- Watch line spacing
+        },
+
+        -- World quest list options
+        WQList = {
+            showgear = true,                            -- Show gear rewards
+            showap = true,                              -- Show artifact power
+            showorder = true,                           -- Show order resources
+            showgold = true,                            -- Show gold rewards
+            showother = true,                           -- Show other rewards
+            showpvp = true,                             -- Show PVP rewards
+            showbounty = false,                         -- Bounty only
+            sortmode = 1,                               -- Sort mode
+            zoneonly = false,                           -- Current zone only
+            -- Faction filters
+            showfaronis = true,
+            showdreamweaver = true,
+            showhighmountain = true,
+            showlegionfall = true,
+            showargussian = true,
+            shownightfallen = true,
+            showwardens = true,
+            showkirintor = true,
+            showarmyoflight = true,
+            showvalarjar = true,
+            bountycolor = true,                         -- Color bounty quests
+        },
+    },
 }
 
+-------------------------------------------------------------------------------
+-- LOCAL VARIABLES
+-------------------------------------------------------------------------------
+
 local GlobalAddonName = ...
+
+-- Tooltip for inspecting world quest items
 local inspectScantip = CreateFrame("GameTooltip", GlobalAddonName.."WQInspectScanningTooltip", nil, "GameTooltipTemplate")
 inspectScantip:SetOwner(UIParent, "ANCHOR_NONE")
 
+-- World quest data
 local WQTable = {}
-local ITEM_LEVEL = (ITEM_LEVEL or "NO DATA FOR ITEM_LEVEL"):gsub("%%d","(%%d+%+*)")
+local ITEM_LEVEL = (ITEM_LEVEL or "NO DATA FOR ITEM_LEVEL"):gsub("%%d", "(%%d+%+*)")
 
+-- Options and world quest state
 local questoptions
 local worldquestdb = {}
 local emmBfA = {}
 local emmLegion = {}
+
+-- Tooltip for world quest list
 local worldquesttip = CreateFrame("GameTooltip", "WQListTip", nil, "GameTooltipTemplate")
 worldquesttip:SetOwner(UIParent, "ANCHOR_NONE")
 
-local function QuestOptions ()
+-------------------------------------------------------------------------------
+-- OPTIONS CONFIGURATION
+-- AceConfig options table for quest module settings
+-------------------------------------------------------------------------------
+
+---
+-- Get or create quest options configuration
+-- @return  Quest options table for AceConfig
+--
+local function QuestOptions()
 	if not questoptions then
 		questoptions = {
 			type = "group",
@@ -1927,22 +1984,32 @@ local function QuestOptions ()
 			},
 		}
 	end
-	Nx.Opts:AddToProfileMenu(L["Quest"],3,Nx.qdb)
-	if Nx.MaxPlayerLevel < 90 then
-		questoptions.args.database.args.q10 = nil
-	end
-	if Nx.MaxPlayerLevel < 85 then
-		questoptions.args.database.args.q9 = nil
-	end
-	if Nx.MaxPlayerLevel < 80 then
-		questoptions.args.database.args.q8 = nil
-	end
-	if Nx.MaxPlayerLevel < 70 then
-		questoptions.args.database.args.q7 = nil
-	end
-	return questoptions
+    Nx.Opts:AddToProfileMenu(L["Quest"], 3, Nx.qdb)
+
+    -- Remove database options for levels above max player level
+    if Nx.MaxPlayerLevel < 90 then
+        questoptions.args.database.args.q10 = nil
+    end
+    if Nx.MaxPlayerLevel < 85 then
+        questoptions.args.database.args.q9 = nil
+    end
+    if Nx.MaxPlayerLevel < 80 then
+        questoptions.args.database.args.q8 = nil
+    end
+    if Nx.MaxPlayerLevel < 70 then
+        questoptions.args.database.args.q7 = nil
+    end
+    return questoptions
 end
 
+-------------------------------------------------------------------------------
+-- MODULE INITIALIZATION
+-------------------------------------------------------------------------------
+
+---
+-- AceAddon initialization callback
+-- Sets up database, button types, and initializes quest system
+--
 function CarboniteQuest:OnInitialize()
 	if not Nx.Initialized then
 		CarbQuestInit = Nx:ScheduleTimer(CarboniteQuest.OnInitialize,5)
@@ -2197,11 +2264,18 @@ function CarboniteQuest:OnInitialize()
 		[1504562405] = {"Sept 4th 2017","","New feature for world quests.","Carbonite Quests now has it's own WorldQuest Tracker","","You can find it as World Quest List under the menu in the top left of quest watch.","(Play button icon)"}
 	}
 	
-	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileChanged", "OnProfileChanged")
-	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileCopied", "OnProfileChanged")
-	Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileReset", "OnProfileChanged")
+    -- Register profile callbacks
+    Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileChanged", "OnProfileChanged")
+    Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileCopied", "OnProfileChanged")
+    Nx.qdb.RegisterCallback(Nx.Quest, "OnProfileReset", "OnProfileChanged")
 end
 
+---
+-- Handle profile change events
+-- @param event            Event type
+-- @param database         Database reference
+-- @param newProfileKey    New profile key
+--
 function Nx.Quest:OnProfileChanged(event, database, newProfileKey)
 	if event == "OnProfileReset" then
 		qopts = {}
@@ -2213,43 +2287,59 @@ function Nx.Quest:OnProfileChanged(event, database, newProfileKey)
 	Nx.Opts.NXCmdReload()
 end
 
+---
+-- Initialize quest data for current character
+--
 function Nx.Quest:InitQuestCharacter()
-	local chars = Nx.qdb.global.Characters
-	local fullName = Nx:GetRealmCharName()
-	local ch = chars[fullName]
-	if not ch then
-		ch = {}
-	end
-	if not ch.Q then
-		ch.Q = {}
-	end
-	Nx.Quest.CurCharacter = ch
+    local chars = Nx.qdb.global.Characters
+    local fullName = Nx:GetRealmCharName()
+    local ch = chars[fullName]
+    if not ch then
+        ch = {}
+    end
+    if not ch.Q then
+        ch.Q = {}
+    end
+    Nx.Quest.CurCharacter = ch
 end
 
-function Nx.Quest:OnChat_msg_addon(msg,dist,target)
+---
+-- Handle addon communication messages
+-- @param msg     Message string
+-- @param dist    Distribution type
+-- @param target  Target player
+--
+function Nx.Quest:OnChat_msg_addon(msg, dist, target)
 	if msg == "QUEST_DECODE" then
 		Nx.Quest:DecodeComRcv (Nx.qTEMPinfo, Nx.qTEMPmsg)
 	end
 end
 
+---
+-- Convert quest data from old format to new
+-- Migrates character quest data from main db to quest db
+--
 function Nx.Quest:ConvertData()
-	if not Nx.qdb.global then
-		Nx.qdb.global = {}
-	end
-	if not Nx.qdb.global.Characters then
-		Nx.qdb.global.Characters = {}
-	end
-	for ch,data in pairs(Nx.db.global.Characters) do
-		if not Nx.qdb.global.Characters[ch] then
-			Nx.qdb.global.Characters[ch] = {}
-		end
-		if Nx.db.global.Characters[ch].Q then
-			Nx.qdb.global.Characters[ch].Q = Nx.db.global.Characters[ch].Q
-			Nx.db.global.Characters[ch].Q = nil
-		end
-	end
+    if not Nx.qdb.global then
+        Nx.qdb.global = {}
+    end
+    if not Nx.qdb.global.Characters then
+        Nx.qdb.global.Characters = {}
+    end
+    for ch, data in pairs(Nx.db.global.Characters) do
+        if not Nx.qdb.global.Characters[ch] then
+            Nx.qdb.global.Characters[ch] = {}
+        end
+        if Nx.db.global.Characters[ch].Q then
+            Nx.qdb.global.Characters[ch].Q = Nx.db.global.Characters[ch].Q
+            Nx.db.global.Characters[ch].Q = nil
+        end
+    end
 end
 
+---
+-- Reset quest options to defaults
+--
 function Nx.Quest:OptsReset()
 
 	local qopts = Nx.Quest:GetQuestOpts()
@@ -2282,19 +2372,24 @@ function Nx.Quest:OptsReset()
 	Nx.qdb.profile.QuestOpts = qopts
 end
 
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- DEBUG
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 --function Nx.Quest.SelectQuestLogEntry (qn)
---	Nx.prt ("QSel %s", qn)
---	Nx.Quest.OldSelectQuestLogEntry (qn)
+--    Nx.prt ("QSel %s", qn)
+--    Nx.Quest.OldSelectQuestLogEntry (qn)
 --end
 
----------------------------------------------------------------------------------------
--- Init quest and watch data and windows
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- QUEST SYSTEM INITIALIZATION
+-- Initialize quest and watch data structures and windows
+-------------------------------------------------------------------------------
 
+---
+-- Initialize the quest system
+-- Sets up tracking tables, hooks, and windows
+--
 function Nx.Quest:Init()
 
 	if WatchFrame then
@@ -2916,8 +3011,10 @@ function Nx.Quest:Init()
 	QuestLogFrame:HookScript ("OnShow", func)
 end
 
--------
--- Changing orginal Blizz functions to fix quest map toggle
+-------------------------------------------------------------------------------
+-- BLIZZARD UI MODIFICATIONS
+-- Override Blizzard functions for quest map integration
+-------------------------------------------------------------------------------
 
 --[[local oQuestMapFrame_Show = QuestMapFrame_Show
 function QuestMapFrame_Show()
@@ -11533,15 +11630,22 @@ function Nx.Quest:OnPartyMsg (plName, msg)
 	QPartyUpdate = Nx:ScheduleTimer(self.PartyUpdateTimer,.5,self)
 end
 
--------------------------------------------------------------------------------
-
+---
+-- Timer callback for party quest updates
+--
 function Nx.Quest:PartyUpdateTimer()
-	self:RecordQuests(0)
-	self.Watch:Update()
+    self:RecordQuests(0)
+    self.Watch:Update()
 end
 
 -------------------------------------------------------------------------------
+-- PARTY QUEST SHARING
+-- Share quest progress with party members
+-------------------------------------------------------------------------------
 
+---
+-- Start sending quest data to party
+--
 function Nx.Quest:PartyStartSend()
 
 	if IsInRaid() or GetNumSubgroupMembers() == 0 then
@@ -11637,11 +11741,24 @@ function Nx.Quest:PartySendTimer()
 	end
 end
 
+-------------------------------------------------------------------------------
+-- QUEST DATA ACCESS FUNCTIONS
+-------------------------------------------------------------------------------
+
+---
+-- Get quest options table
+-- @return  Quest options profile table
+--
 function Nx.Quest:GetQuestOpts()
-	return Nx.qdb.profile.QuestOpts
+    return Nx.qdb.profile.QuestOpts
 end
 
-function Nx.Quest:UnpackObjectiveNew (obj)
+---
+-- Unpack objective data from string format
+-- @param obj  Objective string
+-- @return     desc, zone, typ
+--
+function Nx.Quest:UnpackObjectiveNew(obj)
 	if not obj then
 		return
 	end
@@ -11652,17 +11769,22 @@ function Nx.Quest:UnpackObjectiveNew (obj)
 	return desc, tonumber(zone), tonumber(typ)
 end
 
-function Nx.Quest:UnpackLocRect (locStr)
-
-	local _,_,_,x, y, w, h = Nx.Split ("|",locStr)
-
-	return	tonumber(x),		-- * 100 / 200	Optimised
-				tonumber(y),		-- * 100 / 200
-				tonumber(w),
-				tonumber(h)
+---
+-- Unpack location rectangle from string
+-- @param locStr  Location string
+-- @return        x, y, w, h
+--
+function Nx.Quest:UnpackLocRect(locStr)
+    local _, _, _, x, y, w, h = Nx.Split("|", locStr)
+    return tonumber(x), tonumber(y), tonumber(w), tonumber(h)
 end
 
-function Nx.Quest:UnpackLocPtOff (locStr)
+---
+-- Unpack location point offset from string
+-- @param locStr  Location string
+-- @return        x1, x2, y1, y2
+--
+function Nx.Quest:UnpackLocPtOff(locStr)
 	if type(locStr) == "string" then
 		local _,_,_,x1,x2,y1,y2 = Nx.Split("|",locStr)
 		return tonumber(x1), tonumber(x2), tonumber(y1), tonumber(y2)
@@ -11672,41 +11794,69 @@ function Nx.Quest:UnpackLocPtOff (locStr)
 	end
 end
 
-function Nx.Quest:GetQuest (qId)
-	local quest = Nx.Quest.CurCharacter.Q[qId]
-	if not quest then
-		return
-	end
-	if type(quest) == "table" then
-		Nx.Quest.CurCharacter.Q[qId] = ""
-		return
-	end
-	local s1, s2, status, time = strfind (quest, "(%a)(%d+)")
-	return status, time
+---
+-- Get quest status for character
+-- @param qId  Quest ID
+-- @return     status, time
+--
+function Nx.Quest:GetQuest(qId)
+    local quest = Nx.Quest.CurCharacter.Q[qId]
+    if not quest then
+        return
+    end
+    if type(quest) == "table" then
+        Nx.Quest.CurCharacter.Q[qId] = ""
+        return
+    end
+    local s1, s2, status, time = strfind(quest, "(%a)(%d+)")
+    return status, time
 end
 
-function Nx.Quest:SetQuest (qId, qStatus, qTime)
+---
+-- Set quest status for character
+-- @param qId      Quest ID
+-- @param qStatus  Quest status
+-- @param qTime    Quest time
+--
+function Nx.Quest:SetQuest(qId, qStatus, qTime)
 	qTime = qTime or 0
 	Nx.Quest.CurCharacter.Q[qId] = qStatus .. qTime
 end
 
-function Nx.Quest:NullQuest (qId)
-	Nx.Quest.CurCharacter.Q[qId] = ""
-	
-	if Nx.Quest.Tracking[qId] then
-		Nx.Quest.Tracking[qId] = nil
-	end
+---
+-- Clear quest data for character
+-- @param qId  Quest ID
+--
+function Nx.Quest:NullQuest(qId)
+    Nx.Quest.CurCharacter.Q[qId] = ""
+
+    if Nx.Quest.Tracking[qId] then
+        Nx.Quest.Tracking[qId] = nil
+    end
 end
 
-function Nx.Quest:GetQuestID (loc)
+---
+-- Get quest ID from log location
+-- @param loc  Quest log index
+-- @return     Quest ID
+--
+function Nx.Quest:GetQuestID(loc)
 	local _, _, _, _, _, _, _, questId, _, _, _, _, _, _ = GetQuestLogTitle(loc)
 	return questId
 end
 
+-------------------------------------------------------------------------------
+-- WORLD QUEST LIST WINDOW
+-- Window for tracking and filtering world quests
+-------------------------------------------------------------------------------
+
+---
+-- Open and initialize the world quest list window
+--
 function Nx.Quest.WQList:Open()
-	self.GOpts = opts
-	local qopts = Nx.Quest:GetQuestOpts()		
-	local win = Nx.Window:Create ("NxQuestWQList", nil, nil, nil, 1, false)
+    self.GOpts = opts
+    local qopts = Nx.Quest:GetQuestOpts()
+    local win = Nx.Window:Create("NxQuestWQList", nil, nil, nil, 1, false)
 	local xo, yo = 7,3
 	Nx.Window:SetCreateFade (1, .15)
 	self.Opened = true	
@@ -11804,12 +11954,21 @@ function Nx.Quest.WQList:Open()
 	win.Frm:Hide()
 end
 
-function Nx.Quest.WQList:WinUpdateFade (fade)	
-	Nx.Quest.WQList.Win:SetTitleColors (1, 1, 1, fade)		
-	Nx.Quest.WQList.List.Frm:SetAlpha (fade)
-	Nx.Quest.WQList.ButMenu.Frm:SetAlpha (fade)
+---
+-- Update world quest list window fade
+-- @param fade  Fade alpha value
+--
+function Nx.Quest.WQList:WinUpdateFade(fade)
+    Nx.Quest.WQList.Win:SetTitleColors(1, 1, 1, fade)
+    Nx.Quest.WQList.List.Frm:SetAlpha(fade)
+    Nx.Quest.WQList.ButMenu.Frm:SetAlpha(fade)
 end
 
+---
+-- Generate tooltip text for a world quest
+-- @param questId  World quest ID
+-- @return         Tooltip string
+--
 function Nx.Quest.WQList:GenWQTip(questId)	
 	if worldquestdb[questId].tip and worldquestdb[questId].tip ~= false then		
 		return worldquestdb[questId].tip
@@ -11904,13 +12063,18 @@ function Nx.Quest.WQList:GenWQTip(questId)
 	return tip
 end
 
+---
+-- Get reward type for a world quest
+-- @param questId  World quest ID
+-- @return         Reward type code (10=AP, 20=gold, 30=resources, 40=gear, false=other)
+--
 function Nx.Quest.WQList:GetWQReward(questId)
-	local reward = ""
-	
-	local artxp = GetQuestLogRewardArtifactXP(questId)	
-	if artxp > 0 then				
-		return 10
-	end
+    local reward = ""
+
+    local artxp = GetQuestLogRewardArtifactXP(questId)
+    if artxp > 0 then
+        return 10
+    end
 	local items = GetNumQuestLogRewards(questId)
 	if items > 0 then
 		worldquesttip:ClearLines()
@@ -11943,17 +12107,30 @@ function Nx.Quest.WQList:GetWQReward(questId)
 	return false
 end
 
-function Nx.Quest.WQList:OnListEvent (eventName, sel, val2, click)
-	local itemData = self.List:ItemGetData (sel) or 0
-	local shift = IsShiftKeyDown() or eventName == "mid"
-	local map = Nx.Map:GetMap (1)	
-	if eventName == "button" and itemData then				
-		local title, faction = C_TaskQuest.GetQuestInfoByQuestID(itemData.questid)		
-		map:SetTargetXY (itemData.mapid, itemData.x, itemData.y, title, false)	
-	end
+---
+-- Handle world quest list events
+-- @param eventName  Event type
+-- @param sel        Selected index
+-- @param val2       Additional value
+-- @param click      Click info
+--
+function Nx.Quest.WQList:OnListEvent(eventName, sel, val2, click)
+    local itemData = self.List:ItemGetData(sel) or 0
+    local shift = IsShiftKeyDown() or eventName == "mid"
+    local map = Nx.Map:GetMap(1)
+    if eventName == "button" and itemData then
+        local title, faction = C_TaskQuest.GetQuestInfoByQuestID(itemData.questid)
+        map:SetTargetXY(itemData.mapid, itemData.x, itemData.y, title, false)
+    end
 end
 
 local WQListUpdateDBTimer
+
+---
+-- Update world quest database from API
+-- @param event  Event type
+-- @param ...    Event arguments
+--
 function Nx.Quest.WQList:UpdateDB(event, ...)
 	if WQListUpdateDBTimer then
 		WQListUpdateDBTimer:Cancel()
@@ -12008,17 +12185,25 @@ function Nx.Quest.WQList:UpdateDB(event, ...)
 	end	
 end
 
+---
+-- Check if quest counts toward a faction bounty
+-- @param questId  World quest ID
+-- @return         true if quest is a bounty criteria
+--
 function Nx.Quest.WQList:CheckBounty(questId)
-	local bounties = GetQuestBountyInfoForMapID(1014)
-	local isbounty = false
-	for bountyIndex, bounty in ipairs(bounties) do
-		if IsQuestCriteriaForBounty(questId, bounty.questID) then
-			isbounty = true
-		end
-	end
-	return isbounty
+    local bounties = GetQuestBountyInfoForMapID(1014)
+    local isbounty = false
+    for bountyIndex, bounty in ipairs(bounties) do
+        if IsQuestCriteriaForBounty(questId, bounty.questID) then
+            isbounty = true
+        end
+    end
+    return isbounty
 end
 
+---
+-- Update the world quest list display
+--
 function Nx.Quest.WQList:Update()	
 	local list = Nx.Quest.WQList.List	
 	list:Empty()		
@@ -12108,4 +12293,5 @@ function Nx.Quest.WQList:Update()
 end
 
 -------------------------------------------------------------------------------
--- EOF
+-- END OF FILE
+-------------------------------------------------------------------------------

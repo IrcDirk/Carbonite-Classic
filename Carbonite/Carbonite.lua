@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -14,53 +14,78 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Commit: 2019-08-20 08:10:08 +0200 (436eed1)
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- INITIALIZATION
+-- Core addon setup using Ace3 framework
+-------------------------------------------------------------------------------
+
 local _G = getfenv(0)
 
+-- Create main addon object using Ace3 libraries
 Nx = LibStub("AceAddon-3.0"):NewAddon("Carbonite","AceConsole-3.0", "AceTimer-3.0", "AceEvent-3.0", "AceComm-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
+
+-------------------------------------------------------------------------------
+-- VERSION INFORMATION
+-- Version numbers used for data migration and compatibility checks
+-------------------------------------------------------------------------------
 
 Nx.WebSite = "wowinterface.com"
 NXTITLEFULL = L["Carbonite"]
 
-Nx.VERMAJOR			= 113
-Nx.VERMINOR			= .0				-- Not 0 is a test version
-Nx.BUILD			= "436eed1"
+-- Main version numbers
+Nx.VERMAJOR             = 113
+Nx.VERMINOR             = .0                -- Non-zero indicates test version
+Nx.BUILD                = "436eed1"
 if Nx.BUILD:find("Format:%h", 1, true) then Nx.BUILD = string.sub("581", 0, 7) end
 if Nx.BUILD:find("project-revision", 1, true) then Nx.BUILD = "0" end
 
-Nx.VERSION			= Nx.VERMAJOR + Nx.VERMINOR / 100
+Nx.VERSION              = Nx.VERMAJOR + Nx.VERMINOR / 100
 
-Nx.VERSIONDATA			= .02				-- Main data
-Nx.VERSIONCHAR			= .02				-- Character data
-Nx.VERSIONCharData		= .4				-- Character specific saved data
-Nx.VERSIONGATHER		= .9				-- Gathered data
-Nx.VERSIONGOPTS			= .102				-- Global options
-Nx.VERSIONHUDOPTS		= .03				-- HUD options
-Nx.VERSIONList			= .1				-- List header data
-Nx.VERSIONTaxiCap		= .5				-- Taxi capture data
-Nx.VERSIONTRAVEL		= .5				-- Travel data
-Nx.VERSIONWin			= .31				-- Window layouts
-Nx.VERSIONTOOLBAR		= .1				-- Tool Bar data
-Nx.VERSIONCAP			= .75				-- Captured data (quest recording)
-Nx.VERSIONVENDORV		= .56				-- Visited vendor data
-Nx.VERSIONTransferData		= .1				-- Transfer data
-Nx.TXTBLUE			= "|cffc0c0ff"
+-- Data structure version numbers (used for migration/reset on version change)
+Nx.VERSIONDATA          = .02               -- Main data format
+Nx.VERSIONCHAR          = .02               -- Character data format
+Nx.VERSIONCharData      = .4                -- Character-specific saved data
+Nx.VERSIONGATHER        = .9                -- Gathered node data (herbs/mines)
+Nx.VERSIONGOPTS         = .102              -- Global options
+Nx.VERSIONHUDOPTS       = .03               -- HUD options
+Nx.VERSIONList          = .1                -- List header data
+Nx.VERSIONTaxiCap       = .5                -- Taxi capture data
+Nx.VERSIONTRAVEL        = .5                -- Travel data
+Nx.VERSIONWin           = .31               -- Window layouts
+Nx.VERSIONTOOLBAR       = .1                -- Tool Bar data
+Nx.VERSIONCAP           = .75               -- Captured data (quest recording)
+Nx.VERSIONVENDORV       = .56               -- Visited vendor data
+Nx.VERSIONTransferData  = .1                -- Transfer data
 
--- Keybindings
-BINDING_HEADER_Carbonite	= "|cffc0c0ff" .. L["Carbonite"] .. "|r"
-BINDING_NAME_NxMAPTOGORIGINAL	= L["NxMAPTOGORIGINAL"]
-BINDING_NAME_NxMAPTOGNORMMAX	= L["NxMAPTOGNORMMAX"]
-BINDING_NAME_NxMAPTOGNONEMAX	= L["NxMAPTOGNONEMAX"]
-BINDING_NAME_NxMAPTOGNONENORM	= L["NxMAPTOGNONENORM"]
-BINDING_NAME_NxMAPSCALERESTORE	= L["NxMAPSCALERESTORE"]
-BINDING_NAME_NxMAPTOGMINIFULL	= L["NxMAPTOGMINIFULL"]
-BINDING_NAME_NxMAPTOGHERB	= L["NxMAPTOGHERB"]
-BINDING_NAME_NxMAPTOGMINE	= L["NxMAPTOGMINE"]
-BINDING_NAME_NxTOGGLEGUIDE	= L["NxTOGGLEGUIDE"]
-BINDING_NAME_NxMAPSKIPTARGET	= L["NxMAPSKIPTARGET"]
+-- Color codes for formatted text
+Nx.TXTBLUE              = "|cffc0c0ff"
+
+-------------------------------------------------------------------------------
+-- KEYBINDING DEFINITIONS
+-- Localized names for keybindable actions
+-------------------------------------------------------------------------------
+
+BINDING_HEADER_Carbonite        = "|cffc0c0ff" .. L["Carbonite"] .. "|r"
+BINDING_NAME_NxMAPTOGORIGINAL   = L["NxMAPTOGORIGINAL"]
+BINDING_NAME_NxMAPTOGNORMMAX    = L["NxMAPTOGNORMMAX"]
+BINDING_NAME_NxMAPTOGNONEMAX    = L["NxMAPTOGNONEMAX"]
+BINDING_NAME_NxMAPTOGNONENORM   = L["NxMAPTOGNONENORM"]
+BINDING_NAME_NxMAPSCALERESTORE  = L["NxMAPSCALERESTORE"]
+BINDING_NAME_NxMAPTOGMINIFULL   = L["NxMAPTOGMINIFULL"]
+BINDING_NAME_NxMAPTOGHERB       = L["NxMAPTOGHERB"]
+BINDING_NAME_NxMAPTOGMINE       = L["NxMAPTOGMINE"]
+BINDING_NAME_NxTOGGLEGUIDE      = L["NxTOGGLEGUIDE"]
+BINDING_NAME_NxMAPSKIPTARGET    = L["NxMAPSKIPTARGET"]
+
+-------------------------------------------------------------------------------
+-- GAME VERSION DETECTION
+-- Flags for different WoW client versions
+-------------------------------------------------------------------------------
 
 Nx.isClassic      = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 Nx.isTBCClassic   = (WOW_PROJECT_ID == WOW_PROJECT_TBC_CLASSIC)
@@ -70,17 +95,29 @@ Nx.isMoPClassic   = (WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC)
 Nx.BlobsAvailable = select(4, GetBuildInfo()) > 39999
 Nx.MaxPlayerLevel = GetMaxLevelForExpansionLevel(LE_EXPANSION_LEVEL_CURRENT)
 
+-------------------------------------------------------------------------------
+-- GLOBAL STATE VARIABLES
+-------------------------------------------------------------------------------
+
+-- Frame update counter
 Nx.Tick = 0
 
+-- Battleground combat statistics
 Nx.Combat = {
-	["KBs"] = 0,
-	["Deaths"] = 0,
-	["HKs"] = 0,
-	["Honor"] = 0,
-	["DamDone"] = 0,
-	["HealDone"] = 0,
+    ["KBs"] = 0,        -- Killing blows
+    ["Deaths"] = 0,     -- Deaths
+    ["HKs"] = 0,        -- Honorable kills
+    ["Honor"] = 0,      -- Honor earned
+    ["DamDone"] = 0,    -- Damage done
+    ["HealDone"] = 0,   -- Healing done
 }
 
+-------------------------------------------------------------------------------
+-- MODULE NAMESPACES
+-- Empty tables to be populated by respective modules
+-------------------------------------------------------------------------------
+
+-- UI Components
 Nx.Font = {}
 Nx.Skin = {}
 Nx.Window = {}
@@ -95,65 +132,115 @@ Nx.Slider = {}
 Nx.TabBar = {}
 Nx.ToolBar = {}
 
+-- Processing and scripting
 Nx.Proc = {}
 Nx.Script = {}
 
+-- Logo texture path
 Nx.Logo = "Interface\\AddOns\\Carbonite\\Gfx\\Carbonite"
 
+-- Options module
 Nx.Opts = {}
 
+-- Communication module
 Nx.Com = {}
 Nx.Com.List = {}
 
+-- Heads-up display
 Nx.HUD = {}
 
+-- Map module (main functionality)
 Nx.Map = {}
 Nx.Map.Dock = {}
 Nx.Map.Guide = {}
 Nx.Map.Guide.PlayerTargets = {}
 
+-- Travel/taxi system
 Nx.Travel = {}
 
+-- Title screen animation
 Nx.Title = {}
+
+-- Auction house assistant
 Nx.AuctionAssist = {}
 
+-- User events tracking
 Nx.UEvents = {}
 Nx.UEvents.List = {}
 
-Nx.DebugOn = false
-Nx.NetSendPos = false
-Nx.NetPlyrSendTime = GetTime()
+-------------------------------------------------------------------------------
+-- RUNTIME FLAGS
+-- State tracking variables
+-------------------------------------------------------------------------------
 
-Nx.GroupMembers = {}
+Nx.DebugOn = false          -- Debug output enabled
+Nx.NetSendPos = false       -- Network position sending enabled
+Nx.NetPlyrSendTime = GetTime()  -- Last network send timestamp
 
-Nx.Item = {}
+Nx.GroupMembers = {}        -- Current group member cache
 
-Nx.NXMiniMapBut = {}
+Nx.Item = {}                -- Item management module
 
-Nx.db = {}
-Nx.dbs = {}
+Nx.NXMiniMapBut = {}        -- Minimap button handler
+
+Nx.db = {}                  -- Main database reference
+Nx.dbs = {}                 -- Database array for multi-profile support
 
 Nx.ModuleUpdateIcon = {"test"}
-Nx.RequestTime = false
-Nx.FirstTry = true
-Nx.Loaded = false
-Nx.Initialized = false
-Nx.RealTom =  false
-Nx.PlayerFnd = false
-Nx.ModQAction = ""
-Nx.ModPAction = ""
-Nx.GlowOn = false
+Nx.RequestTime = false      -- Time played request pending
+Nx.FirstTry = true          -- First initialization attempt
+Nx.Loaded = false           -- Addon files loaded
+Nx.Initialized = false      -- Full initialization complete
+Nx.RealTom = false          -- Real TomTom addon detected
+Nx.PlayerFnd = false        -- Player unit found
+Nx.ModQAction = ""          -- Module quest action
+Nx.ModPAction = ""          -- Module player action
+Nx.GlowOn = false           -- Minimap button glow state
+
+-------------------------------------------------------------------------------
+-- WHAT'S NEW SYSTEM
+-- Displays version history and update notes to users
+-------------------------------------------------------------------------------
 
 Nx.Whatsnew = {}
 Nx.Whatsnew.Categories = {"Maps"}
 Nx.Whatsnew.Maps = {
-  [1568657164] = {"Sept 16th 2019","","This is Alpha version of Carbonite Classic, all bugs/issues please report to", "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."},
-  [1653631200] = {"May 27th 2022","","Fixed map path generation using FlightMasters", "Fixed HandyNotes icons disappearing while standing still", "Fixed Carbonite Map causing errors while trying to open map in combat", "Fixed Carbonite maps going out while traveling between islands/subcontinents in Kalimdor/Eastern Kingdoms/Outlands", "Fixed Warehouse module not showing equipped wands", "Add tracking of goods bought in Auction House in Warehouse module", "Add localizations for various strings (need translators for some languages)", "Updated translations for some of the Carbonite modules"},
-  [1660510987] = {"Aug 14th 2022","","Implemented WotLK Classic support for Pre-patch","Updated Flight Masters data", "Updated Flight Masters locales for DE,ES,FR,KO,PT,RU,TW Languages", "Fixed various small errors caused by division by zero."}
+    [1568657164] = {
+        "Sept 16th 2019", "",
+        "This is Alpha version of Carbonite Classic, all bugs/issues please report to",
+        "GitHub repo: https://github.com/IrcDirk/Carbonite-Classic."
+    },
+    [1653631200] = {
+        "May 27th 2022", "",
+        "Fixed map path generation using FlightMasters",
+        "Fixed HandyNotes icons disappearing while standing still",
+        "Fixed Carbonite Map causing errors while trying to open map in combat",
+        "Fixed Carbonite maps going out while traveling between islands/subcontinents in Kalimdor/Eastern Kingdoms/Outlands",
+        "Fixed Warehouse module not showing equipped wands",
+        "Add tracking of goods bought in Auction House in Warehouse module",
+        "Add localizations for various strings (need translators for some languages)",
+        "Updated translations for some of the Carbonite modules"
+    },
+    [1660510987] = {
+        "Aug 14th 2022", "",
+        "Implemented WotLK Classic support for Pre-patch",
+        "Updated Flight Masters data",
+        "Updated Flight Masters locales for DE,ES,FR,KO,PT,RU,TW Languages",
+        "Fixed various small errors caused by division by zero."
+    }
 }
 Nx.Whatsnew.WhichCat = 1
 Nx.Whatsnew.HasWhatsNew = nil
 
+-------------------------------------------------------------------------------
+-- TOMTOM EMULATION
+-- Provides TomTom-compatible API for addons that expect it
+-------------------------------------------------------------------------------
+
+---
+-- Set up TomTom emulation API
+-- Creates global TomTom table with wrapper functions
+--
 function Nx.EmulateTomTom()
 	if _G.TomTom and Nx.RealTom then
 		return
@@ -622,11 +709,15 @@ end
 
 function Nx:OnDisable()
 end
----------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- SLASH COMMAND HANDLER
+-- Parses /carb command and subcommands
+-------------------------------------------------------------------------------
 
---------
--- Slash command parsing
-
+---
+-- Parse and execute slash commands
+-- @param txt  Command string following /carb
+--
 function Nx.slashCommand (txt)
 
 	local UEvents = Nx.UEvents
@@ -771,9 +862,16 @@ function Nx.slashCommand (txt)
 	end
 end
 
---------------------------------------------------------------------------------
--- Startup
+-------------------------------------------------------------------------------
+-- ADDON STARTUP
+-- Initial loading and event registration
+-------------------------------------------------------------------------------
 
+---
+-- Called when the addon frame is created
+-- Registers slash commands and initial events
+-- @param frm  The addon's main frame
+--
 function Nx:NXOnLoad (frm)
 
 	SlashCmdList["Carbonite"] = Nx.slashCommand
@@ -789,7 +887,10 @@ function Nx:NXOnLoad (frm)
 	Nx.CalendarDate = 0		-- For safety if Map update happens early
 end
 
---------
+---
+-- Main initialization function
+-- Sets up all modules and UI components after player is detected
+-- Called when addon is loaded, player exists, and not in combat
 --
 function Nx:SetupEverything()
 
@@ -874,12 +975,19 @@ function Nx:SetupEverything()
 	--GuildControlPopupFrame.initialized = 1
 end
 
+---
+-- Handle ADDON_LOADED event
+-- Marks addon as loaded
+--
 function Nx:ADDON_LOADED (event, arg1, ...)
-	Nx.Loaded = true
-	
-	CarbMigr = {}
+    Nx.Loaded = true
+    CarbMigr = {}
 end
 
+---
+-- Handle UNIT_NAME_UPDATE event
+-- Called when player name becomes available; enables TomTom emulation
+--
 function Nx:UNIT_NAME_UPDATE (event, arg1, ...)
 	Nx.PlayerFnd = true
 	
@@ -894,14 +1002,24 @@ function Nx:UNIT_NAME_UPDATE (event, arg1, ...)
 	Nx.EmulateTomTom()
 end
 
+---
+-- Initialize locale settings
+-- Stores current game locale for localization
+--
 function Nx:LocaleInit()
-	local loc = GetLocale()
-	Nx.Locale = loc
+    local loc = GetLocale()
+    Nx.Locale = loc
 end
 
---------
--- Register events
+-------------------------------------------------------------------------------
+-- EVENT REGISTRATION
+-- Sets up all event handlers for the addon
+-------------------------------------------------------------------------------
 
+---
+-- Register all addon events
+-- Uses Ace3 event system for various game events
+--
 function Nx:InitEvents()
 
 	local Com = Nx.Com
@@ -948,7 +1066,10 @@ function Nx:InitEvents()
 	Travel:RegisterEvent("TAXIMAP_OPENED", "OnTaximap_opened")
 end
 
--- Handle frame events
+---
+-- Handle legacy frame events
+-- Routes events to appropriate handlers
+--
 function Nx:NXOnEvent (event, ...)
 	local h = self.Events[event]
 	if h then
@@ -958,9 +1079,15 @@ function Nx:NXOnEvent (event, ...)
 	end
 end
 
---------
--- Login message
+-------------------------------------------------------------------------------
+-- EVENT HANDLERS
+-- Individual handlers for game events
+-------------------------------------------------------------------------------
 
+---
+-- Handle PLAYER_LOGIN event
+-- Initializes windows and requests time played
+--
 function Nx:OnPlayer_login (event, ...)
 	Nx:OnParty_members_changed()	
 	Nx.Com:OnEvent (event)
@@ -973,8 +1100,10 @@ function Nx:OnPlayer_login (event, ...)
 	Nx.RequestTime = true;
 end
 
---------
-
+---
+-- Handle UPDATE_MOUSEOVER_UNIT event
+-- Processes quest tooltips and GUID information for debugging
+--
 function Nx:OnUpdate_mouseover_unit (event, ...)	
 	if Nx.Quest then
 		Nx.Quest:TooltipProcess (true)
@@ -1002,9 +1131,13 @@ function Nx:OnUpdate_mouseover_unit (event, ...)
 	end
 end
 
+---
+-- Get unit debug data from GUID
+-- @param target  Unit ID to inspect
+-- @return        data table, guid, id, type
+--
 function Nx:UnitDGet (target)
-
-	if Nx.db.profile.Debug.DebugUnit then
+    if Nx.db.profile.Debug.DebugUnit then
 
 		local guid = UnitGUID (target)
 		if guid then
@@ -1027,8 +1160,10 @@ function Nx:UnitDGet (target)
 	end
 end
 
--- Capture pos of target
-
+---
+-- Capture position of targeted unit
+-- Stores NPC location data for debugging
+--
 function Nx:UnitDCapture()
 
 	local data, guid, id, typ = self:UnitDGet ("target")
@@ -1052,9 +1187,12 @@ function Nx:UnitDCapture()
 	end
 end
 
+---
+-- Add unit debug info to tooltip
+-- Shows GUID and position data for moused-over unit
+--
 function Nx:UnitDTip()
-
-	local data, guid, id, typ = self:UnitDGet ("mouseover")
+    local data, guid, id, typ = self:UnitDGet ("mouseover")
 	if data and typ == 3 then
 
 		local midCur = Nx.Map:GetCurrentMapAreaID()
@@ -1129,14 +1267,24 @@ function Nx:UnitDTip()
 	end
 end
 
+---
+-- Handle entering combat
+--
 function Nx:OnPlayer_regen_disabled()
-	Nx.Window:UpdateCombat()
+    Nx.Window:UpdateCombat()
 end
 
+---
+-- Handle leaving combat
+--
 function Nx:OnPlayer_regen_enabled()
-	Nx.Window:UpdateCombat()
+    Nx.Window:UpdateCombat()
 end
 
+---
+-- Handle spell cast sent event
+-- Detects gathering spells (herbs/mining) to record nodes
+--
 function Nx:OnUnit_spellcast_sent (event, arg1, arg2, arg3, arg4)	
 	if arg1 == "player" then
 		local Nx = Nx
@@ -1181,23 +1329,32 @@ function Nx:OnUnit_spellcast_sent (event, arg1, arg2, arg3, arg4)
 	end
 end
 
+---
+-- Handle zone change event
+-- Records zone entry in events list
+--
 function Nx:OnZone_changed_new_area (event)
-
-	Nx.UEvents:AddInfo (L["Entered"])
+    Nx.UEvents:AddInfo (L["Entered"])
 
 	Nx.Com:OnEvent (event)
 end
 
+---
+-- Handle player level up event
+-- Records level gain in events list
+--
 function Nx:OnPlayer_level_up (event, arg1)
-
-	Nx.UEvents:AddInfo (format (L["Level"] .. " %d", arg1))
+    Nx.UEvents:AddInfo (format (L["Level"] .. " %d", arg1))
 
 	Nx.Com:OnPlayer_level_up (event, arg1)
 end
 
+---
+-- Handle party/raid roster change
+-- Updates group member cache
+--
 function Nx.OnParty_members_changed()
-
-	local self = Nx
+    local self = Nx
 
 	local members = {}
 	self.GroupMembers = members
@@ -1225,9 +1382,12 @@ function Nx.OnParty_members_changed()
 	end
 end
 
+---
+-- Handle battleground score update
+-- Tracks and displays player's PvP statistics
+--
 function Nx:OnUpdate_battlefield_score (event)
-
-	local plName = UnitName ("player")
+    local plName = UnitName ("player")
 	local scores = GetNumBattlefieldScores()
 	local cb = Nx.Combat
 
@@ -1276,9 +1436,16 @@ function Nx:OnUpdate_battlefield_score (event)
 
 end
 
---------
--- Generic update
+-------------------------------------------------------------------------------
+-- MAIN UPDATE LOOP
+-- Called every frame to update addon state
+-------------------------------------------------------------------------------
 
+---
+-- Main frame update handler
+-- Processes tooltips, network updates, and calls module updates
+-- @param elapsed  Time since last frame
+--
 function Nx:NXOnUpdate (elapsed)    
 	if InCombatLockdown() and not Nx.Initialized and not Nx.CombatMessage then		
 		Nx.prt("You are in combat! Carbonite will resume loading when your safe.")
@@ -1391,18 +1558,24 @@ function Nx:NXOnUpdate (elapsed)
 
 end
 
+---
+-- Check if there are unread what's new entries
+-- @return  true if any entries are newer than last read time
+--
 function Nx:WhatsNewUnread()
-	local checkread
-	for a,b in pairs(Nx.Whatsnew.Categories) do
-		for c,d in pairs(Nx.Whatsnew[b]) do
-			if Nx.db.profile.Whatsnew.lastreadtime < c then
-				return true
-			end
-		end
-	end
-	return false
+    for a, b in pairs(Nx.Whatsnew.Categories) do
+        for c, d in pairs(Nx.Whatsnew[b]) do
+            if Nx.db.profile.Whatsnew.lastreadtime < c then
+                return true
+            end
+        end
+    end
+    return false
 end
 
+---
+-- Toggle the What's New window visibility
+--
 function Nx.Whatsnew:ToggleShow()
 
 	if not self.Win then
@@ -1416,6 +1589,10 @@ function Nx.Whatsnew:ToggleShow()
 	end
 end
 
+---
+-- Create the What's New window
+-- Sets up list view with date entries
+--
 function Nx.Whatsnew:Create()	
 	local win = Nx.Window:Create ("NxWhatsNew", nil, nil, nil, 1)
 	self.Win = win
@@ -1501,9 +1678,14 @@ function Nx.Whatsnew:Update()
 	list:Update()
 end
 
---------
--- Loot vendor Test
+-------------------------------------------------------------------------------
+-- UTILITY FUNCTIONS
+-------------------------------------------------------------------------------
 
+---
+-- Debug function to auto-click gossip buttons
+-- Used for vendor testing
+--
 function Nx:LootIt()
 
 	local b = _G["GossipTitleButton1"]
@@ -1513,9 +1695,14 @@ function Nx:LootIt()
 	end
 end
 
---------
--- Show a generic message with optional function callback
-
+---
+-- Show a generic message dialog with optional callbacks
+-- @param msg       Message text to display
+-- @param func1Txt  Button 1 text
+-- @param func1     Button 1 callback function
+-- @param func2Txt  Button 2 text (optional)
+-- @param func2     Button 2 callback function (optional)
+--
 function Nx:ShowMessage (msg, func1Txt, func1, func2Txt, func2)
 
 	local pop = StaticPopupDialogs["NxMsg"]
@@ -1543,9 +1730,14 @@ function Nx:ShowMessage (msg, func1Txt, func1, func2Txt, func2)
 	StaticPopup_Show ("NxMsg")
 end
 
---------
--- Show a generic edit box with optional function callback
-
+---
+-- Show a generic edit box dialog with callbacks
+-- @param msg         Prompt message
+-- @param val         Initial value in edit box
+-- @param userData    Data to pass to callback
+-- @param funcAccept  Accept button callback
+-- @param funcCancel  Cancel button callback
+--
 function Nx:ShowEditBox (msg, val, userData, funcAccept, funcCancel)
 
 --	Nx.prt ("ShowEditBox")
@@ -1610,23 +1802,26 @@ function Nx:ShowEditBox (msg, val, userData, funcAccept, funcCancel)
 	StaticPopup_Show ("NxEdit")
 end
 
---------
--- Show a trial message
-
+---
+-- Show trial limitation message (stub)
+--
 function Nx:ShowMessageTrial()
 end
 
---------
--- Find active chat frame edit box. Added for patch 3.35 because there is one for each possible chat window now
--- Was called ChatFrameEditBox. Now ChatFrame1EditBox to ChatFrame10EditBox
-
+---
+-- Find the currently active chat frame edit box
+-- Returns the edit box if one is open for typing
+-- @return  Active chat edit box or nil
+--
 function Nx:FindActiveChatFrameEditBox()
 	return ChatEdit_GetActiveWindow()
 end
 
---------
--- Get time in seconds * 100. Adds fake hundreths
-
+---
+-- Get high-resolution time value
+-- Returns seconds * 100 with simulated hundredths
+-- @return  Time value for event ordering
+--
 function Nx:Time()
 
 	local tm = time()
@@ -1642,18 +1837,29 @@ function Nx:Time()
 	return tm * 100 + self.TimeFrac
 end
 
+---
+-- Check if a unit is an elite mob
+-- @param target  Unit ID to check
+-- @return        true if elite, rareelite, or worldboss
+--
 function Nx:UnitIsPlusMob (target)
-	local c = UnitClassification (target)
-	return c == "elite" or c == "rareelite" or c == "worldboss"
+    local c = UnitClassification (target)
+    return c == "elite" or c == "rareelite" or c == "worldboss"
 end
 
---------------------------------------------------------------------------------
--- Global Data Management
+-------------------------------------------------------------------------------
+-- GLOBAL DATA MANAGEMENT
+-- Functions for managing saved variables and persistent data
+-------------------------------------------------------------------------------
 
--- Gather format {}
---  Herb [map id] = { [#] = { Id = #, Cnt = times gathered, X, Y } }
---  Mine ^
+-- Gather format:
+--   [nodeType] = { [mapId] = { [nodeId] = { "x|y|level", ... } } }
+--   Herb and Mine node data organized by map
 
+---
+-- Initialize global data structures
+-- Creates/migrates character data, options, travel data, gather data, etc.
+--
 function Nx:InitGlobal()
 	if Nx.db.profile.Version.OptionsVersion < Nx.VERSIONDATA then
 
@@ -1821,9 +2027,12 @@ function Nx:InitGlobal()
 	cap["NPC"] = cap["NPC"] or {}
 end
 
---------
--- Get generic named data (global, character, database)
-
+---
+-- Get named data from appropriate storage
+-- @param name  Data category: "Events", "List", "Quests", "Win", "Herb", "Mine"
+-- @param ch    Character table (defaults to current)
+-- @return      Requested data table
+--
 function Nx:GetData (name, ch)
 
 	ch = ch or Nx.CurCharacter
@@ -1848,9 +2057,12 @@ function Nx:GetData (name, ch)
 	end
 end
 
---------
--- Copy character data
-
+---
+-- Copy character data between characters
+-- @param srcName  Source character name (nil = export current to all)
+-- @param dstName  Destination character name
+-- @return         true on success
+--
 function Nx:CopyCharacterData (srcName, dstName)
 
 	if not srcName then
@@ -1884,9 +2096,10 @@ function Nx:CopyCharacterData (srcName, dstName)
 	return true
 end
 
---------
--- Delete character data
-
+---
+-- Delete a character's saved data
+-- @param srcName  Character name to delete
+--
 function Nx:DeleteCharacterData (srcName)
 
 	self:DeleteCharacter (srcName)
@@ -1896,27 +2109,36 @@ function Nx:DeleteCharacterData (srcName)
 	end
 end
 
---------
--- Get data
-
+---
+-- Get toolbar layout data for current character
+-- @return  Toolbar configuration table
+--
 function Nx:GetDataToolBar()
-	return Nx.CurCharacter["TBar"]
+    return Nx.CurCharacter["TBar"]
 end
 
---------
+---
 -- Get HUD options
-
+-- @return  HUD configuration table
+--
 function Nx:GetHUDOpts()
-	return Nx.db.profile.HUDOpts
+    return Nx.db.profile.HUDOpts
 end
 
---------
--- Get Captured data
-
+---
+-- Get captured (recorded) data
+-- @return  Global capture table
+--
 function Nx:GetCap()
-	return Nx.db.global.Capture
+    return Nx.db.global.Capture
 end
 
+---
+-- Find or create a capture data entry
+-- @param t    Table to search in
+-- @param key  Key to find/create
+-- @return     Data table for the key
+--
 function Nx:CaptureFind (t, key)
 
 	assert (type (t) == "table" and key)
@@ -1926,10 +2148,12 @@ function Nx:CaptureFind (t, key)
 	return d
 end
 
---------
--- Make packed XY string
--- (xy 0-100)
-
+---
+-- Pack x,y coordinates into a hex string
+-- @param x  X coordinate (0-100)
+-- @param y  Y coordinate (0-100)
+-- @return   6-character hex string "XXXYYY"
+--
 function Nx:PackXY (x, y)
 
 	x = max (0, min (100, x))
@@ -1937,30 +2161,39 @@ function Nx:PackXY (x, y)
 	return format ("%03x%03x", x * 40.9 + .5, y * 40.9 + .5)		-- Round off
 end
 
---------
-
+---
+-- Unpack a hex string to x,y coordinates
+-- @param xy  6-character hex string
+-- @return    x, y coordinates (0-100 range)
+--
 function Nx:UnpackXY (xy)
-
-	local x = tonumber (strsub (xy, 1, 3), 16) / 40.9
-	local y = tonumber (strsub (xy, 4, 6), 16) / 40.9
-	return x, y
+    local x = tonumber (strsub (xy, 1, 3), 16) / 40.9
+    local y = tonumber (strsub (xy, 4, 6), 16) / 40.9
+    return x, y
 end
 
---------------------------------------------------------------------------------
--- Character Data Management
+-------------------------------------------------------------------------------
+-- CHARACTER DATA MANAGEMENT
+-- Per-character data storage and retrieval
+-------------------------------------------------------------------------------
 
--- Event format OLD! Now a packed string!
---  Type table [Info, Kill, Death, Mine, Herb]
---   All have: Name, Time, Map, X, Y
---   T added by GetAllEvents for type ("I" "K" "D" "M" "H")
---   Kill: Level
+-- Event packed string format: "TYPE^TIME^MAPID^XXYY^NAME[^DATA]"
+--   TYPE: I=Info, K=Kill, D=Death, M=Mine, H=Herb
+--   TIME: time() * 100
+--   MAPID: numeric map ID
+--   XXYY: packed coordinates
+--   NAME: event description
+--   DATA: optional extra data (kill count, etc.)
 
--- Quest format
---  table index [quest id]
---  string "STime"
---   S (status char): C completed, c not completed, W watched
---   Time is number from time()
+-- Quest format:
+--   Table indexed by quest ID
+--   Value: "STIME" where S = status (C=complete, c=incomplete, W=watched)
+--                         TIME = time() value
 
+---
+-- Initialize character-specific data
+-- Creates or migrates character record
+--
 function Nx:InitCharacter()
 	local chars = Nx.db.global.Characters
 	local fullName = self:GetRealmCharName()
@@ -1992,16 +2225,18 @@ function Nx:InitCharacter()
 end
 
 
---------
+---
+-- Get the full realm.character name for current player
+-- @return  "RealmName.CharacterName"
 --
-
 function Nx:GetRealmCharName()
-	return GetRealmName() .. "." .. UnitName ("player")
+    return GetRealmName() .. "." .. UnitName ("player")
 end
 
---------
+---
+-- Build list of characters on current realm (including connected realms)
+-- Populates Nx.RealmChars with sorted list
 --
-
 function Nx:CalcRealmChars()
 	local chars = Nx.db.global.Characters
 	local realmName = GetRealmName()
@@ -2047,9 +2282,12 @@ function Nx:CalcRealmChars()
 	end
 end
 
---------
--- Find character data for a named character on current realm or all realms if "realm.name"
-
+---
+-- Find character data by name
+-- Searches current realm first, then accepts "realm.name" format
+-- @param name  Character name or "realm.name"
+-- @return      Character data table or nil
+--
 function Nx:FindCharacter (name)
 
 	for cnum, rc in ipairs (Nx.RealmChars) do
@@ -2067,9 +2305,10 @@ function Nx:FindCharacter (name)
 	return Nx.db.global.Characters[name]
 end
 
---------
--- Delete character data for a named character on current realm or all realms if "realm.name"
-
+---
+-- Delete character data by name
+-- @param name  Character name or "realm.name"
+--
 function Nx:DeleteCharacter (name)
 
 	for cnum, rc in ipairs (Nx.RealmChars) do
@@ -2088,34 +2327,44 @@ function Nx:DeleteCharacter (name)
 	Nx.db.global.Characters[name] = nil
 end
 
---------
-
+---
+-- Get player's class name (formatted)
+-- @return  Capitalized class name
+--
 function Nx:GetUnitClass()
-	local _, cls = UnitClass ("player")
-	cls = gsub (Nx.Util_CapStr (cls), L["Deathknight"], L["Death Knight"])
-	return cls
+    local _, cls = UnitClass ("player")
+    cls = gsub (Nx.Util_CapStr (cls), L["Deathknight"], L["Death Knight"])
+    return cls
 end
 
---------
--- Record logged in state
-
+---
+-- Record current character state (level, class)
+-- Called periodically during gameplay
+--
 function Nx:RecordCharacter()
 	local ch = self.CurCharacter
 	ch["Level"] = UnitLevel ("player")
 	ch["Class"] = Nx:GetUnitClass()
 end
 
+---
+-- Delete old events from all characters
+-- Migrates old format and trims to max count
+--
 function Nx:DeleteOldEvents()
-
-	for rc, ch in pairs (Nx.db.global.Characters) do
-		if not ch.E or ch.E["Info"] then		-- Missing or has an old table? (User had missing table)
-			ch.E = {}
-		end
-
-		self:DeleteOldEvent (ch.E, 60)
-	end
+    for rc, ch in pairs (Nx.db.global.Characters) do
+        if not ch.E or ch.E["Info"] then    -- Missing or old table format
+            ch.E = {}
+        end
+        self:DeleteOldEvent (ch.E, 60)
+    end
 end
 
+---
+-- Trim event list to maximum size
+-- @param ev    Event array
+-- @param maxE  Maximum entries to keep
+--
 function Nx:DeleteOldEvent (ev, maxE)
 	if #ev > maxE then
 
@@ -2125,11 +2374,16 @@ function Nx:DeleteOldEvent (ev, maxE)
 	end
 end
 
---------
--- Add event
--- (event) 1 letter name: I,K,D,H,M
--- (data) is optional string
-
+---
+-- Add an event to current character's event log
+-- @param event  Event type: "I"=info, "K"=kill, "D"=death, "H"=herb, "M"=mine
+-- @param name   Event description
+-- @param time   Timestamp from Nx:Time()
+-- @param mapId  Map ID where event occurred
+-- @param x      Zone X coordinate (0-100)
+-- @param y      Zone Y coordinate (0-100)
+-- @param data   Optional extra data string
+--
 function Nx:AddEvent (event, name, time, mapId, x, y, data)
 
 	local ev = Nx.CurCharacter.E
@@ -2164,17 +2418,21 @@ end
 --	return strsub (evStr, 1, 1)
 --end
 
---------
-
+---
+-- Extract map ID from packed event string
+-- @param evStr  Packed event string
+-- @return       Map ID number
+--
 function Nx:GetEventMapId (evStr)
-
-	local _, _, map = Nx.Split ("^", evStr)
-
-	return tonumber (map) or 0
+    local _, _, map = Nx.Split ("^", evStr)
+    return tonumber (map) or 0
 end
 
---------
-
+---
+-- Unpack an event string to its components
+-- @param evStr  Packed event string
+-- @return       type, time, mapId, x, y, text, data
+--
 function Nx:UnpackEvent (evStr)
 	local typ, tm, map, xy, text, data = Nx.Split ("^", evStr)
 	tm = tonumber (tm)
@@ -2220,9 +2478,14 @@ function Nx:AddMineEvent (name, time, mapId, x, y)
 end
 
 -------------------------------------------------------------------------------
+-- TITLE SCREEN ANIMATION
+-- Animated logo displayed on addon load
 -------------------------------------------------------------------------------
--- Title
 
+---
+-- Initialize the title screen animation
+-- Creates frame with logo and schedules animation process
+--
 function Nx.Title:Init()
 
 	local f = CreateFrame ("Frame", nil, UIParent, "BackdropTemplate")
@@ -2357,11 +2620,14 @@ function Nx.Title:Tick()
 end
 
 -------------------------------------------------------------------------------
+-- AUCTION HOUSE ASSISTANT
+-- Provides buyout-per-item calculations and display
 -------------------------------------------------------------------------------
--- Auction
 
---PAIDS!
-
+---
+-- Handle auction house opening
+-- Hooks update function if AuctionUI is loaded
+--
 function Nx.AuctionAssist.OnAuction_house_show()
 
 --	Nx.prt ("OnAUCTION_HOUSE_SHOW")
@@ -2372,11 +2638,12 @@ function Nx.AuctionAssist.OnAuction_house_show()
 	end
 end
 
+---
+-- Handle auction house closing
+-- Hides window and clears item list
+--
 function Nx.AuctionAssist.OnAuction_house_closed()
-
---	Nx.prt ("OnAUCTION_HOUSE_CLOSED")
-
-	local self = Nx.AuctionAssist
+    local self = Nx.AuctionAssist
 	if self.Win then
 		self.Win:Show (false)
 		self.ItemList:Empty()
@@ -2501,17 +2768,22 @@ function Nx.AuctionAssist.AuctionFrameBrowse_Update()
 end
 
 -------------------------------------------------------------------------------
+-- USER EVENTS SYSTEM
+-- Records and displays player activities (kills, deaths, gathering, etc.)
 -------------------------------------------------------------------------------
--- User events recording and list
 
+---
+-- Initialize user events module
+--
 function Nx.UEvents:Init()
-
---	self.Sorted = {}
+    -- self.Sorted = {}
 end
 
-------
--- Add info to list
-
+---
+-- Add an info event to the log
+-- @param name  Description of the event
+-- @return      Map ID where event occurred
+--
 function Nx.UEvents:AddInfo (name)
 
 	local mapId, x, y = self:GetPlyrPos()
@@ -2523,9 +2795,10 @@ function Nx.UEvents:AddInfo (name)
 	return mapId
 end
 
-------
--- Add player death to list
-
+---
+-- Add a player death event
+-- @param name  Cause of death description
+--
 function Nx.UEvents:AddDeath (name)
 
 	local mapId, x, y = self:GetPlyrPos()
@@ -2542,9 +2815,10 @@ function Nx.UEvents:AddDeath (name)
 	end
 end
 
-------
--- Add kill to list
-
+---
+-- Add a kill event
+-- @param name  Name of killed enemy
+--
 function Nx.UEvents:AddKill (name)
 
 	local mapId, x, y = self:GetPlyrPos()
@@ -2556,9 +2830,10 @@ function Nx.UEvents:AddKill (name)
 --	Nx:SendComm (2, "Killed "..name)
 end
 
-------
--- Add honor info to list
-
+---
+-- Add an honor event
+-- @param name  Honor event description
+--
 function Nx.UEvents:AddHonor (name)
 
 	local mapId = self:AddInfo (name)
@@ -2569,9 +2844,10 @@ function Nx.UEvents:AddHonor (name)
 	end
 end
 
-------
--- Add herb to list
-
+---
+-- Add an herb gathering event
+-- @param name  Name of the herb gathered
+--
 function Nx.UEvents:AddHerb (name)
 
 	local mapId, x, y, level = self:GetPlyrPos()
@@ -2586,9 +2862,10 @@ function Nx.UEvents:AddHerb (name)
 	end
 end
 
-------
--- Add mine to list
-
+---
+-- Add a mining event
+-- @param name  Name of the ore mined
+--
 function Nx.UEvents:AddMine (name)	
 	local mapId, x, y, level = self:GetPlyrPos()
 	mapId = Nx.Map:GetCurrentMapAreaID()
@@ -2602,9 +2879,11 @@ function Nx.UEvents:AddMine (name)
 	end
 end
 
-------
--- Add open to list
-
+---
+-- Add a chest/container opening event
+-- @param typ   Type of opening (e.g., "Art" for artifact)
+-- @param name  Name of what was opened
+--
 function Nx.UEvents:AddOpen (typ, name)
 
 	local mapId = self:AddInfo (name)
@@ -2616,9 +2895,10 @@ function Nx.UEvents:AddOpen (typ, name)
 	end
 end
 
---------
--- Get player map pos
-
+---
+-- Get current player map position
+-- @return  mapId, x, y, dungeonLevel
+--
 function Nx.UEvents:GetPlyrPos()
 	local mapId = Nx.Map:GetRealMapId()
 	local map = Nx.Map:GetMap (1)	
@@ -2807,6 +3087,10 @@ function Nx.UEvents:UpdateMap (upGuide)
 end
 
 -------------------------------------------------------------------------------
+-- GATHERING SYSTEM
+-- Tracks and stores locations of herb/mining nodes
+-- Data structure: { skillLevel, iconPath, localizedName }
+-------------------------------------------------------------------------------
 
 Nx.GatherInfo = {
 	[" "] = {	-- Misc
@@ -2932,9 +3216,10 @@ Nx.GatherRemap = {
 	}
 }
 
---------
--- Init. Call after map init
-
+---
+-- Initialize gathering system
+-- Must be called after map init for proper node display
+--
 function Nx:GatherInit()
 	if self.DoGatherUpgrade then
 		self.DoGatherUpgrade = nil
@@ -2944,16 +3229,29 @@ function Nx:GatherInit()
 	Nx.GatherVerUpgradeType = nil		-- Kill it
 end
 
+---
+-- Get gather node info by type and ID
+-- @param typ  Node type: "H" (herb), "M" (mine)
+-- @param id   Node ID number
+-- @return     name, iconPath, skillLevel
+--
 function Nx:GetGather (typ, id)
-	local v = Nx.GatherInfo[typ][id]
-	if v then
-		return v[3], v[2], v[1]
-	end
+    local v = Nx.GatherInfo[typ][id]
+    if v then
+        return v[3], v[2], v[1]
+    end
 end
 
+-- Cache for quick node type lookups
 Nx.GatherCache = {}
-Nx.GatherCache.H = {}
-Nx.GatherCache.M = {}
+Nx.GatherCache.H = {}  -- Herbs
+Nx.GatherCache.M = {}  -- Mines
+
+---
+-- Check if a spell name is a gathering spell
+-- @param nodename  Spell/node name
+-- @return          "Herb Gathering" or "Mining" or nil
+--
 function Nx:IsGathering(nodename)
 	if #Nx.GatherCache.H == 0 then
 		for k, v in ipairs (Nx.GatherInfo["H"]) do
@@ -2969,18 +3267,28 @@ function Nx:IsGathering(nodename)
 	if Nx.GatherCache.M[nodename] then return L["Mining"] end
 end
 
+---
+-- Convert herb name to internal ID
+-- @param name  Localized herb name
+-- @return      Herb ID or nil if not found
+--
 function Nx:HerbNameToId (name)
-	for k, v in ipairs (Nx.GatherInfo["H"]) do
-		if v[3] == name then
-			return k
-		end
-	end
+    for k, v in ipairs (Nx.GatherInfo["H"]) do
+        if v[3] == name then
+            return k
+        end
+    end
 
-	if Nx.db.profile.Debug.DBGather then
-		Nx.prt (L["Unknown herb"] .. " %s", name)
-	end
+    if Nx.db.profile.Debug.DBGather then
+        Nx.prt (L["Unknown herb"] .. " %s", name)
+    end
 end
 
+---
+-- Convert mining node name to internal ID
+-- @param name  Localized node name
+-- @return      Node ID or nil if not found
+--
 function Nx:MineNameToId (name)
 
 	name = gsub (name, L["Ooze Covered"] .. " ", "")
@@ -3009,25 +3317,40 @@ end
 function Nx:GatherVerUpgradeType (tName)
 end
 
---------
--- Save location of gathered herb
--- xy is zone coords
-
+---
+-- Record a gathered herb location
+-- @param id     Herb ID
+-- @param mapId  Map ID
+-- @param x      Zone X (0-100)
+-- @param y      Zone Y (0-100)
+-- @param level  Dungeon level
+--
 function Nx:GatherHerb (id, mapId, x, y, level)
-	self:Gather ("NXHerb", id, mapId, x, y, level)
+    self:Gather ("NXHerb", id, mapId, x, y, level)
 end
 
---------
--- Save location of gathered mining
--- xy is zone coords
-
+---
+-- Record a gathered mining node location
+-- @param id     Node ID
+-- @param mapId  Map ID
+-- @param x      Zone X (0-100)
+-- @param y      Zone Y (0-100)
+-- @param level  Dungeon level
+--
 function Nx:GatherMine (id, mapId, x, y, level)
-	self:Gather ("NXMine", id, mapId, x, y, level)
+    self:Gather ("NXMine", id, mapId, x, y, level)
 end
 
---------
--- Add gathered item. xy zone coords 0-100
-
+---
+-- Record a gathered node location (generic)
+-- Merges nearby nodes and stores position
+-- @param nodeType  "NXHerb", "NXMine", or "Misc"
+-- @param id        Node ID
+-- @param mapId     Map ID
+-- @param x         Zone X (0-100)
+-- @param y         Zone Y (0-100)
+-- @param level     Dungeon level
+--
 function Nx:Gather (nodeType, id, mapId, x, y, level)	
 	local remap = self.GatherRemap[nodeType]
 	if remap then
@@ -3076,9 +3399,12 @@ function Nx:Gather (nodeType, id, mapId, x, y, level)
 	nodeT[index] = format ("%f|%f|%d", x, y, level)
 end
 
---------
-
--- Optimized: avoid creating tables with Nx.Split
+---
+-- Unpack gather node position string
+-- Optimized to avoid creating temporary tables
+-- @param item  "x|y|level" string
+-- @return      x, y, level numbers
+--
 function Nx:GatherUnpack (item)
 	-- Use string.find instead of Split to avoid table creation
 	local p1 = string.find(item, "|", 1, true)
@@ -3098,22 +3424,35 @@ function Nx:GatherUnpack (item)
 	return x, y, level
 end
 
---------
-
+---
+-- Delete all herb gathering data
+--
 function Nx:GatherDeleteHerb()
-	Nx.db.profile.GatherData.NXHerb = {}
+    Nx.db.profile.GatherData.NXHerb = {}
 end
 
+---
+-- Delete all mining gathering data
+--
 function Nx:GatherDeleteMine()
-	Nx.db.profile.GatherData.NXMine = {}
+    Nx.db.profile.GatherData.NXMine = {}
 end
 
+---
+-- Delete all misc gathering data
+--
 function Nx:GatherDeleteMisc()
-	Nx.db.profile.GatherData["Misc"] = {}
+    Nx.db.profile.GatherData["Misc"] = {}
 end
 
---------
+-------------------------------------------------------------------------------
+-- GATHERMATE DATA IMPORT
+-- Functions to import node data from Carbonite.Gathermate2_Data addon
+-------------------------------------------------------------------------------
 
+---
+-- Import herb data from Gathermate2_Data
+--
 function Nx:GatherImportCarbHerb()
 	Nx:GatherImportCarb ("NXHerb")
 end
@@ -3405,21 +3744,35 @@ function Nx:GatherImportBatch()
 end
 
 -------------------------------------------------------------------------------
--- Item handling
+-- ITEM HANDLING
+-- Item info loading and tooltip management
+-------------------------------------------------------------------------------
 
+---
+-- Initialize item management
+--
 function Nx.Item:Init()
 	self.Asked = {}
 end
 
+---
+-- Load item info by ID
+-- Caches result to avoid repeated queries
+-- @param id  Item ID
+--
 function Nx.Item:Load (id)
-	if not self.Asked[id] then			-- Ask once
-		local name, link = C_Item.GetItemInfo (id)
-		if name then			
-			self.Asked[id] = name
-		end
-	end
+    if not self.Asked[id] then
+        local name, link = C_Item.GetItemInfo (id)
+        if name then
+            self.Asked[id] = name
+        end
+    end
 end
 
+---
+-- Enable server-side item loading
+-- Sets up tooltip for query and timer for update
+--
 function Nx.Item.EnableLoadFromServer()
 
 --	Nx.prt ("EnableLoadFromServer")
@@ -3455,6 +3808,11 @@ function Nx.Item.AskDeleteVV()
 	Nx:ShowMessage (Nx.TXTBLUE.."Carbonite:\n|cffffff60" .. L["Delete visited vendor data?"] .. "\n" .. L["This will stop the attempted retrieval of items on login."], L["Delete"], func, L["Cancel"])
 end
 
+---
+-- Show item tooltip by ID
+-- @param id       Item ID or link
+-- @param compare  Show comparison tooltips if true
+--
 function Nx.Item:ShowTooltip (id, compare)
 
 --	Nx.prtVar ("ShowTooltip", id)
@@ -3492,8 +3850,14 @@ function Nx.Item:DrawTimer()
 end
 
 -------------------------------------------------------------------------------
--- Minimap button functions
+-- MINIMAP BUTTON
+-- Main addon button on the minimap
+-------------------------------------------------------------------------------
 
+---
+-- Initialize the minimap button
+-- Sets up right-click menu with addon options
+--
 function Nx.NXMiniMapBut:Init()
 	local f = NXMiniMapBut
 
@@ -3637,9 +4001,10 @@ function Nx.NXMiniMapBut:OpenMenu()
 	end
 end
 
---------
--- Move the minimap button around the minimap
-
+---
+-- Update handler for minimap button dragging
+-- @param frm  The button frame
+--
 function Nx.NXMiniMapBut:NXOnUpdate (frm)
 
 --	Nx.prtVar ("NXOnUpdate", frm)
@@ -3657,9 +4022,13 @@ function Nx.NXMiniMapBut:NXOnUpdate (frm)
 	end
 end
 
+---
+-- Position the minimap button around the minimap edge
+-- @param x  Cursor X position
+-- @param y  Cursor Y position
+--
 function Nx.NXMiniMapBut:Move (x, y)
-
-	local but = NXMiniMapBut		-- 32x32
+    local but = NXMiniMapBut        -- 32x32
 
 	local mm = _G["Minimap"]
 
@@ -3686,12 +4055,27 @@ function Nx.NXMiniMapBut:Move (x, y)
 	but:SetUserPlaced (true)
 end
 
+---
+-- Handle inter-addon communication (stub)
+--
 function Nx.ModChatReceive(msg,dist,target)
 end
 
+-------------------------------------------------------------------------------
+-- UTILITY FUNCTIONS
+-- String splitting, process management
+-------------------------------------------------------------------------------
+
+-- Cache for split results (weak values for garbage collection)
 local TempTable = {}
 setmetatable(TempTable, {__mode = "v"})
 
+---
+-- Split a string by delimiter (cached for performance)
+-- @param d  Delimiter character
+-- @param p  String to split
+-- @return   Unpacked values from split
+--
 function Nx.Split(d, p)
 	if p and not string.find(p,d) then
 		return p
@@ -3720,12 +4104,25 @@ function Nx.Split(d, p)
 	end
 end
 
-function Nx.Proc:Init()
+-------------------------------------------------------------------------------
+-- PROCESS SCHEDULER
+-- Lightweight coroutine-like system for spreading work across frames
+-------------------------------------------------------------------------------
 
-	self.Procs = {}
-	self.TimeLeft = 0
+---
+-- Initialize the process scheduler
+--
+function Nx.Proc:Init()
+    self.Procs = {}
+    self.TimeLeft = 0
 end
 
+---
+-- Create a new scheduled process
+-- @param user   Object that owns the process (passed to func)
+-- @param func   Function to call each tick
+-- @param delay  Initial delay in ticks before first call
+--
 function Nx.Proc:New (user, func, delay)
 
 	local p = {}
@@ -3735,10 +4132,20 @@ function Nx.Proc:New (user, func, delay)
 	p.Delay = delay or 1
 end
 
+---
+-- Change the function for a running process
+-- @param proc  Process object
+-- @param func  New function to call
+--
 function Nx.Proc:SetFunc (proc, func)
-	proc.Func = func
+    proc.Func = func
 end
 
+---
+-- Process scheduler update
+-- Runs pending processes based on elapsed time
+-- @param elapsed  Time since last frame
+--
 function Nx.Proc:OnUpdate (elapsed)
 
 --	Nx.prt ("Proc Elapsed raw %s", elapsed)
@@ -3779,5 +4186,6 @@ function Nx.Proc:OnUpdate (elapsed)
 
 	self.TimeLeft = elapsed
 end
----------------------------------------------------------------------------------------
---EOF
+-------------------------------------------------------------------------------
+-- END OF FILE
+-------------------------------------------------------------------------------

@@ -10693,6 +10693,10 @@ function Nx.Map:GetWorldContinentInfo (cont)
 end
 
 --------
+-- Cache for parent map lookups (avoid C_Map.GetMapInfo every frame)
+local ParentMapCache = {}
+
+--------
 -- Get world info for a continent and zone
 -- (cont #, zone #)
 
@@ -10731,10 +10735,6 @@ function Nx.Map:GetWorldZoneInfo (cont, zone)
 
     return name, x, y, scale, scale / 1.5        -- x, y, w, h
 end
-
---------
--- Cache for parent map lookups (avoid C_Map.GetMapInfo every frame)
-local ParentMapCache = {}
 
 --------
 -- Get world zone from map id

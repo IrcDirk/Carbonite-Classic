@@ -1,4 +1,4 @@
-## Interface: 50501
+## Interface: 50502
 ## Title: Carbonite Quest - Classic @project-version@
 ## Version: @project-version@
 ## Author: No One

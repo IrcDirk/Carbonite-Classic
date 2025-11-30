@@ -696,6 +696,19 @@ function Nx.Map:Create(index)
     m.StepTime = 0                          -- Animation step time
 
     ---------------------------------------------------------------------------
+    -- Edit Mode State (for drawing quest objective rectangles)
+    ---------------------------------------------------------------------------
+    m.EditMode = false                      -- Edit mode enabled
+    m.EditDrawing = false                   -- Currently drawing a rectangle
+    m.EditStartX = nil                      -- Start X coordinate (zone 0-100)
+    m.EditStartY = nil                      -- Start Y coordinate (zone 0-100)
+    m.EditMapId = nil                       -- Map ID where drawing started
+    m.EditPreviewFrame = nil                -- Preview rectangle frame
+    m.EditRectangles = {}                   -- Array of drawn rectangles
+    m.EditRectFrames = {}                   -- Array of rectangle display frames
+    m.EditFinishButton = nil                -- Button to finish and output all
+
+    ---------------------------------------------------------------------------
     -- Map Position and Zone State
     ---------------------------------------------------------------------------
     m.MapId = 0                             -- Current map ID
@@ -3956,6 +3969,11 @@ function Nx.Map:OnMouseDown (button)
         end
 --]]
 
+        -- Edit mode: Ctrl+Alt+LeftClick starts rectangle drawing
+        if map:EditModeMouseDown(button) then
+            return
+        end
+
         if IsControlKeyDown() and map:CallFunc ("ButLCtrl") then    -- If func does nothing continue
 
         elseif IsAltKeyDown() and map:CallFunc ("ButLAlt") then    -- If func does nothing continue
@@ -4066,6 +4084,12 @@ end
 function Nx.Map:OnMouseUp(button)
     local this = self
     local map = this.NxMap
+    
+    -- Edit mode: finalize rectangle on mouse up
+    if map:EditModeMouseUp(button) then
+        return
+    end
+    
     map.Scrolling = false
 end
 
@@ -4336,6 +4360,9 @@ function Nx.Map.OnUpdate(this, elapsed)
         map.MapPosY = map.MapPosYDraw
         map.Scale = map.ScaleDraw
     end
+
+    -- Update edit mode preview rectangle while drawing
+    map:EditModeUpdate()
 
     map:Update (elapsed)
 
@@ -12504,6 +12531,909 @@ function Nx.Map:UnpackObjective (obj)
     local zone = strbyte (obj, i + 1) - 35
     return desc, zone, i + 2
 end
+
+-------------------------------------------------------------------------------
+-- EDIT MODE - QUEST OBJECTIVE RECTANGLE DRAWING
+-- Allows manual drawing of multiple objective rectangles on the map
+-- Activated with /carb editmode, draw with Ctrl+Alt+LeftClick+Drag
+-- Each rectangle has a close button, finish button outputs all rectangles
+-------------------------------------------------------------------------------
+
+---
+-- Toggle edit mode for quest objective rectangle drawing
+--
+function Nx.Map:ToggleEditMode()
+    self.EditMode = not self.EditMode
+    if self.EditMode then
+        Nx.prt("|cff00ff00Quest Objective Edit Mode ENABLED|r")
+        Nx.prt("|cffffffff  Ctrl+Alt+Click = place a point (type 32)|r")
+        Nx.prt("|cffffffff  Ctrl+Alt+Click+Drag = draw a rectangle (type 35)|r")
+        Nx.prt("|cffffffff  Click [X] to remove, [Finish] to output all|r")
+        self:EditModeCreateFinishButton()
+    else
+        Nx.prt("|cffff0000Quest Objective Edit Mode DISABLED|r")
+        self:EditModeClearAll()
+    end
+end
+
+---
+-- Create the finish button for outputting all rectangles
+--
+function Nx.Map:EditModeCreateFinishButton()
+    if self.EditFinishButton then
+        self.EditFinishButton:Show()
+        return
+    end
+    
+    local map = self
+    local f = CreateFrame("Button", nil, self.Frm, "UIPanelButtonTemplate")
+    f:SetSize(80, 22)
+    f:SetPoint("TOPRIGHT", self.Frm, "TOPRIGHT", -10, -30)
+    f:SetText("Finish")
+    f:SetFrameLevel(100)
+    f:SetScript("OnClick", function()
+        map:EditModeFinish()
+    end)
+    f:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        GameTooltip:AddLine("Output all rectangles to chat")
+        GameTooltip:AddLine("and clear the editor", 0.7, 0.7, 0.7)
+        GameTooltip:Show()
+    end)
+    f:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    
+    -- Add a "Clear All" button next to it
+    local clearBtn = CreateFrame("Button", nil, self.Frm, "UIPanelButtonTemplate")
+    clearBtn:SetSize(70, 22)
+    clearBtn:SetPoint("RIGHT", f, "LEFT", -5, 0)
+    clearBtn:SetText("Clear")
+    clearBtn:SetFrameLevel(100)
+    clearBtn:SetScript("OnClick", function()
+        map:EditModeClearRectangles()
+        Nx.prt("|cffff8000All rectangles cleared|r")
+    end)
+    clearBtn:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        GameTooltip:AddLine("Clear all rectangles")
+        GameTooltip:AddLine("without outputting", 0.7, 0.7, 0.7)
+        GameTooltip:Show()
+    end)
+    clearBtn:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    
+    -- Rectangle count label
+    local countLabel = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    countLabel:SetPoint("RIGHT", clearBtn, "LEFT", -10, 0)
+    countLabel:SetText("0 rects")
+    
+    self.EditFinishButton = f
+    self.EditClearButton = clearBtn
+    self.EditCountLabel = countLabel
+end
+
+---
+-- Update the rectangle count display
+--
+function Nx.Map:EditModeUpdateCount()
+    if self.EditCountLabel then
+        local total = #self.EditRectangles
+        local points = 0
+        local rects = 0
+        for _, data in ipairs(self.EditRectangles) do
+            if data.isPoint then
+                points = points + 1
+            else
+                rects = rects + 1
+            end
+        end
+        
+        local text
+        if points > 0 and rects > 0 then
+            text = rects .. "R " .. points .. "P"
+        elseif points > 0 then
+            text = points .. (points == 1 and " pt" or " pts")
+        elseif rects > 0 then
+            text = rects .. (rects == 1 and " rect" or " rects")
+        else
+            text = "0"
+        end
+        
+        self.EditCountLabel:SetText(text)
+        if total > 0 then
+            self.EditCountLabel:SetTextColor(0, 1, 0)
+        else
+            self.EditCountLabel:SetTextColor(0.7, 0.7, 0.7)
+        end
+    end
+end
+
+---
+-- Clear all rectangles without output
+--
+function Nx.Map:EditModeClearRectangles()
+    -- Hide all rectangle frames
+    for i, frame in ipairs(self.EditRectFrames) do
+        frame:Hide()
+    end
+    self.EditRectFrames = {}
+    self.EditRectangles = {}
+    
+    if self.EditPreviewFrame then
+        self.EditPreviewFrame:Hide()
+    end
+    self.EditDrawing = false
+    self:EditModeUpdateCount()
+end
+
+---
+-- Clear everything and hide UI
+--
+function Nx.Map:EditModeClearAll()
+    self:EditModeClearRectangles()
+    
+    if self.EditFinishButton then
+        self.EditFinishButton:Hide()
+    end
+    if self.EditClearButton then
+        self.EditClearButton:Hide()
+    end
+    if self.EditCountLabel then
+        self.EditCountLabel:SetText("")
+    end
+end
+
+---
+-- Create a persistent rectangle frame with close button
+-- @param rectData  Table with x, y, w, h, mapId
+-- @param index     Index in the rectangles array
+--
+function Nx.Map:EditModeCreateRectFrame(rectData, index)
+    local map = self
+    
+    -- Use stable frame level (base + high offset to be above map elements)
+    local baseLevel = self.Frm:GetFrameLevel() + 100
+    
+    -- Main rectangle frame
+    local f = CreateFrame("Frame", nil, self.Frm)
+    f:SetFrameLevel(baseLevel)
+    f.NxEditIndex = index
+    f.NxRectData = rectData
+    f.NxBaseLevel = baseLevel  -- Store for later use
+    
+    -- Rectangle texture (semi-transparent green with border effect)
+    local t = f:CreateTexture(nil, "OVERLAY")
+    t:SetAllPoints(f)
+    t:SetColorTexture(0, 0.8, 0, 0.35)
+    f.texture = t
+    
+    -- Border textures for visibility
+    local borderSize = 2
+    local borders = {}
+    for i = 1, 4 do
+        local b = f:CreateTexture(nil, "OVERLAY")
+        b:SetColorTexture(0, 1, 0, 0.9)
+        borders[i] = b
+    end
+    -- Top
+    borders[1]:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    borders[1]:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+    borders[1]:SetHeight(borderSize)
+    -- Bottom
+    borders[2]:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 0, 0)
+    borders[2]:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+    borders[2]:SetHeight(borderSize)
+    -- Left
+    borders[3]:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    borders[3]:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 0, 0)
+    borders[3]:SetWidth(borderSize)
+    -- Right
+    borders[4]:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+    borders[4]:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+    borders[4]:SetWidth(borderSize)
+    f.borders = borders
+    
+    -- Close button (X) in upper right
+    local closeBtn = CreateFrame("Button", nil, f)
+    closeBtn:SetSize(16, 16)
+    closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", 2, 2)
+    closeBtn:SetFrameLevel(baseLevel + 5)
+    closeBtn.NxEditIndex = index
+    
+    -- Close button background
+    local closeBg = closeBtn:CreateTexture(nil, "BACKGROUND")
+    closeBg:SetAllPoints()
+    closeBg:SetColorTexture(0.8, 0, 0, 0.8)
+    
+    -- Close button X text
+    local closeText = closeBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    closeText:SetPoint("CENTER", 0, 0)
+    closeText:SetText("X")
+    closeText:SetTextColor(1, 1, 1)
+    
+    closeBtn:SetScript("OnClick", function(self)
+        map:EditModeRemoveRect(self.NxEditIndex)
+    end)
+    closeBtn:SetScript("OnEnter", function(self)
+        closeBg:SetColorTexture(1, 0, 0, 1)
+    end)
+    closeBtn:SetScript("OnLeave", function(self)
+        closeBg:SetColorTexture(0.8, 0, 0, 0.8)
+    end)
+    
+    f.closeBtn = closeBtn
+    
+    -- Index label
+    local indexLabel = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    indexLabel:SetPoint("CENTER", f, "CENTER", 0, 0)
+    indexLabel:SetText(tostring(index))
+    indexLabel:SetTextColor(1, 1, 1, 0.7)
+    f.indexLabel = indexLabel
+    
+    return f
+end
+
+---
+-- Create a point marker frame with close button
+-- @param pointData  Table with x, y, mapId, isPoint=true
+-- @param index      Index in the rectangles array
+--
+function Nx.Map:EditModeCreatePointFrame(pointData, index)
+    local map = self
+    
+    -- Use stable frame level
+    local baseLevel = self.Frm:GetFrameLevel() + 105  -- Slightly above rectangles
+    
+    -- Main point frame (fixed size circle/dot)
+    local f = CreateFrame("Frame", nil, self.Frm)
+    f:SetSize(16, 16)
+    f:SetFrameLevel(baseLevel)
+    f.NxEditIndex = index
+    f.NxRectData = pointData
+    f.NxBaseLevel = baseLevel
+    f.NxIsPoint = true
+    
+    -- Point texture (cyan/blue dot)
+    local t = f:CreateTexture(nil, "OVERLAY")
+    t:SetAllPoints(f)
+    t:SetTexture("Interface\\MINIMAP\\ObjectIconsAtlas")
+    t:SetTexCoord(0.2578125, 0.2890625, 0.0078125, 0.0390625)  -- Small dot
+    t:SetVertexColor(0, 1, 1, 1)  -- Cyan color
+    f.texture = t
+    
+    -- Alternative: colored circle texture
+    local bg = f:CreateTexture(nil, "BACKGROUND")
+    bg:SetPoint("CENTER")
+    bg:SetSize(14, 14)
+    bg:SetColorTexture(0, 0.8, 0.8, 0.6)
+    f.bg = bg
+    
+    -- Border ring
+    local ring = f:CreateTexture(nil, "BORDER")
+    ring:SetPoint("CENTER")
+    ring:SetSize(16, 16)
+    ring:SetColorTexture(0, 1, 1, 0.9)
+    f.ring = ring
+    
+    -- Inner dot
+    local dot = f:CreateTexture(nil, "ARTWORK")
+    dot:SetPoint("CENTER")
+    dot:SetSize(10, 10)
+    dot:SetColorTexture(0, 0.6, 0.6, 1)
+    f.dot = dot
+    
+    -- Close button (X) 
+    local closeBtn = CreateFrame("Button", nil, f)
+    closeBtn:SetSize(12, 12)
+    closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", 4, 4)
+    closeBtn:SetFrameLevel(baseLevel + 5)
+    closeBtn.NxEditIndex = index
+    
+    local closeBg = closeBtn:CreateTexture(nil, "BACKGROUND")
+    closeBg:SetAllPoints()
+    closeBg:SetColorTexture(0.8, 0, 0, 0.8)
+    
+    local closeText = closeBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    closeText:SetPoint("CENTER", 0, 0)
+    closeText:SetText("X")
+    closeText:SetTextColor(1, 1, 1)
+    
+    closeBtn:SetScript("OnClick", function(self)
+        map:EditModeRemoveRect(self.NxEditIndex)
+    end)
+    closeBtn:SetScript("OnEnter", function(self)
+        closeBg:SetColorTexture(1, 0, 0, 1)
+    end)
+    closeBtn:SetScript("OnLeave", function(self)
+        closeBg:SetColorTexture(0.8, 0, 0, 0.8)
+    end)
+    
+    f.closeBtn = closeBtn
+    
+    -- Index label
+    local indexLabel = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    indexLabel:SetPoint("BOTTOM", f, "TOP", 0, 2)
+    indexLabel:SetText(tostring(index))
+    indexLabel:SetTextColor(0, 1, 1, 0.9)
+    f.indexLabel = indexLabel
+    
+    return f
+end
+
+---
+-- Position a point frame at world coordinates
+-- @param frm  Frame to position
+-- @param wx   World X coordinate
+-- @param wy   World Y coordinate
+-- @return     true if visible, false if off-screen
+--
+function Nx.Map:EditModePositionPoint(frm, wx, wy)
+    local scale = self.ScaleDraw
+    local clipW = self.MapW
+    local clipH = self.MapH
+    
+    -- Calculate screen position from world coordinates (centered)
+    local sx = (wx - self.MapPosXDraw) * scale + clipW * 0.5
+    local sy = (wy - self.MapPosYDraw) * scale + clipH * 0.5
+    
+    -- Check if off screen (with margin for point size)
+    if sx < -8 or sx > clipW + 8 or sy < -8 or sy > clipH + 8 then
+        frm:Hide()
+        return false
+    end
+    
+    -- Position the frame centered on the point
+    frm:ClearAllPoints()
+    frm:SetPoint("CENTER", self.Frm, "TOPLEFT", sx, -sy - self.TitleH)
+    frm:Show()
+    
+    return true
+end
+
+---
+-- Remove a rectangle or point by index
+-- @param index  Index of item to remove
+--
+function Nx.Map:EditModeRemoveRect(index)
+    -- Get type before removing
+    local wasPoint = self.EditRectangles[index] and self.EditRectangles[index].isPoint
+    
+    -- Hide and remove the frame
+    if self.EditRectFrames[index] then
+        self.EditRectFrames[index]:Hide()
+    end
+    
+    -- Remove from arrays
+    table.remove(self.EditRectangles, index)
+    table.remove(self.EditRectFrames, index)
+    
+    -- Re-index remaining frames
+    for i, frame in ipairs(self.EditRectFrames) do
+        frame.NxEditIndex = i
+        frame.closeBtn.NxEditIndex = i
+        frame.indexLabel:SetText(tostring(i))
+    end
+    
+    self:EditModeUpdateCount()
+    local itemType = wasPoint and "Point" or "Rectangle"
+    Nx.prt("|cff808080%s %d removed (%d remaining)|r", itemType, index, #self.EditRectangles)
+end
+
+---
+-- Handle mouse down in edit mode
+-- Starts rectangle drawing on Ctrl+Alt+LeftButton
+-- @param button  Mouse button pressed
+-- @return        true if event was consumed, false otherwise
+--
+function Nx.Map:EditModeMouseDown(button)
+    if not self.EditMode then return false end
+    
+    if button == "LeftButton" and IsControlKeyDown() and IsAltKeyDown() then
+        -- Calculate click position - convert frame pos to world, then to zone coords
+        self:CalcClick()
+        local wx, wy = self:FramePosToWorldPos(self.ClickFrmX, self.ClickFrmY)
+        local x, y = self:GetZonePos(self.MapId, wx, wy)
+        
+        -- Clamp to valid range
+        x = max(0, min(100, x))
+        y = max(0, min(100, y))
+        
+        self.EditDrawing = true
+        self.EditStartX = x
+        self.EditStartY = y
+        self.EditMapId = self.MapId
+        
+        -- Create preview frame if it doesn't exist
+        if not self.EditPreviewFrame then
+            local f = CreateFrame("Frame", nil, self.Frm)
+            local previewLevel = self.Frm:GetFrameLevel() + 110  -- Above rect frames
+            f:SetFrameLevel(previewLevel)
+            f.NxBaseLevel = previewLevel
+            local t = f:CreateTexture(nil, "OVERLAY")
+            t:SetAllPoints(f)
+            t:SetColorTexture(0.2, 1, 0.2, 0.4)  -- Bright green for active drawing
+            f.texture = t
+            self.EditPreviewFrame = f
+        end
+        self.EditPreviewFrame:Show()
+        
+        return true
+    end
+    return false
+end
+
+---
+-- Position an edit mode rectangle frame using world coordinates
+-- @param frm    Frame to position
+-- @param wx1    World X of top-left
+-- @param wy1    World Y of top-left  
+-- @param wx2    World X of bottom-right
+-- @param wy2    World Y of bottom-right
+-- @return       true if visible, false if off-screen
+--
+function Nx.Map:EditModePositionRect(frm, wx1, wy1, wx2, wy2)
+    local scale = self.ScaleDraw
+    local clipW = self.MapW
+    local clipH = self.MapH
+    
+    -- Calculate screen positions from world coordinates
+    local sx1 = (wx1 - self.MapPosXDraw) * scale + clipW * 0.5
+    local sy1 = (wy1 - self.MapPosYDraw) * scale + clipH * 0.5
+    local sx2 = (wx2 - self.MapPosXDraw) * scale + clipW * 0.5
+    local sy2 = (wy2 - self.MapPosYDraw) * scale + clipH * 0.5
+    
+    -- Check if completely off screen
+    if sx2 < 0 or sx1 > clipW or sy2 < 0 or sy1 > clipH then
+        frm:Hide()
+        return false
+    end
+    
+    -- Clamp to visible area
+    sx1 = max(0, sx1)
+    sy1 = max(0, sy1)
+    sx2 = min(clipW, sx2)
+    sy2 = min(clipH, sy2)
+    
+    local w = sx2 - sx1
+    local h = sy2 - sy1
+    
+    if w < 1 or h < 1 then
+        frm:Hide()
+        return false
+    end
+    
+    -- Position the frame - clear existing points first!
+    frm:ClearAllPoints()
+    frm:SetPoint("TOPLEFT", self.Frm, "TOPLEFT", sx1, -sy1 - self.TitleH)
+    frm:SetSize(w, h)
+    frm:Show()
+    
+    return true
+end
+
+---
+-- Update edit mode - preview rectangle and existing rectangles
+-- Called during OnUpdate
+--
+function Nx.Map:EditModeUpdate()
+    if not self.EditMode then return end
+    
+    -- Update preview rectangle if drawing
+    if self.EditDrawing and self.EditPreviewFrame then
+        local f = self.Frm
+        local cx, cy = GetCursorPosition()
+        cx = cx / f:GetEffectiveScale()
+        cy = cy / f:GetEffectiveScale()
+        
+        local frmX = cx - f:GetLeft()
+        local frmY = f:GetTop() - cy
+        
+        -- Convert frame position to world, then to zone coordinates
+        local wx, wy = self:FramePosToWorldPos(frmX, frmY)
+        local endX, endY = self:GetZonePos(self.EditMapId, wx, wy)
+        
+        -- Clamp to valid range
+        endX = max(0, min(100, endX))
+        endY = max(0, min(100, endY))
+        
+        -- Calculate rectangle bounds
+        local x1 = min(self.EditStartX, endX)
+        local y1 = min(self.EditStartY, endY)
+        local x2 = max(self.EditStartX, endX)
+        local y2 = max(self.EditStartY, endY)
+        
+        -- Convert zone coords back to world coordinates for drawing
+        local wx1, wy1 = self:GetWorldPos(self.EditMapId, x1, y1)
+        local wx2, wy2 = self:GetWorldPos(self.EditMapId, x2, y2)
+        
+        if self:EditModePositionRect(self.EditPreviewFrame, wx1, wy1, wx2, wy2) then
+            -- Use stored stable frame level
+            if self.EditPreviewFrame.NxBaseLevel then
+                self.EditPreviewFrame:SetFrameLevel(self.EditPreviewFrame.NxBaseLevel)
+            end
+            self.EditPreviewFrame.texture:SetColorTexture(0.2, 1, 0.2, 0.4)
+        end
+    end
+    
+    -- Update all existing rectangle/point positions (for map pan/zoom)
+    for i, frame in ipairs(self.EditRectFrames) do
+        local data = frame.NxRectData
+        if data then
+            if data.isPoint then
+                -- Position point
+                local pwx, pwy = self:GetWorldPos(data.mapId, data.x, data.y)
+                if self:EditModePositionPoint(frame, pwx, pwy) then
+                    if frame.NxBaseLevel then
+                        frame:SetFrameLevel(frame.NxBaseLevel)
+                    end
+                end
+            else
+                -- Position rectangle
+                local wx1, wy1 = self:GetWorldPos(data.mapId, data.x, data.y)
+                local wx2, wy2 = self:GetWorldPos(data.mapId, data.x + data.w, data.y + data.h)
+                
+                if self:EditModePositionRect(frame, wx1, wy1, wx2, wy2) then
+                    if frame.NxBaseLevel then
+                        frame:SetFrameLevel(frame.NxBaseLevel)
+                    end
+                end
+            end
+        end
+    end
+end
+
+---
+-- Check if two rectangles overlap
+-- @param r1  Rectangle 1 {x, y, w, h}
+-- @param r2  Rectangle 2 {x, y, w, h}
+-- @return    true if overlapping, false otherwise
+--
+function Nx.Map:EditModeRectsOverlap(r1, r2)
+    -- Points don't overlap with anything (they're just markers)
+    if r1.isPoint or r2.isPoint then
+        return false
+    end
+    
+    -- Check if r1 and r2 overlap (excluding touching edges)
+    local r1x2 = r1.x + r1.w
+    local r1y2 = r1.y + r1.h
+    local r2x2 = r2.x + r2.w
+    local r2y2 = r2.y + r2.h
+    
+    -- No overlap if one is completely to the side of the other
+    if r1x2 <= r2.x or r2x2 <= r1.x then return false end
+    if r1y2 <= r2.y or r2y2 <= r1.y then return false end
+    
+    return true
+end
+
+---
+-- Adjust a new rectangle to eliminate overlap with existing rectangles
+-- Creates flush edges for clean blob coverage
+-- @param newRect  The new rectangle to adjust {x, y, w, h}
+-- @return         Adjusted rectangle (may be split into multiple), or nil if completely inside existing
+--
+function Nx.Map:EditModeAdjustForOverlap(newRect)
+    local adjusted = {x = newRect.x, y = newRect.y, w = newRect.w, h = newRect.h, mapId = newRect.mapId}
+    local wasAdjusted = false
+    
+    for _, existing in ipairs(self.EditRectangles) do
+        if self:EditModeRectsOverlap(adjusted, existing) then
+            -- Calculate overlap region
+            local overlapX1 = max(adjusted.x, existing.x)
+            local overlapY1 = max(adjusted.y, existing.y)
+            local overlapX2 = min(adjusted.x + adjusted.w, existing.x + existing.w)
+            local overlapY2 = min(adjusted.y + adjusted.h, existing.y + existing.h)
+            
+            local overlapW = overlapX2 - overlapX1
+            local overlapH = overlapY2 - overlapY1
+            
+            -- Determine which edge to adjust (pick the one that removes least area)
+            -- Calculate how much we'd lose by trimming each edge
+            local trimLeft = overlapX2 - adjusted.x  -- trim from left edge
+            local trimRight = (adjusted.x + adjusted.w) - overlapX1  -- trim from right
+            local trimTop = overlapY2 - adjusted.y  -- trim from top
+            local trimBottom = (adjusted.y + adjusted.h) - overlapY1  -- trim from bottom
+            
+            -- Calculate area lost for each trim option
+            local areaLeft = trimLeft * adjusted.h
+            local areaRight = trimRight * adjusted.h
+            local areaTop = trimTop * adjusted.w
+            local areaBottom = trimBottom * adjusted.w
+            
+            -- Find minimum loss that still leaves a valid rectangle
+            local minLoss = math.huge
+            local bestTrim = nil
+            
+            -- Only consider trims that leave a rectangle with positive dimensions
+            if adjusted.w - trimLeft > 0.5 and areaLeft < minLoss then
+                minLoss = areaLeft
+                bestTrim = "left"
+            end
+            if adjusted.w - trimRight > 0.5 and areaRight < minLoss then
+                minLoss = areaRight
+                bestTrim = "right"
+            end
+            if adjusted.h - trimTop > 0.5 and areaTop < minLoss then
+                minLoss = areaTop
+                bestTrim = "top"
+            end
+            if adjusted.h - trimBottom > 0.5 and areaBottom < minLoss then
+                minLoss = areaBottom
+                bestTrim = "bottom"
+            end
+            
+            -- Apply the trim
+            if bestTrim == "left" then
+                adjusted.w = adjusted.w - trimLeft
+                adjusted.x = overlapX2
+                wasAdjusted = true
+            elseif bestTrim == "right" then
+                adjusted.w = overlapX1 - adjusted.x
+                wasAdjusted = true
+            elseif bestTrim == "top" then
+                adjusted.h = adjusted.h - trimTop
+                adjusted.y = overlapY2
+                wasAdjusted = true
+            elseif bestTrim == "bottom" then
+                adjusted.h = overlapY1 - adjusted.y
+                wasAdjusted = true
+            else
+                -- No valid trim found - rectangle is too small or completely inside existing
+                return nil, true
+            end
+            
+            -- Check if adjusted rectangle is still valid
+            if adjusted.w < 0.5 or adjusted.h < 0.5 then
+                return nil, true
+            end
+        end
+    end
+    
+    return adjusted, wasAdjusted
+end
+
+---
+-- Handle mouse up in edit mode
+-- Finalizes the rectangle and adds it to the list
+-- @param button  Mouse button released
+-- @return        true if event was consumed, false otherwise
+--
+function Nx.Map:EditModeMouseUp(button)
+    if not self.EditMode or not self.EditDrawing then return false end
+    
+    if button == "LeftButton" then
+        self.EditDrawing = false
+        
+        -- Get final cursor position - convert frame pos to world, then to zone coords
+        local f = self.Frm
+        local cx, cy = GetCursorPosition()
+        cx = cx / f:GetEffectiveScale()
+        cy = cy / f:GetEffectiveScale()
+        
+        local frmX = cx - f:GetLeft()
+        local frmY = f:GetTop() - cy
+        local wx, wy = self:FramePosToWorldPos(frmX, frmY)
+        local endX, endY = self:GetZonePos(self.EditMapId, wx, wy)
+        
+        -- Clamp to valid range
+        endX = max(0, min(100, endX))
+        endY = max(0, min(100, endY))
+        
+        -- Calculate size of drawn area
+        local w = abs(endX - self.EditStartX)
+        local h = abs(endY - self.EditStartY)
+        
+        -- Hide preview
+        if self.EditPreviewFrame then
+            self.EditPreviewFrame:Hide()
+        end
+        
+        -- Determine if this is a POINT (small drag) or RECTANGLE (larger drag)
+        local isPoint = (w < 1.5 and h < 1.5)
+        
+        if isPoint then
+            -- Create a POINT at the click location
+            local pointX = (self.EditStartX + endX) / 2  -- Center of tiny drag
+            local pointY = (self.EditStartY + endY) / 2
+            
+            local pointData = {
+                x = pointX,
+                y = pointY,
+                isPoint = true,
+                mapId = self.EditMapId
+            }
+            
+            local index = #self.EditRectangles + 1
+            self.EditRectangles[index] = pointData
+            
+            -- Create point frame
+            local pointFrame = self:EditModeCreatePointFrame(pointData, index)
+            self.EditRectFrames[index] = pointFrame
+            
+            -- Position the frame
+            local pwx, pwy = self:GetWorldPos(pointData.mapId, pointX, pointY)
+            self:EditModePositionPoint(pointFrame, pwx, pwy)
+            
+            self:EditModeUpdateCount()
+            Nx.prt("|cff80ffff Point %d added|r at (%.1f, %.1f)", index, pointX, pointY)
+        else
+            -- Create a RECTANGLE
+            local x = min(self.EditStartX, endX)
+            local y = min(self.EditStartY, endY)
+            
+            -- Check for minimum size for rectangles
+            if w < 0.5 or h < 0.5 then
+                Nx.prt("|cffff0000Rectangle too small - cancelled|r")
+                return true
+            end
+            
+            -- Create initial rectangle data
+            local rectData = {
+                x = x,
+                y = y,
+                w = w,
+                h = h,
+                isPoint = false,
+                mapId = self.EditMapId
+            }
+            
+            -- Adjust for overlaps with existing rectangles
+            local adjustedRect, wasAdjusted = self:EditModeAdjustForOverlap(rectData)
+            
+            if not adjustedRect then
+                Nx.prt("|cffff8000Rectangle overlaps existing - skipped|r")
+                return true
+            end
+            
+            -- Use the adjusted rectangle
+            rectData = adjustedRect
+            rectData.isPoint = false
+            x, y, w, h = rectData.x, rectData.y, rectData.w, rectData.h
+            
+            local index = #self.EditRectangles + 1
+            self.EditRectangles[index] = rectData
+            
+            -- Create persistent frame for this rectangle
+            local rectFrame = self:EditModeCreateRectFrame(rectData, index)
+            self.EditRectFrames[index] = rectFrame
+            
+            -- Position the frame using our custom function
+            local wx1, wy1 = self:GetWorldPos(rectData.mapId, x, y)
+            local wx2, wy2 = self:GetWorldPos(rectData.mapId, x + w, y + h)
+            self:EditModePositionRect(rectFrame, wx1, wy1, wx2, wy2)
+            
+            self:EditModeUpdateCount()
+            if wasAdjusted then
+                Nx.prt("|cff80ff80Rectangle %d added (adjusted)|r (%.1f, %.1f) size %.1fx%.1f", index, x, y, w, h)
+            else
+                Nx.prt("|cff80ff80Rectangle %d added|r (%.1f, %.1f) size %.1fx%.1f", index, x, y, w, h)
+            end
+        end
+        
+        return true
+    end
+    return false
+end
+
+---
+-- Finish editing - output all rectangles and clear
+--
+function Nx.Map:EditModeFinish()
+    local count = #self.EditRectangles
+    
+    if count == 0 then
+        Nx.prt("|cffff0000No items to output|r")
+        return
+    end
+    
+    -- Count points and rectangles
+    local points = 0
+    local rects = 0
+    for _, data in ipairs(self.EditRectangles) do
+        if data.isPoint then
+            points = points + 1
+        else
+            rects = rects + 1
+        end
+    end
+    
+    -- Get mapId from first item (assuming all are same zone)
+    local mapId = self.EditRectangles[1].mapId
+    
+    local summary = ""
+    if rects > 0 and points > 0 then
+        summary = format("%d rectangles, %d points", rects, points)
+    elseif rects > 0 then
+        summary = format("%d rectangles", rects)
+    else
+        summary = format("%d points", points)
+    end
+    
+    Nx.prt("|cff00ff00=== Quest Objective Output (%s) ===|r", summary)
+    Nx.prt("|cffffffffMap ID: |cffffd700%d|r", mapId)
+    Nx.prt("")
+    Nx.prt("|cff80ff80Quest database format (copy these lines):|r")
+    
+    for i, data in ipairs(self.EditRectangles) do
+        local str
+        if data.isPoint then
+            -- Format for points: "|mapId|32|x|y|5.01|3.34" (type 32, default size)
+            str = format("\"|%d|32|%.0f|%.0f|5.01|3.34\"", 
+                data.mapId, data.x, data.y)
+        else
+            -- Format for rectangles: "|mapId|35|x|y|w|h" (type 35 for rectangles)
+            str = format("\"|%d|35|%.0f|%.0f|%.2f|%.2f\"", 
+                data.mapId, data.x, data.y, data.w, data.h)
+        end
+        Nx.prt("|cffffffff  %s|r", str)
+    end
+    
+    Nx.prt("")
+    Nx.prt("|cff808080Raw coordinates:|r")
+    for i, data in ipairs(self.EditRectangles) do
+        if data.isPoint then
+            Nx.prt("|cff80ffff  [%d] POINT MapId=%d X=%.2f Y=%.2f|r", 
+                i, data.mapId, data.x, data.y)
+        else
+            Nx.prt("|cff808080  [%d] RECT  MapId=%d X=%.2f Y=%.2f W=%.2f H=%.2f|r", 
+                i, data.mapId, data.x, data.y, data.w, data.h)
+        end
+    end
+    
+    -- Generate hex-encoded string for rectangles (sorted by X)
+    if rects > 0 then
+        -- Collect rectangles only
+        local rectList = {}
+        for _, data in ipairs(self.EditRectangles) do
+            if not data.isPoint then
+                table.insert(rectList, data)
+            end
+        end
+        
+        -- Sort by top-left X coordinate
+        table.sort(rectList, function(a, b) return a.x < b.x end)
+        
+        -- Helper function to convert to padded hex
+        local function toHex3(val)
+            local hex = format("%X", floor(val + 0.5))
+            while #hex < 3 do
+                hex = "0" .. hex
+            end
+            return strlower(hex)
+        end
+        
+        -- Generate hex strings
+        local hexParts = {}
+        for _, rect in ipairs(rectList) do
+            local zw = rect.w / 100 * 1002
+            local zh = rect.h / 100 * 668
+            local wx = rect.x * 4095 / 100
+            local wy = rect.y * 4095 / 100
+            local ww = zw * 4095 / 1002
+            local wh = zh * 4095 / 668
+            
+            local hexx = toHex3(wx)
+            local hexy = toHex3(wy)
+            local hexw = toHex3(ww)
+            local hexh = toHex3(wh)
+            
+            table.insert(hexParts, hexx .. hexy .. hexw .. hexh)
+        end
+        
+        local hexString = table.concat(hexParts)
+        Nx.prt("")
+        Nx.prt("|cffffaa00Hex-encoded rectangles (sorted by X):|r")
+        Nx.prt("|cffffffff  %s|r", hexString)
+    end
+    
+    -- Clear all items
+    self:EditModeClearRectangles()
+    Nx.prt("|cff00ff00Output complete - cleared|r")
+end
+
 -------------------------------------------------------------------------------
 -- DEBUG/TEST CODE
 -- Development and debugging utilities

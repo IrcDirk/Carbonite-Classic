@@ -730,6 +730,7 @@ function Nx.slashCommand (txt)
     if cmd == "" or cmd == "?" or cmd == "help" then
 
         Nx.prt ("Commands:")
+        Nx.prt (" editmode  (toggle quest objective rectangle editor)")
         Nx.prt (" goto [zone] x y  (set map goto)")
         Nx.prt (" gotoadd [zone] x y  (add map goto)")
         Nx.prt (" menu  (open menu)")
@@ -855,6 +856,9 @@ function Nx.slashCommand (txt)
 
     elseif cmd == "vehpos" then
         Nx.Map:GetMap (1):VehicleDumpPos()
+
+    elseif cmd == "editmode" then
+        Nx.Map:GetMap(1):ToggleEditMode()
 
     else
         local s = gsub (txt, "note%s*", "")

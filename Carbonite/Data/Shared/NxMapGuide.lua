@@ -413,34 +413,6 @@ Nx.GuideInfo = {
             Name = "@E",
             Map = 2
         },
-        {
-            Name = "@O",
-            Map = 3
-        },
-        {
-            Name = "@N",
-            Map = 4
-        },
-        {
-            Name = "@M",
-            Map = 5
-        },
-        {
-            Name = "@P",
-            Map = 6
-        },
-        --[[{
-            Name = "@D",
-            Map = 7
-        },
-        {
-            Name = "@B",
-            Map = 8
-        },
-        {
-            Name = "@A",
-            Map = 9
-        },]]--
     },
     --[[{
         Name = L["Trade Skill"],
@@ -468,6 +440,20 @@ Nx.GuideInfo = {
     },]]--
 
 }
+
+-- Add MoP-specific continents to the Zone folder
+if isMoP then
+    -- Find the Zone folder in GuideInfo and add MoP continents
+    for _, folder in ipairs(Nx.GuideInfo) do
+        if folder.Name == L["Zone"] then
+            tinsert(folder, { Name = "@O", Map = 3 })  -- Outland
+            tinsert(folder, { Name = "@N", Map = 4 })  -- Northrend
+            tinsert(folder, { Name = "@M", Map = 5 })  -- Maelstrom
+            tinsert(folder, { Name = "@P", Map = 6 })  -- Pandaria
+            break
+        end
+    end
+end
 
 Nx.Map.Guide.FindType = nil
 
@@ -965,21 +951,23 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
             cont2 = Map.ContCnt
         end
         for cont = cont1, cont2 do
-            for _,id in pairs(Nx.Map.MapZones[cont]) do
-                local f = {}
-                local color, infoStr, minLvl = Map:GetMapNameDesc (id)
-                local name = Map:IdToName (id)
-                f.Name = format ("%s%s", color, name)
-                f.Column2 = infoStr
-                if not Map.MapWorldInfo[id] then
-                Nx.prt("err: " .. id)
+            if Nx.Map.MapZones[cont] then
+                for _,id in pairs(Nx.Map.MapZones[cont]) do
+                    local f = {}
+                    local color, infoStr, minLvl = Map:GetMapNameDesc (id)
+                    local name = Map:IdToName (id)
+                    f.Name = format ("%s%s", color, name)
+                    f.Column2 = infoStr
+                    if not Map.MapWorldInfo[id] then
+                    Nx.prt("err: " .. id)
+                    end
+                    f.T = "#Map" .. id
+                    f.Tx = parent.Tx
+                    f.MId = id
+                    f.SrtN = name
+                    f.Srt = minLvl
+                    tinsert (folder, f)
                 end
-                f.T = "#Map" .. id
-                f.Tx = parent.Tx
-                f.MId = id
-                f.SrtN = name
-                f.Srt = minLvl
-                tinsert (folder, f)
             end
         end
         if folder.Map == 0 then
@@ -1850,22 +1838,24 @@ function Nx.Map.Guide:FindClosest (findType)
                     local fid = folder.Id
                     local data = Nx:GetData (longType)
                     for cont = cont1, cont2 do
-                        for _,mapId in pairs(Nx.Map.MapZones[cont]) do
-                            local blizzArea = mapId
-                            local zoneT = data[blizzArea]
-                            if zoneT then
-                                local nodeT = zoneT[fid]
-                                if nodeT then
-                                    for k, node in ipairs (nodeT) do
-                                        local x, y, level = Nx:GatherUnpack (node)
-                                        local wx, wy = Map:GetWorldPos (mapId, x, y)
-                                        if level == Nx.Map.DungeonLevel then
-                                            local dist = (wx - px) ^ 2 + (wy - py) ^ 2
-                                            if dist < closeDist then
-                                                closeDist = dist
-                                                close = 0
-                                                closeMapId = mapId
-                                                closeX, closeY = wx, wy
+                        if Nx.Map.MapZones[cont] then
+                            for _,mapId in pairs(Nx.Map.MapZones[cont]) do
+                                local blizzArea = mapId
+                                local zoneT = data[blizzArea]
+                                if zoneT then
+                                    local nodeT = zoneT[fid]
+                                    if nodeT then
+                                        for k, node in ipairs (nodeT) do
+                                            local x, y, level = Nx:GatherUnpack (node)
+                                            local wx, wy = Map:GetWorldPos (mapId, x, y)
+                                            if level == Nx.Map.DungeonLevel then
+                                                local dist = (wx - px) ^ 2 + (wy - py) ^ 2
+                                                if dist < closeDist then
+                                                    closeDist = dist
+                                                    close = 0
+                                                    closeMapId = mapId
+                                                    closeX, closeY = wx, wy
+                                                end
                                             end
                                         end
                                     end

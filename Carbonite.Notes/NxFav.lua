@@ -1960,6 +1960,19 @@ end
 -- Cache for dirty detection
 Nx.Notes.RSCache = Nx.Notes.RSCache or {}
 Nx.Notes.RSLastMapId = nil
+Nx.Notes.RSNeedsRefresh = true  -- Flag to track if we need to refresh WorldMapFrame
+
+-- Hook WorldMapFrame OnHide to know when we need to refresh again
+-- When user closes the Blizzard map, pins get cleared, so we need to re-populate
+if not Nx.Notes.RSWorldMapHooked then
+    Nx.Notes.RSWorldMapHooked = true
+    WorldMapFrame:HookScript("OnHide", function()
+        Nx.Notes.RSNeedsRefresh = true
+        -- Clear cache so icons get rebuilt after user closes Blizzard map
+        Nx.Notes.RSCache = {}
+        Nx.Notes.PrevRSPins = 0
+    end)
+end
 
 ---
 -- Update RareScanner icons on the map
@@ -1968,6 +1981,17 @@ Nx.Notes.RSLastMapId = nil
 function Nx.Notes:RareScanner(mapId)
     local map = Nx.Map:GetMap (1)
     if (Nx.fdb.profile.Notes.RareScanner and RareScanner) then
+        -- Refresh WorldMapFrame when needed (zone change or after Blizzard map was closed)
+        -- Only refresh when Blizzard map is NOT shown to avoid flickering
+        if self.RSNeedsRefresh or self.RSLastMapId ~= mapId then
+            if not WorldMapFrame:IsShown() then
+                self.RSNeedsRefresh = false
+                -- Set the map ID internally and refresh to populate RareScanner pins
+                WorldMapFrame:SetMapID(mapId)
+                WorldMapFrame:RefreshAll(true)
+            end
+        end
+
         -- Collect all pins and build a hash of their positions/data
         local rspins = {}
         local currentHash = 0

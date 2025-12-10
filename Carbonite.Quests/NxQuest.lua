@@ -10694,7 +10694,7 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
     if not InCombatLockdown() then
         local cur = self.QIds[qId]
         if cur then
-            if not cur.Complete and Nx.isMoPClassic then
+            if not cur.Complete and Nx.BlobsAvailable then
                 QMap.QuestWin:DrawNone();
                 if Nx.db.char.Map.ShowQuestBlobs and Nx.Quests[-qId] then
                     QMap.QuestWin:DrawBlob(qId,true)
@@ -10784,7 +10784,7 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
                             RemoveQuestWatch(BlizIndex)
                         end
                         self.Map:ClearTargets()
-                        if not InCombatLockdown() then
+                        if not InCombatLockdown() and Nx.BlobsAvailable then
                             local QMap = NxMap1.NxMap
                             QMap.QuestWin:DrawNone();
                             QMap.QuestWin:Hide()

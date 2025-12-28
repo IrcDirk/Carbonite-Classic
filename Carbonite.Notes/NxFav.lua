@@ -1974,6 +1974,16 @@ if not Nx.Notes.RSWorldMapHooked then
     end)
 end
 
+if not Nx.Notes.CriteriaUpdateHooked then
+    Nx.Notes.CriteriaUpdateHooked = true
+    CarboniteNotes:RegisterEvent("CRITERIA_EARNED", function(...) Nx.Notes:Update()
+        Nx.Notes.RSNeedsRefresh = true
+        -- Clear cache so icons get rebuilt after user closes Blizzard map
+        Nx.Notes.RSCache = {}
+        Nx.Notes.PrevRSPins = 0
+    end)
+end
+
 ---
 -- Update RareScanner icons on the map
 -- @param mapId  Current map ID

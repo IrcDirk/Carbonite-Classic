@@ -1889,8 +1889,11 @@ function Nx.Map:UpdateWorldMap()
     end
     if not InCombatLockdown() and Nx.BlobsAvailable then
         self.Arch:DrawNone();
-        -- Hide arch blobs during zoom animation to prevent position/scale mismatch
-        if self.StepTime ~= 0 or self.Scrolling then
+        -- Hide arch blobs during zoom animation or manual scrolling to prevent position/scale mismatch
+        -- Note: We check for scale change rather than StepTime != 0, because StepTime is also set
+        -- when following the player (position change only), and we want blobs visible during that
+        local isZooming = abs(self.ScaleDraw - self.Scale) > 0.001
+        if isZooming or self.Scrolling then
             self.Arch:Hide()
         elseif Nx.db.char.Map.ShowArchBlobs then
             local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());

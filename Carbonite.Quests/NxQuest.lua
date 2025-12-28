@@ -10696,7 +10696,13 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
         if cur then
             if not cur.Complete and Nx.BlobsAvailable then
                 QMap.QuestWin:DrawNone();
-                if Nx.db.char.Map.ShowQuestBlobs and Nx.Quests[-qId] then
+                -- Hide quest blobs during zoom animation or manual scrolling to prevent position/scale mismatch
+                -- Note: We check for scale change rather than StepTime != 0, because StepTime is also set
+                -- when following the player (position change only), and we want blobs visible during that
+                local isZooming = math.abs(QMap.ScaleDraw - QMap.Scale) > 0.001
+                if isZooming or QMap.Scrolling then
+                    QMap.QuestWin:Hide()
+                elseif Nx.db.char.Map.ShowQuestBlobs and Nx.Quests[-qId] then
                     QMap.QuestWin:DrawBlob(qId,true)
                     QMap:ClipZoneFrm( QMap.Cont, QMap.Zone, QMap.QuestWin, 1 )
                     QMap.QuestWin:SetFrameLevel(QMap.Level)

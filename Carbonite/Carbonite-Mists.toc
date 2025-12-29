@@ -1,4 +1,4 @@
-## Interface: 50501
+## Interface: 50502
 ## Title: Carbonite Maps - Classic @project-version@
 ## Version: @project-version@
 ## Author: No one
@@ -25,7 +25,7 @@ Data\mop\NxMapData.lua
 
 NxMap.lua
 
-Data\mop\NxMapGuide.lua
+Data\Shared\NxMapGuide.lua
 
 NxTravel.lua
 

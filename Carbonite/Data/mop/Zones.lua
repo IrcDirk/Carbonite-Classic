@@ -1,33 +1,33 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
 Nx.BuggedSubZones = {
-	[0] = "null",
-	[1] = "Caverns of Time",
-	[2] = "Cleft of Shadow",
-	[3] = "Temple of Earth",
-	[4] = "Terrace of Light"
+    [0] = "null",
+    [1] = "Caverns of Time",
+    [2] = "Cleft of Shadow",
+    [3] = "Temple of Earth",
+    [4] = "Terrace of Light"
 }
 
 Nx.BuggedAreas = {
-	[0] = "null",
-	[1] = 125,
-	[2] = 126,
-	[3] = 103,
-	[4] = 87,
-	[5] = 90,
+    [0] = "null",
+    [1] = 125,
+    [2] = 126,
+    [3] = 103,
+    [4] = 87,
+    [5] = 90,
 }
 
 
-	-- Can anyone expand/corect this (from dratr https://github.com/dratr/Carbonite/commits/map-zonesdocs)
-	-- Fields: name, minLvl, maxLvl, faction, cont, entryId, ex, ey, ??
-	-- entryId, ex, ey only for instances.
-	-- entryId is map id of zone that has dungeon entrance; ex, ey is loc in zone
-	-- Faction:
-	-- 0 Alliance
-	-- 1 Horde
-	-- 2 Contested
-	-- 3 Instance
-	-- 4 Unknown
+    -- Can anyone expand/corect this (from dratr https://github.com/dratr/Carbonite/commits/map-zonesdocs)
+    -- Fields: name, minLvl, maxLvl, faction, cont, entryId, ex, ey, ??
+    -- entryId, ex, ey only for instances.
+    -- entryId is map id of zone that has dungeon entrance; ex, ey is loc in zone
+    -- Faction:
+    -- 0 Alliance
+    -- 1 Horde
+    -- 2 Contested
+    -- 3 Instance
+    -- 4 Unknown
 Nx.Zones = {
     [0] = L["Unknown Zone"] .. "|0|0|4|0||",
     [1] = L["Durotar"] .. "|1|12|1|1||",
@@ -73,7 +73,7 @@ Nx.Zones = {
     [83] = L["Winterspring"] .. "|50|55|2|1||",
     [84] = L["Stormwind City"] .. "|0|0|0|2||",
     [85] = L["Orgrimmar"] .. "|0|0|1|1||",
-	[86] = L["Orgrimmar"] .. "|0|0|1|1||",
+    [86] = L["Orgrimmar"] .. "|0|0|1|1||",
     [87] = L["Ironforge"] .. "|0|0|0|2||",
     [88] = L["Thunder Bluff"] .. "|0|0|1|1||",
     [89] = L["Darnassus"] .. "|0|0|0|1||",
@@ -85,7 +85,7 @@ Nx.Zones = {
     [95] = L["Ghostlands"] .. "|10|20|1|2||",
     [97] = L["Azuremyst Isle"] .. "|1|10|0|1||",
     [1467] = L["Outland"] .. "|0|0|2|3||",
-    [100] = L["Hellfire Peninsula"] .. "|58|63|2|3||",  
+    [100] = L["Hellfire Peninsula"] .. "|58|63|2|3||",
     [102] = L["Zangarmarsh"] .. "|60|64|2|3||",
     [103] = L["The Exodar"] .. "|0|0|0|1||",
     [104] = L["Shadowmoon Valley"] .. "|67|70|2|3||",
@@ -230,12 +230,12 @@ Nx.Zones = {
     [379] = L["Kun-Lai Summit"] .. "|87|90|2|6||",
     [388] = L["Townlong Steppes"] .. "|87|90|2|6||",
     [390] = L["Vale of Eternal Blossoms"] .. "|90|90|2|6||",
-    [391] = L["Shrine of Two Moons"] .. "|85|90|3|5|390|0|0|0", 
-    [392] = L["Shrine of Two Moons"] .. "|85|90|3|5|390|0|0|0", 
-    [393] = L["Shrine of Seven Stars"] .. "|85|90|3|5|390|0|0|0", 
-    [394] = L["Shrine of Seven Stars"] .. "|85|90|3|5|390|0|0|0", 
-    [395] = L["Guo-Lai Hal"] .. "|85|90|3|5|390|0|0|0", 
-    [396] = L["Guo-Lai Hal"] .. "|85|90|3|5|390|0|0|0", 
+    [391] = L["Shrine of Two Moons"] .. "|85|90|3|5|390|0|0|0",
+    [392] = L["Shrine of Two Moons"] .. "|85|90|3|5|390|0|0|0",
+    [393] = L["Shrine of Seven Stars"] .. "|85|90|3|5|390|0|0|0",
+    [394] = L["Shrine of Seven Stars"] .. "|85|90|3|5|390|0|0|0",
+    [395] = L["Guo-Lai Hal"] .. "|85|90|3|5|390|0|0|0",
+    [396] = L["Guo-Lai Hal"] .. "|85|90|3|5|390|0|0|0",
     [397] = L["Eye of the Storm"] .. "|0|0|3|4||",
     [398] = L["Well of Eternity"] .. "|85|85|3|5|71|65.34|50|5",
     [399] = L["Hour of Twilight"] .. "|85|85|3|5|71|65.34|50|5",
@@ -304,10 +304,10 @@ Nx.Zones = {
 
 
 Nx.SubNames = {
-		[L["Dalaran"]] = {
-			[L["Cantrips & Crows"]] = 2,
-			[L["Circle of Wills"]] = 2,
-			[L["The Black Market"]] = 2,
-			[L["The Underbelly"]] = 2,
-		}
-	}
+        [L["Dalaran"]] = {
+            [L["Cantrips & Crows"]] = 2,
+            [L["Circle of Wills"]] = 2,
+            [L["The Black Market"]] = 2,
+            [L["The Underbelly"]] = 2,
+        }
+    }

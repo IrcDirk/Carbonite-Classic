@@ -1,8 +1,10 @@
 ﻿---------------------------------------------------------------------------------------
+-- NxCom - Communication System
+-- Copyright 2007-2012 Carbon Based Creations, LLC
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
---
--- NxCom - Communication code
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -11,1959 +13,1817 @@
 --
 -- This program is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- along with this program. If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------
--- Warning: "\" in send data can lead to invalid escape codes (ok, since only escaped if in literal string?)
--- Bytes 35 (#) + 57 == 92 (\)
+-- Module Description:
+-- The Communication module handles all inter-player communication for Carbonite.
+-- This includes:
+--   - Position sharing with guild members and friends
+--   - Target information sharing
+--   - Quest progress sharing
+--   - Custom chat channels for zone-based communication
+--   - Level-up notifications
+--   - Enemy player (punk) alerts
 --
--- Byte 124 == |. Must be |c or creates invalid escape code. Not in addon channel, only chat
--- Byte 128 or higher == invalid UTF-8 error. Not in addon channel, only chat
+-- Technical Notes:
+-- - "\" in send data can lead to invalid escape codes
+-- - Bytes 35 (#) + 57 == 92 (\)
+-- - Byte 124 == |. Must be |c or creates invalid escape code (chat only, not addon channel)
+-- - Byte 128 or higher == invalid UTF-8 error (chat only, not addon channel)
 ---------------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
--- Com
----------------------------------------------------------------------------------------
-
+-- Localization library reference
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
-NxCOMOPTS_VERSION	= .01
+---------------------------------------------------------------------------------------
+-- Version and Default Options
+---------------------------------------------------------------------------------------
+
+NxCOMOPTS_VERSION = .01
 
 NxComOpts = {
-	Version = 0
+    Version = 0
 }
 
 NxComOptsDefaults = {
-	Version = NxCOMOPTS_VERSION,
+    Version = NxCOMOPTS_VERSION,
 }
 
+---------------------------------------------------------------------------------------
+-- Communication System Initialization
+---------------------------------------------------------------------------------------
+
+--- Initialize the communication system
+-- Sets up channels, message queues, and hooks into the chat system
 function Nx.Com:Init()
-	if NxComOpts.Version < NxCOMOPTS_VERSION then
+    -- Check and reset options if version mismatch
+    if NxComOpts.Version < NxCOMOPTS_VERSION then
+        if NxComOpts.Version ~= 0 then
+            Nx.prt(L["Com options reset (%f, %f)"], NxComOpts.Version, NxComOptsDefaults.Version)
+        end
+        NxComOpts = NxComOptsDefaults
+    end
 
-		if NxComOpts.Version ~= 0 then
-			Nx.prt (L["Com options reset (%f, %f)"], NxComOpts.Version, NxComOptsDefaults.Version)
-		end
+    -- Initialize state
+    self.Created = false
+    self.Data = {}
+    self.Data.Rcv = {}       -- Received messages
+    self.Data.Send = {}      -- Messages to send
+    self.Name = "Crb"        -- Addon message prefix
 
-		NxComOpts = NxComOptsDefaults
-	end
+    -- Channel letter: Y for free, M for ads, B for standard
+    self.ChanALetter = Nx.Free and "Y" or Nx.Ads and "M" or "B"
 
-	--
-	self.Created = false
-	self.Data = {}
-	self.Data.Rcv = {}
-	self.Data.Send = {}
-	self.Name = "Crb"
-	self.ChanALetter = Nx.Free and "Y" or Nx.Ads and "M" or "B"		-- Global letter. Z is used by zone channel
+    self.SendRate = 1        -- Message send rate multiplier
 
-	self.SendRate = 1
+    -- Send queue names mapping
+    self.SendQNames = {
+        ["Chan"] = 1,
+        ["Guild"] = 2,
+        ["Friend"] = 3,
+        ["Zone"] = 4
+    }
 
-	self.SendQNames = { ["Chan"] = 1, ["Guild"] = 2, ["Friend"] = 3, ["Zone"] = 4 }
+    -- Initialize send queues
+    local sq = {}
+    self.SendQ = sq
+    sq[1] = {}               -- Channel queue
+    sq[2] = {}               -- Guild queue
+    sq[3] = {}               -- Friends queue
+    sq[4] = {}               -- Zone queue
+    self.SendQMode = 1
 
-	local sq = {}
-	self.SendQ = sq
-	sq[1] = {}				-- Channel
-	sq[2] = {}				-- Guild
-	sq[3] = {}				-- Friends
-	sq[4] = {}				-- Zone
-	self.SendQMode = 1
+    -- Player tracking info
+    self.PalsInfo = {}       -- Friends and guild member info (positions)
+    self.PalsSendQ = {}      -- Queue of messages to send to pals
+    self.PalNames = {}       -- Names of all pals (friends + guild)
 
-	self.PalsInfo = {}			-- Friends and guildy info (position)
-	self.PalsSendQ = {}
-	self.PalNames = {}
+    self.MemberNames = {}    -- Names in current party or raid
 
-	self.MemberNames = {}			-- Names in party or raid
+    self.Friends = {}        -- Online friends list
+    self.Punks = {}          -- Enemy player tracking
 
-	self.Friends = {}
-	self.Punks = {}
+    -- Zone channel info
+    self.ZPInfo = {}         -- Zone player info (positions of non-pals)
+    self.ZStatus = {}        -- Zone channel status, indexed by map ID
+    self.ZMonitor = {}       -- Zones being monitored
 
-	self.ZPInfo = {}			-- Zone player info (position)
-	self.ZStatus = {}			-- Zones status. Indexed with map id
-	self.ZMonitor = {}			-- Zones to monitor
+    self.SendChanQ = {}      -- Queue for numbered channel sends
 
-	self.SendChanQ = {}
+    self.PosSendNext = -2    -- Index for next position send
+    self.SendZSkip = 1       -- Zone send skip counter
 
-	self.PosSendNext = -2
-	self.SendZSkip = 1
+    -- Target type colors
+    self.TypeColors = {
+        "|cff80ff80",    -- Friendly (green)
+        "|cffff4040",    -- Enemy player (red)
+        "|cffffff40",    -- Enemy NPC (yellow)
+        "|cffffffe0",    -- Elite/Boss (light yellow)
+        "|cffc0c0ff"     -- Neutral (light blue)
+    }
 
-	self.TypeColors = { "|cff80ff80", "|cffff4040", "|cffffff40", "|cffffffe0", "|cffc0c0ff" }
+    -- Class names with localization
+    self.ClassNames = {
+        [0] = "?",
+        L["Druid"], L["Hunter"], L["Mage"], L["Paladin"], L["Priest"],
+        L["Rogue"], L["Shaman"], L["Warlock"], L["Warrior"], L["Deathknight"], L["Monk"]
+    }
 
-	self.ClassNames = {
-		[0] = "?",
-		L["Druid"], L["Hunter"], L["Mage"], L["Paladin"], L["Priest"],
-		L["Rogue"], L["Shaman"], L["Warlock"], L["Warrior"], L["Deathknight"], L["Monk"]
-	}
-	for k, v in ipairs (self.ClassNames) do
-		self.ClassNames[v] = k
-		self.ClassNames[strupper (v)] = k	-- All caps version
-	end
+    -- Create reverse lookup for class names
+    for k, v in ipairs(self.ClassNames) do
+        self.ClassNames[v] = k
+        self.ClassNames[strupper(v)] = k    -- Uppercase version
+    end
 
-	self.Created = true	-- Used???
+    self.Created = true
 
-	self.List.Opened = false
-	self.List.Sorted = {}
+    -- Initialize message list
+    self.List.Opened = false
+    self.List.Sorted = {}
 
---	self.List:Open()
+    -- Debug: Bytes per second tracking
+    self.SentBytes = 0
+    self.SentBytesSec = 0
+    self.SentBytesTime = GetTime()
+    ComBytesSec = Nx:ScheduleTimer(self.OnBytesSecTimer, 1, self)
 
---[[
-	for n = 1, 25 do
-		Nx.Timer:Start (L["ComTest"]..n, 1 + n * .1, self, self.OnTestTimer)
-	end
---]]
-
-	self.SentBytes = 0			-- Debugging
-	self.SentBytesSec = 0
-	self.SentBytesTime = GetTime()
-	ComBytesSec = Nx:ScheduleTimer(self.OnBytesSecTimer,1,self)
-
-	hooksecurefunc ("SendChatMessage", self.SendChatHook)
-	Nx:RegisterComm(self.Name,Nx.Com.OnChat_msg_addon)
+    -- Hook into chat system
+    hooksecurefunc("SendChatMessage", self.SendChatHook)
+    Nx:RegisterComm(self.Name, Nx.Com.OnChat_msg_addon)
 end
 
 ---------------------------------------------------------------------------------------
+-- Testing Functions
+---------------------------------------------------------------------------------------
 
-function Nx.Com:Test (a1, a2)
+--- Test communication function
+-- @param a1 First argument
+-- @param a2 Second argument
+function Nx.Com:Test(a1, a2)
+    self:SendSecG("? }a", "")    -- Ask for response
+end
 
-	self:SendSecG ("? }a", "")		-- Ask for it
+--- Timer callback for communication testing
+-- @param name Timer name
+-- @return Next timer interval
+function Nx.Com:OnTestTimer(name)
+    self:SendPals("!" .. name)
 
---[[
-	local start = tonumber (a1) or 1
-	local num = tonumber (a2) or 8
+    if random() < .5 then
+        -- Could trigger level up test here
+    end
 
-	local s = ""
-
-	for n = start, start+19 do
-		Nx.prt ("%d", n)
-		s = format ("%d |d%c", n, n)
-		self:SendChatMessageFixed (s, "CHANNEL", num)
-		self:SendChatMessageFixed (s, "PARTY")
---		Nx:SendCommMessage (self.Name, format ("%d |%c \%c", n, n, n), "PARTY")
-	end
---]]
+    return .1 + random() * 5
 end
 
 ---------------------------------------------------------------------------------------
---
+-- Bandwidth Monitoring
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnTestTimer (name)
+--- Timer callback to calculate bytes per second
+-- @param name Timer name
+-- @return Next timer interval (always 1 second)
+function Nx.Com:OnBytesSecTimer(name)
+    local tm = GetTime()
 
-	self:SendPals ("!"..name)
+    self.SentBytesSec = self.SentBytes / (tm - self.SentBytesTime)
+    self.SentBytes = 0
+    self.SentBytesTime = tm
 
-	if random() < .5 then
---		local i = random (1, 80)
---		self:OnPlayer_level_up (i)
-	end
-
-	return .1 + random() * 5 --15
+    return 1
 end
 
 ---------------------------------------------------------------------------------------
---
+-- Event Handlers
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnBytesSecTimer (name)
+--- Handle communication-related events
+-- @param event Event name
+function Nx.Com:OnEvent(event)
+    local self = Nx.Com
 
-	local tm = GetTime()
+    if event == "PLAYER_LOGIN" then
+        -- Initialize player info
+        local playername, realmname = UnitFullName("player")
+        self.PlyrName = playername .. (realmname and "-" .. realmname or "")
+        self.PlyrMapId = Nx.Map:GetRealMapId()
+        self.PlyrX = 0
+        self.PlyrY = 0
 
-	self.SentBytesSec = self.SentBytes / (tm - self.SentBytesTime)
+        -- Get player class index
+        local _, tCls = UnitClass("player")
+        self.PlyrClassI = self.ClassNames[tCls] or 0
 
-	self.SentBytes = 0
-	self.SentBytesTime = tm
+        self.List:AddInfo("", "PLAYER_LOGIN")
 
-	return 1
+        -- Initialize send timers
+        self.SendTime = GetTime()
+        self.SendPosTime = GetTime()
+        self.SendChanTime = GetTime()
+
+        -- Leave any existing channels
+        self:LeaveChan("A")
+        self:LeaveChan("Z")
+
+        -- Schedule login timer with random delay
+        ComLogin = Nx:ScheduleTimer(self.OnLoginTimer, random(10, 15), self)
+
+        -- Request guild roster update
+        if IsInGuild() then
+            C_GuildInfo.GuildRoster()
+        end
+
+        Nx.Com.Initialized = true
+
+    elseif event == "ZONE_CHANGED_NEW_AREA" then
+        self.List:AddInfo("", "ZONE_CHANGED_NEW_AREA")
+
+        -- Update channels if login timer has completed
+        if Nx.TimeLeft(ComLogin) == 0 then
+            self:UpdateChannels()
+        end
+
+    elseif event == "PLAYER_LEAVING_WORLD" then
+        -- Clean up channels when leaving world
+        self:LeaveChan("A")
+        self:LeaveChan("Z")
+    end
+
+    self.List:Update()
 end
 
----------------------------------------------------------------------------------------
--- On com event
----------------------------------------------------------------------------------------
-
-function Nx.Com:OnEvent (event)
-	local self = Nx.Com
-
---	Nx.prt ("Com Event: %s", event)
-
-	if event == "PLAYER_LOGIN" then
-		local playername, realmname = UnitFullName("player")
-		self.PlyrName = playername .. (realmname and "-" .. realmname or "")
-		self.PlyrMapId = Nx.Map:GetRealMapId()
-		self.PlyrX = 0
-		self.PlyrY = 0
-
-		local _, tCls = UnitClass ("player")		-- Non localized uppercase version
-		self.PlyrClassI = self.ClassNames[tCls] or 0
-
-		self.List:AddInfo ("", "PLAYER_LOGIN")
-
-		self.SendTime = GetTime()
-		self.SendPosTime = GetTime()
-		self.SendChanTime = GetTime()
-
-		self:LeaveChan ("A")
-		self:LeaveChan ("Z")
---		Nx.Timer:Start ("ComLogin", 3 + random() * 1, self, self.OnLoginTimer)
-		ComLogin = Nx:ScheduleTimer(self.OnLoginTimer,random(10,15),self)
---		Nx.prt ("Com PLAYER_LOGIN")
-
-		if IsInGuild() then
-			C_GuildInfo.GuildRoster()
-		end
-		--ShowFriends()
-		Nx.Com.Initialized = true
-	elseif event == "ZONE_CHANGED_NEW_AREA" then
-
-		self.List:AddInfo ("", "ZONE_CHANGED_NEW_AREA")
-
-		if Nx.TimeLeft(ComLogin) == 0 then
-			self:UpdateChannels()
-		end
-
-	elseif event == "PLAYER_LEAVING_WORLD" then
-
-		self:LeaveChan ("A")
-		self:LeaveChan ("Z")
-	end
-
-	self.List:Update()
-end
-
+--- Login timer callback
+-- Handles channel joining after login/reload
 function Nx.Com:OnLoginTimer()
-	local redeploy = 0
-	if UnitOnTaxi ("player") then			-- Detect login on taxi, which will not join channels until you land
+    local redeploy = 0
 
-		local id = GetChannelName (1)		-- Detect if reload
-		if id ~= 1 then
-			self.WasOnTaxi = true
-			redeploy = 1
-		end
-	end
+    -- Check if we logged in on a taxi (channels don't join while on taxi)
+    if UnitOnTaxi("player") then
+        local id = GetChannelName(1)
+        if id ~= 1 then
+            self.WasOnTaxi = true
+            redeploy = 1
+        end
+    end
 
-	if self.WasOnTaxi then
-		self.WasOnTaxi = nil
-		redeploy = 3
-	end
+    -- Handle post-taxi channel rejoining
+    if self.WasOnTaxi then
+        self.WasOnTaxi = nil
+        redeploy = 3
+    end
 
-	if GetChannelName(1)  ~= 1 then
-		redeploy = 3
-	end
+    -- Check if channels are ready
+    if GetChannelName(1) ~= 1 then
+        redeploy = 3
+    end
 
-	if redeploy > 0 then
-		ComLogin = Nx:ScheduleTimer(self.OnLoginTimer,redeploy,self)
-		return
-	end
+    -- Retry if needed
+    if redeploy > 0 then
+        ComLogin = Nx:ScheduleTimer(self.OnLoginTimer, redeploy, self)
+        return
+    end
 
-	if IsControlKeyDown() and IsAltKeyDown() then
-		Nx.prt (L["Disabling com functions!"])
-		Nx.db.profile.Comm.Global = false
-		Nx.db.profile.Comm.Zone = false
-	end
+    -- Allow manual disable of com features with Ctrl+Alt
+    if IsControlKeyDown() and IsAltKeyDown() then
+        Nx.prt(L["Disabling com functions!"])
+        Nx.db.profile.Comm.Global = false
+        Nx.db.profile.Comm.Zone = false
+    end
 
-	local need = 2
-	if not Nx.db.profile.Comm.Global then
-		need = 1
-	end
-	if not Nx.db.profile.Comm.Zone then
-		need = need - 1
-	end
+    -- Calculate how many channels we need
+    local need = 2
+    if not Nx.db.profile.Comm.Global then
+        need = 1
+    end
+    if not Nx.db.profile.Comm.Zone then
+        need = need - 1
+    end
 
-	local free = max (10 - self:GetChanCount(), 0)
+    -- Check available channel slots
+    local free = max(10 - self:GetChanCount(), 0)
 
-	if need > free then
-		Nx.prt ("|cffff9f5f" .. L["Need"] .. " %d " .. L["chat channel(s)!"], need - free)
-		Nx.prt ("|cffff9f5f" .. L["This will disable some communication features"])
-		Nx.prt ("|cffff9f5f" .. L["You may free channels using the chat tab"])
-	end
+    if need > free then
+        Nx.prt("|cffff9f5f" .. L["Need"] .. " %d " .. L["chat channel(s)!"], need - free)
+        Nx.prt("|cffff9f5f" .. L["This will disable some communication features"])
+        Nx.prt("|cffff9f5f" .. L["You may free channels using the chat tab"])
+    end
 
-	-- Should not find any since we left all zone channels a few seconds ago
-	self:ScanChans()
-	self:UpdateChannels()
+    -- Scan and update channels
+    self:ScanChans()
+    self:UpdateChannels()
 
-	self:JoinChan ("A")		-- Addon
---	self:JoinChan ("Z")		-- Zone
-
---	self:SendA (format ("TEST"))
+    -- Join addon channel
+    self:JoinChan("A")
 end
 
+--- Timer callback for leaving addon channel
 function Nx.Com:OnLeaveATimer()
---	Nx.prt ("Com OnLeaveATimer")
-	self:LeaveChan ("A")
+    self:LeaveChan("A")
 end
 
 ---------------------------------------------------------------------------------------
--- We leveled
+-- Level Up Handling
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnPlayer_level_up (event, arg1)
-
-	if arg1 >= 1 then		-- Level #
-		self:SendPals (format ("L%s", strchar (35 + arg1)))
-	end
+--- Called when player levels up
+-- Broadcasts level up notification to pals
+-- @param event Event name
+-- @param arg1 New level
+function Nx.Com:OnPlayer_level_up(event, arg1)
+    if arg1 >= 1 then
+        self:SendPals(format("L%s", strchar(35 + arg1)))
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- Friends list changed. Build list of connected non guild friends
+-- Friends List Management
 ---------------------------------------------------------------------------------------
 
+--- Called when friends or guild list updates
+-- Builds list of connected non-guild friends
 function Nx.Com:OnFriendguild_update()
+    local self = Nx.Com
 
-	local self = Nx.Com
+    -- Build set of online guild members
+    local gNames = {}
+    local gNum = GetNumGuildMembers()
 
---	Nx.prt ("OnFriendguild_update")
+    for n = 1, gNum do
+        local name, _, _, _, _, _, _, _, online = GetGuildRosterInfo(n)
+        if online then
+            gNames[name] = true
+        end
+    end
 
-	local gNames = {}
-	local gNum = GetNumGuildMembers()
+    -- Build friends list (excluding guild members)
+    self.Friends = {}
+    local i = 1
 
-	for n = 1, gNum do
-		local name, _, _, _, _, _, _, _, online = GetGuildRosterInfo (n)
-		if online then
-			gNames [name] = true
-		end
-	end
+    for n = 1, C_FriendList.GetNumFriends() do
+        local finfo = C_FriendList.GetFriendInfoByIndex(n)
+        local name = finfo.name
+        local con = finfo.connected
 
-	self.Friends = {}
-	local i = 1
+        -- Add realm name if not present
+        if not Nx.strpos(name, "-") then
+            local realmname = GetRealmName()
+            name = name .. (realmname and "-" .. realmname or "")
+        end
 
-	for n = 1, C_FriendList.GetNumFriends() do
-		local finfo = C_FriendList.GetFriendInfoByIndex (n)
-		local name = finfo.name
-		local con = finfo.connected
-		if not Nx.strpos(name, "-") then
-			local realmname = GetRealmName()
-			name = name .. (realmname and "-" .. realmname or "")
-		end
-		if con then
-			if not gNames[name] then
+        if con then
+            if not gNames[name] then
+                self.Friends[i] = name
+                i = i + 1
+            end
+        end
+    end
 
---				Nx.prt ("Add friend %s", name)
+    -- Mark friends in guild names table
+    for k, v in ipairs(self.Friends) do
+        gNames[v] = false
+    end
 
-				self.Friends[i] = name
-				i = i + 1
-			end
-		end
-	end
-
-	for k, v in ipairs (self.Friends) do
-		gNames[v] = false
-	end
-	self.PalNames = gNames
+    self.PalNames = gNames
 end
 
 ---------------------------------------------------------------------------------------
--- On com event
+-- Chat Event Handlers
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnChatEvent (event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--- Handle chat channel events (join, leave, notices)
+-- @param event Event name
+-- @param arg1-arg9 Event arguments
+function Nx.Com:OnChatEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+    local self = Nx.Com
 
-	local self = Nx.Com
+    -- Only handle our channels
+    if strsub(arg9, 1, 3) == self.Name then
+        if event == "CHAT_MSG_CHANNEL_JOIN" then
+            self.List:AddInfo("CJ:" .. arg9, format("%s", arg2))
 
-	--Nx.prt ("ComChatEvent: %s %s %s", event, arg1, arg9)
+        elseif event == "CHAT_MSG_CHANNEL_NOTICE" then
+            self.List:AddInfo("CN:" .. arg9, format("%s", arg1))
 
-	if strsub (arg9, 1, 3) == self.Name then
+            local nameRoot = Nx.Split("I", arg9)    -- Drop I and #
 
-		if event == "CHAT_MSG_CHANNEL_JOIN" then
+            if arg1 == "YOU_JOINED" or arg1 == "YOU_CHANGED" then
+                local typ = strupper(strsub(arg9, 4, 4))
 
-			self.List:AddInfo ("CJ:"..arg9, format ("%s", arg2))
+                if typ == self.ChanALetter then
+                    -- Joined addon channel
+                    self.ChanAName = arg9
+                    Nx:CancelTimer(ComA)
 
-		elseif event == "CHAT_MSG_CHANNEL_NOTICE" then
+                elseif typ == "Z" then
+                    -- Joined zone channel
+                    local mapId = tonumber(strsub(nameRoot, 5))
+                    if mapId then
+                        local zs = self.ZStatus[mapId] or {}
+                        zs.ChanName = arg9
+                        self.ZStatus[mapId] = zs
 
-			self.List:AddInfo ("CN:"..arg9, format ("%s", arg1))
+                        Nx:CancelTimer("ComZ" .. mapId)
+                        self:UpdateChannels()
+                    end
+                end
 
-			local nameRoot = Nx.Split ("I", arg9)		-- Drop I and #
+            elseif arg1 == "YOU_LEFT" then
+                local typ = strupper(strsub(arg9, 4, 4))
 
-			if arg1 == "YOU_JOINED" or arg1 == "YOU_CHANGED" then
+                if typ == "Z" then
+                    -- Left zone channel
+                    local mapId = tonumber(strsub(nameRoot, 5))
+                    if mapId then
+                        local zs = self.ZStatus[mapId] or {}
+                        zs.ChanName = nil
+                        self.ZStatus[mapId] = zs
+                    end
+                end
+            end
 
-				local typ = strupper (strsub (arg9, 4, 4))
+        elseif event == "CHAT_MSG_CHANNEL_LEAVE" then
+            self.List:AddInfo("CL:" .. arg9, format("%s", arg2))
+        end
 
-				if typ == self.ChanALetter then
-					self.ChanAName = arg9
+        self.List:Update()
+    end
+end
 
---					Nx.prt ("Join %s", arg9)
-					Nx:CancelTimer(ComA)
-				elseif typ == "Z" then
+--- Handle channel chat messages
+-- Processes status messages from zone channel
+-- @param event Event name
+-- @param arg1-arg9 Event arguments
+function Nx.Com:OnChat_msg_channel(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+    local self = Nx.Com
 
-					local mapId = tonumber (strsub (nameRoot, 5))
-					if mapId then
-						local zs = self.ZStatus[mapId] or {}
-						zs.ChanName = arg9
-						self.ZStatus[mapId] = zs
+    -- Handle system messages for player not found
+    if event == "CHAT_MSG_SYSTEM" then
+        local message = arg1
 
-						Nx:CancelTimer("ComZ" .. mapId)
+        local NOT_FOUND = ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)")
+        local name = strmatch(message, NOT_FOUND)
 
-						self:UpdateChannels()
-					end
+        if name then
+            -- Add realm if not present
+            if not Nx.strpos(name, "-") then
+                local realmname = GetRealmName()
+                name = name .. (realmname and "-" .. realmname or "")
+            end
 
---					Nx.prt ("Join %s", arg9)
-				end
+            -- Remove from friends list
+            for k, v in ipairs(self.Friends) do
+                if name == v then
+                    tremove(self.Friends, k)
+                end
+            end
+        end
+    end
 
-			elseif arg1 == "YOU_LEFT" then
+    -- Process messages from our channels
+    if strsub(arg9, 1, 3) == self.Name then
+        local name = arg2
 
-				local typ = strupper (strsub (arg9, 4, 4))
+        -- Ignore our own messages
+        if name ~= self.PlyrName then
+            local msg = self:RestoreChars(arg1)
+            local id = strbyte(msg)
 
-				if typ == "Z" then
+            if id == 83 then    -- S (status)
+                -- Don't process if this is a known pal
+                if not self.PalsInfo[name] then
+                    if #msg >= 16 then
+                        local pl = self.ZPInfo[name]
 
-					local mapId = tonumber (strsub (nameRoot, 5))
-					if mapId then
-						local zs = self.ZStatus[mapId] or {}
-						zs.ChanName = nil
-						self.ZStatus[mapId] = zs
-					end
-				end
-			end
+                        if not pl then
+                            pl = {}
+                            self.ZPInfo[name] = pl
+                        end
 
-		elseif event == "CHAT_MSG_CHANNEL_LEAVE" then
+                        self:ParsePlyrStatus(name, pl, msg)
+                    end
+                end
 
-			self.List:AddInfo ("CL:"..arg9, format ("%s", arg2))
-		end
+            elseif id == 86 then    -- V (Version)
+                -- Version and registered name - currently unused
+            end
+        end
+    end
+end
 
-		self.List:Update()
-	end
+--- Handle addon channel messages
+-- Processes messages from guild, party, and whisper channels
+-- @param args Message content
+-- @param distribution Distribution type
+-- @param target Sender name
+function Nx.Com:OnChat_msg_addon(args, distribution, target)
+    local self = Nx.Com
+
+    local name = target
+
+    -- Add realm if not present
+    if not Nx.strpos(name, "-") then
+        local realmname = GetRealmName()
+        name = name .. (realmname and "-" .. realmname or "")
+    end
+
+    -- Ignore our own messages
+    if name ~= self.PlyrName then
+        -- Split multiple messages (separated by tab)
+        local data = { Nx.Split("\t", args) }
+
+        for k, msg in ipairs(data) do
+            local id = strbyte(msg)
+
+            if id == 83 then    -- S (status)
+                -- Check if sender is a pal
+                if self.PalNames[name] ~= nil then
+                    if #msg >= 16 then
+                        local pal = self.PalsInfo[name]
+
+                        if not pal then
+                            pal = {}
+                            self.PalsInfo[name] = pal
+                        end
+
+                        self:ParsePlyrStatus(name, pal, msg)
+                    end
+                else
+                    -- Non-pal player
+                    if #msg >= 16 then
+                        local pl = self.ZPInfo[name]
+
+                        if not pl then
+                            pl = {}
+                            self.ZPInfo[name] = pl
+                        end
+
+                        self:ParsePlyrStatus(name, pl, msg)
+                    end
+                end
+
+            elseif id == 76 then    -- L (Level up)
+                if Nx.db.profile.Comm.LvlUpShow then
+                    local s = format("%s " .. L["reached level"] .. " %d!", name, strbyte(msg, 2) - 35)
+                    Nx.prt(s)
+                    Nx.UEvents:AddInfo(s)
+                end
+
+            elseif id == 81 then    -- Q (Quest)
+                if Nx.Quest then
+                    Nx.Quest:OnMsgQuest(name, msg)
+                end
+
+            elseif id == 86 then    -- V (Version)
+                -- Version info - currently unused
+            end
+        end
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- On channel message event
+-- Player Status Parsing
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnChat_msg_channel (event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--- Parse a player status message
+-- Extracts position, health, target, quest, and punk data from status message
+-- @param name Player name
+-- @param info Info table to populate
+-- @param msg Status message to parse
+function Nx.Com:ParsePlyrStatus(name, info, msg)
+    -- Status message flags:
+    -- Bit 1: In combat
+    -- Bit 2: Has target data
+    -- Bit 4: Has quest data
+    -- Bit 8: Has punks data
 
-	local self = Nx.Com
+    local flags = strbyte(msg, 2) - 35
+    info.F = flags
+    info.Quest = nil
 
-	if event == "CHAT_MSG_SYSTEM" then
-		local message = arg1
-		
-		local NOT_FOUND = ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)")
-		local name = strmatch(message, NOT_FOUND)
-		if name then 
-			if not Nx.strpos(name, "-") then
-				local realmname = GetRealmName()
-				name = name .. (realmname and "-" .. realmname or "")
-			end
-			
-			for k, v in ipairs (self.Friends) do
-				if name == v then tremove(self.Friends, k) end
-			end
-		end
-		
-		--local ONLINE = ERR_FRIEND_ONLINE_SS:gsub("%%s", "(.-)"):gsub("[%[%]]", "%%%1")
-		--local OFFLINE = ERR_FRIEND_OFFLINE_S:gsub("%%s", "(.-)")
-		--[[
-		local action = ""
-		local _, name = strmatch(message, ONLINE)
-		
-		if name then
-			action = "ONLINE"
-		else
-			name = strmatch(message, OFFLINE)
-			if name then
-				action = "OFFLINE"
-			end
-		end
-		
-		if name then
-			if action == "ONLINE" then
-				if Nx.IsFriend(name) then
-					Nx.prt("ONLINE %s", name)
-				end
-			elseif action == "OFFLINE" then
-				if Nx.IsFriend(name) then
-					Nx.prt("OFFLINE %s", name)
-				end
-			end
-		end
-		]]--
-		--[[ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", function(frame, event, message)
-		   local action = "OFFLINE"
-		   local _, name = strmatch(message, ONLINE)
-		   if name then
-			   action = "ONLINE"
-		   else
-			   name = strmatch(message, OFFLINE)
-		   end
-		   if not name then
-			   return
-		   end
-		   if action == "ONLINE" then
-			   if Nx.IsFriend(name) then
-					  self.news = true
-			   end
-		   elseif action == "OFFLINE" then
-			   if Nx.IsFriend(name) then
-					  self.news = true
-			   end
-		   end
-		end)]]--
-	end
-	
-	if strsub (arg9, 1, 3) == self.Name then
+    -- Parse player position info
+    local mapId = tonumber(strsub(msg, 3, 6), 16)
 
-		local name = arg2
+    local winfo = Nx.Map.MapWorldInfo[mapId]
+    if not winfo then
+        info.T = 0    -- Mark as dead
+        return
+    end
 
-		if name ~= self.PlyrName then
+    info.T = GetTime()
+    info.MId = mapId
+    info.EntryMId = mapId
 
-			local msg = self:RestoreChars (arg1)
+    if winfo.EntryMId then
+        info.EntryMId = winfo.EntryMId
+    end
 
---			self.List:AddInfo ("C:"..arg9, format ("(%s) %s", name, msg))
---			self.List:Update()
+    if not msg or #msg < 7 then
+        return
+    end
 
-			local id = strbyte (msg)
+    -- Parse coordinates (hex encoded)
+    info.X = tonumber(strsub(msg, 7, 9), 16) / 0xfff * 100
+    info.Y = (tonumber(strsub(msg, 10, 13), 16) or 0) / 0xfff * 100    -- Includes dungeon level offset
 
-			if id == 83 then		-- S (status) Check 1st for performance
+    -- Parse health, level, class
+    info.Health = (strbyte(msg, 14) - 48) / 20 * 100
+    info.Lvl = strbyte(msg, 15) - 35
+    info.Cls = self.ClassNames[strbyte(msg, 16) - 35] or "?"
 
-				if not self.PalsInfo[name] then		-- Not a pal we have?
-					if #msg >= 16 then
+    -- Build tooltip text
+    info.Tip = format("%s %s%%\n  %s %s", name, info.Health, info.Lvl, info.Cls)
 
-						local pl = self.ZPInfo[name]
+    local off = 17
 
-						if not pl then
-							pl = {}
-							self.ZPInfo[name] = pl
-						end
+    -- Parse target data (if present)
+    if bit.band(flags, 2) > 0 then
+        -- Target format: Type, level, class, health, name length, name
+        info.TType = strbyte(msg, 17) - 35
+        local col = self.TypeColors[info.TType] or ""
 
-						self:ParsePlyrStatus (name, pl, msg)
-					end
-				end
+        info.TLvl = strbyte(msg, 18) - 35
+        info.TCls = self.ClassNames[strbyte(msg, 19) - 35] or "?"
+        info.TH = (strbyte(msg, 20) - 35) / 20 * 100
 
-			elseif id == 86 then	-- V (Version and registered name)
-			end
-		end
-	end
+        local len = strbyte(msg, 21) - 35
+        info.TName = strsub(msg, 22, 22 + len - 1)
+
+        local lvl = info.TLvl
+        if lvl < 0 then
+            lvl = "??"
+        end
+
+        info.TStr = format("\n%s%s %s %s %d%%", col, info.TName, lvl, info.TCls, info.TH)
+
+        off = 22 + len
+    else
+        info.TType = nil
+        info.TStr = nil
+    end
+
+    -- Parse quest tracking data (if present)
+    if bit.band(flags, 4) > 0 then
+        Nx.qTEMPinfo = info
+        Nx.qTEMPmsg = strsub(msg, off)
+        Nx.qTEMPname = name
+
+        if Nx.qTEMPinfo and Nx.qTEMPmsg and Nx.qTEMPname then
+            Nx.ModQAction = "QUEST_DECODE"
+        end
+
+        if not Nx.qTEMPmsg or #Nx.qTEMPmsg > 7 then
+            local tmp = (strbyte(Nx.qTEMPmsg, 7) - 35)
+            off = off + (7 + tmp * 2)
+        end
+    end
+
+    -- Parse punks data (if present)
+    if bit.band(flags, 8) > 0 then
+        Nx.pTEMPinfo = info
+        Nx.pTEMPname = name
+        Nx.pTEMPmsg = strsub(msg, off + 1)
+
+        if Nx.pTEMPinfo and Nx.pTEMPname and Nx.pTEMPmsg then
+            Nx.ModPAction = "PUNK_DECODE"
+        end
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- On addon message event
+-- Cartographer Compatibility
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:OnChat_msg_addon (args, distribution, target)
+--- Parse Cartographer LibGuildPositions messages
+-- @param name Player name
+-- @param msg Position message
+function Nx.Com:ParseLGP(name, msg)
+    if strbyte(msg) == 0x50 then    -- P (position)
+        local x, x2, y, y2, len = strbyte(msg, 2, 6)
 
-	local self = Nx.Com
+        if len and len > 1 then
+            -- Decode position
+            x = ((x - 1) * 255 + x2 - 1) / (255 ^ 2) * 100
+            y = ((y - 1) * 255 + y2 - 1) / (255 ^ 2) * 100
+            local zoneName = strsub(msg, 7, 5 + len)
 
---	Nx.prt ("ComChatAddonEvent: %s %s %s", args, distribution, target)
+            local mapId = Nx.MapOverlayToMapId[strlower(zoneName)]
 
-	local name = target
-	if not Nx.strpos(name, "-") then
-		local realmname = GetRealmName()
-		name = name .. (realmname and "-" .. realmname or "")
-	end
+            if mapId then
+                local info = self.PalsInfo[name]
 
-	if name ~= self.PlyrName then		-- Ignore myself
---		self.List:AddInfo ("A:"..arg1, format ("(%s %s) %s", name, arg3, arg2))
-		local data = { Nx.Split ("\t", args) }
-		for k, msg in ipairs (data) do
-			local id = strbyte (msg)
-			if id == 83 then	-- S (status) Check 1st for performance
-				if self.PalNames[name] ~= nil then
-					if #msg >= 16 then
-						local pal = self.PalsInfo[name]
-						if not pal then
-							pal = {}
-							self.PalsInfo[name] = pal
-						end
-						self:ParsePlyrStatus (name, pal, msg)
-					end
-				else
-					if #msg >= 16 then
-						local pl = self.ZPInfo[name]
-						if not pl then
-							pl = {}
-							self.ZPInfo[name] = pl
-						end
-						self:ParsePlyrStatus (name, pl, msg)
-					end
-				end
-			elseif id == 76 then	-- L (Level)
-				if Nx.db.profile.Comm.LvlUpShow then
-					local s = format ("%s " .. L["reached level"] .." %d!", name, strbyte (msg, 2) - 35)
-					Nx.prt (s)
-					Nx.UEvents:AddInfo (s)
-				end
-			elseif id == 81 then	-- Q (Quest)
-				if Nx.Quest then
-					Nx.Quest:OnMsgQuest (name, msg)
-				end
-			elseif id == 86 then	-- V (Version and registered name)
-			end
-		end
-	end
+                if not info then
+                    info = {}
+                    self.PalsInfo[name] = info
+                end
+
+                info.T = GetTime()
+                info.MId = mapId
+                info.EntryMId = mapId
+                info.X = x
+                info.Y = y
+                info.F = 0
+                info.Tip = name
+            end
+        end
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- Parse a player status message
+-- Channel Management
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:ParsePlyrStatus (name, info, msg)
-
-	-- Flags
-	-- 1 combat
-	-- 2 target data
-	-- 4 quest data
-	-- 8 punks data
-
-	local flags = strbyte (msg, 2) - 35
-	info.F = flags
-
-	info.Quest = nil
-
-	-- Player info
-
-	local mapId = tonumber (strsub (msg, 3, 6), 16)		-- Map id
-
-	local winfo = Nx.Map.MapWorldInfo[mapId]
-	if not winfo then
-		info.T = 0					-- Cause it to die
---		Nx.prt ("Die %s", mapId)
-		return
-	end
-
-	info.T = GetTime()
-	info.MId = mapId
-	info.EntryMId = mapId
-
-	if winfo.EntryMId then
-		info.EntryMId = winfo.EntryMId
-	end
-	if not msg or #msg < 7 then
-		return
-	end
-	info.X = tonumber (strsub (msg, 7, 9), 16) / 0xfff * 100
-	info.Y = (tonumber (strsub (msg, 10, 13), 16) or 0) / 0xfff * 100		-- Includes dungeon level offset (dzzz)
-	info.Health = (strbyte (msg, 14) - 48) / 20 * 100
-	info.Lvl = strbyte (msg, 15) - 35
-	info.Cls = self.ClassNames[strbyte (msg, 16) - 35] or "?"
-
---	Nx.prt ("%s %d %d", name, info.X, info.Y)
-
---	if not self.ClassNames[strbyte (msg, 16) - 35] then
---		Nx.prt ("com cls? %s", strbyte (msg, 16) - 35)
---	end
-
-	info.Tip = format ("%s %s%%\n  %s %s", name, info.Health, info.Lvl, info.Cls)
-
---	Nx.prtVar ("Cominfo", info)
-
-
-	local off = 17
-
-	-- Target data
-
-	if bit.band (flags, 2) > 0 then
-
-		-- Type, level, class, health, name len, name
-
-		info.TType = strbyte (msg, 17) - 35
-		local col = self.TypeColors[info.TType] or ""		-- User had a nil
-
-		info.TLvl = strbyte (msg, 18) - 35
-		info.TCls = self.ClassNames[strbyte (msg, 19) - 35] or "?"
-
---		if not self.ClassNames[strbyte (msg, 19) - 35] then
---			Nx.prt ("com tcls? %s", strbyte (msg, 19) - 35)
---		end
-
-		info.TH = (strbyte (msg, 20) - 35) / 20 * 100
-		local len = strbyte (msg, 21) - 35
-		info.TName = strsub (msg, 22, 22 + len - 1)
-
-		local lvl = info.TLvl
-		if lvl < 0 then
-			lvl = "??"
-		end
-
-		info.TStr = format ("\n%s%s %s %s %d%%", col, info.TName, lvl, info.TCls, info.TH)
-
-		off = 22 + len
-
-	else
-		info.TType = nil
-		info.TStr = nil
-	end
-
-	-- Quest tracking data
-
-	if bit.band (flags, 4) > 0 then
-		Nx.qTEMPinfo = info
-		Nx.qTEMPmsg = strsub(msg,off)
-	Nx.qTEMPname = name
-		if Nx.qTEMPinfo and Nx.qTEMPmsg and Nx.qTEMPname then
---			Nx:SendCommMessage("carbmodule","QUEST_DECODE","WHISPER",UnitName("player"),"BULK")
-			Nx.ModQAction = "QUEST_DECODE"
-		end
-		if not Nx.qTEMPmsg or #Nx.qTEMPmsg > 7 then
-			local tmp = (strbyte(Nx.qTEMPmsg,7) - 35)
-			off = off + (7 + tmp * 2)
-		else
-			off = off
-		end
-	end
-
-	-- Punks data
-	if bit.band (flags, 8) > 0 then
-		Nx.pTEMPinfo = info
-		Nx.pTEMPname = name
-		Nx.pTEMPmsg = strsub(msg,off+1)
-		if Nx.pTEMPinfo and Nx.pTEMPname and Nx.pTEMPmsg then
-			Nx.ModPAction = "PUNK_DECODE"
---			Nx:SendCommMessage("carbmodule","PUNK_DECODE","WHISPER",UnitName("player"),"BULK")
-		end
-	end
-end
-
----------------------------------------------------------------------------------------
--- Parse Cartographer LibGuildPositions
----------------------------------------------------------------------------------------
-
-function Nx.Com:ParseLGP (name, msg)
-
-	if strbyte (msg) == 0x50 then		-- P (position)
-
-		local x, x2, y, y2, len = strbyte (msg, 2, 6)
-
-		if len and len > 1 then
-
-			x = ((x - 1) * 255 + x2 - 1) / (255 ^ 2) * 100
-			y = ((y - 1) * 255 + y2 - 1) / (255 ^ 2) * 100
-			local zoneName = strsub (msg, 7, 5 + len)	-- Len is +1 real length
---			Nx.prt ("%s %s %s", zoneName, x, y)
-
-			local mapId = Nx.MapOverlayToMapId[strlower (zoneName)]
---			Nx.prt ("mapId %s", mapId or "nil")
-
-			if mapId then
-
-				local info = self.PalsInfo[name]
-
-				if not info then
-					info = {}
-					self.PalsInfo[name] = info
-				end
-
-				info.T = GetTime()
-				info.MId = mapId
-				info.EntryMId = mapId
-				info.X = x
-				info.Y = y
-				info.F = 0
-				info.Tip = name
-			end
-		end
-	end
-end
-
----------------------------------------------------------------------------------------
--- Update channels
----------------------------------------------------------------------------------------
-
+--- Schedule channel update
 function Nx.Com:UpdateChannels()
-	ComUC = Nx:ScheduleTimer(self.UpdateChannelsTimer,2,self)
+    ComUC = Nx:ScheduleTimer(self.UpdateChannelsTimer, 2, self)
 end
 
+--- Timer callback for channel updates
+-- Manages joining and leaving zone channels based on player location
 function Nx.Com:UpdateChannelsTimer()
-	if Nx:TimeLeft(ComLogin) > 0 then
-		return 0
-	end
+    if Nx:TimeLeft(ComLogin) > 0 then
+        return 0
+    end
 
-	local curMapId = Nx.Map:GetRealMapId()
+    local curMapId = Nx.Map:GetRealMapId()
 
-	if UnitIsAFK ("player") or not Nx.db.profile.Comm.Zone then		-- No current zone channel?
-		curMapId = nil
-	else
-		if Nx.Map:IsNormalMap (curMapId) then
-			local zs = self.ZStatus[curMapId] or {}
-			zs.Join = true
-			self.ZStatus[curMapId] = zs
-		end
-	end
+    -- Determine if we should be in a zone channel
+    if UnitIsAFK("player") or not Nx.db.profile.Comm.Zone then
+        curMapId = nil
+    else
+        if Nx.Map:IsNormalMap(curMapId) then
+            local zs = self.ZStatus[curMapId] or {}
+            zs.Join = true
+            self.ZStatus[curMapId] = zs
+        end
+    end
 
-	-- Monitor
+    -- Process monitored zones
+    for mapId, mode in pairs(self.ZMonitor) do
+        if mode == 0 then
+            self.ZMonitor[mapId] = 1
 
-	for mapId, mode in pairs (self.ZMonitor) do
+            local zs = self.ZStatus[mapId] or {}
+            zs.Join = true
+            self.ZStatus[mapId] = zs
 
-		if mode == 0 then
+        elseif mode == -1 then
+            self.ZMonitor[mapId] = nil
+        end
+    end
 
-			self.ZMonitor[mapId] = 1
+    -- Update zone channel status (join or leave)
+    for mapId, status in pairs(self.ZStatus) do
+        -- Mark for leaving if not current zone and not monitored
+        if status.ChanName then
+            if curMapId ~= mapId and not self.ZMonitor[mapId] then
+                status.Leave = true
+            end
+        end
 
-			local zs = self.ZStatus[mapId] or {}
-			zs.Join = true
-			self.ZStatus[mapId] = zs
+        -- Process leave requests
+        if status.Leave then
+            status.Leave = false
+            Nx:CancelTimer("ComZ")
 
-		elseif mode == -1 then
+            if status.ChanName then
+                LeaveChannelByName(status.ChanName)
+            end
+        end
 
-			self.ZMonitor[mapId] = nil
-		end
-	end
+        -- Process join requests
+        if status.Join then
+            status.Join = false
 
-	-- Update status (join or leave channels)
-
-	for mapId, status in pairs (self.ZStatus) do
-
-		if status.ChanName then
-			if curMapId ~= mapId and not self.ZMonitor[mapId] then
-				status.Leave = true
-			end
-		end
-
-		if status.Leave then
-			status.Leave = false
-
-			Nx:CancelTimer ("ComZ")
-
-			if status.ChanName then
-				LeaveChannelByName (status.ChanName)
-			end
-		end
-
-		if status.Join then
-			status.Join = false
-
-			if not status.ChanName then
-				if Nx:TimeLeft(ComZ) == 0 then
-
---					Nx.prt ("Com Status Join %s", mapId)
-
-					ComZ = Nx:ScheduleTimer(self.OnJoinChanZTimer,2,self)
-					timer = {}
-					timer.UMapId = mapId
-					timer.UTryCnt = 0
-				end
-			end
-		end
-	end
+            if not status.ChanName then
+                if Nx:TimeLeft(ComZ) == 0 then
+                    ComZ = Nx:ScheduleTimer(self.OnJoinChanZTimer, 2, self)
+                    timer = {}
+                    timer.UMapId = mapId
+                    timer.UTryCnt = 0
+                end
+            end
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Join a channel
----------------------------------------------------------------------------------------
+--- Join a Carbonite channel
+-- @param chanId Channel identifier ("A" for addon, "Z" for zone)
+function Nx.Com:JoinChan(chanId)
+    if chanId == "A" then
+        -- Addon channel (global)
+        if Nx.db.profile.Comm.Global then
+            self.ChanAName = nil
+            self.TryA = 0
+            ComA = Nx:ScheduleTimer(self.OnJoinChanATimer, 0, self)
+        end
 
-function Nx.Com:JoinChan (chanId)	
-	if chanId == "A" then		-- Addon channel (global)
+    elseif chanId == "Z" then
+        -- Zone channel
+        if Nx.db.profile.Comm.Zone then
+            local mapId = Nx.Map:GetRealMapId()
 
-		if Nx.db.profile.Comm.Global then
-
-			self.ChanAName = nil
-			self.TryA = 0
-			ComA = Nx:ScheduleTimer(self.OnJoinChanATimer, 0, self)
-		end
-
-	elseif chanId == "Z" then	-- Our zone
-
-		if Nx.db.profile.Comm.Zone then
-
-			local mapId = Nx.Map:GetRealMapId()
-			if Nx.Map:IsNormalMap (mapId) then
-				ComZ = Nx:ScheduleTimer(self.OnJoinChanZTimer, 0,self)
-				timer = {}
-				timer.UMapId = mapId
-				timer.UTryCnt = 0
-			end
-		end
-	else
-		Nx.prt (L["JoinChan Err %s"], chanId)
-
-	end
+            if Nx.Map:IsNormalMap(mapId) then
+                ComZ = Nx:ScheduleTimer(self.OnJoinChanZTimer, 0, self)
+                timer = {}
+                timer.UMapId = mapId
+                timer.UTryCnt = 0
+            end
+        end
+    else
+        Nx.prt(L["JoinChan Err %s"], chanId)
+    end
 end
 
+--- Timer callback for joining addon channel
 function Nx.Com:OnJoinChanATimer()
+    self.List:AddInfo("", "OnJoinChanATimer")
 
-	self.List:AddInfo ("", "OnJoinChanATimer")
+    -- Wait if all channels are full
+    if self:GetChanCount() >= 10 then
+        return 10
+    end
 
-	if self:GetChanCount() >= 10 then
-		return 10
-	end
+    self.TryA = self.TryA + 1
+    JoinChannelByName(self.Name .. self.ChanALetter .. self.TryA)
 
---	if self.TryA > 0 then
---		Nx.prt ("Trying A%d", self.TryA + 1)
---	end
-
-	self.TryA = self.TryA + 1
-
-	JoinChannelByName (self.Name .. self.ChanALetter .. self.TryA)
-
-	return 3
+    return 3
 end
 
-function Nx.Com:OnJoinChanZTimer ()
-	name = "ComZ" .. timer.UMapId
-	self.List:AddInfo ("", "OnJoinChanZTimer " .. name)
+--- Timer callback for joining zone channel
+function Nx.Com:OnJoinChanZTimer()
+    name = "ComZ" .. timer.UMapId
+    self.List:AddInfo("", "OnJoinChanZTimer " .. name)
 
-	if self:GetChanCount() >= 10 then
-		return 5
-	end
+    -- Wait if all channels are full
+    if self:GetChanCount() >= 10 then
+        return 5
+    end
 
---	if self.TryZ > 0 then
---		Nx.prt ("Trying Z%d", self.TryZ + 1)
---	end
+    timer.UTryCnt = timer.UTryCnt + 1
 
-	timer.UTryCnt = timer.UTryCnt + 1
+    local name = format("%sZ%dI%d", self.Name, timer.UMapId, timer.UTryCnt)
 
-	local name = format ("%sZ%dI%d", self.Name, timer.UMapId, timer.UTryCnt)
-	if self:InChan (name) then
-		return
-	end
+    -- Don't rejoin if already in channel
+    if self:InChan(name) then
+        return
+    end
 
-	Nx.Com:LeaveChan("Z")
-	JoinChannelByName (name)
+    Nx.Com:LeaveChan("Z")
+    JoinChannelByName(name)
 
-	return 3
+    return 3
 end
 
----------------------------------------------------------------------------------------
--- Count channels being used
----------------------------------------------------------------------------------------
-
+--- Count how many chat channels are currently in use
+-- @return Number of channels in use
 function Nx.Com:GetChanCount()
+    local chanCnt = 0
 
-	local chanCnt = 0
+    for n = 1, GetNumDisplayChannels() do
+        local chname, header, collapsed, chanNumber, plCnt, active, category, voiceEnabled, voiceActive = GetChannelDisplayInfo(n)
+        if not header then
+            chanCnt = chanCnt + 1
+        end
+    end
 
-	for n = 1, GetNumDisplayChannels() do
-		local chname, header, collapsed, chanNumber, plCnt, active, category, voiceEnabled, voiceActive = GetChannelDisplayInfo (n)
-		if not header then
-			chanCnt = chanCnt + 1
-		end
-	end
-
-	return chanCnt
+    return chanCnt
 end
 
----------------------------------------------------------------------------------------
--- Leave a channel
----------------------------------------------------------------------------------------
+--- Leave a Carbonite channel
+-- @param chanId Channel identifier ("A" for addon, "Z" for zone)
+function Nx.Com:LeaveChan(chanId)
+    if chanId == "A" then
+        self.ChanAName = nil
+        self:LeaveChans(self.ChanALetter)
 
-function Nx.Com:LeaveChan (chanId)
-
-	if chanId == "A" then
-
-		self.ChanAName = nil
-		self:LeaveChans (self.ChanALetter)
-
-	elseif chanId == "Z" then
-
-		self:LeaveChans (chanId)
-	end
+    elseif chanId == "Z" then
+        self:LeaveChans(chanId)
+    end
 end
 
----------------------------------------------------------------------------------------
--- Leave a type of channel
----------------------------------------------------------------------------------------
+--- Leave all channels of a specific type
+-- @param typeName Type letter to match
+function Nx.Com:LeaveChans(typeName)
+    for n = 1, 10 do
+        local id, name = GetChannelName(n)
 
-function Nx.Com:LeaveChans (typeName)
+        if id > 0 and name then
+            local name3 = strsub(name, 1, 3)
 
-	for n = 1, 10 do
+            if name3 == self.Name then
+                local typ = strupper(strsub(name, 4, 4))
 
-		local id, name = GetChannelName (n)
-		if id > 0 and name then
+                if typ == typeName then
+                    if typ == "Z" then
+                        -- Don't leave monitored zone channels
+                        local nameRoot = Nx.Split("I", name)
+                        local id = tonumber(strsub(nameRoot, 5))
 
---			Nx.prt ("Leave Chan N %d %s", id, name)
-
-			local name3 = strsub (name, 1, 3)
-			if name3 == self.Name then
-
-				local typ = strupper (strsub (name, 4, 4))
-				if typ == typeName then
-
-					if typ == "Z" then
-
-						local nameRoot = Nx.Split ("I", name)	-- Drop I and #
-						local id = tonumber (strsub (nameRoot, 5))
---						Nx.prtVar ("Com leave id", id)
-
-						if not self.ZMonitor[id] then		-- Not monitored?
-							LeaveChannelByName (name)
-						end
-
-					else
-						LeaveChannelByName (name)
-					end
-				end
-			end
-		end
-	end
+                        if not self.ZMonitor[id] then
+                            LeaveChannelByName(name)
+                        end
+                    else
+                        LeaveChannelByName(name)
+                    end
+                end
+            end
+        end
+    end
 end
 
----------------------------------------------------------------------------------------
--- Scan channels and add missing to status
----------------------------------------------------------------------------------------
-
+--- Scan existing channels and update status
 function Nx.Com:ScanChans()
+    local baseName = self.Name .. "Z"
 
---	Nx.prt ("Com scan")
+    for n = 1, 10 do
+        local id, name = GetChannelName(n)
 
-	local baseName = self.Name .. "Z"
+        if id > 0 and name then
+            local name4 = strsub(name, 1, 4)
 
-	for n = 1, 10 do
+            if name4 == baseName then
+                local nameRoot = Nx.Split("I", name)
+                local mapId = tonumber(strsub(nameRoot, 5))
 
-		local id, name = GetChannelName (n)
-		if id > 0 and name then
+                if mapId then
+                    local zs = self.ZStatus[mapId] or {}
+                    zs.ChanName = name
+                    self.ZStatus[mapId] = zs
+                end
+            end
+        end
+    end
+end
 
---			Nx.prt ("Com scan %s", name)
+--- Check if player is in a specific channel type
+-- @param typeName Type letter to check
+-- @return true if in channel of that type
+function Nx.Com:InChanType(typeName)
+    for n = 1, 10 do
+        local _, name = GetChannelName(n)
 
-			local name4 = strsub (name, 1, 4)
-			if name4 == baseName then
+        if name then
+            local name3 = strsub(name, 1, 3)
 
-				local nameRoot = Nx.Split ("I", name)	-- Drop I and #
-				local mapId = tonumber (strsub (nameRoot, 5))
+            if name3 == self.Name then
+                local typ = strsub(name, 4, 4)
 
-				if mapId then
-					local zs = self.ZStatus[mapId] or {}
-					zs.ChanName = name
-					self.ZStatus[mapId] = zs
-				end
-			end
-		end
-	end
+                if typ == typeName then
+                    return true
+                end
+            end
+        end
+    end
+end
+
+--- Check if player is in a specific named channel
+-- @param chanName Channel name to check
+-- @return true if in that channel
+function Nx.Com:InChan(chanName)
+    for n = 1, 10 do
+        local _, name = GetChannelName(n)
+
+        if chanName == name then
+            return true
+        end
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- Check if in a type of channel
+-- Message Sending
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:InChanType (typeName)
+--- Set the send pals mask (called by options)
+-- @param mask Bitmask for send targets
+function Nx.Com:SetSendPalsMask(mask)
+    self.SendPMask = mask
+end
 
-	for n = 1, 10 do
+--- Queue a message to send to pals
+-- @param msg Message to send
+function Nx.Com:SendPals(msg)
+    assert(msg)
+    self.PalsSendQ[#self.PalsSendQ + 1] = msg
+end
 
-		local _, name = GetChannelName (n)
-		if name then
+--- Send a secure message to the global addon channel
+-- @param pre Message prefix/type
+-- @param msg Message body
+function Nx.Com:SendSecG(pre, msg)
+    if self.ChanAName then
+        local num = GetChannelName(self.ChanAName)
 
-			local name3 = strsub (name, 1, 3)
-			if name3 == self.Name then
+        if num ~= 0 then
+            local cs = self:Chksum(msg)
+            local str = self:Encode(format("%s%c%c%s", pre, floor(cs / 16) + 65, bit.band(cs, 15) + 65, msg))
 
-				local typ = strsub (name, 4, 4)
-				if typ == typeName then
+            self:SendChan(num, str)
+        else
+            Nx.prt(L["SendSecG Error: %s"], pre)
+        end
+    end
+end
 
-					return true
-				end
-			end
-		end
-	end
+--- Send a secure message via addon whisper
+-- @param pre Message prefix/type
+-- @param msg Message body
+-- @param plName Target player name
+function Nx.Com:SendSecW(pre, msg, plName)
+    local cs = self:Chksum(msg)
+    local str = self:Encode(format("%s%c%c%s", pre, floor(cs / 16) + 65, bit.band(cs, 15) + 65, msg))
+
+    -- Track bandwidth (packet overhead + WoW overhead)
+    self.SentBytes = self.SentBytes + #str + 54 + 20
+
+    Nx:SendCommMessage(self.Name, str, "WHISPER", plName)
+end
+
+--- Send a message to a channel or whisper
+-- @param chanId Channel identifier
+-- @param msg Message to send
+-- @param plName Player name (for whispers)
+function Nx.Com:Send(chanId, msg, plName)
+    assert(msg)
+
+    if chanId == "Z" then
+        -- Zone chat channel
+        local mapId = Nx.Map:GetRealMapId()
+        local chanName = self.ZStatus[mapId] and self.ZStatus[mapId].ChanName
+
+        if chanName then
+            local num = GetChannelName(chanName)
+            if num ~= 0 then
+                self:SendChan(num, msg)
+            end
+        end
+
+    else
+        -- Track bandwidth
+        self.SentBytes = self.SentBytes + #msg + 54 + 20
+
+        if chanId == "g" then
+            -- Addon guild channel
+            if IsInGuild() then
+                Nx:SendCommMessage(self.Name, msg, "GUILD", plName)
+            end
+
+        elseif chanId == "p" then
+            -- Addon party channel
+            if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+                Nx:SendCommMessage(self.Name, msg, "INSTANCE_CHAT")
+            else
+                Nx:SendCommMessage(self.Name, msg, "PARTY")
+            end
+
+        elseif chanId == "W" then
+            -- Addon whisper
+            Nx:SendCommMessage(self.Name, msg, "WHISPER", plName)
+
+        elseif chanId == "P" then
+            -- Party chat channel
+            if GetNumSubgroupMembers() > 0 then
+                if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+                    self:SendChatMessageFixed(msg, "INSTANCE_CHAT")
+                else
+                    self:SendChatMessageFixed(msg, "PARTY")
+                end
+            end
+
+        else
+            assert(false)
+        end
+    end
+end
+
+--- Queue a message for numbered channel sending
+-- @param num Channel number
+-- @param msg Message to send
+function Nx.Com:SendChan(num, msg)
+    local data = {}
+    data.ChanNum = num
+    data.Msg = msg
+    tinsert(self.SendChanQ, data)
+end
+
+--- Hook for SendChatMessage to track timing
+-- @param msg Message being sent
+-- @param chanName Channel type
+function Nx.Com.SendChatHook(msg, chanName)
+    if chanName == "CHANNEL" then
+        Nx.Com.SendChanTime = GetTime()
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- Check if in a named channel
+-- Message Encoding/Decoding
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:InChan (chanName)
+--- Calculate a checksum for a message
+-- @param msg Message to checksum
+-- @return XOR checksum value
+function Nx.Com:Chksum(msg)
+    local v = 0
+    local xor = bit.bxor
 
-	for n = 1, 10 do
+    for n = 1, #msg do
+        v = xor(v, strbyte(msg, n))
+    end
 
-		local _, name = GetChannelName (n)
-		if chanName == name then
-			return true
-		end
-	end
+    return v
+end
+
+--- Verify a message checksum
+-- @param msg Message to verify
+-- @return true if checksum is valid
+function Nx.Com:IsChksumOK(msg)
+    if #msg >= 4 then
+        -- Extract checksum from bytes 3-4
+        local ck = (strbyte(msg, 3) - 65) * 16 + (strbyte(msg, 4) - 65)
+
+        -- Calculate checksum of remaining message
+        local v = 0
+        local xor = bit.bxor
+
+        for n = 5, #msg do
+            v = xor(v, strbyte(msg, n))
+        end
+
+        return ck == v
+    end
+end
+
+--- Encode a message for transmission
+-- Shifts bytes to avoid invalid characters
+-- @param msg Message to encode
+-- @return Encoded message
+function Nx.Com:Encode(msg)
+    local s = {}
+
+    s[1] = strsub(msg, 1, 2)
+
+    for n = 3, #msg do
+        s[n - 1] = strchar(strbyte(msg, n) - 1)
+    end
+
+    return table.concat(s)
+end
+
+--- Decode a received message
+-- Reverses byte shifting from encoding
+-- @param msg Message to decode
+-- @return Decoded message
+function Nx.Com:Decode(msg)
+    local s = {}
+
+    s[1] = strsub(msg, 1, 2)
+
+    for n = 3, #msg do
+        s[n - 1] = strchar(strbyte(msg, n) + 1)
+    end
+
+    return table.concat(s)
+end
+
+--- Send a chat message with character validation
+-- Fixes invalid chat characters before sending
+-- @param msg Message to send
+-- @param typ Chat type (CHANNEL, PARTY, etc.)
+-- @param num Channel number (optional)
+function Nx.Com:SendChatMessageFixed(msg, typ, num)
+    -- Fix invalid | character (must be |c for color codes)
+    local s1 = strfind(msg, "|")
+    if s1 then
+        if strbyte(msg, s1 + 1) ~= 99 then    -- not 'c'
+            msg = gsub(msg, "|", "\1")
+        end
+    end
+
+    if typ == "CHANNEL" then
+        Nx:SendCommMessage(self.Name, msg, typ, num)
+    else
+        local ok = pcall(SendChatMessage, msg, typ, nil, num)
+    end
+end
+
+--- Restore characters that were escaped for chat transmission
+-- @param msg Message with escaped characters
+-- @return Message with restored characters
+function Nx.Com:RestoreChars(msg)
+    local s1 = strfind(msg, "\1")
+    if s1 then
+        return gsub(msg, "\1", "|")
+    end
+
+    return msg
 end
 
 ---------------------------------------------------------------------------------------
--- Set send pals mask. Called by options init. Don't do stuff needing com init
+-- Zone Monitoring
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:SetSendPalsMask (mask)
-	self.SendPMask = mask
+--- Enable or disable monitoring of a zone channel
+-- @param mapId Map ID to monitor
+-- @param enable true to enable, false to disable
+function Nx.Com:MonitorZone(mapId, enable)
+    local i = self.ZMonitor[mapId]
+
+    if enable then
+        if not i or i < 0 then
+            if self:GetChanCount() >= 10 then
+                Nx.prt("|cffff4040" .. L["Monitor Error: All 10 chat channels are in use"])
+            else
+                Nx.prt("|cff40ff40" .. L["Monitored:"])
+            end
+
+            self.ZMonitor[mapId] = 0
+
+            -- List all monitored zones
+            for mapId, mode in pairs(self.ZMonitor) do
+                if mode >= 0 then
+                    local zs = self.ZStatus[mapId]
+
+                    if zs and zs.ChanName then
+                        Nx.prt(" %s", Nx.Map:GetMapNameByID(mapId))
+                    else
+                        Nx.prt(" %s (pending)", Nx.Map:GetMapNameByID(mapId))
+                    end
+                end
+            end
+        end
+    else
+        if i and i >= 0 then
+            self.ZMonitor[mapId] = -1
+        end
+    end
+
+    self:UpdateChannels()
+end
+
+--- Check if a zone is being monitored
+-- @param mapId Map ID to check
+-- @return true if zone is monitored
+function Nx.Com:IsZoneMonitored(mapId)
+    local i = self.ZMonitor[mapId]
+    return i and i >= 0
 end
 
 ---------------------------------------------------------------------------------------
--- Send message to pals
+-- Main Update Loop
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:SendPals (msg)
+--- Frame update handler
+-- Processes message queues and sends position updates
+-- @param elapsed Time since last frame
+function Nx.Com:OnUpdate(elapsed)
+    if not Nx.Com.Initialized then
+        return
+    end
 
-	assert (msg)
+    local Nx = Nx
+    local bgmap = Nx.InBG
 
-	self.PalsSendQ[#self.PalsSendQ + 1] = msg
+    local targetName = UnitName("target")
+
+    local tm = GetTime()
+    local tdiff = tm - self.SendTime
+
+    -- Rate limit updates
+    if tdiff < .2 then
+        return
+    end
+
+    -- Handle AFK state changes
+    if UnitIsAFK("player") then
+        if not self.AFK then
+            self:UpdateChannels()
+        end
+        self.AFK = true
+    else
+        if self.AFK then
+            self:UpdateChannels()
+        end
+        self.AFK = nil
+    end
+
+    -- Calculate position send delay based on state
+    local map = Nx.Map:GetMap(1)
+    local delay = 10
+
+    if self.PlyrChange then
+        if not UnitOnTaxi("player") then
+            delay = 3.1
+        end
+    end
+
+    if Nx.InCombat then
+        delay = map.InstanceId and 4.5 or 2.2
+    end
+
+    delay = delay * self.SendRate
+
+    if bgmap then
+        delay = 25
+    end
+
+    if self.AFK then
+        delay = 120
+    end
+
+    -- Override for punk alerts
+    if next(self.Punks) then
+        delay = min(6, delay)
+    end
+
+    -- Send position update if enough time has passed
+    if tm - self.SendPosTime >= delay then
+        self.SendPosTime = tm
+        self.PlyrChange = false
+
+        local flgs = 0
+
+        -- Set combat flag
+        if Nx.InCombat then
+            flgs = 1
+        end
+
+        -- Get player position
+        local x, y = Nx.Map.GetPlayerMapPosition("player")
+
+        if x ~= 0 or y ~= 0 then
+            self.PlyrMapId = map:GetCurrentMapId()
+            self.PlyrX = x
+            self.PlyrY = y + max(map:GetCurrentMapDungeonLevel(), 1) - 1
+        else
+            if map.InstanceId then
+                self.PlyrMapId = map.InstanceId
+                if not Nx.Map.InstanceInfo[self.PlyrMapId] then
+                    self.PlyrX = 0
+                    self.PlyrY = 0
+                end
+            end
+        end
+
+        -- Clamp position values
+        x = max(min(self.PlyrX, .999), 0) * 0xfff
+        y = max(min(self.PlyrY, 9.999), 0) * 0xfff
+
+        -- Calculate health percentage
+        local h = UnitHealth("player")
+        if UnitIsDeadOrGhost("player") then
+            h = 0
+        end
+        local hm = UnitHealthMax("player")
+        if hm < 1 then
+            hm = 1
+        end
+        local hper = h / hm * 20
+        if hper > 0 then
+            hper = max(hper, 1)
+        end
+        hper = floor(hper + .5)
+
+        local plyrLvl = min(UnitLevel("player"), 90)
+
+        -- Build target info string
+        local tStr = ""
+        if targetName then
+            flgs = flgs + 2
+
+            -- Determine target type
+            local tType = 5
+            if UnitIsFriend("player", "target") then
+                tType = 1
+            else
+                if UnitIsPlayer("target") then
+                    tType = 2
+                elseif UnitIsEnemy("player", "target") then
+                    tType = 3
+                    if Nx:UnitIsPlusMob("target") then
+                        tType = 4
+                    end
+                end
+            end
+
+            local tLvl = min(UnitLevel("target"), 90)
+            local _, tCls = UnitClass("target")
+            tCls = self.ClassNames[tCls] or 0
+
+            -- Calculate target health
+            local h = UnitHealth("target")
+            if UnitIsDeadOrGhost("target") then
+                h = 0
+            end
+            local hm = max(UnitHealthMax("target"), 1)
+            local hper = h / hm * 20
+            if hper > 0 then
+                hper = max(hper, 1)
+            end
+            hper = min(floor(hper + .5), 20)
+
+            tStr = format("%c%c%c%c%c%s", tType + 35, tLvl + 35, tCls + 35, hper + 35, #targetName + 35, targetName)
+        end
+
+        -- Build quest string
+        qStr = ""
+        if Nx.Quest then
+            local qStr, qFlg = Nx.Quest:BuildComSend()
+            flgs = flgs + qFlg
+        end
+
+        -- Build punks (enemy players) string
+        local enStr = ""
+        if next(self.Punks) then
+            for name, lvl in pairs(self.Punks) do
+                enStr = enStr .. format("%2x%s!", lvl >= 0 and lvl or 0, name)
+                if #enStr > 50 then
+                    break
+                end
+            end
+
+            self.Punks = {}
+            self.SendZSkip = 1
+
+            flgs = flgs + 8
+
+            enStr = strchar(#enStr - 1 + 35) .. strsub(enStr, 1, -2)
+        end
+
+        -- Send status message
+        self:SendPals(format("S%c%4x%3x%4x%c%c%c%s%s%s",
+            flgs + 35, self.PlyrMapId, x, y, hper + 48, plyrLvl + 35, self.PlyrClassI + 35, tStr, qStr, enStr))
+    end
+
+    -- Check for queued pals messages
+    if not self.PalsSendMsg then
+        if #self.PalsSendQ > 0 then
+            -- Combine all queued messages
+            self.PalsSendMsg = self.PalsSendQ[1]
+            self.PalsSendQ[1] = nil
+
+            for n = 2, #self.PalsSendQ do
+                self.PalsSendMsg = self.PalsSendMsg .. "\t" .. self.PalsSendQ[n]
+                self.PalsSendQ[n] = nil
+            end
+
+            self.PosSendNext = -2
+        end
+    end
+
+    -- Send pals message to next recipient
+    if tdiff >= .25 then
+        local msg = self.PalsSendMsg
+
+        if msg then
+            self.PosSendNext = self.PosSendNext + 1
+
+            if self.PosSendNext > #self.Friends then
+                -- Done sending to all recipients
+                self.PosSendNext = -2
+                self.PalsSendMsg = nil
+            else
+                if self.PosSendNext == -1 then
+                    -- Send to guild
+                    if bit.band(self.SendPMask, 2) > 0 then
+                        self:Send("g", msg, self.PlyrName)
+                    end
+
+                elseif self.PosSendNext == 0 then
+                    -- Send to zone channel
+                    if self.SendChanQ[1] == nil and not bgmap and not Nx:FindActiveChatFrameEditBox() then
+                        if bit.band(self.SendPMask, 4) > 0 then
+                            local sk = self.SendZSkip - 1
+
+                            if sk < 1 then
+                                sk = 4
+                                self:Send("Z", msg)
+                                if Nx.Quest then
+                                    Nx.Quest.QLastChanged = nil
+                                end
+                            end
+
+                            self.SendZSkip = sk
+                        end
+                    end
+
+                else
+                    -- Send to individual friend
+                    if bit.band(self.SendPMask, 1) > 0 then
+                        self:Send("W", msg, self.Friends[self.PosSendNext])
+                    end
+                end
+
+                self.SendTime = tm
+            end
+        end
+    end
+
+    -- Process numbered channel send queue
+    if Nx:FindActiveChatFrameEditBox() then
+        Nx.Com.SendChanTime = tm
+    else
+        if tm - self.SendChanTime >= .5 then
+            if self.SendChanQ[1] then
+                local data = self.SendChanQ[1]
+                tremove(self.SendChanQ, 1)
+
+                self.SentBytes = self.SentBytes + #data.Msg + 54 + 20
+                self:SendChatMessageFixed(data.Msg, "CHANNEL", data.ChanNum)
+
+                self.SendChanTime = tm
+            end
+        end
+    end
 end
 
 ---------------------------------------------------------------------------------------
--- Send a secure message to the global addon named channel
+-- Map Icon Rendering
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:SendSecG (pre, msg)
+--- Update communication-related map icons
+-- Draws player positions from pals and zone info
+-- @param map Map instance
+-- @return Track name and coordinates if tracking a player
+function Nx.Com:UpdateIcons(map)
+    -- Update party/raid member tracking periodically
+    if Nx.Tick % 20 == 1 then
+        local memberNames = {}
+        self.MemberNames = memberNames
 
---	Nx.prt ("Send G")
+        local members = MAX_PARTY_MEMBERS
+        local unitName = "party"
 
-	if self.ChanAName then		-- Should always be set, but was nil once
+        if IsInRaid() then
+            members = MAX_RAID_MEMBERS
+            unitName = "raid"
+        end
 
-		local num = GetChannelName (self.ChanAName)
-		if num ~= 0 then
+        local mapId = map.MapId
+        local palsInfo = self.PalsInfo
 
-			local cs = self:Chksum (msg)
-			local str = self:Encode (format ("%s%c%c%s", pre, floor (cs / 16) + 65, bit.band (cs, 15) + 65, msg))
+        for n = 1, members do
+            local unit = unitName .. n
+            local name = UnitName(unit)
 
-			self:SendChan (num, str)
-		else
-			Nx.prt (L["SendSecG Error: %s"], pre)
-		end
-	end
+            if name then
+                local x, y = Nx.Map.GetPlayerMapPosition(unit)
+
+                if x ~= 0 or y ~= 0 then
+                    memberNames[name] = 1
+                else
+                    local info = palsInfo[name]
+                    if info and info.EntryMId == mapId then
+                        memberNames[name] = 1
+                    end
+                end
+            end
+        end
+    end
+
+    -- Raise icon level when Alt is held
+    local alt = IsAltKeyDown()
+    if alt then
+        map.Level = map.Level + 3
+    end
+
+    self.TrackX = nil
+
+    -- Draw player icons based on settings and location
+    if map:GetWorldZone(map.RMapId).City then
+        -- In a city
+        if Nx.db.profile.Map.ShowOthersInCities then
+            self:UpdatePlyrIcons(self.ZPInfo, map, "IconPlyrZ")
+        end
+
+        if Nx.db.profile.Map.ShowPalsInCities then
+            self:UpdatePlyrIcons(self.PalsInfo, map, "IconPlyrG")
+        end
+    else
+        -- Not in a city
+        if Nx.db.profile.Map.ShowOthersInZone then
+            self:UpdatePlyrIcons(self.ZPInfo, map, "IconPlyrZ")
+        end
+
+        if self.PalsInfo then
+            self:UpdatePlyrIcons(self.PalsInfo, map, "IconPlyrG")
+        end
+    end
+
+    if alt then
+        map.Level = map.Level - 3
+    end
+
+    return self.TrackName, self.TrackX, self.TrackY
+end
+
+--- Draw player icons on the map
+-- @param info Player info table to draw from
+-- @param map Map instance
+-- @param iconName Base icon texture name
+function Nx.Com:UpdatePlyrIcons(info, map, iconName)
+    local memberNames = self.MemberNames
+    local alt = IsAltKeyDown()
+    local redGlow = abs(GetTime() * 400 % 200 - 100) / 200 + .5
+    local inBG = Nx.InBG
+
+    local t = GetTime()
+    local showTargetText = not Nx.Free
+
+    for name, pl in pairs(info) do
+        -- Remove stale entries
+        if t - pl.T > 35 then
+            info[name] = nil
+
+        elseif not memberNames[name] and (not inBG or map.MapId ~= pl.MId) and pl.Y then
+            if pl.MId >= 10000 then
+                return
+            end
+
+            local mapId = pl.MId
+            local wx, wy = map:GetWorldPos(mapId, pl.X, pl.Y)
+
+            -- Calculate icon size based on player type
+            local sz = 14 * map.DotZoneScale
+
+            if self.PalNames[name] ~= nil then
+                sz = 17 * map.DotPalScale
+            end
+
+            if map.TrackPlyrs[name] then
+                sz = 22 * map.DotPalScale
+                self.TrackName = name
+                self.TrackX, self.TrackY = wx, wy
+            end
+
+            -- Draw player icon
+            local f = map:GetIcon()
+
+            if map:ClipFrameW(f, wx, wy, sz, sz, 0) then
+                f.NXType = 1000
+                f.NXData2 = name
+
+                -- Build tooltip
+                local mapName = "?"
+                if mapId then
+                    mapName = Nx.Map:GetMapNameByID(mapId)
+                end
+                local tStr = pl.TStr or ""
+                local qStr = pl.QStr or ""
+                f.NxTip = format("%s\n  %s (%d,%d)%s%s", pl.Tip, mapName, pl.X, pl.Y, tStr, qStr)
+
+                -- Select icon texture
+                local txName = iconName
+
+                if self.PalNames[name] == false then
+                    txName = "IconPlyrF"
+                end
+
+                if bit.band(pl.F, 1) > 0 then
+                    txName = txName .. "C"    -- Combat version
+                end
+
+                f.texture:SetTexture("Interface\\AddOns\\Carbonite\\Gfx\\Map\\" .. txName)
+
+                -- Show name text when Alt is held
+                if alt then
+                    local s = pl.TType == 2 and showTargetText and (name .. tStr) or name
+                    local txt = map:GetText(s)
+                    map:MoveTextToIcon(txt, f, 15, 1)
+                end
+            end
+
+            -- Draw health bar
+            if pl.Health then
+                f = map:GetIconNI(1)
+                local per = pl.Health / 100
+
+                if per >= .33 then
+                    -- Horizontal health bar
+                    local sc = map.ScaleDraw
+                    map:ClipFrameTL(f, wx - 8 / sc, wy - 8 / sc, 14 * per / sc, 1 / sc)
+                    f.texture:SetColorTexture(1, 1, 1, 1)
+                else
+                    -- Low health indicator
+                    map:ClipFrameW(f, wx, wy, 8, 8, 0)
+
+                    if per > 0 then
+                        f.texture:SetColorTexture(1, .1, .1, 1 - per * 2)
+                    else
+                        f.texture:SetColorTexture(0, 0, 0, .5)
+                    end
+                end
+
+                -- Draw target health indicator
+                local tt = pl.TType
+
+                if tt then
+                    local per = pl.TH / 100
+                    local f = map:GetIconNI(1)
+                    local sc = map.ScaleDraw
+
+                    if tt == 1 then
+                        -- Friendly target: horizontal green bar
+                        map:ClipFrameTL(f, wx - 8 / sc, wy - 2 / sc, 14 * per / sc, 1 / sc)
+                        f.texture:SetColorTexture(0, 1, 0, 1)
+                    else
+                        -- Enemy/neutral target: vertical bar
+                        map:ClipFrameTL(f, wx - 8 / sc, wy - 7 / sc, 1 / sc, 13 * per / sc)
+
+                        if tt == 2 then
+                            f.texture:SetColorTexture(redGlow, .1, 0, 1)    -- Enemy player (red glow)
+                        elseif tt == 3 then
+                            f.texture:SetColorTexture(1, 1, 0, 1)           -- Enemy NPC (yellow)
+                        elseif tt == 4 then
+                            f.texture:SetColorTexture(1, .4, 1, 1)          -- Elite (purple)
+                        else
+                            f.texture:SetColorTexture(.7, .7, 1, 1)         -- Neutral (blue)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+--- Get quest string for a player
+-- @param name Player name
+-- @return Quest info string or nil
+function Nx.Com:GetPlyrQStr(name)
+    local info = self.PalsInfo[name] or self.ZPInfo[name]
+    return info and info.QStr
 end
 
 ---------------------------------------------------------------------------------------
--- Send a secure message to player using addon whisper
+-- Communication Message List Window
 ---------------------------------------------------------------------------------------
 
-function Nx.Com:SendSecW (pre, msg, plName)
-
-	local cs = self:Chksum (msg)
-	local str = self:Encode (format ("%s%c%c%s", pre, floor (cs / 16) + 65, bit.band (cs, 15) + 65, msg))
-
-	self.SentBytes = self.SentBytes + #str + 54 + 20	-- Packet overhead + some WOW overhead
-
-	Nx:SendCommMessage (self.Name, str, "WHISPER", plName)
-end
-
----------------------------------------------------------------------------------------
--- Send a message to a named channel
----------------------------------------------------------------------------------------
-
-function Nx.Com:Send (chanId, msg, plName)
-
-	assert (msg)
-
-	if chanId == "Z" then		-- Zone chat channel
-
-		local mapId = Nx.Map:GetRealMapId()
-		local chanName = self.ZStatus[mapId] and self.ZStatus[mapId].ChanName
-
-		if chanName then
-
-			local num = GetChannelName (chanName)
-			if num ~= 0 then
-				self:SendChan (num, msg)
-			end
-		end
-
-	else
-
-		self.SentBytes = self.SentBytes + #msg + 54 + 20	-- Packet overhead + some WOW overhead
-
-		if chanId == "g" then		-- Addon guild
-
-			if IsInGuild() then
-				Nx:SendCommMessage (self.Name, msg, "GUILD", plName)
-			end
-
-		elseif chanId == "p" then	-- Addon party
-			if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
-				Nx:SendCommMessage (self.Name, msg, "INSTANCE_CHAT")
-			else
-				Nx:SendCommMessage (self.Name, msg, "PARTY")
-			end
-		elseif chanId == "W" then	-- Addon whisper
-
---			Nx.prt ("Send W %s", plName)
-			Nx:SendCommMessage (self.Name, msg, "WHISPER", plName)
-
-		elseif chanId == "P" then	-- Party channel
-			if GetNumSubgroupMembers() > 0 then
-				if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
-					self:SendChatMessageFixed (msg, "INSTANCE_CHAT")
-				else
-					self:SendChatMessageFixed (msg, "PARTY")
-				end
-			end
-
-		else
-			assert (false)
-
-		end
-	end
-end
-
----------------------------------------------------------------------------------------
--- Send a message to a numbered chat channel using a buffer
----------------------------------------------------------------------------------------
-
-function Nx.Com:SendChan (num, msg)
-
-	local data = {}
-	data.ChanNum = num
-	data.Msg = msg
-	tinsert (self.SendChanQ, data)
-end
-
----------------------------------------------------------------------------------------
--- Send chat hook
----------------------------------------------------------------------------------------
-
-function Nx.Com.SendChatHook (msg, chanName)
-
-	if chanName == "CHANNEL" then
---		Nx.prt ("SendChat CHANNEL %s", msg)
-
-		Nx.Com.SendChanTime = GetTime()		-- Reset time
-	end
-end
-
----------------------------------------------------------------------------------------
--- Calc a message checksum
----------------------------------------------------------------------------------------
-
-function Nx.Com:Chksum (msg)
-
-	local v = 0
-	local xor = bit.bxor
-
-	for n = 1, #msg do
-		 v = xor (v, strbyte (msg, n))
-	end
-
-	return v
-end
-
-function Nx.Com:IsChksumOK (msg)
-
---	Nx.prt ("Com chksum rcv %s", #msg)
-
-	if #msg >= 4 then
-
-		-- skip 2 bytes at head
-
-		local ck = (strbyte (msg, 3) - 65) * 16 + (strbyte (msg, 4) - 65)
-
-		local v = 0
-		local xor = bit.bxor
-
-		for n = 5, #msg do
-			 v = xor (v, strbyte (msg, n))
-		end
-
-		return ck == v
-	end
-end
-
----------------------------------------------------------------------------------------
--- Encode a message
----------------------------------------------------------------------------------------
-
-function Nx.Com:Encode (msg)
-
-	local s = {}
-
-	s[1] = strsub (msg, 1, 2)
-
-	for n = 3, #msg do
-		 s[n - 1] = strchar (strbyte (msg, n) - 1)
-	end
-
---	Nx.prt (table.concat (s))
-
-	return table.concat (s)
-end
-
---------
--- Decode a message
-
-function Nx.Com:Decode (msg)
-
-	local s = {}
-
-	s[1] = strsub (msg, 1, 2)
-
-	for n = 3, #msg do
-		 s[n - 1] = strchar (strbyte (msg, n) + 1)
-	end
-
-	return table.concat (s)
-end
-
-function Nx.Com:SendChatMessageFixed (msg, typ, num)
-
-	-- Fix invalid chat characters
-
-	local s1 = strfind (msg, "|")
-	if s1 then
-		if strbyte (msg, s1 + 1) ~= 99 then		-- not c
---			Nx.prt ("chat OR in %s (%s)", strsub (msg, 1, 2), strsub (msg, s1, s1 + 5))
-			msg = gsub (msg, "|", "\1")
-		end
-	end
-
---  p  i  i  i  i  x  x  x  y  y  y  h  f qi qi qi qi ob  f lb  c to
--- 70 20 37 64 63 39 66 38 38 32 63 44 2b 31 37 30 64 23 25 24 25 87   << 100 termites. overflow
---        7  d  c  9  f  8  8  2  c  D  8  1  7  0  d        1  0 100
-
--- 70 20 62 62 62 62 36 63 63 36 66 44 4b 24 83 2c 37 2b 4b 69
---        b  b  b  b  f  8  8  2  c  D 28  $ ??  ,  7  +
-
--- "p%4x%3x%3x%c%c%s%s%s", self.PlyrMapId, x, y, hper+48, flgs+35, tStr, qStr, enStr))
-
---                                        typ lvl cls he 13  O  a  s  i  s     S  n  a  p  j  a  w
--- 70 20 33 66 62 38 65 35 36 66 39 44 43 26  32  2c  d9 30 4f 61 73 69 73 20 53 6e 61 70 6a 61 77
---                                     20
-
-	if typ == "CHANNEL" then
-		Nx:SendCommMessage(self.Name, msg, typ, num)	
-	else
-		local ok = pcall (SendChatMessage, msg, typ, nil, num)
-	end
-	
-	if not ok then
---		Nx.prtStrHex (typ .. " SendChat failed", msg)
-	end
-end
-
----------------------------------------------------------------------------------------
--- Restore invalid chat characters
----------------------------------------------------------------------------------------
-
-function Nx.Com:RestoreChars (msg)
-
-	local s1 = strfind (msg, "\1")
-	if s1 then
---		Nx.prt ("Com restored char")
-		return gsub (msg, "\1", "|")
-	end
-
-	return msg
-end
-
----------------------------------------------------------------------------------------
--- Monitor a zone
----------------------------------------------------------------------------------------
-
-function Nx.Com:MonitorZone (mapId, enable)
-
-	local i = self.ZMonitor[mapId]
-
-	if enable then
-		if not i or i < 0 then
-
-			if self:GetChanCount() >= 10 then
-				Nx.prt ("|cffff4040" .. L["Monitor Error: All 10 chat channels are in use"])
-			else
-				Nx.prt ("|cff40ff40" .. L["Monitored:"])
-			end
-
-			self.ZMonitor[mapId] = 0
-
-			for mapId, mode in pairs (self.ZMonitor) do
-				if mode >= 0 then
-					local zs = self.ZStatus[mapId]
-					if zs and zs.ChanName then
-						Nx.prt (" %s", Nx.Map:GetMapNameByID(mapId))
-					else
-						Nx.prt (" %s (pending)", Nx.Map:GetMapNameByID(mapId))
-					end
-				end
-			end
-		end
-	else
-		if i and i >= 0 then
-			self.ZMonitor[mapId] = -1
-		end
-	end
-
-	self:UpdateChannels()
-end
-
-function Nx.Com:IsZoneMonitored (mapId)
-	local i = self.ZMonitor[mapId]
-	return i and i >= 0
-end
-
----------------------------------------------------------------------------------------
--- Frame update. Called by main addon frame
----------------------------------------------------------------------------------------
-
-function Nx.Com:OnUpdate (elapsed)
-	if not Nx.Com.Initialized then
-		return
-	end
-	local Nx = Nx
-	local bgmap = Nx.InBG
-
-	local targetName = UnitName ("target")
-
-	local tm = GetTime()
-	local tdiff = tm - self.SendTime
-
-	if tdiff < .2 then	-- Never go faster than this
-		return
-	end
-
-	-- Handle AFK
-
-	if UnitIsAFK ("player") then
-		if not self.AFK then
-			self:UpdateChannels()
-		end
-		self.AFK = true
-
-	else
-		if self.AFK then
-			self:UpdateChannels()
-		end
-		self.AFK = nil
-	end
-
-	-- Position send
-
-	local map = Nx.Map:GetMap (1)
-
-	local delay = 10
-
-	if self.PlyrChange then
-		if not UnitOnTaxi ("player") then
-			delay = 3.1
-		end
-	end
-
-	if Nx.InCombat then
-		delay = map.InstanceId and 4.5 or 2.2
-	end
-
-	delay = delay * self.SendRate
-
-	if bgmap then
-		delay = 25
-	end
-
-	if self.AFK then
-		delay = 120
-	end
-
-	if next (self.Punks) then		-- Have a punk? Override all times
-		delay = min (6, delay)
-	end
-
---	Nx.prt ("send delay %s", delay)
-
-	if tm - self.SendPosTime >= delay then
-
-		self.SendPosTime = tm
-		self.PlyrChange = false		-- Reset
-
-		local flgs = 0
-
-		-- Player info
-
-		if Nx.InCombat then
-			flgs = 1
-		end
-
-		local x, y = Nx.Map.GetPlayerMapPosition ("player")
-
-		if x ~= 0 or y ~= 0 then
-			self.PlyrMapId = map:GetCurrentMapId()
-			self.PlyrX = x
-			self.PlyrY = y + max (map:GetCurrentMapDungeonLevel(), 1) - 1		-- 0 to 1 + dlvl
-		else
-			if map.InstanceId then
-				self.PlyrMapId = map.InstanceId
-				if not Nx.Map.InstanceInfo[self.PlyrMapId] then
-					self.PlyrX = 0
-					self.PlyrY = 0
-				end
-			end
-		end
-
-		x = max (min (self.PlyrX,  .999), 0) * 0xfff
-		y = max (min (self.PlyrY, 9.999), 0) * 0xfff
-
-		local h = UnitHealth ("player")
-		if UnitIsDeadOrGhost ("player") then
-			h = 0
-		end
-		local hm = UnitHealthMax ("player")
-		if hm < 1 then
-			hm = 1 
-		end
-		local hper = h / hm * 20
-		if hper > 0 then
-			hper = max (hper, 1)
-		end
-		hper = floor (hper + .5)
-
-		local plyrLvl = min (UnitLevel ("player"), 90)	-- 93 or above makes 0x80+ illegal chat char
-
-		-- Target info
-
-		local tStr = ""
-		if targetName then
-
-			flgs = flgs + 2	-- Have target
-
-			local tType = 5
-			if UnitIsFriend ("player", "target") then
-				tType = 1
-			else
-				if UnitIsPlayer ("target") then
-					tType = 2
-				elseif UnitIsEnemy ("player", "target") then
-					tType = 3
-					if Nx:UnitIsPlusMob ("target") then
-						tType = 4
-					end
-				end
-			end
-
-			local tLvl = min (UnitLevel ("target"), 90)	-- 93 or above makes 0x80+ illegal chat char
---			Nx.prt ("%s", tLvl)
-			local _, tCls = UnitClass ("target")		-- Non localized uppercase version
-			tCls = self.ClassNames[tCls] or 0
-
-			local h = UnitHealth ("target")
-			if UnitIsDeadOrGhost ("target") then
-				h = 0
-			end
-			local hm = max (UnitHealthMax ("target"), 1)
-			local hper = h / hm * 20
-			if hper > 0 then				-- Alive?
-				hper = max (hper, 1)
-			end
-			hper = min (floor (hper + .5), 20)
-
---			Nx.prt ("THealth %s", hper)
-
-			-- tLvl will cause a "\" at lvl 57 which could form a bad escape char with tCls
-
-			tStr = format ("%c%c%c%c%c%s", tType+35, tLvl+35, tCls+35, hper+35, #targetName+35, targetName)
-		end
-		qStr = ""
-		if Nx.Quest then
-			local qStr, qFlg = Nx.Quest:BuildComSend()
-			flgs = flgs + qFlg	-- 0 or 4
-		end
-
-		-- Punks info
-
-		local enStr = ""
-
-		if next (self.Punks) then
-
-			for name, lvl in pairs (self.Punks) do
-
---				enStr = enStr .. format ("%2x%s!", lvl, name)	-- Old, sends 0xffffffff for -1 level
-				enStr = enStr .. format ("%2x%s!", lvl >= 0 and lvl or 0, name)
-				if #enStr > 50 then
-					break
-				end
-			end
-
-			self.Punks = {}
-			self.SendZSkip = 1	-- So we get sent to zone for sure
-
-			flgs = flgs + 8
-
-			enStr = strchar (#enStr - 1 + 35) .. strsub (enStr, 1, -2)
-
---			Nx.prt ("En: %s", enStr)
-		end
---[[
-		Nx.prt ("tStr '%s'", tStr)
-		Nx.prt ("qStr '%s'", qStr)
-		Nx.prt ("enStr '%s'", enStr)
---]]
-		-- Send
-
-		self:SendPals (format ("S%c%4x%3x%4x%c%c%c%s%s%s",
-			  flgs+35, self.PlyrMapId, x, y, hper+48, plyrLvl+35, self.PlyrClassI+35, tStr, qStr, enStr))
-	end
-
-	-- Check for pals message
-
-	if not self.PalsSendMsg then
-
-		if #self.PalsSendQ > 0 then
-
-			self.PalsSendMsg = self.PalsSendQ[1]
-			self.PalsSendQ[1] = nil
-
-			for n = 2, #self.PalsSendQ do
-				self.PalsSendMsg = self.PalsSendMsg .. "\t" .. self.PalsSendQ[n]
-				self.PalsSendQ[n] = nil
---				table.remove (self.PalsSendQ, 1)
-			end
-
-			self.PosSendNext = -2
-		end
-	end
-
-	-- Send pals the next message
-
-	if tdiff >= .25 then
-
-		local msg = self.PalsSendMsg
-
-		if msg then
-
-			--ShowFriends()		-- force Friend List Update
-
-			self.PosSendNext = self.PosSendNext + 1
-
-			if self.PosSendNext > #self.Friends then
-
-				-- Reset now that guild and all friends are sent
-
-				self.PosSendNext = -2
-				self.PalsSendMsg = nil
-
-			else
-				if self.PosSendNext == -1 then
-
-					if bit.band (self.SendPMask, 2) > 0 then
-						self:Send ("g", msg, self.PlyrName)
-					end
-
-				elseif self.PosSendNext == 0 then
-
-					if self.SendChanQ[1] == nil and not bgmap and not Nx:FindActiveChatFrameEditBox() then
---					if self.SendChanQ[1] == nil and not bgmap and not ChatFrameEditBox:IsVisible() then
-
-						if bit.band (self.SendPMask, 4) > 0 then
-
-							local sk = self.SendZSkip - 1			-- Zone skipped to reduce rate
-
-							if sk < 1 then
-								sk = 4
-								self:Send ("Z", msg)
-								if Nx.Quest then
-									Nx.Quest.QLastChanged = nil	-- Now that zone has it kill it
-								end
-							end
-
-							self.SendZSkip = sk
-						end
-					end
-
-				else
-
-					if bit.band (self.SendPMask, 1) > 0 then
-						self:Send ("W", msg, self.Friends[self.PosSendNext])
-					end
-				end
-
-				self.SendTime = tm
-			end
-		end
-	end
-
-	-- Send numbered channel queue
-
-	if Nx:FindActiveChatFrameEditBox() then
-
-		Nx.Com.SendChanTime = tm		-- Reset time
-
-	else
-		if tm - self.SendChanTime >= .5 then
-
-			if self.SendChanQ[1] then
-
-				local data = self.SendChanQ[1]
-				tremove (self.SendChanQ, 1)
-
-				self.SentBytes = self.SentBytes + #data.Msg + 54 + 20	-- Packet overhead + some WOW overhead
-
-				self:SendChatMessageFixed (data.Msg, "CHANNEL", data.ChanNum)
-
-				self.SendChanTime = tm
-			end
-		end
-	end
-
---[[
-	for n = 1, #self.SendQ do
-
-		local q = self.SendQ[n]
-
-		self.SendTime = tm
-	end
---]]
-end
-
----------------------------------------------------------------------------------------
--- Update map icons (called by map)
----------------------------------------------------------------------------------------
-
-function Nx.Com:UpdateIcons (map)
-
-	if Nx.Tick % 20 == 1 then
-
-		local memberNames = {}
-		self.MemberNames = memberNames
-
-		local members = MAX_PARTY_MEMBERS
-		local unitName = "party"
-
-		if IsInRaid() then
-			members = MAX_RAID_MEMBERS
-			unitName = "raid"
-		end
-
-		local mapId = map.MapId
-		local palsInfo = self.PalsInfo
-
-		for n = 1, members do
-
-			local unit = unitName .. n
-			local name = UnitName (unit)
-			if name then
-
-				local x, y = Nx.Map.GetPlayerMapPosition (unit)
-				if x ~= 0 or y ~= 0 then
-					memberNames[name] = 1
-
-				else
-					local info = palsInfo[name]
-					if info and info.EntryMId == mapId then
-						memberNames[name] = 1
-					end
-				end
-			end
-		end
-	end
-
-	--
-
-	local alt = IsAltKeyDown()
-	if alt then
-		map.Level = map.Level + 3
-	end
-
-
-	self.TrackX = nil
-
-	if map:GetWorldZone (map.RMapId).City then
-
-		if Nx.db.profile.Map.ShowOthersInCities then
-			self:UpdatePlyrIcons (self.ZPInfo, map, "IconPlyrZ")
-		end
-
-		if Nx.db.profile.Map.ShowPalsInCities then
-			self:UpdatePlyrIcons (self.PalsInfo, map, "IconPlyrG")
-		end
-
-	else
-		if Nx.db.profile.Map.ShowOthersInZone then
-			self:UpdatePlyrIcons (self.ZPInfo, map, "IconPlyrZ")
-		end
-		if self.PalsInfo then
-			self:UpdatePlyrIcons (self.PalsInfo, map, "IconPlyrG")
-		end
-	end
-
-	if alt then
-		map.Level = map.Level - 3
-	end
-
-	return self.TrackName, self.TrackX, self.TrackY
-end
-
----------------------------------------------------------------------------------------
--- Update icons
----------------------------------------------------------------------------------------
-
-function Nx.Com:UpdatePlyrIcons (info, map, iconName)
-
-	local memberNames = self.MemberNames
-	local alt = IsAltKeyDown()
-	local redGlow = abs (GetTime() * 400 % 200 - 100) / 200 + .5
-	local inBG = Nx.InBG
-
-	local t = GetTime()
-	local showTargetText = not Nx.Free
-
-	for name, pl in pairs (info) do
---		Nx.prt ("%s", name)
-
-		if t - pl.T > 35 then
-			info[name] = nil
---			Nx.prt ("Com del plyr %s", name)
-		elseif not memberNames[name] and (not inBG or map.MapId ~= pl.MId) and pl.Y then		-- Y can be nil somehow
-			if pl.MId >= 10000 then
-				return
-			end
-			local mapId = pl.MId
-			local wx, wy = map:GetWorldPos (mapId, pl.X, pl.Y)
-
---			Nx.prt ("%f %f", wx, wy)
-
-			local sz = 14 * map.DotZoneScale
-
-			if self.PalNames[name] ~= nil then
-				sz = 17 * map.DotPalScale
-			end
-
-			if map.TrackPlyrs[name] then
-				sz = 22 * map.DotPalScale
-				self.TrackName = name
-				self.TrackX, self.TrackY = wx, wy
-			end
-
-			local f = map:GetIcon()
-
-			if map:ClipFrameW (f, wx, wy, sz, sz, 0) then
-
-				f.NXType = 1000
-				f.NXData2 = name
-
-				local mapName = "?"
-				if mapId then
-					mapName = Nx.Map:GetMapNameByID(mapId)
-				end
-				local tStr = pl.TStr or ""
-				local qStr = pl.QStr or ""
-				f.NxTip = format ("%s\n  %s (%d,%d)%s%s", pl.Tip, mapName, pl.X, pl.Y, tStr, qStr)
-
-				local txName = iconName
-
-				if self.PalNames[name] == false then
-					txName = "IconPlyrF"
-				end
-
-				if bit.band (pl.F, 1) > 0 then		-- In combat?
-					txName = txName .. "C"
-				end
-
-				f.texture:SetTexture ("Interface\\AddOns\\Carbonite\\Gfx\\Map\\"..txName)
-
-				if alt then
-					-- tStr has \n
-					local s = pl.TType == 2 and showTargetText and (name .. tStr) or name
-					local txt = map:GetText (s)
-					map:MoveTextToIcon (txt, f, 15, 1)
-				end
-			end
-
-			-- Show health
---PAIDS!
-			if pl.Health then		-- No health if from Cartographer
-
-				f = map:GetIconNI (1)
-				local per = pl.Health / 100
-
-				if per >= .33 then
-
-					local sc = map.ScaleDraw
-					map:ClipFrameTL (f, wx - 8 / sc, wy - 8 / sc, 14 * per / sc, 1 / sc)
-					f.texture:SetColorTexture (1, 1, 1, 1)
-
-				else
-					map:ClipFrameW (f, wx, wy, 8, 8, 0)
-
-					if per > 0 then
-						f.texture:SetColorTexture (1, .1, .1, 1 - per * 2)
-					else
-						f.texture:SetColorTexture (0, 0, 0, .5)
-					end
-				end
-
-				local tt = pl.TType
-
-				if tt then		-- Target?
-
-					local per = pl.TH / 100
-
-					local f = map:GetIconNI (1)
-					local sc = map.ScaleDraw
-
-					if tt == 1 then
-						-- Horizontal green bar
-						map:ClipFrameTL (f, wx - 8 / sc, wy - 2 / sc, 14 * per / sc, 1 / sc)
-						f.texture:SetColorTexture (0, 1, 0, 1)
-
-					else	-- Vertical bar
-
-						map:ClipFrameTL (f, wx - 8 / sc, wy - 7 / sc, 1 / sc, 13 * per / sc)
-
-						if tt == 2 then
-							f.texture:SetColorTexture (redGlow, .1, 0, 1)
-						elseif tt == 3 then
-							f.texture:SetColorTexture (1, 1, 0, 1)
-						elseif tt == 4 then
-							f.texture:SetColorTexture (1, .4, 1, 1)
-						else
-							f.texture:SetColorTexture (.7, .7, 1, 1)
-						end
-					end
-				end
-			end
---PAIDE!
-		end
-	end
-end
-
-function Nx.Com:GetPlyrQStr (name)
-
-	local info = self.PalsInfo[name] or self.ZPInfo[name]
-	return info and info.QStr
-end
-
----------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------
--- Com message list
----------------------------------------------------------------------------------------
-
----------------------------------------------------------------------------------------
--- Open and init or toggle Com frame
----------------------------------------------------------------------------------------
-
+--- Open the communication list window (debug)
 function Nx.Com.List:Open()
+    -- Currently empty - list window is optional debug feature
 end
 
----------------------------------------------------------------------------------------
--- Add info to list
----------------------------------------------------------------------------------------
-
-function Nx.Com.List:AddInfo (type, name)
+--- Add info entry to the message list
+-- @param type Message type
+-- @param name Message content
+function Nx.Com.List:AddInfo(type, name)
+    -- Currently empty - list entries are optional
 end
 
----------------------------------------------------------------------------------------
--- Update list
----------------------------------------------------------------------------------------
-
+--- Update the message list display
 function Nx.Com.List:Update()
+    if not self.Opened then
+        return
+    end
 
-	if not self.Opened then
-		return
-	end
+    -- Update title with stats
+    self.Win:SetTitle(format(L["Com %d Bytes sec %d"], #self.Sorted, Nx.Com.SentBytesSec or 0))
 
-	-- Title
+    -- Update list
+    local list = self.List
+    local isLast = list:IsShowLast()
 
-	self.Win:SetTitle (format (L["Com %d Bytes sec %d"], #self.Sorted, Nx.Com.SentBytesSec or 0))
+    list:Empty()
 
-	-- List
+    for k, v in pairs(self.Sorted) do
+        list:ItemAdd()
+        list:ItemSet(1, date("%d %H:%M:%S", v.Time))
+        list:ItemSet(2, v.Type)
+        list:ItemSet(3, v.Name)
+    end
 
-	local list = self.List
-
-	local isLast = list:IsShowLast()
-
-	list:Empty()
-
-	for k, v in pairs (self.Sorted) do
-
-		list:ItemAdd()
-		list:ItemSet (1, date ("%d %H:%M:%S", v.Time))
-		list:ItemSet (2, v.Type)
-		list:ItemSet (3, v.Name)
-	end
-
-	list:Update (isLast)
+    list:Update(isLast)
 end
 
----------------------------------------------------------------------------------------
--- Sort compare
----------------------------------------------------------------------------------------
-
-function Nx.Com.List.SortCmp (v1, v2)
-	return v1.Time < v2.Time
+--- Sort comparison function for message list
+-- @param v1 First item
+-- @param v2 Second item
+-- @return true if v1 should come before v2
+function Nx.Com.List.SortCmp(v1, v2)
+    return v1.Time < v2.Time
 end
 
----------------------------------------------------------------------------------------
-
+--- Sort the message list
 function Nx.Com.List:Sort()
+    local rcv = Nx.Com.Data.Rcv
 
-	local rcv = Nx.Com.Data.Rcv
+    self.Sorted = {}
 
-	self.Sorted = {}
+    local t = self.Sorted
+    local i = 1
 
-	local t = self.Sorted
-	local i = 1
-	for k, v in pairs (rcv) do
-		t[i] = v
-		i = i + 1
-	end
+    for k, v in pairs(rcv) do
+        t[i] = v
+        i = i + 1
+    end
 
-	sort (self.Sorted, self.SortCmp)
+    sort(self.Sorted, self.SortCmp)
 end
 
 ---------------------------------------------------------------------------------------
---EOF
+-- EOF
+---------------------------------------------------------------------------------------

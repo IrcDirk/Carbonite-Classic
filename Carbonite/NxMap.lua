@@ -315,7 +315,9 @@ function Nx.Map:SetMapByID(zone)
             if zone == 12 then zone = 1414 end      -- Kalimdor
             if zone == 13 then zone = 1415 end      -- Eastern Kingdoms
         end
-        WorldMapFrame:SetMapID(zone)
+        -- Wrap in pcall to catch Blizzard VehicleDataProvider errors
+        -- (their code doesn't handle nil from C_PvP.GetBattlefieldVehicles)
+        pcall(WorldMapFrame.SetMapID, WorldMapFrame, zone)
     end
 end
 
@@ -5258,21 +5260,22 @@ function Nx.Map:Update (elapsed)
     local txX1, txX2, txY1, txY2
 
     if not IsAltKeyDown() then
-        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
+        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid) or {}
         -- Reuse pooled tables instead of creating new ones every frame
         local pPOIs = POI_Pool.pPOIs
         wipe(pPOIs)
-        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
+        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid) or {}
         local aPOIs = POI_Pool.aPOIs
         wipe(aPOIs)
         local awinfo = Map.MapWorldInfo[rid]
         if not awinfo.City then
-            for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
+            local areaPOIIds = C_AreaPoiInfo.GetAreaPOIForMap(rid) or {}
+            for j, aPOIId in ipairs(areaPOIIds) do
                 aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
             end
         end
 
-        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
+        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid) or {}
 
         -- Use pooled table for concatenation
         local zPOIs = POI_Pool.zPOIs

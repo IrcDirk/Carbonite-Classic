@@ -315,7 +315,9 @@ function Nx.Map:SetMapByID(zone)
             if zone == 12 then zone = 1414 end      -- Kalimdor
             if zone == 13 then zone = 1415 end      -- Eastern Kingdoms
         end
-        WorldMapFrame:SetMapID(zone)
+        -- Wrap in pcall to catch Blizzard VehicleDataProvider errors
+        -- (their code doesn't handle nil from C_PvP.GetBattlefieldVehicles)
+        pcall(WorldMapFrame.SetMapID, WorldMapFrame, zone)
     end
 end
 
@@ -900,6 +902,7 @@ function Nx.Map:Create(index)
     f:SetWidth(m.W)
     f:SetHeight(m.H)
     f:SetResizeBounds(50, 50)
+    f:SetClipsChildren(true)  -- Clip child frames (icons) at frame edges
 
     -- Background texture
     local t = f:CreateTexture()
@@ -5257,21 +5260,22 @@ function Nx.Map:Update (elapsed)
     local txX1, txX2, txY1, txY2
 
     if not IsAltKeyDown() then
-        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid)
+        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid) or {}
         -- Reuse pooled tables instead of creating new ones every frame
         local pPOIs = POI_Pool.pPOIs
         wipe(pPOIs)
-        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid)
+        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid) or {}
         local aPOIs = POI_Pool.aPOIs
         wipe(aPOIs)
         local awinfo = Map.MapWorldInfo[rid]
         if not awinfo.City then
-            for j, aPOIId in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(rid)) do
+            local areaPOIIds = C_AreaPoiInfo.GetAreaPOIForMap(rid) or {}
+            for j, aPOIId in ipairs(areaPOIIds) do
                 aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
             end
         end
 
-        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
+        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid) or {}
 
         -- Use pooled table for concatenation
         local zPOIs = POI_Pool.zPOIs
@@ -5457,17 +5461,30 @@ function Nx.Map:Update (elapsed)
                         f.texture:SetAtlas(atlasIcon)
                     else
                         pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-                        self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
-                        if atlasIcon then
-                            f.texture:SetAtlas(atlasIcon)
-                        else
-                            f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-                            txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
-                            f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
-                            f.texture:SetVertexColor (1, 1, 1, 1)
-                        end
                         if zPOI.facing then
-                            f.texture:SetRotation(zPOI.facing)
+                            -- For rotated icons, show fully or hide entirely to avoid uneven clipping
+                            local iconSize = max(txW, txH) * self.ScaleDraw
+                            if self:ClipFrameWNoChop(f, pX, pY, iconSize, iconSize) then
+                                if atlasIcon then
+                                    f.texture:SetAtlas(atlasIcon)
+                                else
+                                    f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                                    txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
+                                    f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                                    f.texture:SetVertexColor (1, 1, 1, 1)
+                                end
+                                f.texture:SetRotation(zPOI.facing)
+                            end
+                        else
+                            self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
+                            if atlasIcon then
+                                f.texture:SetAtlas(atlasIcon)
+                            else
+                                f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                                txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
+                                f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                                f.texture:SetVertexColor (1, 1, 1, 1)
+                            end
                         end
                     end
                 end
@@ -7822,6 +7839,45 @@ function Nx.Map:ClipFrameW (frm, bx, by, w, h, dir)
     end
 
     -- Note: SetSnapToPixelGrid/SetTexelSnappingBias moved to icon creation for performance
+
+    frm:Show()
+
+    return true
+end
+
+--------
+-- Position a frame on the map without chopping texture coords
+-- Used for rotated icons - parent frame clips at edges via SetClipsChildren
+-- XY is center. Width and height are not scaled
+-- Returns true if visible, false if hidden (completely off-screen)
+
+function Nx.Map:ClipFrameWNoChop (frm, bx, by, w, h)
+
+    local scale = self.ScaleDraw
+    local clipW = self.MapW
+    local clipH = self.MapH
+
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
+
+    -- For rotated icons, use half the diagonal as the effective radius
+    local halfDiag = max(w, h) * 0.71  -- ~sqrt(2)/2
+
+    -- Only hide if completely off-screen (no part visible)
+    if x + halfDiag < 0 or x - halfDiag > clipW or
+       y + halfDiag < 0 or y - halfDiag > clipH then
+        frm:Hide()
+        return false
+    end
+
+    -- Position frame centered at x, y
+    -- Parent frame will clip at edges via SetClipsChildren(true)
+    local vx = x - w * .5
+    local vy = y - h * .5
+
+    frm:SetPoint ("TOPLEFT", vx, -vy - self.TitleH)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
     frm:Show()
 

@@ -900,6 +900,7 @@ function Nx.Map:Create(index)
     f:SetWidth(m.W)
     f:SetHeight(m.H)
     f:SetResizeBounds(50, 50)
+    f:SetClipsChildren(true)  -- Clip child frames (icons) at frame edges
 
     -- Background texture
     local t = f:CreateTexture()
@@ -5457,17 +5458,30 @@ function Nx.Map:Update (elapsed)
                         f.texture:SetAtlas(atlasIcon)
                     else
                         pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-                        self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
-                        if atlasIcon then
-                            f.texture:SetAtlas(atlasIcon)
-                        else
-                            f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-                            txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
-                            f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
-                            f.texture:SetVertexColor (1, 1, 1, 1)
-                        end
                         if zPOI.facing then
-                            f.texture:SetRotation(zPOI.facing)
+                            -- For rotated icons, show fully or hide entirely to avoid uneven clipping
+                            local iconSize = max(txW, txH) * self.ScaleDraw
+                            if self:ClipFrameWNoChop(f, pX, pY, iconSize, iconSize) then
+                                if atlasIcon then
+                                    f.texture:SetAtlas(atlasIcon)
+                                else
+                                    f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                                    txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
+                                    f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                                    f.texture:SetVertexColor (1, 1, 1, 1)
+                                end
+                                f.texture:SetRotation(zPOI.facing)
+                            end
+                        else
+                            self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
+                            if atlasIcon then
+                                f.texture:SetAtlas(atlasIcon)
+                            else
+                                f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
+                                txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
+                                f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
+                                f.texture:SetVertexColor (1, 1, 1, 1)
+                            end
                         end
                     end
                 end
@@ -7822,6 +7836,45 @@ function Nx.Map:ClipFrameW (frm, bx, by, w, h, dir)
     end
 
     -- Note: SetSnapToPixelGrid/SetTexelSnappingBias moved to icon creation for performance
+
+    frm:Show()
+
+    return true
+end
+
+--------
+-- Position a frame on the map without chopping texture coords
+-- Used for rotated icons - parent frame clips at edges via SetClipsChildren
+-- XY is center. Width and height are not scaled
+-- Returns true if visible, false if hidden (completely off-screen)
+
+function Nx.Map:ClipFrameWNoChop (frm, bx, by, w, h)
+
+    local scale = self.ScaleDraw
+    local clipW = self.MapW
+    local clipH = self.MapH
+
+    local x = (bx - self.MapPosXDraw) * scale + clipW * .5
+    local y = (by - self.MapPosYDraw) * scale + clipH * .5
+
+    -- For rotated icons, use half the diagonal as the effective radius
+    local halfDiag = max(w, h) * 0.71  -- ~sqrt(2)/2
+
+    -- Only hide if completely off-screen (no part visible)
+    if x + halfDiag < 0 or x - halfDiag > clipW or
+       y + halfDiag < 0 or y - halfDiag > clipH then
+        frm:Hide()
+        return false
+    end
+
+    -- Position frame centered at x, y
+    -- Parent frame will clip at edges via SetClipsChildren(true)
+    local vx = x - w * .5
+    local vy = y - h * .5
+
+    frm:SetPoint ("TOPLEFT", vx, -vy - self.TitleH)
+    frm:SetWidth (w)
+    frm:SetHeight (h)
 
     frm:Show()
 

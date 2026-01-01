@@ -5270,6 +5270,7 @@ function Nx.Map:Update (elapsed)
                 aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
             end
         end
+
         local bgPOIs = C_PvP.GetBattlefieldVehicles(rid)
 
         -- Use pooled table for concatenation
@@ -5288,9 +5289,16 @@ function Nx.Map:Update (elapsed)
                 pX = zPOI.x
                 pY = zPOI.y
             end
-            local atlasIcon = zPOI.atlasName
+
+            local atlasIcon = zPOI.atlasName or zPOI.atlas
             local desc = zPOI.description
             local faction = zPOI.faction
+
+            local txW = 16
+            local txH = 16
+
+            if zPOI.textureWidth  then txW = zPOI.textureWidth  end
+            if zPOI.textureHeight then txH = zPOI.textureHeight end
 
             local skip = false
 
@@ -5449,7 +5457,7 @@ function Nx.Map:Update (elapsed)
                         f.texture:SetAtlas(atlasIcon)
                     else
                         pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-                        self:ClipFrameWChop(f, pX, pY, 16 * self.ScaleDraw, 16 * self.ScaleDraw)
+                        self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
                         if atlasIcon then
                             f.texture:SetAtlas(atlasIcon)
                         else
@@ -5457,6 +5465,9 @@ function Nx.Map:Update (elapsed)
                             txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
                             f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
                             f.texture:SetVertexColor (1, 1, 1, 1)
+                        end
+                        if zPOI.facing then
+                            f.texture:SetRotation(zPOI.facing)
                         end
                     end
                 end

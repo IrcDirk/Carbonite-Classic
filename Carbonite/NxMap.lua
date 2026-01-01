@@ -5294,6 +5294,12 @@ function Nx.Map:Update (elapsed)
             local desc = zPOI.description
             local faction = zPOI.faction
 
+            local txW = 16
+            local txH = 16
+
+            if zPOI.textureWidth  then txW = zPOI.textureWidth  end
+            if zPOI.textureHeight then txH = zPOI.textureHeight end
+
             local skip = false
 
             local _, splitname = strsplit(",", name)
@@ -5451,7 +5457,7 @@ function Nx.Map:Update (elapsed)
                         f.texture:SetAtlas(atlasIcon)
                     else
                         pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-                        self:ClipFrameWChop(f, pX, pY, 16 * self.ScaleDraw, 16 * self.ScaleDraw)
+                        self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
                         if atlasIcon then
                             f.texture:SetAtlas(atlasIcon)
                         else

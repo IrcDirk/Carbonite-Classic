@@ -86,7 +86,8 @@ patch("CUF_PROFILE_ACTIVATE_PATCH_VERSION", 1, function(V)
 		pcall(UIDropDownMenu_InitializeHelper, dd)
 		purgeKey(_G, "UIDROPDOWNMENU_OPEN_MENU")
 		purgeKey(_G, "UIDROPDOWNMENU_INIT_MENU")
-		pcall(ScriptErrorsFrameMixin.DisplayMessageInternal, o, "", 0, 0, 0, "")
+		-- Removed: pcall(ScriptErrorsFrameMixin.DisplayMessageInternal, o, "", 0, 0, 0, "")
+		-- This was causing Swatter to catch empty error messages
 	end)
 end)
 

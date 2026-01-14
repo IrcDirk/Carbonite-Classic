@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- NxMapGuide - Map guide code
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 ---------------------------------------------------------------------------------------
@@ -26,10 +26,6 @@
 -------------------------------------------------------------------------------
 local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
--- Version detection (Nx.isMoPClassic is defined in Carbonite.lua)
-local isMoP = Nx.isMoPClassic or false
-local isClassic = not isMoP
-
 -- API Compatibility: Classic uses GetItemInfo, MoP uses GetItemInfoCompat
 local GetItemInfoCompat
 if C_Item and GetItemInfoCompat then
@@ -41,7 +37,7 @@ end
 -- Version-specific zone IDs for portal icons
 -- Classic uses new map IDs (1400+), MoP uses old IDs
 local PortalZoneIDs
-if isClassic then
+if Nx.OldMapIDs then
     PortalZoneIDs = {
         BlastedLands = 1419,
         BlastedLands2 = 1944,
@@ -87,12 +83,8 @@ Nx.GuideAbr = {
     ["K"] = L["Kalimdor"],
     ["E"] = L["Eastern Kingdoms"],
 }
-if isMoP then
-    Nx.GuideAbr["O"] = L["Outland"]
-    Nx.GuideAbr["N"] = L["Northrend"]
-    Nx.GuideAbr["M"] = L["The Maelstrom"]
-    Nx.GuideAbr["P"] = L["Pandaria"]
-end
+
+
 Nx.GuideInfo = {
     Name = L["All"],
     Tx = "INV_Misc_Map02",
@@ -110,13 +102,11 @@ Nx.GuideInfo = {
         T = L["Flight Master"],
         Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Ability_mount_wyvern_01",
     },
-    --[[{
-        T = L["Lightforged Beacon"],
-        Tx = "INV_Alchemy_AstralAlchemistStone",
-    },]]--
+    -- Lightforged Beacon: Available from Legion 7.3+ (Argus) - added dynamically below
     {
         Name = L["Common Place"],
         Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\INV_Misc_Map02",
+        -- Vanilla common places (always available)
         {
             T = L["Auctioneer"],
             Tx = "Racial_Dwarf_FindTreasure",
@@ -130,22 +120,6 @@ Nx.GuideInfo = {
             Tx = "Spell_Shadow_Twilight",
         },
         {
-            T = L["Void Storage"],
-            Tx = "spell_nature_astralrecalgroup",
-        },
-        {
-            T = L["Transmogrifier"],
-            Tx = "INV_Arcane_Orb",
-        },
-        {
-            T = L["Battle Pet Trainer"],
-            Tx = "INV_Pet_BattlePetTraining",
-        },
-        {
-            T = L["Barber"],
-            Tx = "INV_Misc_Comb_02",
-        },
-        {
             T = L["Mailbox"],
             Tx = "INV_Letter_15",
         },
@@ -157,16 +131,14 @@ Nx.GuideInfo = {
             T = L["Forge"],
             Tx = "INV_Sword_09",
         },
+        -- Version-specific common places added dynamically below
     },
 
     {
         Name = L["Class Trainer"],
         T = "^C",
         Tx = "INV_Misc_Book_10",
-        {
-            T = L["Death Knight Trainer"],
-            Tx = "Spell_Deathknight_ClassIcon",
-        },
+        -- Vanilla classes (always available)
         {
             T = L["Druid Trainer"],
             Tx = "Ability_Druid_Maul",
@@ -203,31 +175,19 @@ Nx.GuideInfo = {
             T = L["Warrior Trainer"],
             Tx = "INV_Sword_27",
         },
-        {
-            T = L["Monk Trainer"],
-            Tx = "Class_Monk",
-        },
-        --[[{
-            T = L["Demon Hunter Trainer"],
-            Tx = "ClassIcon_DemonHunter",
-        },]]--
+        -- Version-specific classes added dynamically below
     },
     {
         Name = L["Trainer"],
         T = "^C",
         Tx = "INV_Misc_Book_01",
 
+        -- Vanilla professions (always available)
         {
             Pre = L["Alchemy"],
             Name = L["Trainer"],
             T = "^P",
             Tx = "Trade_Alchemy",
-        },
-        {
-            Pre = L["Archaeology"],
-            Name = L["Trainer"],
-            T = "^P",
-            Tx = "trade_archaeology",
         },
         {
             Pre = L["Blacksmithing"],
@@ -254,18 +214,6 @@ Nx.GuideInfo = {
             Tx = "Trade_Herbalism",
         },
         {
-            Pre = L["Inscription"],
-            Name = L["Trainer"],
-            T = "^P",
-            Tx = "INV_Inscription_Tradeskill01",
-        },
-        {
-            Pre = L["Jewelcrafting"],
-            Name = L["Trainer"],
-            T = "^P",
-            Tx = "INV_Misc_Gem_02",
-        },
-        {
             Pre = L["Leatherworking"],
             Name = L["Trainer"],
             T = "^P",
@@ -289,6 +237,7 @@ Nx.GuideInfo = {
             T = "^P",
             Tx = "Trade_Tailoring",
         },
+        -- Secondary professions (always available)
         {
             Pre = L["Cooking"],
             Name = L["Trainer"],
@@ -308,17 +257,12 @@ Nx.GuideInfo = {
             Tx = "Trade_Fishing",
         },
         {
-            Pre = L["Flying"],
-            Name = L["Trainer"],
-            T = "^S",
-            Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11",
-        },
-        {
             Pre = L["Riding"],
             Name = L["Trainer"],
             T = "^S",
             Tx = "spell_nature_swiftness",
         },
+        -- Version-specific professions added dynamically below
     },
     {
         Name = L["Travel"],
@@ -361,42 +305,6 @@ Nx.GuideInfo = {
             Name = "@E",
             Inst = 2
         },
-        {
-            Name = "@O",
-            Inst = 3
-        },
-        {
-            Name = "@N",
-            Inst = 4
-        },
-        {
-            Name = "@M",
-            Inst = 5
-        },
-        {
-            Name = "@P",
-            Inst = 6
-        },
-        --[[{
-            Name = "@D",
-            Inst = 7
-        },
-        {
-            Name = "@B",
-            Inst = 8
-        },
-        {
-            Name = "@A",
-            Inst = 9
-        },
-        {
-            Name = "@ZA",
-            Inst = 10
-        },
-        {
-            Name = "@KU",
-            Inst = 11
-        },]]--
     },
     {
         Name = L["Zone"],
@@ -414,7 +322,7 @@ Nx.GuideInfo = {
             Map = 2
         },
     },
-    --[[{
+    {
         Name = L["Trade Skill"],
         Tx = "INV_Misc_Note_04",
         {
@@ -437,22 +345,220 @@ Nx.GuideInfo = {
             T = L["Moonwell"],
             Tx = "INV_Fabric_MoonRag_Primal",
         },
-    },]]--
-
+    },
 }
 
--- Add MoP-specific continents to the Zone folder
-if isMoP then
-    -- Find the Zone folder in GuideInfo and add MoP continents
-    for _, folder in ipairs(Nx.GuideInfo) do
-        if folder.Name == L["Zone"] then
-            tinsert(folder, { Name = "@O", Map = 3 })  -- Outland
-            tinsert(folder, { Name = "@N", Map = 4 })  -- Northrend
-            tinsert(folder, { Name = "@M", Map = 5 })  -- Maelstrom
-            tinsert(folder, { Name = "@P", Map = 6 })  -- Pandaria
+
+if Nx.TBCMaps then
+    Nx.GuideAbr["O"] = L["Outland"]
+end
+
+if Nx.WOTLKMaps then
+    Nx.GuideAbr["N"] = L["Northrend"]
+end
+
+if Nx.CataMaps then
+    Nx.GuideAbr["M"] = L["The Maelstrom"]
+end
+
+if Nx.MOPMaps then
+    Nx.GuideAbr["P"] = L["Pandaria"]
+end
+
+if Nx.WODMaps then
+    Nx.GuideAbr["D"] = L["Draenor"]
+end
+
+if Nx.LegionMaps then
+    Nx.GuideAbr["B"] = L["Broken Isles"]
+    Nx.GuideAbr["A"] = L["Argus"]
+end
+
+if Nx.BFAMaps then
+    Nx.GuideAbr["ZA"] = L["Zandalar"]
+    Nx.GuideAbr["KU"] = L["Kul Tiras"]
+end
+if Nx.SLMaps then
+    Nx.GuideAbr["NZ"] = L["Nazjatar"]
+    Nx.GuideAbr["SL"] = L["The Shadowlands"]
+end
+if Nx.DFMaps then
+    Nx.GuideAbr["DI"] = L["Dragon Isles"]
+end
+if Nx.TWWMaps then
+    Nx.GuideAbr["KA"] = L["Khaz Algar"]
+end
+if Nx.MidMaps then
+    Nx.GuideAbr["QT"] = L["Quel'Talas"]
+end
+
+
+-------------------------------------------------------------------------------
+-- Dynamic Version-Specific Content
+-- Add expansion-specific features based on detected WoW version
+-------------------------------------------------------------------------------
+
+for _, folder in ipairs(Nx.GuideInfo) do
+
+    ---------------------------------------------------------------------------
+    -- Zone folder: Add expansion-specific continents
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Zone"] then
+        if Nx.TBCMaps    then tinsert(folder, { Name = "@O", Map = 3 })  end -- Outland
+        if Nx.WOTLKMaps  then tinsert(folder, { Name = "@N", Map = 4 })  end -- Northrend
+        if Nx.CataMaps   then tinsert(folder, { Name = "@M", Map = 5 })  end -- Maelstrom
+        if Nx.MOPMaps    then tinsert(folder, { Name = "@P", Map = 6 })  end -- Pandaria
+        if Nx.WODMaps    then tinsert(folder, { Name = "@D", Map = 7 })  end -- Draenor
+        if Nx.LegionMaps then 
+            tinsert(folder, { Name = "@B", Map = 8 })  -- Broken Isles
+            tinsert(folder, { Name = "@A", Map = 9 })  -- Argus
+        end
+        if Nx.BFAMaps then
+            tinsert(folder, { Name = "@ZA", Map = 10 }) -- Zandalar
+            tinsert(folder, { Name = "@KU", Map = 11 }) -- Kul Tiras
+        end
+        if Nx.SLMaps then
+            tinsert(folder, { Name = "@NZ", Map = 12 })  -- Nazjatar
+            tinsert(folder, { Name = "@SL", Map = 13 })  -- Shadowlands
+        end
+        if Nx.DFMaps  then tinsert(folder, { Name = "@DI", Map = 14 }) end -- Dragon Isles
+        if Nx.TWWMaps then tinsert(folder, { Name = "@KA", Map = 15 }) end -- Khaz Algar
+        if Nx.MidMaps then tinsert(folder, { Name = "@QT", Map = 16 }) end -- Quel'Talas
+    end
+
+    ---------------------------------------------------------------------------
+    -- Instances folder: Add expansion-specific instance continents
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Instances"] then
+        if Nx.TBCMaps    then tinsert(folder, { Name = "@O", Inst = 3 })  end -- Outland
+        if Nx.WOTLKMaps  then tinsert(folder, { Name = "@N", Inst = 4 })  end -- Northrend
+        if Nx.CataMaps   then tinsert(folder, { Name = "@M", Inst = 5 })  end -- Maelstrom
+        if Nx.MOPMaps    then tinsert(folder, { Name = "@P", Inst = 6 })  end -- Pandaria
+        if Nx.WODMaps    then tinsert(folder, { Name = "@D", Inst = 7 })  end -- Draenor
+        if Nx.LegionMaps then 
+            tinsert(folder, { Name = "@B", Inst = 8 })  -- Broken Isles
+            tinsert(folder, { Name = "@A", Inst = 9 })  -- Argus
+        end
+        if Nx.BFAMaps then
+            tinsert(folder, { Name = "@ZA", Inst = 10 }) -- Zandalar
+            tinsert(folder, { Name = "@KU", Inst = 11 }) -- Kul Tiras
+        end
+        if Nx.SLMaps then
+            tinsert(folder, { Name = "@NZ", Inst = 12 })  -- Nazjatar
+            tinsert(folder, { Name = "@SL", Inst = 13 })  -- Shadowlands
+        end
+        if Nx.DFMaps  then tinsert(folder, { Name = "@DI", Inst = 14 }) end -- Dragon Isles
+        if Nx.TWWMaps then tinsert(folder, { Name = "@KA", Inst = 15 }) end -- Khaz Algar
+        if Nx.MidMaps then tinsert(folder, { Name = "@QT", Inst = 16 }) end -- Quel'Talas
+    end
+
+    ---------------------------------------------------------------------------
+    -- Class Trainer folder: Add expansion-specific class trainers
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Class Trainer"] then
+        -- Death Knight: Available from WotLK (3.x)
+        if Nx.WOTLKMaps then
+            tinsert(folder, { T = L["Death Knight Trainer"], Tx = "Spell_Deathknight_ClassIcon" })
+        end
+        -- Monk: Available from MoP (5.x)
+        if Nx.MOPMaps then
+            tinsert(folder, { T = L["Monk Trainer"], Tx = "Class_Monk" })
+        end
+        -- Demon Hunter: Available from Legion (7.x)
+        if Nx.LegionMaps then
+            tinsert(folder, { T = L["Demon Hunter Trainer"], Tx = "ClassIcon_DemonHunter" })
+        end
+        -- Evoker: Available from Dragonflight (10.x)
+        if Nx.DFMaps then
+            tinsert(folder, { T = L["Evoker Trainer"], Tx = "ClassIcon_Evoker" })
+        end
+    end
+
+    ---------------------------------------------------------------------------
+    -- Trainer (Professions) folder: Add expansion-specific professions
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Trainer"] and folder.T == "^C" then
+        -- Jewelcrafting: Available from TBC (2.x)
+        if Nx.TBCMaps then
+            tinsert(folder, { Pre = L["Jewelcrafting"], Name = L["Trainer"], T = "^P", Tx = "INV_Misc_Gem_02" })
+        end
+        -- Inscription: Available from WotLK (3.x)
+        if Nx.WOTLKMaps then
+            tinsert(folder, { Pre = L["Inscription"], Name = L["Trainer"], T = "^P", Tx = "INV_Inscription_Tradeskill01" })
+        end
+        -- Archaeology: Available from Cata (4.x)
+        if Nx.CataMaps then
+            tinsert(folder, { Pre = L["Archaeology"], Name = L["Trainer"], T = "^P", Tx = "trade_archaeology" })
+        end
+        -- Flying Trainer: Available from Wotlk (3.x)
+        if Nx.WOTLKMaps then
+            tinsert(folder, { Pre = L["Flying"], Name = L["Trainer"], T = "^S", Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11" })
+        end
+    end
+
+    ---------------------------------------------------------------------------
+    -- Common Place folder: Add expansion-specific features
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Common Place"] then
+        -- Barber: Available from WotLK (3.x)
+        if Nx.WOTLKMaps then
+            tinsert(folder, { T = L["Barber"], Tx = "INV_Misc_Comb_02" })
+        end
+        -- Void Storage: Available from Cata (4.3)
+        if Nx.CataMaps then
+            tinsert(folder, { T = L["Void Storage"], Tx = "spell_nature_astralrecalgroup" })
+        end
+        -- Transmogrifier: Available from Cata (4.3)
+        if Nx.CataMaps then
+            tinsert(folder, { T = L["Transmogrifier"], Tx = "INV_Arcane_Orb" })
+        end
+        -- Battle Pet Trainer: Available from MoP (5.x)
+        if Nx.MOPMaps then
+            tinsert(folder, { T = L["Battle Pet Trainer"], Tx = "INV_Pet_BattlePetTraining" })
+        end
+    end
+
+    ---------------------------------------------------------------------------
+    -- Gather folder: Add expansion-specific gathering types
+    ---------------------------------------------------------------------------
+    if folder.Name == L["Gather"] then
+        -- Timber (Lumbermill): Available from WoD (6.x)
+        if Nx.WODMaps then
+            tinsert(folder, { Name = L["Timber"], Tx = "INV_Tradeskillitem_03", Persist = "ShowGatherL" })
+        end
+        -- Artifacts (Archaeology): Available from Cata (4.x)
+        if Nx.CataMaps then
+            tinsert(folder, { Name = L["Artifacts"], T = "$ A", Id = "Art", Tx = "Trade_Archaeology", Persist = "ShowGatherA" })
+        end
+        -- Everfrost: Available from WotLK (3.x - Storm Peaks specific)
+        if Nx.WOTLKMaps then
+            tinsert(folder, { Name = L["Everfrost"], T = "$ E", Id = "Everfrost", Tx = "spell_shadow_teleport" })
+        end
+        -- Gas (Outland Clouds): Available from TBC (2.x)
+        if Nx.TBCMaps then
+            tinsert(folder, { Name = L["Gas"], T = "$ G", Id = "Gas", Tx = "inv_gizmo_zapthrottlegascollector" })
+        end
+    end
+
+end
+
+-------------------------------------------------------------------------------
+-- Top-level GuideInfo additions (not inside folders)
+-- These are direct entries that show up in the main guide list
+-------------------------------------------------------------------------------
+
+-- Lightforged Beacon: Available from Legion 7.3+ (Argus)
+if Nx.LegionMaps then
+    -- Insert after Flight Master (which is typically at position 3)
+    -- Find the position after Flight Master
+    local insertPos = 4  -- Default position
+    for i, folder in ipairs(Nx.GuideInfo) do
+        if folder.T == L["Flight Master"] then
+            insertPos = i + 1
             break
         end
     end
+    tinsert(Nx.GuideInfo, insertPos, { T = L["Lightforged Beacon"], Tx = "INV_Alchemy_AstralAlchemistStone" })
 end
 
 Nx.Map.Guide.FindType = nil
@@ -1044,7 +1150,10 @@ function Nx.Map.Guide:CalcType (folder)
             if s2 == "C" then
                 local _, cls = UnitClass ("player")
                 cls = Nx.Util_CapStr (cls)
-                cls = gsub (cls, "Deathknight", "Death Knight")
+                -- Handle multi-word class names from the API
+                cls = gsub (cls, "Deathknight", "Death Knight")   -- WotLK+
+                cls = gsub (cls, "Demonhunter", "Demon Hunter")   -- Legion+
+                -- Evoker doesn't need conversion (single word)   -- DF+
                 return L[cls .. " Trainer"], true
             elseif s21 == "F" then
                 local s22 = strsub (s2, 2, 2)
@@ -1745,12 +1854,18 @@ function Nx.Map.Guide:UpdateTravelIcons (hideFac)
         if winfo.Connections then
             for id, zcon in pairs (winfo.Connections) do
                 for n, con in ipairs (zcon) do
-                    local wx, wy = con.StartX, con.StartY
-                    local icon = map:AddIconPt ("!POI", wx, wy, 0, nil, "Interface\\Icons\\Spell_Nature_FarSight")
-                    map:SetIconTip (icon, L["Connection to"] .. " " ..  Map.MapWorldInfo[con.EndMapId].Name)
-                    local wx, wy = con.EndX, con.EndY
-                    local icon = map:AddIconPt ("!POI", wx, wy, 0, nil, "Interface\\Icons\\Spell_Nature_FarSight")
-                    map:SetIconTip (icon, L["Connection to"] .. " " ..  Map.MapWorldInfo[con.StartMapId].Name)
+                    local endInfo = Map.MapWorldInfo[con.EndMapId]
+                    local startInfo = Map.MapWorldInfo[con.StartMapId]
+                    if endInfo then
+                        local wx, wy = con.StartX, con.StartY
+                        local icon = map:AddIconPt ("!POI", wx, wy, 0, nil, "Interface\\Icons\\Spell_Nature_FarSight")
+                        map:SetIconTip (icon, L["Connection to"] .. " " .. endInfo.Name)
+                    end
+                    if startInfo then
+                        local wx, wy = con.EndX, con.EndY
+                        local icon = map:AddIconPt ("!POI", wx, wy, 0, nil, "Interface\\Icons\\Spell_Nature_FarSight")
+                        map:SetIconTip (icon, L["Connection to"] .. " " .. startInfo.Name)
+                    end
                 end
             end
         end
@@ -2880,6 +2995,21 @@ Nx.Map.Guide.ItemCats = {
         Item = -8,
     },
 }
+
+-------------------------------------------------------------------------------
+-- Dynamic additions to ItemCats based on expansion version
+-- Add expansion-specific glyph categories
+-------------------------------------------------------------------------------
+for _, category in ipairs(Nx.Map.Guide.ItemCats) do
+    if category.Name == "Glyphs" then
+        -- Evoker Glyphs: Available from Dragonflight (10.x)
+        if Nx.DFMaps then
+            tinsert(category, { T = "Evoker", Item = -9 })
+        end
+        break
+    end
+end
+
 Nx.Map.Guide.ItemStatNames = {
     "",
     "^%d - %d %s",
@@ -2926,8 +3056,11 @@ Nx.Map.Guide.ItemStatLen = {
     0, 0, 0, 0,
     -2
 }
+-- Classes that can use items (order matters - matches item data indexes)
+-- Vanilla classes: Druid, Hunter, Mage, Paladin, Priest, Rogue, Shaman, Warlock, Warrior
+-- WotLK+: Death Knight | MoP+: Monk | Legion+: Demon Hunter | DF+: Evoker
 Nx.Map.Guide.ItemStatAllowableClass = {
-    "Death Knight",
+    "Death Knight",    -- WotLK+
     "Druid",
     "Hunter",
     "Mage",
@@ -2937,8 +3070,9 @@ Nx.Map.Guide.ItemStatAllowableClass = {
     "Shaman",
     "Warlock",
     "Warrior",
-    "Monk",
-    "Demon Hunter",
+    "Monk",            -- MoP+
+    "Demon Hunter",    -- Legion+
+    "Evoker",          -- DF+
 }
 Nx.Map.Guide.ItemStatRequiredSkill = {
     "Alchemy",
@@ -3006,7 +3140,8 @@ Nx.Map.Guide.ItemTypeNames = {
     "Elixir",
     "Flask",
     "Potion",
-    "Death Knight",
+    -- Class names for glyphs and class-restricted items
+    "Death Knight",    -- WotLK+
     "Druid",
     "Hunter",
     "Mage",
@@ -3016,8 +3151,10 @@ Nx.Map.Guide.ItemTypeNames = {
     "Shaman",
     "Warlock",
     "Warrior",
-    "Monk",
-    "Demon Hunter",
+    "Monk",            -- MoP+
+    "Demon Hunter",    -- Legion+
+    "Evoker",          -- DF+
+    -- Gem colors
     "Red",
     "Yellow",
     "Blue",

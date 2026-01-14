@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- NxWarehouse - Warehouse Inventory Tracker
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 -------------------------------------------------------------------------------
@@ -50,6 +50,94 @@ BINDING_NAME_NxTOGGLEWAREHOUSE = L["NxTOGGLEWAREHOUSE"]
 -- API COMPATIBILITY
 -- Wrapper for container item info API changes
 -------------------------------------------------------------------------------
+
+local CharBags = {}
+local BankBags = {}
+local BandBags = {}
+local BandBankActive = false
+
+-- Check if Enum.BagIndex exists (not available in all Classic versions)
+if Enum and Enum.BagIndex then
+    -- Character bags
+    CharBags = {
+        Enum.BagIndex.Backpack,
+        Enum.BagIndex.Bag_1,
+        Enum.BagIndex.Bag_2,
+        Enum.BagIndex.Bag_3,
+        Enum.BagIndex.Bag_4,
+    }
+
+    if Nx.isRetail then
+        BandBankActive = true
+        local CharBankTabsActive = Enum.BagIndex.CharacterBankTab_1 ~= nil
+        if Enum.BagIndex.ReagentBag then
+            table.insert(CharBags, Enum.BagIndex.ReagentBag)
+        end
+
+        if CharBankTabsActive then
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_1)
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_2)
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_3)
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_4)
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_5)
+            table.insert(BankBags, Enum.BagIndex.CharacterBankTab_6)
+        else
+            table.insert(BankBags, Enum.BagIndex.Bank)
+            table.insert(BankBags, Enum.BagIndex.BankBag_1)
+            table.insert(BankBags, Enum.BagIndex.BankBag_2)
+            table.insert(BankBags, Enum.BagIndex.BankBag_3)
+            table.insert(BankBags, Enum.BagIndex.BankBag_4)
+            table.insert(BankBags, Enum.BagIndex.BankBag_5)
+            table.insert(BankBags, Enum.BagIndex.BankBag_6)
+            table.insert(BankBags, Enum.BagIndex.BankBag_7)
+        end
+
+        if Enum.BagIndex.AccountBankTab_1 then
+            BandBags = {
+                Enum.BagIndex.AccountBankTab_1,
+                Enum.BagIndex.AccountBankTab_2,
+                Enum.BagIndex.AccountBankTab_3,
+                Enum.BagIndex.AccountBankTab_4,
+                Enum.BagIndex.AccountBankTab_5,
+            }
+        end
+    elseif Nx.isClassicEra then
+        table.insert(BankBags, Enum.BagIndex.Bank)
+        table.insert(BankBags, Enum.BagIndex.BankBag_1)
+        table.insert(BankBags, Enum.BagIndex.BankBag_2)
+        table.insert(BankBags, Enum.BagIndex.BankBag_3)
+        table.insert(BankBags, Enum.BagIndex.BankBag_4)
+        table.insert(BankBags, Enum.BagIndex.BankBag_5)
+        table.insert(BankBags, Enum.BagIndex.BankBag_6)
+        table.insert(BankBags, Enum.BagIndex.BankBag_7)
+        if Enum.BagIndex.ReagentBag then
+            table.insert(BankBags, Enum.BagIndex.ReagentBag)
+        end
+    else
+        -- MoP Classic / Cata Classic / other classic versions
+        if Enum.BagIndex.Bank then
+            table.insert(BankBags, Enum.BagIndex.Bank)
+        end
+        if Enum.BagIndex.BankBag_1 then
+            table.insert(BankBags, Enum.BagIndex.BankBag_1)
+            table.insert(BankBags, Enum.BagIndex.BankBag_2)
+            table.insert(BankBags, Enum.BagIndex.BankBag_3)
+            table.insert(BankBags, Enum.BagIndex.BankBag_4)
+            table.insert(BankBags, Enum.BagIndex.BankBag_5)
+            table.insert(BankBags, Enum.BagIndex.BankBag_6)
+            table.insert(BankBags, Enum.BagIndex.BankBag_7)
+        end
+    end
+
+    -- Keyring for older classic versions
+    if not Nx.CataMaps and Enum.BagIndex.Keyring then
+        table.insert(CharBags, Enum.BagIndex.Keyring)
+    end
+else
+    -- Fallback for versions without Enum.BagIndex (use numeric constants)
+    CharBags = { 0, 1, 2, 3, 4 }  -- BACKPACK_CONTAINER through bag 4
+    BankBags = { -1, 5, 6, 7, 8, 9, 10, 11 }  -- BANK_CONTAINER and bank bags
+end
 
 function GetContainerItemInfo(bag, slot)
     local containerInfo = C_Container.GetContainerItemInfo(bag, slot)
@@ -127,6 +215,8 @@ local CurrencyArray = {
     1220, 1226, 1268, 1273, 1275, 1299, 1314, 1324, 1325, 1342, 1355, 1356,
     1357, 1379, 1416, 1501, 1506, 1508, 1533
 }
+
+local GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo or GetCurrencyInfo
 
 -------------------------------------------------------------------------------
 -- OPTIONS CONFIGURATION
@@ -840,7 +930,7 @@ function CarboniteWarehouse:OnInitialize()
     CarboniteWarehouse:RegisterEvent("BAG_UPDATE","EventHandler")
     CarboniteWarehouse:RegisterEvent("PLAYERBANKSLOTS_CHANGED", "EventHandler")
     --CarboniteWarehouse:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", "EventHandler")
-    CarboniteWarehouse:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED", "EventHandler")
+    --CarboniteWarehouse:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED", "EventHandler")
     CarboniteWarehouse:RegisterEvent("BANKFRAME_OPENED", "EventHandler")
     CarboniteWarehouse:RegisterEvent("BANKFRAME_CLOSED", "EventHandler")
     CarboniteWarehouse:RegisterEvent("GUILDBANKFRAME_OPENED", "EventHandler")
@@ -896,58 +986,109 @@ function CarboniteWarehouse:OnInitialize()
     tinsert (Nx.BarData,{"MapWarehouse", L["-Warehouse-"], Nx.Warehouse.OnButToggleWarehouse, false })
     Nx.Map.Maps[1]:CreateToolBar()
 
---[[    local ttHooks = {
-        "SetAction",
-        "SetAuctionItem",
-        "SetBagItem",
-        "SetGuildBankItem",
-        "SetHyperlink",
-        "SetInboxItem",
-        "SetInventoryItem",
-        "SetLootItem",
-        "SetLootRollItem",
-        "SetMerchantItem",
-        "SetCraftItem",
-        "SetQuestItem",
-        "SetQuestLogItem",
-        "SetTradeTargetItem",
-        "SetTradeSkillItem",
-    }
+    ---------------------------------------------------------------------------
+    -- Tooltip Hooks - Version-specific
+    -- Priority: GameTooltip_UpdateStyle > TooltipDataProcessor > Individual hooks
+    ---------------------------------------------------------------------------
 
-    for k, name in ipairs (ttHooks) do
-            hooksecurefunc (GameTooltip, name, Nx.Warehouse.TooltipProcess)
-            hooksecurefunc (ItemRefTooltip, name, Nx.Warehouse.ReftipProcess)
+    if GameTooltip_UpdateStyle then
+        -- GameTooltip_UpdateStyle: Available in Classic and Shadowlands
+        -- This is the simplest approach - one hook catches all tooltip updates
+        hooksecurefunc("GameTooltip_UpdateStyle", Nx.Warehouse.TooltipProcess)
+
+    elseif TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
+        -- TooltipDataProcessor: Dragonflight+ modern tooltip system
+        -- Used when GameTooltip_UpdateStyle is not available
+        TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
+            if tooltip == GameTooltip then
+                Nx.Warehouse.TooltipProcess()
+            elseif tooltip == ItemRefTooltip then
+                Nx.Warehouse.ReftipProcess()
+            end
+        end)
+
+    else
+        -- Fallback: Individual tooltip method hooks
+        -- Used when neither GameTooltip_UpdateStyle nor TooltipDataProcessor is available
+        local ttHooks = {
+            "SetAction",
+            "SetBagItem",
+            "SetHyperlink",
+            "SetInboxItem",
+            "SetInventoryItem",
+            "SetLootItem",
+            "SetLootRollItem",
+            "SetMerchantItem",
+            "SetQuestItem",
+            "SetQuestLogItem",
+            "SetTradeTargetItem",
+            "SetAuctionItem",
+        }
+
+        -- SetGuildBankItem: Available from TBC+ (guild banks added in TBC 2.3)
+        if Nx.TBCMaps then
+            tinsert(ttHooks, "SetGuildBankItem")
+        end
+
+        -- SetCraftItem / SetTradeSkillItem: Classic crafting system
+        tinsert(ttHooks, "SetCraftItem")
+        tinsert(ttHooks, "SetTradeSkillItem")
+
+        -- SetRecipeReagentItem / SetRecipeResultItem: Newer crafting system (WoD+)
+        if Nx.WODMaps then
+            tinsert(ttHooks, "SetRecipeReagentItem")
+            tinsert(ttHooks, "SetRecipeResultItem")
+        end
+
+        -- Hook the tooltip methods that exist in this version
+        for k, name in ipairs(ttHooks) do
+            if GameTooltip[name] then
+                hooksecurefunc(GameTooltip, name, Nx.Warehouse.TooltipProcess)
+            end
+            if ItemRefTooltip[name] then
+                hooksecurefunc(ItemRefTooltip, name, Nx.Warehouse.ReftipProcess)
+            end
+        end
     end
-]]--
-    hooksecurefunc("GameTooltip_UpdateStyle", Nx.Warehouse.TooltipProcess);
 
-    hooksecurefunc("PlaceAuctionBid", function(ltype, index, bid)
+    ---------------------------------------------------------------------------
+    -- Auction House Hooks - Version-specific
+    -- Old AH API (pre-BFA 8.3) vs New AH API (BFA 8.3+)
+    ---------------------------------------------------------------------------
+
+    -- Old Auction House API: Classic through BFA 8.2
+    if PlaceAuctionBid then
+        hooksecurefunc("PlaceAuctionBid", function(ltype, index, bid)
             local link = GetAuctionItemLink(ltype, index)
             local _, _, count, _, _, _, _, _, _, buyout = GetAuctionItemInfo(ltype, index)
             if not link or bid ~= buyout then
                 return
             end
-                    Nx.Warehouse.onAuctionHouseUpdate(link, count)
-    end)
-
-    if Nx.isMoPClassic then
-        hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
-                local name, link = C_Item.GetItemInfo(itemID)
-                if not link or not count then
-                    return
-                end
-                Nx.Warehouse.onAuctionHouseUpdate(link, count)
+            Nx.Warehouse.onAuctionHouseUpdate(link, count)
         end)
     end
 
-    hooksecurefunc("CancelAuction", function(index)
+    if CancelAuction then
+        hooksecurefunc("CancelAuction", function(index)
             local link = GetAuctionItemLink("owner", index)
             local _, _, count = GetAuctionItemInfo("owner", index)
             if not link or not count or count == 0 then
                 return
             end
-                    Nx.Warehouse.onAuctionHouseUpdate(link, count)
-    end)
+            Nx.Warehouse.onAuctionHouseUpdate(link, count)
+        end)
+    end
+
+    -- New Auction House API: BFA 8.3+ and MoP Classic (retail client base)
+    if C_AuctionHouse and C_AuctionHouse.ConfirmCommoditiesPurchase then
+        hooksecurefunc(C_AuctionHouse, "ConfirmCommoditiesPurchase", function(itemID, count)
+            local name, link = C_Item.GetItemInfo(itemID)
+            if not link or not count then
+                return
+            end
+            Nx.Warehouse.onAuctionHouseUpdate(link, count)
+        end)
+    end
 
     Nx:AddToConfig("Warehouse Module",WarehouseOptions(),L["Warehouse Module"])
     tinsert(Nx.BrokerMenuTemplate,{ text = L["Toggle Warehouse"], func = function() Nx.Warehouse:ToggleShow() end })
@@ -2039,7 +2180,7 @@ function Nx.Warehouse:Update()
                         list:ItemSet(2, format (L[" Valor: %s%s|r  Justice: %s%s"], hicol, ch["Currency"][396], hicol, ch["Currency"][395]))
                         list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\pvecurrency-valor")
                     end
---[[                    if ch["Currency"][823] then
+                    if ch["Currency"][823] then
                         list:ItemAdd(cnum)
                         list:ItemSet(2, format (L[" Apexis Crystals: %s%s"], hicol, ch["Currency"][823]))
                         list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\inv_apexis_draenor")
@@ -2058,7 +2199,7 @@ function Nx.Warehouse:Update()
                         list:ItemAdd(cnum)
                         list:ItemSet(2, format (L[" Order Resources: %s%s"], hicol, ch["Currency"][1220]))
                         list:ItemSetButton ("Warehouse", false, "Interface\\Icons\\inv_orderhall_orderresources")
-                    end --]]
+                    end
                 else
                     list:ItemAdd(cnum)
                     list:ItemSet(2, format (" " .. L["No Currency Data Saved"]))
@@ -3178,11 +3319,14 @@ function Nx.Warehouse:CaptureItems()
     local inv = {}
     ch["WareBags"] = inv
 
---    self:AddBag (KEYRING_CONTAINER, false, inv)
-    self:AddBag (BACKPACK_CONTAINER, false, inv)
-
-    for bag = 1, NUM_BAG_SLOTS do
+    for i, bag in ipairs(CharBags) do
         self:AddBag (bag, false, inv)
+    end
+
+    if BandBankActive then
+        for i, bandbag in ipairs(BandBags) do
+            self:AddBag (bandbag, false, inv)
+        end
     end
 
 --    self:prtdb ("Bags %d", Nx.Util_tcount (inv))
@@ -3190,14 +3334,9 @@ function Nx.Warehouse:CaptureItems()
     -- Bank slots
 
     if self.BankOpen then
---    if BankFrame and BankFrame:IsShown() then
-
         local inv = {}
-
-        self:AddBag (BANK_CONTAINER, true, inv)
-
-        for bag = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
-            self:AddBag (bag, true, inv)
+        for i, bankbag in ipairs(BankBags) do
+            self:AddBag (bankbag, true, inv)
         end
 
         if next (inv) then        -- Get any bank items?
@@ -3225,6 +3364,9 @@ function Nx.Warehouse:ScanRBank()
 end
 
 function Nx.Warehouse:AddBag (bag, isBank, inv)
+    if bag == nil then
+        return
+    end
 
     local slots = C_Container.GetContainerNumSlots (bag)
     for slot = 1, slots do
@@ -3817,8 +3959,8 @@ function Nx.Warehouse:RecordCharacterLogin()
     ch["LXP"] = UnitXP ("player")
     ch["LXPMax"] = UnitXPMax ("player")
     ch["LXPRest"] = GetXPExhaustion() or 0
-    local _, arena = GetCurrencyInfo (390)
-    local _, honor = GetCurrencyInfo (1901)
+    local _, arena =  GetCurrencyInfo(390)
+    local _, honor = GetCurrencyInfo(1901)
     ch["Conquest"] = arena            --V4 gone GetArenaCurrency()
     ch["Honor"] = honor            --V4 gone GetHonorCurrency()
     Nx.Warehouse:RecordCharacter()

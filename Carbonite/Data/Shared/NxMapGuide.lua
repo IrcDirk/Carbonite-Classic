@@ -490,8 +490,8 @@ for _, folder in ipairs(Nx.GuideInfo) do
         if Nx.CataMaps then
             tinsert(folder, { Pre = L["Archaeology"], Name = L["Trainer"], T = "^P", Tx = "trade_archaeology" })
         end
-        -- Flying Trainer: Available from TBC (2.x)
-        if Nx.TBCMaps then
+        -- Flying Trainer: Available from Wotlk (3.x)
+        if Nx.WOTLKMaps then
             tinsert(folder, { Pre = L["Flying"], Name = L["Trainer"], T = "^S", Tx = "Interface\\AddOns\\Carbonite\\Gfx\\Icons\\inv_scroll_11" })
         end
     end

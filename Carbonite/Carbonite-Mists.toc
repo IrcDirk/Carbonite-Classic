@@ -1,4 +1,4 @@
-## Interface: 50502
+## Interface: 50503
 ## Title: Carbonite Maps - Classic @project-version@
 ## Version: @project-version@
 ## Author: No one

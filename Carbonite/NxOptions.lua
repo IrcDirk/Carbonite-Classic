@@ -4675,7 +4675,20 @@ end
 -- Open options
 
 function Nx.Opts:Open (pageName)
-    Settings.OpenToCategory("Carbonite")
+    -- Use the registered options frame
+    if Settings and Settings.OpenToCategory then
+        -- In retail 11.0+, we need to find the category by name
+        local category = Settings.GetCategory and Settings.GetCategory("Carbonite")
+        if category then
+            Settings.OpenToCategory(category:GetID())
+        end
+    elseif InterfaceOptionsFrame_OpenToCategory then
+        -- Classic fallback
+        if Nx.optionsFrame then
+            InterfaceOptionsFrame_OpenToCategory(Nx.optionsFrame)
+            InterfaceOptionsFrame_OpenToCategory(Nx.optionsFrame)
+        end
+    end
 end
 
 --------
@@ -4773,12 +4786,14 @@ end
 -- Show or hide action bar gryphon graphics
 --
 function Nx.Opts:NXCmdGryphonsUpdate()
-    if Nx.db.profile.General.GryphonsHide then
-        MainMenuBarLeftEndCap:Hide()
-        MainMenuBarRightEndCap:Hide()
-    else
-        MainMenuBarLeftEndCap:Show()
-        MainMenuBarRightEndCap:Show()
+    if not Nx.MidMaps then
+        if Nx.db.profile.General.GryphonsHide then
+            MainMenuBarLeftEndCap:Hide()
+            MainMenuBarRightEndCap:Hide()
+        else
+            MainMenuBarLeftEndCap:Show()
+            MainMenuBarRightEndCap:Show()
+        end
     end
 end
 

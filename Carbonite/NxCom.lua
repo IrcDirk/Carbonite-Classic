@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- NxCom - Communication System
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 ---------------------------------------------------------------------------------------
@@ -1382,7 +1382,10 @@ function Nx.Com:OnUpdate(elapsed)
         if hm < 1 then
             hm = 1
         end
-        local hper = h / hm * 20
+	local hper = 1
+	if not Nx.MidMaps then
+            hper = h / hm * 20
+        end
         if hper > 0 then
             hper = max(hper, 1)
         end
@@ -1419,8 +1422,12 @@ function Nx.Com:OnUpdate(elapsed)
             if UnitIsDeadOrGhost("target") then
                 h = 0
             end
-            local hm = max(UnitHealthMax("target"), 1)
-            local hper = h / hm * 20
+            local hm = UnitHealthMax("target")
+            local hper = 1
+	    if not Nx.MidMaps then
+                hper = h / hm * 20
+		hm = max(UnitHealthMax("target"), 1)
+            end
             if hper > 0 then
                 hper = max(hper, 1)
             end

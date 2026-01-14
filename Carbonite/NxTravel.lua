@@ -57,11 +57,11 @@ function Nx.Travel:Init()
 
     -- Cache flying skill spell names for each expansion
     -- These are used to determine if the player can fly in specific zones
-    self.WrathFlyName = GetSpellInfo(54197) or ""       -- Cold Weather Flying (Northrend)
-    self.AzerothFlyName = GetSpellInfo(90267) or ""     -- Flight Master's License (Azeroth)
-    self.PandariaFlyName = GetSpellInfo(115913) or ""   -- Wisdom of the Four Winds
-    self.DraenorFlyName = GetSpellInfo(191645) or ""    -- Draenor Pathfinder
-    self.LegionFlyName = GetSpellInfo(233368) or ""     -- Broken Isles Pathfinder
+    self.WrathFlyName    = C_Spell.GetSpellInfo(54197)  and C_Spell.GetSpellInfo(54197).name or ""  -- Cold Weather Flying (Northrend)
+    self.AzerothFlyName  = C_Spell.GetSpellInfo(90267)  and C_Spell.GetSpellInfo(90267).name or ""  -- Flight Master's License (Azeroth)
+    self.PandariaFlyName = C_Spell.GetSpellInfo(115913) and C_Spell.GetSpellInfo(115913).name or "" -- Wisdom of the Four Winds
+    self.DraenorFlyName  = C_Spell.GetSpellInfo(191645) and C_Spell.GetSpellInfo(191645).name or "" -- Draenor Pathfinder
+    self.LegionFlyName   = C_Spell.GetSpellInfo(233368) and C_Spell.GetSpellInfo(233368).name or "" -- Broken Isles Pathfinder
 end
 
 ---------------------------------------------------------------------------------------
@@ -903,26 +903,37 @@ function Nx.Travel:GetRidingSkill()
         return 0
     end
 
-    -- Riding skill spell IDs and their corresponding skill levels
-    local RidingSpells = {
-        [75] = GetSpellInfo(33389) or "",     -- Apprentice Riding
-        [150] = GetSpellInfo(33392) or "",    -- Journeyman Riding
-        [225] = GetSpellInfo(34092) or "",    -- Expert Riding
-        [300] = GetSpellInfo(34093) or "",    -- Artisan Riding
-        [375] = GetSpellInfo(90265) or "",    -- Master Riding
-    }
+    local RidingSkill = 0
 
-    local SkillRiding = 0
+    if Nx.OldRidingSkill then
+	local RidingSkillName = L["Riding"]
+        for skillIndex = 1, GetNumSkillLines() do
+		PlayerSkill = {GetSkillLineInfo(skillIndex)}
+		if PlayerSkill[1] == RidingSkillName then
+			RidingSkill = PlayerSkill[4]
+                       	break
+		end
+	end
+	return RidingSkill
+    else
+    -- Riding skill spell IDs and their corresponding skill levels
+        local RidingSpells = {
+            [75]  = 33389, -- Apprentice Riding
+            [150] = 33392, -- Journeyman Riding
+            [225] = 34092, -- Expert Riding
+            [300] = 34093, -- Artisan Riding
+            [375] = 90265, -- Master Riding
+        }
 
     -- Check each riding skill from lowest to highest
-    for skill, name in pairs(RidingSpells) do
-        if GetSpellInfo(name) then
-            SkillRiding = skill
-            break
+        for skill, spellId in pairs(RidingSpells) do
+            if C_Spell.GetSpellInfo(spellId) then
+                RidingSkill = skill
+                break
+            end
         end
     end
-
-    return SkillRiding
+    return RidingSkill
 end
 
 ---------------------------------------------------------------------------------------

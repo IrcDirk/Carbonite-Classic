@@ -1,0 +1,15 @@
+## Interface: 20505
+## Title: Carbonite Quest - Classic @project-version@
+## Version: @project-version@
+## Author: No One
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXQuest
+## RequiredDeps: Carbonite
+
+Locales\locales.xml
+Data\Shared\QuestCats.lua
+Data\tbc\QuestNPC.lua
+Data\tbc\QuestData.xml
+NxQuest.lua

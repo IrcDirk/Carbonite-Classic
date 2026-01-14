@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Carbonite - Addon for World of Warcraft(tm)
 -- Copyright 2007-2012 Carbon Based Creations, LLC
 --
@@ -87,12 +87,30 @@ BINDING_NAME_NxMAPSKIPTARGET    = L["NxMAPSKIPTARGET"]
 -- Flags for different WoW client versions
 -------------------------------------------------------------------------------
 
-Nx.isClassic      = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
-Nx.isTBCClassic   = (WOW_PROJECT_ID == WOW_PROJECT_TBC_CLASSIC)
-Nx.isWotlkClassic = (WOW_PROJECT_ID == WOW_PROJECT_WOTLK_CLASSIC)
+Nx.isClassic      = (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE)
+Nx.isClassicEra   = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+Nx.isTBCClassic   = (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
+Nx.isWotlkClassic = (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
 Nx.isCataClassic  = (WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC)
 Nx.isMoPClassic   = (WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC)
+Nx.isRetail       = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
+
+Nx.OldMapIDs  = select(4, GetBuildInfo()) < 49999
+
+Nx.TBCMaps    = select(4, GetBuildInfo()) > 19999
+Nx.WOTLKMaps  = select(4, GetBuildInfo()) > 29999
+Nx.CataMaps   = select(4, GetBuildInfo()) > 39999
+Nx.MOPMaps    = select(4, GetBuildInfo()) > 49999
+Nx.WODMaps    = select(4, GetBuildInfo()) > 59999
+Nx.LegionMaps = select(4, GetBuildInfo()) > 69999
+Nx.BFAMaps    = select(4, GetBuildInfo()) > 79999
+Nx.SLMaps     = select(4, GetBuildInfo()) > 89999
+Nx.DFMaps     = select(4, GetBuildInfo()) > 99999
+Nx.TWWMaps    = select(4, GetBuildInfo()) > 109999
+Nx.MidMaps    = select(4, GetBuildInfo()) > 119999
+
 Nx.BlobsAvailable = select(4, GetBuildInfo()) > 39999
+Nx.OldRidingSkill = select(4, GetBuildInfo()) < 40000
 Nx.MaxPlayerLevel = GetMaxLevelForExpansionLevel(LE_EXPANSION_LEVEL_CURRENT)
 
 -------------------------------------------------------------------------------
@@ -1036,6 +1054,9 @@ function Nx:InitEvents()
     LibStub("AceEvent-3.0"):Embed(AuctionAssist)
     LibStub("AceEvent-3.0"):Embed(Travel)
 
+    ---------------------------------------------------------------------------
+    -- Core Events (all versions)
+    ---------------------------------------------------------------------------
     Nx:RegisterEvent("PLAYER_LOGIN", "OnPlayer_login")
     Nx:RegisterEvent("UPDATE_MOUSEOVER_UNIT", "OnUpdate_mouseover_unit")
     Nx:RegisterEvent("PLAYER_REGEN_DISABLED", "OnPlayer_regen_disabled")
@@ -1046,27 +1067,54 @@ function Nx:InitEvents()
     Nx:RegisterEvent("GROUP_ROSTER_UPDATE", "OnParty_members_changed")
     Nx:RegisterEvent("UPDATE_BATTLEFIELD_SCORE", "OnUpdate_battlefield_score")
 
+    ---------------------------------------------------------------------------
+    -- Communication Events
+    ---------------------------------------------------------------------------
     Com:RegisterEvent("PLAYER_LEAVING_WORLD", "OnEvent")
     Com:RegisterEvent("FRIENDLIST_UPDATE", "OnFriendguild_update")
     Com:RegisterEvent("GUILD_ROSTER_UPDATE", "OnFriendguild_update")
-    --Com:RegisterEvent("SOCIAL_QUEUE_UPDATE", "OnFriendguild_update")
     Com:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED", "OnFriendguild_update")
     Com:RegisterEvent("GROUP_ROSTER_UPDATE", "OnFriendguild_update")
     Com:RegisterEvent("CHAT_MSG_CHANNEL_JOIN", "OnChatEvent")
     Com:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", "OnChatEvent")
     Com:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE", "OnChatEvent")
     Com:RegisterEvent("CHAT_MSG_CHANNEL", "OnChat_msg_channel")
-    Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
 
+    -- SOCIAL_QUEUE_UPDATE: Available from Legion+ (group finder social queues)
+    if Nx.LegionMaps then
+        Com:RegisterEvent("SOCIAL_QUEUE_UPDATE", "OnFriendguild_update")
+    end
+
+    -- CHAT_MSG_SYSTEM: Classic/older versions only (handled differently in retail)
+    if not Nx.BFAMaps then
+        Com:RegisterEvent("CHAT_MSG_SYSTEM", "OnChat_msg_channel")
+    end
+
+    ---------------------------------------------------------------------------
+    -- Auction House Events (API changed in BFA 8.3)
+    ---------------------------------------------------------------------------
     AuctionAssist:RegisterEvent("AUCTION_HOUSE_SHOW", "OnAuction_house_show")
     AuctionAssist:RegisterEvent("AUCTION_HOUSE_CLOSED", "OnAuction_house_closed")
-    AuctionAssist:RegisterEvent("AUCTION_ITEM_LIST_UPDATE", "OnAuction_item_list_update")
 
+    -- REPLICATE_ITEM_LIST_UPDATE: New auction house API (BFA 8.3+)
+    -- AUCTION_ITEM_LIST_UPDATE: Classic auction house API (pre-BFA)
+    if Nx.BFAMaps then
+        AuctionAssist:RegisterEvent("REPLICATE_ITEM_LIST_UPDATE", "OnAuction_item_list_update")
+    else
+        AuctionAssist:RegisterEvent("AUCTION_ITEM_LIST_UPDATE", "OnAuction_item_list_update")
+    end
+
+    ---------------------------------------------------------------------------
+    -- Guide Events (all versions)
+    ---------------------------------------------------------------------------
     Guide:RegisterEvent("MERCHANT_SHOW", "OnMerchant_show")
     Guide:RegisterEvent("MERCHANT_UPDATE", "OnMerchant_update")
     Guide:RegisterEvent("GOSSIP_SHOW", "OnGossip_show")
     Guide:RegisterEvent("TRAINER_SHOW", "OnTrainer_show")
 
+    ---------------------------------------------------------------------------
+    -- Travel Events (all versions)
+    ---------------------------------------------------------------------------
     Travel:RegisterEvent("TAXIMAP_OPENED", "OnTaximap_opened")
 end
 

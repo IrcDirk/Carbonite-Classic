@@ -992,11 +992,12 @@ function Nx:SetTooltipText(str)
                 GameTooltip:AddLine(line, 1, 1, 1, true)  -- Wrap text
             end
         end
-
-        GameTooltip:Show()
     else
         GameTooltip:SetText(str, 1, 1, 1, 1, true)  -- Single line with wrap
     end
+
+    -- Always call Show() to ensure tooltip is properly sized and displayed
+    GameTooltip:Show()
 end
 
 -------------------------------------------------------------------------------

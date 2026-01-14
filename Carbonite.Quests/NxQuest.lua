@@ -59,26 +59,182 @@ local wipe = wipe or table.wipe
 -- WoW API functions used frequently
 local GetTime = GetTime
 local UnitLevel = UnitLevel
-local GetNumQuestLogEntries = GetNumQuestLogEntries
-local GetQuestLogTitle = GetQuestLogTitle
+-- GetNumQuestLogEntries, GetQuestLogTitle, SelectQuestLogEntry, GetQuestLogSelection 
+-- are defined after shims section
 local GetQuestLogLeaderBoard = GetQuestLogLeaderBoard
 local GetNumQuestLeaderBoards = GetNumQuestLeaderBoards
-local SelectQuestLogEntry = SelectQuestLogEntry
-local GetQuestLogSelection = GetQuestLogSelection
 local GetQuestLogQuestText = GetQuestLogQuestText
-local GetQuestTagInfo = GetQuestTagInfo
-local GetQuestLogPushable = GetQuestLogPushable
-local GetQuestLogIsAutoComplete = GetQuestLogIsAutoComplete
+-- GetQuestTagInfo replaced by GetQuestTagInfoCompat in retail
+-- GetQuestLogPushable and GetQuestLogIsAutoComplete are defined after shims section
 local GetQuestLogTimeLeft = GetQuestLogTimeLeft
 local GetQuestLogSpecialItemInfo = GetQuestLogSpecialItemInfo
 local GetQuestDifficultyColor = GetQuestDifficultyColor
 local GetQuestObjectiveInfo = GetQuestObjectiveInfo
-local IsUnitOnQuest = IsUnitOnQuest
+-- IsUnitOnQuest is defined after shims section to use the shimmed version
 local UnitName = UnitName
 local UnitGUID = UnitGUID
 local InCombatLockdown = InCombatLockdown
 local GetDailyQuestsCompleted = GetDailyQuestsCompleted
 local GetQuestResetTime = GetQuestResetTime
+local GetAbandonQuestItems = C_QuestLog.GetAbandonQuestItems or GetAbandonQuestItems
+
+-------------------------------------------------------------------------------
+-- API COMPATIBILITY SHIMS
+-- Create wrapper functions for Retail API compatibility
+-- Classic uses GetQuestLogTitle directly, Retail uses C_QuestLog.GetInfo
+-------------------------------------------------------------------------------
+
+-- Check if we need to create shims (Retail doesn't have GetQuestLogTitle natively)
+if C_QuestLog and C_QuestLog.GetInfo then
+    -- Retail: Create shim that wraps C_QuestLog.GetInfo with GetQuestLogTitle signature
+    function GetQuestLogTitle(qn)
+        local q = C_QuestLog.GetInfo(qn)
+        if not q then
+            return
+        end
+        local isComplete = C_QuestLog.IsComplete(q.questID) and 1 or (C_QuestLog.IsFailed(q.questID) and -1 or nil)
+        return q.title, q.level, q.suggestedGroup, q.isHeader, q.isCollapsed, isComplete, q.frequency, q.questID, q.startEvent, q.questID, q.isOnMap, q.hasLocalPOI, q.isTask, q.isBounty, q.isStory, q.isHidden, q.isScaling
+    end
+
+    -- Retail: Wrap C_QuestLog.GetNumQuestLogEntries if it exists
+    if C_QuestLog.GetNumQuestLogEntries then
+        function GetNumQuestLogEntries()
+            return C_QuestLog.GetNumQuestLogEntries()
+        end
+    end
+
+    -- Retail: GetQuestLogSelection returns the selected quest ID
+    function GetQuestLogSelection()
+        return C_QuestLog.GetSelectedQuest()
+    end
+
+    -- Retail: SelectQuestLogEntry - handles both log index and questID
+    -- Quest IDs are typically 5+ digits, log indices are typically under 100
+    function SelectQuestLogEntry(val)
+        if val and val > 0 then
+            if val > 1000 then
+                -- Likely a questID (from GetQuestLogSelection), use directly
+                C_QuestLog.SetSelectedQuest(val)
+            else
+                -- Likely a log index, convert to questID first
+                local questID = C_QuestLog.GetQuestIDForLogIndex(val)
+                if questID then
+                    C_QuestLog.SetSelectedQuest(questID)
+                end
+            end
+        end
+    end
+
+    -- Retail: GetQuestLogPushable - uses currently selected quest
+    function GetQuestLogPushable()
+        local questID = C_QuestLog.GetSelectedQuest()
+        if questID then
+            return C_QuestLog.IsPushableQuest(questID)
+        end
+        return false
+    end
+
+    -- Retail: GetQuestLogIsAutoComplete - get from quest info
+    function GetQuestLogIsAutoComplete(qIndex)
+        local qInfo = C_QuestLog.GetInfo(qIndex)
+        if qInfo then
+            return qInfo.isAutoComplete
+        end
+        return false
+    end
+
+    -- Retail: GetQuestLogIndexByID - get log index for a quest ID
+    function GetQuestLogIndexByID(questID)
+        return C_QuestLog.GetLogIndexForQuestID(questID) or 0
+    end
+end
+
+-- WorldMap_AddQuestTimeToTooltip shim for retail
+if not WorldMap_AddQuestTimeToTooltip and GameTooltip_AddQuestTimeToTooltip then
+    function WorldMap_AddQuestTimeToTooltip(questID)
+        GameTooltip_AddQuestTimeToTooltip(GameTooltip, questID)
+    end
+end
+
+-- GetQuestTagInfo compatibility wrapper
+-- Retail uses C_QuestLog.GetQuestTagInfo(questID), Classic uses GetQuestTagInfo(questID)
+local function GetQuestTagInfoCompat(questID)
+    if not questID then return nil end
+    if C_QuestLog and C_QuestLog.GetQuestTagInfo then
+        return C_QuestLog.GetQuestTagInfo(questID)
+    elseif GetQuestTagInfo then
+        -- Classic: GetQuestTagInfo returns tagID, tagName directly, not a table
+        local tagID, tagName = GetQuestTagInfo(questID)
+        if tagID then
+            return {
+                tagID = tagID,
+                tagName = tagName,
+                worldQuestType = nil,
+                quality = nil,
+                tradeskillLineID = nil,
+                isElite = nil,
+                displayExpiration = nil,
+            }
+        end
+    end
+    return nil
+end
+
+-- IsUnitOnQuest shim for retail (uses C_QuestLog.IsUnitOnQuest)
+if C_QuestLog and C_QuestLog.IsUnitOnQuest then
+    function IsUnitOnQuest(questIndex, unit)
+        -- Retail uses questID, not questIndex, so we need to convert
+        -- Also retail parameter order is (unit, questID), not (questIndex, unit)
+        local questID = C_QuestLog.GetQuestIDForLogIndex(questIndex)
+        if questID then
+            return C_QuestLog.IsUnitOnQuest(unit, questID)
+        end
+        return false
+    end
+end
+
+-- IsQuestWatched shim for retail (uses C_QuestLog.GetQuestWatchType)
+if C_QuestLog and C_QuestLog.GetQuestWatchType and not IsQuestWatched then
+    function IsQuestWatched(questIndex)
+        -- Retail uses questID, not questIndex
+        local questID = C_QuestLog.GetQuestIDForLogIndex(questIndex)
+        if questID then
+            -- GetQuestWatchType returns nil if not watched, or a watch type if watched
+            return C_QuestLog.GetQuestWatchType(questID) ~= nil
+        end
+        return false
+    end
+end
+
+-- AddQuestWatch shim for retail
+if C_QuestLog and C_QuestLog.AddQuestWatch and not AddQuestWatch then
+    function AddQuestWatch(questIndex)
+        local questID = C_QuestLog.GetQuestIDForLogIndex(questIndex)
+        if questID then
+            C_QuestLog.AddQuestWatch(questID, Enum.QuestWatchType.Manual)
+        end
+    end
+end
+
+-- RemoveQuestWatch shim for retail
+if C_QuestLog and C_QuestLog.RemoveQuestWatch and not RemoveQuestWatch then
+    function RemoveQuestWatch(questIndex)
+        local questID = C_QuestLog.GetQuestIDForLogIndex(questIndex)
+        if questID then
+            C_QuestLog.RemoveQuestWatch(questID)
+        end
+    end
+end
+
+-- Update local references to use the shims
+local GetQuestLogTitle = GetQuestLogTitle
+local GetNumQuestLogEntries = GetNumQuestLogEntries
+local SelectQuestLogEntry = SelectQuestLogEntry
+local GetQuestLogSelection = GetQuestLogSelection
+local GetQuestLogPushable = GetQuestLogPushable
+local GetQuestLogIsAutoComplete = GetQuestLogIsAutoComplete
+local GetQuestLogIndexByID = GetQuestLogIndexByID
+local IsUnitOnQuest = IsUnitOnQuest
 
 -------------------------------------------------------------------------------
 -- COLOR UTILITY FUNCTIONS (Performance optimization)
@@ -244,6 +400,7 @@ local defaults = {
             ShowDailyCount = true,                      -- Show daily quest count
             ShowDailyReset = true,                      -- Show daily reset time
             ShowId = false,                             -- Show quest ID
+            ShowQuestOffers = true,                     -- Show quest offers on map
             ShowLinkExtra = true,                       -- Show extra link info
             SideBySide = true,                          -- Side by side layout
             UseAltLKey = false,                         -- Use Alt-L keybind
@@ -455,8 +612,21 @@ local function QuestOptions()
                                 Nx.qdb.profile.Quest.ShowId = not Nx.qdb.profile.Quest.ShowId
                             end,
                         },
-                        ImgorBG = {
+                        qlshowoffers = {
                             order = 7,
+                            type = "toggle",
+                            width = "full",
+                            name = L["Show Quest Offers on Map"],
+                            desc = L["When enabled, shows available quest offers from quest lines on the map"],
+                            get = function()
+                                return Nx.qdb.profile.Quest.ShowQuestOffers
+                            end,
+                            set = function()
+                                Nx.qdb.profile.Quest.ShowQuestOffers = not Nx.qdb.profile.Quest.ShowQuestOffers
+                            end,
+                        },
+                        ImgorBG = {
+                            order = 8,
                             type = "toggle",
                             width = "full",
                             name = L["Use scroll image in quest log"],
@@ -470,7 +640,7 @@ local function QuestOptions()
                             end,
                         },
                         qbgcol = {
-                            order = 8,
+                            order = 9,
                             type = "color",
                             width = "full",
                             name = L["Quest Details Background Color"],
@@ -488,7 +658,7 @@ local function QuestOptions()
                             end,
                         },
                         qtcol = {
-                            order = 9,
+                            order = 10,
                             type = "color",
                             width = "full",
                             name = L["Quest Details Text Color"],
@@ -507,7 +677,7 @@ local function QuestOptions()
                             end,
                         },
                         qtscale = {
-                            order = 10,
+                            order = 11,
                             type = "range",
                             name = L["Quest Details Scale"],
                             desc = L["Sets the size of the quest details"],
@@ -523,24 +693,24 @@ local function QuestOptions()
                             end,
                         },
                         spacer = {
-                            order = 11,
-                            type = "description",
-                            width = "full",
-                            name = " ",
-                        },
-                        spacer2 = {
                             order = 12,
                             type = "description",
                             width = "full",
                             name = " ",
                         },
-                        questdesc = {
+                        spacer2 = {
                             order = 13,
+                            type = "description",
+                            width = "full",
+                            name = " ",
+                        },
+                        questdesc = {
+                            order = 14,
                             type = "description",
                             name = L["Quest Options"],
                         },
                         qtool = {
-                            order = 14,
+                            order = 15,
                             type = "toggle",
                             width = "full",
                             name = L["Show Quest Tooltips"],
@@ -553,7 +723,7 @@ local function QuestOptions()
                             end,
                         },
                         qparty = {
-                            order = 15,
+                            order = 16,
                             type = "toggle",
                             width = "full",
                             name = L["Share Quest Progress"],
@@ -566,7 +736,7 @@ local function QuestOptions()
                             end,
                         },
                         qauto = {
-                            order = 16,
+                            order = 17,
                             type = "toggle",
                             width = "full",
                             name = L["Auto Accept Quests"],
@@ -579,7 +749,7 @@ local function QuestOptions()
                             end,
                         },
                         qautoturn = {
-                            order = 17,
+                            order = 18,
                             type = "toggle",
                             width = "full",
                             name = L["Auto Turn In Quests"],
@@ -592,7 +762,7 @@ local function QuestOptions()
                             end,
                         },
                         qautoac = {
-                            order = 18,
+                            order = 19,
                             type = "toggle",
                             width = "full",
                             name = L["Auto Turn In Self-Completion Quests"],
@@ -605,7 +775,7 @@ local function QuestOptions()
                             end,
                         },
                         qbroad = {
-                            order = 19,
+                            order = 20,
                             type = "toggle",
                             width = "double",
                             name = L["Broadcast Quest Changes"],
@@ -618,7 +788,7 @@ local function QuestOptions()
                             end,
                         },
                         qbroadnum = {
-                            order = 20,
+                            order = 21,
                             type = "range",
                             name = L["Broadcast after number of changes"],
                             desc = L["Sets the number of objective changes before it sends the group/raid message"],
@@ -2504,12 +2674,16 @@ function Nx.Quest:Init()
 --    SelectQuestLogEntry = Nx.Quest.SelectQuestLogEntry
 
     -- Force it to create/enable and then we disable
-    GetUIPanelWidth (QuestLogFrame)
-    --QuestLogFrame:SetAttribute ("UIPanelLayout-enabled", false)
+    -- Use QuestMapFrame for retail, QuestLogFrame for classic
+    local questFrame = QuestMapFrame or QuestLogFrame
+    if questFrame then
+        GetUIPanelWidth(questFrame)
+        questFrame:SetAttribute("UIPanelLayout-enabled", false)
+    end
 
     if QuestLogDetailFrame then    -- Patch 3.2
-        GetUIPanelWidth (QuestLogDetailFrame)
-        QuestLogDetailFrame:SetAttribute ("UIPanelLayout-enabled", false)
+        GetUIPanelWidth(QuestLogDetailFrame)
+        QuestLogDetailFrame:SetAttribute("UIPanelLayout-enabled", false)
     end
 
     local Map = Nx.Map
@@ -3024,7 +3198,7 @@ function Nx.Quest:Init()
 
     local ttHooks = {
         "SetAction",
-        "SetAuctionItem",
+--        "SetAuctionItem",
         "SetBagItem",
         "SetGuildBankItem",
         "SetHyperlink",
@@ -3043,7 +3217,7 @@ function Nx.Quest:Init()
     for k, name in ipairs (ttHooks) do
             hooksecurefunc (GameTooltip, name, Nx.Quest.TooltipHook)
     end
-    GameTooltip:HookScript("OnTooltipSetUnit", Nx.Quest.TooltipHook)
+--    GameTooltip:HookScript("OnTooltipSetUnit", Nx.Quest.TooltipHook)
 
     local unitNames = {    -- 5 letter and shorter words are already blocked
         "Hunter", "Paladin", "Priest", "Monk",
@@ -3069,23 +3243,49 @@ function Nx.Quest:Init()
         ["Erratic Sentry"] = "Erratic Sentries",
     }
 
-    local func = function ()
-        local testAlt = IsAltKeyDown() and not self.IgnoreAlt
-        if Nx.qdb.profile.Quest.UseAltLKey then
-            testAlt = not testAlt
-        end
-        if not testAlt then
-            HideUIPanel(QuestLogFrame);
-            if self.InShowUIPanel then
-                Nx.Quest:HideUIPanel(QuestMapFrame)
-                self.InShowUIPanel = false
-            else
-                Nx.Quest:ShowUIPanel(QuestMapFrame)
-                self.InShowUIPanel = true
+    -- Quest log toggle handling - different approach for Classic vs Retail
+    if QuestLogFrame then
+        -- Classic: Hook the QuestLogFrame OnShow
+        local func = function ()
+            local testAlt = IsAltKeyDown() and not self.IgnoreAlt
+            if Nx.qdb.profile.Quest.UseAltLKey then
+                testAlt = not testAlt
+            end
+            if not testAlt then
+                HideUIPanel(QuestLogFrame)
+                if self.InShowUIPanel then
+                    Nx.Quest:HideUIPanel(QuestMapFrame)
+                    self.InShowUIPanel = false
+                else
+                    Nx.Quest:ShowUIPanel(QuestMapFrame)
+                    self.InShowUIPanel = true
+                end
             end
         end
+        QuestLogFrame:HookScript("OnShow", func)
+    else
+        -- Retail: Override ToggleQuestLog
+        Nx.Quest.OldToggleQuestLog = ToggleQuestLog
+        function ToggleQuestLog(...)
+            Nx.Map.WMFOnShow = false
+            local orig = IsAltKeyDown() and not self.IgnoreAlt
+            if Nx.qdb.profile.Quest.UseAltLKey then
+                orig = not orig
+            end
+            if not orig then
+                if self.InShowUIPanel then
+                    Nx.Quest:HideUIPanel(QuestMapFrame)
+                    self.InShowUIPanel = false
+                else
+                    Nx.Quest:ShowUIPanel(QuestMapFrame)
+                    self.InShowUIPanel = true
+                end
+            else
+                Nx.Quest.OldToggleQuestLog(...)
+            end
+            Nx.Map.WMFOnShow = true
+        end
     end
-    QuestLogFrame:HookScript ("OnShow", func)
 end
 
 -------------------------------------------------------------------------------
@@ -3580,7 +3780,9 @@ function Nx.Quest:ExpandQuests()
         for qn = 1, cnt do
 
             local title, level, groupCnt, isHeader, isCollapsed, _, _, questID = GetQuestLogTitle (qn)
-            local tagID, tag = GetQuestTagInfo(questID)
+            local questTagInfo = GetQuestTagInfoCompat(questID)
+            local tagID = questTagInfo and questTagInfo.tagID
+            local tag = questTagInfo and questTagInfo.tagName
             if isHeader and isCollapsed then
                 local he = self.HeaderExpanded
                 he[title] = true
@@ -3822,7 +4024,13 @@ function Nx.Quest:RecordQuestsLog()
 
     for qn = 1, qcnt do
         local title, level, groupCnt, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(qn)
-        local tagID, tag, worldQuestType, rarity, isElite, tradeskillLineIndex = GetQuestTagInfo(questID)
+        local questTagInfo = GetQuestTagInfoCompat(questID)
+        local tagID = questTagInfo and questTagInfo.tagID
+        local tag = questTagInfo and questTagInfo.tagName
+        local worldQuestType = questTagInfo and questTagInfo.worldQuestType
+        local rarity = questTagInfo and questTagInfo.quality
+        local isElite = questTagInfo and questTagInfo.isElite
+        local tradeskillLineIndex = questTagInfo and questTagInfo.tradeskillLineID
 
         groupCnt = tonumber(groupCnt)
 
@@ -4260,7 +4468,13 @@ function Nx.Quest:ScanBlizzQuestDataZone(WatchUpdate)
             if mapQuests[n] and qi and qi > 0 then
                 local objectives = C_QuestLog.GetQuestObjectives(id)
                 local title, level, groupCnt, isHeader, isCollapsed, isComplete, _, questID = GetQuestLogTitle (qi)
-                local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = GetQuestTagInfo(id)
+                local questTagInfo = GetQuestTagInfoCompat(id)
+                local tagID = questTagInfo and questTagInfo.tagID
+                local tagName = questTagInfo and questTagInfo.tagName
+                local worldQuestType = questTagInfo and questTagInfo.worldQuestType
+                local rarity = questTagInfo and questTagInfo.quality
+                local isElite = questTagInfo and questTagInfo.isElite
+                local tradeskillLineIndex = questTagInfo and questTagInfo.tradeskillLineID
                 local lbCnt = objectives and #objectives or 0; --GetNumQuestLeaderBoards (qi)
                 local qObjl = 0;
                 local quest = Nx.Quests[id] or {}
@@ -4641,7 +4855,9 @@ function Nx.Quest:FindNewQuest()
     for qn = 1, cnt do
 
         local title, level, groupCnt, isHeader, isCollapsed, _, _, questID = GetQuestLogTitle (qn)
-        local tagID, tag = GetQuestTagInfo(questID)
+        local questTagInfo = GetQuestTagInfoCompat(questID)
+        local tagID = questTagInfo and questTagInfo.tagID
+        local tag = questTagInfo and questTagInfo.tagName
 
         if not isHeader then
             title = self:ExtractTitle (title)
@@ -5217,14 +5433,21 @@ function Nx.Quest:Abandon (qIndex, qId)
                 text,
                 YES,
                 function(self)
-                    SelectQuestLogEntry (qIndex)
-                    SetAbandonQuest()
+                    if not Nx.isClassic then
+                        C_QuestLog.SetSelectedQuest (C_QuestLog.GetQuestIDForLogIndex(qIndex))
+                        C_QuestLog.SetAbandonQuest()
+                        -- native blizz
+                        C_QuestLog.AbandonQuest();
+                        if ( QuestLogPopupDetailFrame:IsShown() ) then
+                            HideUIPanel(QuestLogPopupDetailFrame);
+                        end
+                    else
+                         SelectQuestLogEntry (qIndex)
+                         SetAbandonQuest()
+                         -- native blizz
+                         AbandonQuest();
+                    end
 
-                    -- native blizz
-                    AbandonQuest();
-                    --if ( QuestLogPopupDetailFrame:IsShown() ) then
-                    --    HideUIPanel(QuestLogPopupDetailFrame);
-                    --end
                     PlaySound(SOUNDKIT.IG_QUEST_LOG_ABANDON_QUEST);
                     -- carb
                     if qId > 0 then
@@ -5678,6 +5901,7 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
                         local color = GetCachedDifficultyColorStr(cur.Level)
 
                         tip:AddLine (format ("%s %s%d %s", questStr, color, cur.Level, cur.Title))
+                        tipAddSuccess = true
 
                         for n = 1, cur.LBCnt do
                             if strfind (cur[n], tipStr) then
@@ -5694,6 +5918,11 @@ function Nx.Quest:TooltipProcess2 (stripColor, tipStr)
                     end
                 end
             end
+        end
+        
+        -- Return true if we added quest info so the tooltip gets resized
+        if tipAddSuccess then
+            return true
         end
     end
 end
@@ -7069,11 +7298,13 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
         --Nx.Quest:RecordQuests()
     elseif event == "QUEST_REMOVED" then
         local questId = arg1
-        --[[if QuestUtils_IsQuestWorldQuest (questId) then
-            SetSuperTrackedQuestID(0);
+        if QuestUtils_IsQuestWorldQuest(questId) then
+            C_SuperTrack.SetSuperTrackedQuestID(0)
             worldquestdb[questId] = nil
-            Nx.Quest.WQList:UpdateDB()
-        end]]--
+            if Nx.Quest.WQList then
+                Nx.Quest.WQList:UpdateDB()
+            end
+        end
     elseif event == "QUEST_DETAIL" then        -- Happens when auto accept quest is given
         --if QuestGetAutoAccept() and QuestIsFromAreaTrigger() then
             Quest:RecordQuestAcceptOrFinish()
@@ -8005,6 +8236,14 @@ end
 -- Update map icons (called by map)
 -------------------------------------------------------------------------------
 
+-- Cache for World Quest task info (refreshes every second)
+local taskInfoCache = nil
+local taskInfoCacheTimer = C_Timer.NewTicker(1, function(self)
+    if Nx.Map and Nx.Map.UpdateMapID then
+        taskInfoCache = C_TaskQuest.GetQuestsOnMap(Nx.Map.UpdateMapID)
+    end
+end)
+
 function Nx.Quest:UpdateIcons (map)
     if not Nx.QInit then
         return
@@ -8353,129 +8592,186 @@ function Nx.Quest:UpdateIcons (map)
     local taskIconIndex = 1
     local activeWQ = {}
     if Map.UpdateMapID ~= 9000 then
-        local taskInfo = nil -- C_TaskQuest.GetQuestsForPlayerByMapID(Map.UpdateMapID);
+        -- Refresh cache on map change
+        if Nx.Map.mapChange then
+            taskInfoCache = C_TaskQuest.GetQuestsOnMap(Map.UpdateMapID)
+        end
+        local taskInfo = taskInfoCache
         if taskInfo and Nx.db.char.Map.ShowWorldQuest then
-            for i=1,#taskInfo do
+            for i = 1, #taskInfo do
                 local info = taskInfo[i]
-                local questId = taskInfo[i].questId
-                local title, faction = C_TaskQuest.GetQuestInfoByQuestID(questId)
-                if QuestUtils_IsQuestWorldQuest (questId) and (worldquestdb[questId] and worldquestdb[questId].mapid == Map.UpdateMapID and not worldquestdb[questId].Filtered) then
-                    activeWQ[questId] = true
-                    C_TaskQuest.RequestPreloadRewardData (questId)
-                    local tid, name, questtype, rarity, elite, tradeskill = GetQuestTagInfo (questId)
-                    local timeLeft = C_TaskQuest.GetQuestTimeLeftMinutes(questId)
-                    if QuestUtils_ShouldDisplayExpirationWarning(questId) or (timeLeft and timeLeft > 0) then
+                local questID = taskInfo[i].questID
+                local title, faction = C_TaskQuest.GetQuestInfoByQuestID(questID)
 
-                        local x,y = info.x * 100, info.y * 100
+                -- Fetch the quest tag information using the new API function
+                local questTagInfo = GetQuestTagInfoCompat(questID)
+
+                if questTagInfo then
+                    local isCriteria = false
+                    local isElite = questTagInfo.isElite
+                    local isDaily = questTagInfo.isDaily
+                    local isRepeatable = questTagInfo.isRepeatable
+                    local tagName = questTagInfo.tagName
+
+                    local timeLeft = C_TaskQuest.GetQuestTimeLeftMinutes(questID)
+                    -- Check if quest is Important, Campaign, or Legendary (these have no time limit)
+                    local isImportantQuest = false
+                    if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification then
+                        local classification = C_QuestInfoSystem.GetQuestClassification(questID)
+                        if classification then
+                            isImportantQuest = (classification == Enum.QuestClassification.Important) or
+                                               (classification == Enum.QuestClassification.Campaign) or
+                                               (classification == Enum.QuestClassification.Legendary)
+                        end
+                    end
+                    if QuestUtils_ShouldDisplayExpirationWarning(questID) or (timeLeft and timeLeft > 0) or isImportantQuest then
+                        local x, y = info.x * 100, info.y * 100
                         local f = map:GetIconWQ(120)
+                        f.questID = info.questID
 
-                        map:ClipFrameZ (f, x, y, 24, 24, 0)
+                        -- Use hideOutside=true to completely hide icon when outside visible area
+                        if not map:ClipFrameZ(f, x, y, 24, 24, 0, true) then
+                            -- Icon is outside visible area, skip processing
+                            f:Hide()
+                        else
 
-                        local selected = info.questId == GetSuperTrackedQuestID();
+                        local selected = info.questID == C_SuperTrack.GetSuperTrackedQuestID()
 
-                        local function WQTGetOverlay (memberName)
-                            for i = 1, #WorldMapFrame.overlayFrames do
-                                local overlay = WorldMapFrame.overlayFrames [i]
-                                if (overlay [memberName]) then
+                        local function WQTGetOverlay(memberName)
+                            for j = 1, #WorldMapFrame.overlayFrames do
+                                local overlay = WorldMapFrame.overlayFrames[j]
+                                if overlay[memberName] then
                                     return overlay
                                 end
                             end
                         end
-                        local isCriteria = WQTGetOverlay("IsWorldQuestCriteriaForSelectedBounty"):IsWorldQuestCriteriaForSelectedBounty(info.questId);
-                        --local isSpellTarget = SpellCanTargetQuest() and IsQuestIDValidSpellTarget(info.questId);
+                        local overlayFrame = WQTGetOverlay("IsWorldQuestCriteriaForSelectedBounty")
+                        if overlayFrame then
+                            isCriteria = overlayFrame:IsWorldQuestCriteriaForSelectedBounty(info.questID)
+                        end
 
-                        f.worldQuest = true;
-                        f.questID = info.questId
-                        f.numObjectives = info.numObjectives;
-                        f.Texture:SetDrawLayer("OVERLAY");
-                        f:SetScript("OnClick", function (self, button)
-                            map:SetTargetAtStr (format("%s, %s", x, y))
+                        f.worldQuest = true
+                        f.questID = info.questID
+                        f.numObjectives = info.numObjectives
+                        f.Texture:SetDrawLayer("OVERLAY")
+                        f:SetScript("OnClick", function(self, button)
+                            map:SetTargetAtStr(string.format("%s, %s", x, y))
                             if not InCombatLockdown() and self.worldQuest then
-                              if ( not ChatEdit_TryInsertQuestLinkForQuestID(self.questID) ) then
-                                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-                                if ZygorGuidesViewer and ZygorGuidesViewer.WorldQuests then ZygorGuidesViewer.WorldQuests:SuggestWorldQuestGuideFromMap(nil,self.questID,"force",self.mapID) end
-                                if IsShiftKeyDown() then
-                                  if IsWorldQuestHardWatched(self.questID) or (IsWorldQuestWatched(self.questID) and GetSuperTrackedQuestID() == self.questID) then
-                                    BonusObjectiveTracker_UntrackWorldQuest(self.questID);
-                                  else
-                                    BonusObjectiveTracker_TrackWorldQuest(self.questID, true);
-                                  end
-                                else
-                                  if IsWorldQuestHardWatched(self.questID) then
-                                    SetSuperTrackedQuestID(self.questID);
-                                  else
-                                    BonusObjectiveTracker_TrackWorldQuest(self.questID);
-                                  end
+                                if not ChatEdit_TryInsertQuestLinkForQuestID(self.questID) then
+                                    local watchType = C_QuestLog.GetQuestWatchType(self.questID)
+                                    local isSuperTracked = C_SuperTrack.GetSuperTrackedQuestID() == self.questID
+
+                                    if ZygorGuidesViewer and ZygorGuidesViewer.WorldQuests then
+                                        ZygorGuidesViewer.WorldQuests:SuggestWorldQuestGuideFromMap(nil, self.questID, "force", self.mapID)
+                                    end
+
+                                    if IsShiftKeyDown() then
+                                        if watchType == Enum.QuestWatchType.Manual or (watchType == Enum.QuestWatchType.Automatic and isSuperTracked) then
+                                            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+                                            QuestUtil.UntrackWorldQuest(self.questID)
+                                        else
+                                            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+                                            QuestUtil.TrackWorldQuest(self.questID, Enum.QuestWatchType.Manual)
+                                        end
+                                    else
+                                        if isSuperTracked then
+                                            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+                                            C_SuperTrack.SetSuperTrackedQuestID(0)
+                                        else
+                                            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+                                            if watchType ~= Enum.QuestWatchType.Manual then
+                                                QuestUtil.TrackWorldQuest(self.questID, Enum.QuestWatchType.Automatic)
+                                            end
+                                            C_SuperTrack.SetSuperTrackedQuestID(self.questID)
+                                        end
+                                    end
                                 end
-                               end
-                             end
+                            end
                         end)
 
-                        QuestUtil.SetupWorldQuestButton(f, questtype, rarity, elite, tradeskill, info.inProgress, selected, isCriteria)
+                        if isImportantQuest then
+                            -- Use QuestUtil.GetQuestIconOffer for important/campaign/legendary quests
+                            local classification = C_QuestInfoSystem.GetQuestClassification(questID)
+                            local isLegendary = classification == Enum.QuestClassification.Legendary
+                            local isCampaign = classification == Enum.QuestClassification.Campaign
+                            local isImportant = classification == Enum.QuestClassification.Important
+                            local isMeta = classification == Enum.QuestClassification.Meta
+                            local isCalling = classification == Enum.QuestClassification.Calling
+                            local frequency = questTagInfo and questTagInfo.frequency or 0
+                            local isRepeatable = questTagInfo and questTagInfo.isRepeatable or false
+
+                            if QuestUtil.GetQuestIconOffer then
+                                local atlasName, useAtlas = QuestUtil.GetQuestIconOffer(isLegendary, frequency, isRepeatable, isCampaign, isCalling, isImportant, isMeta)
+                                if useAtlas then
+                                    f.Texture:SetAtlas(atlasName)
+                                else
+                                    f.Texture:SetTexture(atlasName)
+                                end
+                                f.Texture:Show()
+                                f:Show()
+                            else
+                                f:Hide()
+                            end
+                        elseif tagName then
+                            QuestUtil.SetupWorldQuestButton(f, questTagInfo, tagName, selected, isCriteria, false, true)
+                        else
+                            f:Hide()
+                        end
 
                         f.texture:Hide()
-
-                        --[[if questtype == LE_QUEST_TAG_TYPE_PVP then
-                            f.NxTip = L["|cffffd100World Quest (Combat Task):\n"] .. title .. objTxt .. (WQTable[questId].reward or L["\n \nReward: Loading..."]) .. timeLeftTxt
-                        elseif questtype == LE_QUEST_TAG_TYPE_PET_BATTLE then
-                            f.NxTip = L["|cffffd100World Quest (Pet Task):\n"] .. title .. objTxt .. (WQTable[questId].reward or L["\n \nReward: Loading..."]) .. timeLeftTxt
-                        else
-                            f.NxTip = L["|cffffd100World Quest:\n"] .. title .. objTxt .. (WQTable[questId].reward or L["\n \nReward: Loading..."]) .. timeLeftTxt
-                        end]]--
+                        end -- Close the hideOutside else block
                     end
                 else
-                    if not worldquestdb[questId] then
+                    if not worldquestdb[questID] and title then
                         taskIconIndex = taskIconIndex + 1
-                        local x,y = taskInfo[i].x * 100, taskInfo[i].y * 100
-                        local f = map:GetIcon (3)
+                        local x, y = taskInfo[i].x * 100, taskInfo[i].y * 100
+                        local f = map:GetIcon(3)
 
-                        -- objectives
                         local objTxt = ""
                         for objectiveIndex = 1, taskInfo[i].numObjectives do
-                            local objectiveText, objectiveType, finished = GetQuestObjectiveInfo(questId, objectiveIndex, false)
-                            if ( objectiveText and #objectiveText > 0 ) then
+                            local objectiveText, objectiveType, finished = GetQuestObjectiveInfo(questID, objectiveIndex, false)
+                            if objectiveText and #objectiveText > 0 then
                                 local color = finished and HIGHLIGHT_FONT_COLOR or GRAY_FONT_COLOR
-                                color = format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255);
+                                color = string.format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
                                 objTxt = objTxt .. "\n- " .. color .. objectiveText
                             end
                         end
 
-                        if taskInfo[i].isCombatAllyQuest then
-                            if not taskInfo[i].inProgress  then
-                                f.questID = taskInfo[i].questId
+                        if taskInfo[i].isCombatAllyQuest or taskInfo[i].isDaily then
+                            if not taskInfo[i].inProgress then
+                                f.questID = taskInfo[i].questID
                                 f.NxTip = "|cffffd100Daily Task:\n" .. title:gsub("Daily Objective: ", "") .. objTxt .. "\n" .. GREEN_FONT_COLOR:GenerateHexColorMarkup() .. GRANTS_FOLLOWER_XP
-                                f.texture:SetTexture ("Interface\\Minimap\\ObjectIconsAtlas")
-                                map:ClipFrameZ (f, x, y, 22, 22, 0)
-                                f.texture:SetTexCoord (GetObjectIconTextureCoords(4713))
-                                f:SetScript("OnMouseDown", function (self, button)
-                                     map:SetTargetAtStr (format("%s, %s", x, y))
-                                     if not InCombatLockdown() then
-                                      if ( not ChatEdit_TryInsertQuestLinkForQuestID(self.questID) ) then
-                                        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-                                        if ZygorGuidesViewer and ZygorGuidesViewer.WorldQuests then ZygorGuidesViewer.WorldQuests:SuggestWorldQuestGuideFromMap(nil,self.questID,"force",self.mapID) end
-                                       end
-                                     end
+                                f.texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas")
+                                if not map:ClipFrameZ(f, x, y, 22, 22, 0, true) then
+                                    f:Hide()
+                                else
+                                f.texture:SetTexCoord(C_Minimap.GetObjectIconTextureCoords(4713))
+                                f:SetScript("OnMouseDown", function(self, button)
+                                    map:SetTargetAtStr(string.format("%s, %s", x, y))
+                                    if not InCombatLockdown() then
+                                        if not ChatEdit_TryInsertQuestLinkForQuestID(self.questID) then
+                                            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+                                            if ZygorGuidesViewer and ZygorGuidesViewer.WorldQuests then
+                                                ZygorGuidesViewer.WorldQuests:SuggestWorldQuestGuideFromMap(nil, self.questID, "force", self.mapID)
+                                            end
+                                        end
+                                    end
                                 end)
+                                end -- Close hideOutside else block
                             end
                         else
                             f.NxTip = "|cffffd100Bonus Task:\n" .. title:gsub("Bonus Objective: ", "") .. objTxt
-                            f.texture:SetTexture ("Interface\\Minimap\\ObjectIconsAtlas")
-                            map:ClipFrameZ (f, x, y, 16, 16, 0)
-                            f.texture:SetTexCoord (GetObjectIconTextureCoords(4734))
+                            f.texture:SetTexture("Interface\\Minimap\\ObjectIconsAtlas")
+                            if map:ClipFrameZ(f, x, y, 22, 22, 0, true) then
+                                f.texture:SetTexCoord(C_Minimap.GetObjectIconTextureCoords(4734))
+                            else
+                                f:Hide()
+                            end
                         end
-
                     end
                 end
             end
         end
-
-        -- clear unused WQ
-        --[[for qId, value in ipairs (WQTable) do
-            if not activeWQ[qId] then
-                WQTable[qId] = nil
-            end
-        end]]--
-
     end
 end
 
@@ -8587,17 +8883,23 @@ function Nx.Quest:UpdateQuestDetailsTimer()
         end
     end
 
-    MapQuestInfoRewardsFrame["ItemChooseText"]:SetTextColor(r, g, b)
-    MapQuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
-    MapQuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
+    -- Set text colors on reward frame elements (with nil checks for compatibility)
+    if MapQuestInfoRewardsFrame then
+        if MapQuestInfoRewardsFrame["ItemChooseText"] then
+            MapQuestInfoRewardsFrame["ItemChooseText"]:SetTextColor(r, g, b)
+        end
+        if MapQuestInfoRewardsFrame["ItemReceiveText"] then
+            MapQuestInfoRewardsFrame["ItemReceiveText"]:SetTextColor(r, g, b)
+        end
+        if MapQuestInfoRewardsFrame["PlayerTitleText"] then
+            MapQuestInfoRewardsFrame["PlayerTitleText"]:SetTextColor(r, g, b)
+        end
+    end
 
     for n = 1, 10 do
         if _G["QuestInfoObjective" .. n] then
             _G["QuestInfoObjective" .. n]:SetTextColor (r, g, b)
         end
-    end
-    if not Nx.isClassic then
-        MapQuestInfoRewardsFrame.QuestInfoPlayerTitleFrame:Hide()
     end
 end
 
@@ -9699,7 +10001,13 @@ function Nx.Quest.Watch:UpdateList()
                             tasks[questId] = true
                             if inArea then
                                 local title, factionID = C_TaskQuest.GetQuestInfoByQuestID(questId)
-                                local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = GetQuestTagInfo(questId)
+                                local questTagInfo = GetQuestTagInfoCompat(questId)
+                                local tagID = questTagInfo and questTagInfo.tagID
+                                local tagName = questTagInfo and questTagInfo.tagName
+                                local worldQuestType = questTagInfo and questTagInfo.worldQuestType
+                                local rarity = questTagInfo and questTagInfo.quality
+                                local isElite = questTagInfo and questTagInfo.isElite
+                                local tradeskillLineIndex = questTagInfo and questTagInfo.tradeskillLineID
                                 local task_title = L["BONUS TASK"]
                                 if worldQuestType ~= nil then task_title = L["WORLD QUEST"] end
                                 list:ItemAdd(0)
@@ -9746,7 +10054,13 @@ function Nx.Quest.Watch:UpdateList()
                             local title, _, _, _, _, _, _, questId, _, _, _, _, isTask, _ = GetQuestLogTitle(i)
                             if isTask and tasks[questId] ~= true then
                                 local title, factionID = C_TaskQuest.GetQuestInfoByQuestID(questId)
-                                local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = GetQuestTagInfo(questId)
+                                local questTagInfo = GetQuestTagInfoCompat(questId)
+                                local tagID = questTagInfo and questTagInfo.tagID
+                                local tagName = questTagInfo and questTagInfo.tagName
+                                local worldQuestType = questTagInfo and questTagInfo.worldQuestType
+                                local rarity = questTagInfo and questTagInfo.quality
+                                local isElite = questTagInfo and questTagInfo.isElite
+                                local tradeskillLineIndex = questTagInfo and questTagInfo.tradeskillLineID
                                 local task_title = L["BONUS TASK"]
                                 if worldQuestType ~= nil then task_title = L["WORLD QUEST"] end
                                 list:ItemAdd(0)
@@ -10694,7 +11008,8 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
     if not InCombatLockdown() then
         local cur = self.QIds[qId]
         if cur then
-            if not cur.Complete and Nx.BlobsAvailable then
+            -- Don't draw regular quest blob if a world quest blob is being shown
+            if not cur.Complete and Nx.BlobsAvailable and not QMap.ShowingWorldQuestBlob then
                 QMap.QuestWin:DrawNone();
                 -- Hide quest blobs during zoom animation or manual scrolling to prevent position/scale mismatch
                 -- Note: We check for scale change rather than StepTime != 0, because StepTime is also set
@@ -10792,8 +11107,11 @@ function Nx.Quest:TrackOnMap (qId, qObj, useEnd, target, skipSame)
                         self.Map:ClearTargets()
                         if not InCombatLockdown() and Nx.BlobsAvailable then
                             local QMap = NxMap1.NxMap
-                            QMap.QuestWin:DrawNone();
-                            QMap.QuestWin:Hide()
+                            -- Only clear if not showing a world quest blob
+                            if not QMap.ShowingWorldQuestBlob then
+                                QMap.QuestWin:DrawNone();
+                                QMap.QuestWin:Hide()
+                            end
                         end
                     end
                 end
@@ -12070,7 +12388,14 @@ function Nx.Quest.WQList:GenWQTip(questId)
     end
     worldquesttip:ClearLines()
     local title, factionID, capped = C_TaskQuest.GetQuestInfoByQuestID(questId)
-    local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, displayTimeLeft = GetQuestTagInfo(questId)
+    local questTagInfo = GetQuestTagInfoCompat(questId)
+    local tagID = questTagInfo and questTagInfo.tagID
+    local tagName = questTagInfo and questTagInfo.tagName
+    local worldQuestType = questTagInfo and questTagInfo.worldQuestType
+    local rarity = questTagInfo and questTagInfo.quality
+    local isElite = questTagInfo and questTagInfo.isElite
+    local tradeskillLineIndex = questTagInfo and questTagInfo.tradeskillLineID
+    local displayTimeLeft = questTagInfo and questTagInfo.displayExpiration
     local color = WORLD_QUEST_QUALITY_COLORS[rarity]
     local style = TOOLTIP_QUEST_REWARDS_STYLE_DEFAULT
     local tipdone = false
@@ -12385,6 +12710,391 @@ function Nx.Quest.WQList:Update()
         end
     end
     list:Update()
+end
+
+-------------------------------------------------------------------------------
+-- QUEST HUB TOOLTIP SUPPORT
+-- Functions to display related quest offers for Quest Hub POIs
+-------------------------------------------------------------------------------
+
+---
+-- Get quest offers related to a Quest Hub POI
+-- @param mapID         The map ID to get quest offers for
+-- @param hubAreaPoiID  The areaPoiID of the Quest Hub
+-- @return              Table of related quest offers {questID = questInfo, ...}
+--
+function Nx.Quest:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
+    if not mapID or not hubAreaPoiID then
+        return {}
+    end
+
+    -- Check if required APIs exist
+    if not C_QuestLine or not C_QuestLine.GetAvailableQuestLines then
+        return {}
+    end
+    if not C_QuestHub or not C_QuestHub.IsQuestCurrentlyRelatedToHub then
+        return {}
+    end
+
+    local relatedQuests = {}
+
+    -- Get available quest lines for the map
+    local questLines = C_QuestLine.GetAvailableQuestLines(mapID)
+    if questLines then
+        for _, questLineInfo in ipairs(questLines) do
+            if questLineInfo.questID then
+                -- Check if this quest is related to the hub
+                local isRelated = C_QuestHub.IsQuestCurrentlyRelatedToHub(questLineInfo.questID, hubAreaPoiID)
+                if isRelated then
+                    relatedQuests[questLineInfo.questID] = {
+                        questID = questLineInfo.questID,
+                        questName = questLineInfo.questName,
+                        questLineID = questLineInfo.questLineID,
+                        questLineName = questLineInfo.questLineName,
+                        isLegendary = questLineInfo.isLegendary,
+                        isCampaign = questLineInfo.isCampaign,
+                        isImportant = questLineInfo.isImportant,
+                    }
+                end
+            end
+        end
+    end
+    return relatedQuests
+end
+
+---
+-- Add Quest Hub related quests to a tooltip
+-- @param tooltip       The GameTooltip to add to
+-- @param mapID         The map ID
+-- @param hubAreaPoiID  The areaPoiID of the Quest Hub
+-- @return              Number of quests added
+--
+function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
+    if not tooltip or not mapID or not hubAreaPoiID then
+        return 0
+    end
+
+    local relatedQuests = self:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
+
+    -- Count quests
+    local questCount = 0
+    for _ in pairs(relatedQuests) do
+        questCount = questCount + 1
+    end
+
+    if questCount == 0 then
+        return 0
+    end
+
+    -- Add header
+    GameTooltip_AddBlankLineToTooltip(tooltip)
+    if QUEST_HUB_TOOLTIP_AVAILABLE_QUESTS_HEADER then
+        GameTooltip_AddHighlightLine(tooltip, QUEST_HUB_TOOLTIP_AVAILABLE_QUESTS_HEADER)
+    else
+        GameTooltip_AddHighlightLine(tooltip, "Available Quests:")
+    end
+
+    -- Add quest names (limit to 5)
+    local displayed = 0
+    local maxDisplay = 5
+
+    -- Sort quests by priority (Campaign > Important > Legendary > Normal)
+    local sortedQuests = {}
+    for questID, questInfo in pairs(relatedQuests) do
+        table.insert(sortedQuests, questInfo)
+    end
+    table.sort(sortedQuests, function(a, b)
+        -- Campaign first
+        if a.isCampaign ~= b.isCampaign then
+            return a.isCampaign
+        end
+        -- Then Important
+        if a.isImportant ~= b.isImportant then
+            return a.isImportant
+        end
+        -- Then Legendary
+        if a.isLegendary ~= b.isLegendary then
+            return a.isLegendary
+        end
+        -- Then alphabetical
+        return (a.questName or "") < (b.questName or "")
+    end)
+
+    for _, questInfo in ipairs(sortedQuests) do
+        if displayed < maxDisplay then
+            local questName = questInfo.questName or ("Quest " .. questInfo.questID)
+            local prefix = ""
+            if questInfo.isCampaign then
+                prefix = "|cFFFFD100" -- Gold for campaign
+            elseif questInfo.isImportant then
+                prefix = "|cFFFF8000" -- Orange for important
+            elseif questInfo.isLegendary then
+                prefix = "|cFFFF8000" -- Orange for legendary
+            else
+                prefix = "|cFFFFFFFF" -- White for normal
+            end
+            GameTooltip_AddNormalLine(tooltip, prefix .. "  " .. questName .. "|r")
+            displayed = displayed + 1
+        end
+    end
+
+    -- Show overflow count
+    if questCount > maxDisplay then
+        local remaining = questCount - maxDisplay
+        if QUEST_HUB_TOOLTIP_MORE_QUESTS_REMAINING then
+            GameTooltip_AddNormalLine(tooltip, QUEST_HUB_TOOLTIP_MORE_QUESTS_REMAINING:format(remaining))
+        else
+            GameTooltip_AddNormalLine(tooltip, "  +" .. remaining .. " more quests")
+        end
+    end
+
+    return questCount
+end
+
+-------------------------------------------------------------------------------
+-- QUEST OFFER MAP ICONS
+-- Functions to display quest offers on the Carbonite map
+-------------------------------------------------------------------------------
+
+-- Quest offer icon atlas based on classification
+local questOfferAtlas = {
+    Normal = "QuestNormal",
+    Questline = "QuestNormal",
+    Recurring = "UI-QuestPoiRecurring-QuestBang",
+    Meta = "quest-wrapper-available",
+    Calling = "Quest-DailyCampaign-Available",
+    Campaign = "Quest-Campaign-Available",
+    Legendary = "UI-QuestPoiLegendary-QuestBang",
+    Important = "importantavailablequesticon",
+}
+
+-- Cache for quest offers
+Nx.Quest.QuestOfferCache = nil
+Nx.Quest.QuestOfferCacheMapID = nil
+Nx.Quest.QuestOfferCacheTime = 0
+
+---
+-- Get all quest offers for a map
+-- @param mapID  The map ID to get quest offers for
+-- @return       Table of quest offers {questID = questInfo, ...}
+--
+function Nx.Quest:GetQuestOffersForMap(mapID)
+    if not mapID then
+        return {}
+    end
+
+    -- Check if required APIs exist
+    if not C_QuestLine or not C_QuestLine.GetAvailableQuestLines then
+        return {}
+    end
+
+    -- Use cache if valid (same map, less than 2 seconds old)
+    local now = GetTime()
+    if self.QuestOfferCache and self.QuestOfferCacheMapID == mapID and (now - self.QuestOfferCacheTime) < 2 then
+        return self.QuestOfferCache
+    end
+
+    local questOffers = {}
+
+    -- Get quest hubs for the map to filter out hub-related quests (unless toggled on)
+    local questHubIds = {}
+    local toggledHubs = Nx.Map and Nx.Map.QuestHubToggles or {}
+    if C_AreaPoiInfo and C_AreaPoiInfo.GetQuestHubsForMap then
+        local hubs = C_AreaPoiInfo.GetQuestHubsForMap(mapID)
+        if hubs then
+            for _, hubAreaPoiID in ipairs(hubs) do
+                local hubKey = mapID .. "_" .. hubAreaPoiID
+                -- Only add to filter if hub is NOT toggled on
+                if not toggledHubs[hubKey] then
+                    questHubIds[hubAreaPoiID] = true
+                end
+            end
+        end
+    end
+
+    -- Helper function to check if quest is related to any non-toggled hub
+    -- If a hub is toggled on, we want to show its quests, so don't filter them out
+    local function isQuestRelatedToNonToggledHub(questID)
+        if not C_QuestHub or not C_QuestHub.IsQuestCurrentlyRelatedToHub then
+            return false
+        end
+        for hubAreaPoiID in pairs(questHubIds) do
+            if C_QuestHub.IsQuestCurrentlyRelatedToHub(questID, hubAreaPoiID) then
+                return true
+            end
+        end
+        return false
+    end
+
+    -- Get available quest lines for the map
+    local questLines = C_QuestLine.GetAvailableQuestLines(mapID)
+    if questLines then
+        for _, info in ipairs(questLines) do
+            if info.questID and not info.inProgress then
+                -- Skip quests that are related to a non-toggled Quest Hub (they'll show in hub tooltip)
+                -- If a hub is toggled on (expanded), show its quests on the map
+                if not isQuestRelatedToNonToggledHub(info.questID) then
+                    -- Get quest classification
+                    local questClassification = nil
+                    if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification then
+                        questClassification = C_QuestInfoSystem.GetQuestClassification(info.questID)
+                    end
+
+                    -- Determine atlas icon
+                    local atlas = "QuestNormal"
+                    local priority = 1
+                    if questClassification then
+                        if questClassification == Enum.QuestClassification.Legendary then
+                            atlas = questOfferAtlas.Legendary
+                            priority = 6
+                        elseif questClassification == Enum.QuestClassification.Important then
+                            atlas = questOfferAtlas.Important
+                            priority = 7
+                        elseif questClassification == Enum.QuestClassification.Campaign then
+                            atlas = questOfferAtlas.Campaign
+                            priority = 5
+                        elseif questClassification == Enum.QuestClassification.Calling then
+                            atlas = questOfferAtlas.Calling
+                            priority = 4
+                        elseif questClassification == Enum.QuestClassification.Meta then
+                            atlas = questOfferAtlas.Meta
+                            priority = 3
+                        elseif questClassification == Enum.QuestClassification.Recurring then
+                            atlas = questOfferAtlas.Recurring
+                            priority = 2
+                        end
+                    elseif info.isLegendary then
+                        atlas = questOfferAtlas.Legendary
+                        priority = 6
+                    elseif info.isCampaign then
+                        atlas = questOfferAtlas.Campaign
+                        priority = 5
+                    elseif info.isImportant then
+                        atlas = questOfferAtlas.Important
+                        priority = 7
+                    end
+
+                    -- Check if quest should be hidden
+                    local isHidden = false
+                    if C_QuestLog and C_QuestLog.IsQuestTrivial then
+                        isHidden = C_QuestLog.IsQuestTrivial(info.questID)
+                    end
+
+                    -- Skip hidden quests unless tracking them
+                    local skipHidden = isHidden and C_Minimap and C_Minimap.IsTrackingHiddenQuests and not C_Minimap.IsTrackingHiddenQuests()
+                    if not skipHidden then
+                        questOffers[info.questID] = {
+                            questID = info.questID,
+                            questName = info.questName,
+                            questLineID = info.questLineID,
+                            questLineName = info.questLineName,
+                            isLegendary = info.isLegendary,
+                            isCampaign = info.isCampaign,
+                            isImportant = info.isImportant,
+                            isHidden = isHidden,
+                            x = info.x,
+                            y = info.y,
+                            atlas = atlas,
+                            priority = priority,
+                            floorLocation = info.floorLocation,
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    -- Cache the results
+    self.QuestOfferCache = questOffers
+    self.QuestOfferCacheMapID = mapID
+    self.QuestOfferCacheTime = now
+
+    return questOffers
+end
+
+---
+-- Update quest offer icons on the map
+-- Called from map update loop
+-- @param map  The Carbonite map object
+--
+function Nx.Quest:UpdateQuestOfferIcons(map)
+    if not map or not Nx.qdb or not Nx.qdb.profile or not Nx.qdb.profile.Quest then
+        return
+    end
+
+    -- Check if quest offer display is enabled
+    if not Nx.qdb.profile.Quest.ShowQuestOffers then
+        return
+    end
+
+    local mapID = map.MapId
+    if not mapID then
+        return
+    end
+
+    local questOffers = self:GetQuestOffersForMap(mapID)
+
+    for questID, offer in pairs(questOffers) do
+        if offer.x and offer.y then
+            -- Get world position
+            local wx, wy = map:GetWorldPos(mapID, offer.x * 100, offer.y * 100)
+
+            -- Get icon frame
+            local icon = map:GetIcon(1)
+
+            if map:ClipFrameTL(icon, wx - 8, wy - 8, 16, 16, 0) then
+                -- Set atlas texture
+                if offer.atlas then
+                    icon.texture:SetAtlas(offer.atlas)
+                else
+                    icon.texture:SetTexture("Interface\\Minimap\\ObjectIcons")
+                    icon.texture:SetTexCoord(0.125, 0.25, 0, 0.25) -- Quest icon
+                end
+
+                -- Alpha for hidden quests
+                if offer.isHidden then
+                    icon.texture:SetVertexColor(1, 1, 1, 0.5)
+                else
+                    icon.texture:SetVertexColor(1, 1, 1, 1)
+                end
+
+                -- Set tooltip
+                local tipText = offer.questName or ("Quest " .. questID)
+                if offer.questLineName then
+                    tipText = tipText .. "\n|cFF808080" .. offer.questLineName .. "|r"
+                end
+                if offer.isCampaign then
+                    tipText = "|cFFFFD100[Campaign]|r " .. tipText
+                elseif offer.isImportant then
+                    tipText = "|cFFFF8000[Important]|r " .. tipText
+                elseif offer.isLegendary then
+                    tipText = "|cFFFF8000[Legendary]|r " .. tipText
+                end
+
+                icon.NxTip = tipText
+                -- Use NXType 8500 range for quest offers (not 9000+ which is for active quests)
+                -- This prevents IconOnEnter from treating these as active quest icons
+                icon.NXType = 8500
+                -- Mark as quest offer - set NXData to nil explicitly to clear stale data
+                icon.NXData = nil
+                -- Flag to prevent TooltipProcess from adding wrong quest data
+                icon.NxQuestOffer = true
+            end
+        end
+    end
+end
+
+---
+-- Initialize quest offer display options
+-- Called during quest system initialization
+--
+function Nx.Quest:InitQuestOfferOptions()
+    -- Add default option if not exists
+    if Nx.qdb and Nx.qdb.profile and Nx.qdb.profile.Quest then
+        if Nx.qdb.profile.Quest.ShowQuestOffers == nil then
+            Nx.qdb.profile.Quest.ShowQuestOffers = true
+        end
+    end
 end
 
 -------------------------------------------------------------------------------

@@ -4773,11 +4773,19 @@ function Nx.Map:UpdateWorld()
         if level and mapTextureKit then
             texPath = "Interface\\WorldMap\\" .. winfo.MapBaseName .. level .. "\\"
             texName = winfo.MapBaseName .. level
+            -- Also update the overlay to match the garrison tier
+            mapFileName = winfo.MapBaseName .. level
+            -- Dynamically update winfo.Overlay so UpdateOverlay uses the correct tier
+            winfo.Overlay = winfo.MapBaseName .. level
         else
-            level = "1"  -- Default to level 1 if no valid level is returned
+            level = 1  -- Default to level 1 if no valid level is returned
             texPath = "Interface\\WorldMap\\" .. winfo.MapBaseName .. level .. "\\"
             texName = winfo.MapBaseName .. level
+            mapFileName = winfo.MapBaseName .. level
+            winfo.Overlay = winfo.MapBaseName .. level
         end
+        -- Store the current garrison tier for use in drawing plot icons
+        self.GarrisonTier = level
     end
 
     if self.Debug then
@@ -5333,6 +5341,7 @@ function Nx.Map:Update (elapsed)
     self:UpdateWorldMap()
 
     self:DrawContinentsPOIs()
+    self:DrawGarrisonPlots()
 
     if Nx.db.profile.Map.ShowTrail then
         self:UpdatePlyrHistory()
@@ -6195,6 +6204,101 @@ function Nx.Map:DrawContinentsPOIs()
                             y + h * t1y, y + h * t4y)
 
 --                Nx.prtCtrl ("%s %s %s %s %s %s", t1x, t1y, t4x, t4y, t2x, t2y)
+            end
+        end
+    end
+
+    self.Level = self.Level + 1
+end
+
+--------
+-- Garrison plot cache (avoid API calls and coordinate conversions every frame)
+local GarrisonPlotCache = {
+    plots = {},           -- [mapId] = cached plot data with world coords
+    lastCheck = {},       -- [mapId] = GetTime() of last check
+}
+
+-- Get cached garrison plots (only refresh every 5 seconds)
+local function GetCachedGarrisonPlots(map, mapId)
+    local now = GetTime()
+    local lastCheck = GarrisonPlotCache.lastCheck[mapId] or 0
+    
+    -- Only refresh garrison plots every 5 seconds (plot data doesn't change often)
+    if (now - lastCheck) < 5 and GarrisonPlotCache.plots[mapId] then
+        return GarrisonPlotCache.plots[mapId]
+    end
+    
+    -- Check if the API exists
+    if not C_Garrison or not C_Garrison.GetGarrisonPlotsInstancesForMap then
+        return nil
+    end
+    
+    -- Get the garrison plots for current map
+    local plots = C_Garrison.GetGarrisonPlotsInstancesForMap(mapId)
+    if not plots or #plots == 0 then
+        return nil
+    end
+    
+    -- Pre-calculate world coordinates for each plot
+    local cachedPlots = {}
+    for _, plot in ipairs(plots) do
+        if plot.position and plot.atlasName then
+            -- Convert position (0-1 range) to zone coordinates (0-100 range)
+            local zoneX = plot.position.x * 100
+            local zoneY = plot.position.y * 100
+            -- Convert to world coordinates
+            local wx, wy = map:GetWorldPos(mapId, zoneX, zoneY)
+            
+            cachedPlots[#cachedPlots + 1] = {
+                wx = wx,
+                wy = wy,
+                name = plot.name or "Garrison Plot",
+                atlasName = plot.atlasName,
+            }
+        end
+    end
+    
+    GarrisonPlotCache.plots[mapId] = cachedPlots
+    GarrisonPlotCache.lastCheck[mapId] = now
+    return cachedPlots
+end
+
+--------
+-- Draw garrison plot icons
+-- Uses C_Garrison.GetGarrisonPlotsInstancesForMap to get plot positions and textures
+
+function Nx.Map:DrawGarrisonPlots()
+    -- Only draw in garrison maps
+    local mapId = self.MapId
+    local wzone = self:GetWorldZone(mapId)
+    if not wzone or not wzone.Garrison then
+        return
+    end
+
+    -- Get cached garrison plots (refreshes every 5 seconds)
+    local plots = GetCachedGarrisonPlots(self, mapId)
+    if not plots then
+        return
+    end
+
+    -- Pre-calculate icon size outside the loop
+    local iconSize = 8 * self.ScaleDraw
+
+    -- Draw each plot icon using cached world coordinates
+    for _, plot in ipairs(plots) do
+        -- Get an icon frame
+        local f = self:GetIcon(3)
+
+        -- Position and display the icon
+        -- Use ClipFrameWNoChop to let parent frame clip the icon at edges
+        if self:ClipFrameWNoChop(f, plot.wx, plot.wy, iconSize, iconSize) then
+            -- Set tooltip to plot name
+            f.NxTip = plot.name
+
+            -- Use atlas texture for the icon
+            if f.texture.SetAtlas then
+                f.texture:SetAtlas(plot.atlasName, true)
+                f.texture:SetTexCoord(0, 1, 0, 1)  -- Reset tex coords for atlas
             end
         end
     end

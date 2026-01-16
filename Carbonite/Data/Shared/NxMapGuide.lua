@@ -1446,22 +1446,17 @@ function Nx.Map.Guide:UpdateMapIcons()
                     local tipText = skill > 0 and (name .. " [" .. L["Skill"] .. ": " .. skill .. "]") or name
                     local dungeonLevel = Nx.Map.DungeonLevel
 
-                    -- Visibility culling bounds
-                    local clipW = map.MapW / map.ScaleDraw
-                    local clipH = map.MapH / map.ScaleDraw
-                    local mapX, mapY = map.MapPosXDraw, map.MapPosYDraw
-                    local minX, maxX = mapX - clipW, mapX + clipW
-                    local minY, maxY = mapY - clipH, mapY + clipH
+                    -- Note: Don't cull icons here at add-time. The draw loop in NxMap.lua
+                    -- already handles visibility culling efficiently. Culling here would
+                    -- cause icons to disappear as the player moves, since this function
+                    -- isn't called every frame.
 
                     for k, node in pairs (nodeT) do
                         local x, y, level = Nx:GatherUnpack (node)
                         if level == dungeonLevel then
                             local wx, wy = Map:GetWorldPos (mapId, x, y)
-                            -- Visibility culling - skip off-screen nodes
-                            if wx >= minX and wx <= maxX and wy >= minY and wy <= maxY then
-                                icon = map:AddIconPt (iconType, wx, wy, level, nil, texPath, level)
-                                map:SetIconTip (icon, tipText)
-                            end
+                            icon = map:AddIconPt (iconType, wx, wy, level, nil, texPath, level)
+                            map:SetIconTip (icon, tipText)
                         end
                     end
                 end

@@ -3667,7 +3667,11 @@ function Nx:GatherImportCarb (nodeType)
         return
     end
 
-    LoadAddOn("Carbonite.Gathermate2_Data")
+    if C_AddOns and C_AddOns.LoadAddOn then
+        C_AddOns.LoadAddOn("Carbonite.Gathermate2_Data")
+    else
+        LoadAddOn("Carbonite.Gathermate2_Data")
+    end
 
     -- Validate data exists
     if nodeType == "NXMine" then

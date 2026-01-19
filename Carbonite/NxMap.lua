@@ -5004,6 +5004,12 @@ function Nx.Map:Update (elapsed)
         if rid ~= 9000 then
 --            Nx.prtD ("Map zone changed %d, %d", rid, mapId)
 
+            -- Reset InstanceId before switch operations to prevent GotoCurrentZone
+            -- from using instance scale (20) when teleporting from instance to normal zone
+            if not self:IsInstanceMap(rid) then
+                self.InstanceId = false
+            end
+
             if Nx.Map.RMapId == 9000 then    -- Loading?
                 self.CurOpts = nil
                 self:SwitchOptions (rid, true)

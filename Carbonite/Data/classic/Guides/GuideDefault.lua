@@ -1,1 +1,1 @@
-﻿Nx.GuideData={}
+Nx.GuideData={}

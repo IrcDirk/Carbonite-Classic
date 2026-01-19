@@ -4714,12 +4714,18 @@ function Nx.Map:UpdateWorld()
     end
 
     self.NeedWorldUpdate = false
+    local mapId
     if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then
         --Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
         Nx.Map:SetToCurrentZone()
         --Nx.Map:RegisterEvent ("WORLD_MAP_UPDATE", "OnEvent")
+        -- Use the player's actual zone when mouse is not over the map
+        -- This fixes city maps not showing initially (RMapId may not be updated yet)
+        mapId = MapUtil.GetDisplayableMapForPlayer()
     end
-    local mapId = self:GetCurrentMapId()
+    if not mapId or mapId == 9000 then
+        mapId = self:GetCurrentMapId()
+    end
 
     local winfo = self.MapWorldInfo[mapId]
     if winfo and self.MapWorldInfo[mapId].BaseMap then
@@ -5891,15 +5897,17 @@ function Nx.Map:SetInstanceMap (mapId)
         self.InstMapId = mapId
         self.InstMapInfo = info
         local winfo = Map.MapWorldInfo[mapId]
-        if winfo.BaseMap then
+        if winfo and winfo.BaseMap then
             winfo = Map.MapWorldInfo[winfo.BaseMap]
         end
-        local wx = winfo.X
-        local wy = winfo.Y
-        self.InstMapWX1 = wx
-        self.InstMapWY1 = wy
-        self.InstMapWX2 = wx + sizex / 256
-        self.InstMapWY2 = wy + sizey / 256 * #info / 3
+        if winfo then
+            local wx = winfo.X
+            local wy = winfo.Y
+            self.InstMapWX1 = wx
+            self.InstMapWY1 = wy
+            self.InstMapWX2 = wx + sizex / 256
+            self.InstMapWY2 = wy + sizey / 256 * #info / 3
+        end
     end
 end
 

@@ -5434,7 +5434,7 @@ function Nx.Quest:Abandon (qIndex, qId)
                 YES,
                 function(self)
                     if not Nx.isClassic then
-                        C_QuestLog.SetSelectedQuest (C_QuestLog.GetQuestIDForLogIndex(qIndex))
+                        C_QuestLog.SetSelectedQuest (C_QuestLog.GetQuestIDForLogIndex(qIndex))				
                         C_QuestLog.SetAbandonQuest()
                         -- native blizz
                         C_QuestLog.AbandonQuest();
@@ -7154,7 +7154,19 @@ function Nx.Quest.List:MakeDescLink (cur, id, debug)
         level = UnitLevel ("player") or 0
     end
 
-    local s = title --Quest:CreateLink (qId, realLevel, title) or '' --
+    -- Try to get the proper quest link from WoW API
+    local questLink
+    local questLogIndex = GetQuestLogIndexByID(qId)
+    if questLogIndex and questLogIndex > 0 and GetQuestLink then
+        questLink = GetQuestLink(questLogIndex)
+    end
+
+    -- Fall back to manually created link if GetQuestLink not available or quest not in log
+    if not questLink then
+        questLink = Quest:CreateLink(qId, realLevel, title)
+    end
+
+    local s = questLink or title
 
     -- Needs a leading space according to Blizzard. White color breaks link
     if quest and Nx.qdb.profile.Quest.ShowLinkExtra then
@@ -7282,12 +7294,33 @@ function CarboniteQuest:OnQuestUpdate (event, ...)
                 CloseQuest();
             end
         end]]--
-        if arg1 and Nx.qdb.profile.QuestWatch.AddNew then
-            local qId = Nx.Quest:GetQuestID (arg1)
-            local qStatus = Nx.Quest:GetQuest (qId)
-            if Nx.Quest:IsDaily(qId) then
-                Nx.Quest:SetQuest (qId, "W")
-                Quest:PartyStartSend()
+        -- Get the questID - handle different API versions
+        -- Classic: arg1 = questLogIndex (small number 1-25)
+        -- Retail: arg1 = questID directly (large number)
+        local questId
+        if Nx.isRetail then
+            -- Retail: arg1 is the questID directly
+            questId = arg1
+        else
+            -- Classic versions: arg1 is quest log index, need to get questID from it
+            if arg1 and arg1 > 0 then
+                questId = Nx.Quest:GetQuestID(arg1)
+            end
+        end
+
+        if questId and questId > 0 then
+            -- Add to AcceptPool so it gets watched during Refresh
+            -- Check if not already in the pool (QUEST_DETAIL may have added it)
+            local found = false
+            for _, qn in ipairs(Quest.AcceptPool) do
+                if qn == questId then
+                    found = true
+                    break
+                end
+            end
+            if not found then
+                table.insert(Quest.AcceptPool, questId)
+                Nx.prtD("QUEST_ACCEPTED added to pool: %s", questId)
             end
         end
         Nx.Quest:RecordQuests()
@@ -8699,7 +8732,7 @@ function Nx.Quest:UpdateIcons (map)
                             local isCalling = classification == Enum.QuestClassification.Calling
                             local frequency = questTagInfo and questTagInfo.frequency or 0
                             local isRepeatable = questTagInfo and questTagInfo.isRepeatable or false
-
+                            
                             if QuestUtil.GetQuestIconOffer then
                                 local atlasName, useAtlas = QuestUtil.GetQuestIconOffer(isLegendary, frequency, isRepeatable, isCampaign, isCalling, isImportant, isMeta)
                                 if useAtlas then
@@ -12727,7 +12760,7 @@ function Nx.Quest:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
     if not mapID or not hubAreaPoiID then
         return {}
     end
-
+    
     -- Check if required APIs exist
     if not C_QuestLine or not C_QuestLine.GetAvailableQuestLines then
         return {}
@@ -12735,9 +12768,9 @@ function Nx.Quest:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
     if not C_QuestHub or not C_QuestHub.IsQuestCurrentlyRelatedToHub then
         return {}
     end
-
+    
     local relatedQuests = {}
-
+    
     -- Get available quest lines for the map
     local questLines = C_QuestLine.GetAvailableQuestLines(mapID)
     if questLines then
@@ -12759,6 +12792,7 @@ function Nx.Quest:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
             end
         end
     end
+    
     return relatedQuests
 end
 
@@ -12773,19 +12807,19 @@ function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
     if not tooltip or not mapID or not hubAreaPoiID then
         return 0
     end
-
+    
     local relatedQuests = self:GetRelatedQuestOffersForHub(mapID, hubAreaPoiID)
-
+    
     -- Count quests
     local questCount = 0
     for _ in pairs(relatedQuests) do
         questCount = questCount + 1
     end
-
+    
     if questCount == 0 then
         return 0
     end
-
+    
     -- Add header
     GameTooltip_AddBlankLineToTooltip(tooltip)
     if QUEST_HUB_TOOLTIP_AVAILABLE_QUESTS_HEADER then
@@ -12793,11 +12827,11 @@ function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
     else
         GameTooltip_AddHighlightLine(tooltip, "Available Quests:")
     end
-
+    
     -- Add quest names (limit to 5)
     local displayed = 0
     local maxDisplay = 5
-
+    
     -- Sort quests by priority (Campaign > Important > Legendary > Normal)
     local sortedQuests = {}
     for questID, questInfo in pairs(relatedQuests) do
@@ -12819,7 +12853,7 @@ function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
         -- Then alphabetical
         return (a.questName or "") < (b.questName or "")
     end)
-
+    
     for _, questInfo in ipairs(sortedQuests) do
         if displayed < maxDisplay then
             local questName = questInfo.questName or ("Quest " .. questInfo.questID)
@@ -12837,7 +12871,7 @@ function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
             displayed = displayed + 1
         end
     end
-
+    
     -- Show overflow count
     if questCount > maxDisplay then
         local remaining = questCount - maxDisplay
@@ -12847,7 +12881,7 @@ function Nx.Quest:AddQuestHubTooltipData(tooltip, mapID, hubAreaPoiID)
             GameTooltip_AddNormalLine(tooltip, "  +" .. remaining .. " more quests")
         end
     end
-
+    
     return questCount
 end
 
@@ -12882,20 +12916,20 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
     if not mapID then
         return {}
     end
-
+    
     -- Check if required APIs exist
     if not C_QuestLine or not C_QuestLine.GetAvailableQuestLines then
         return {}
     end
-
+    
     -- Use cache if valid (same map, less than 2 seconds old)
     local now = GetTime()
     if self.QuestOfferCache and self.QuestOfferCacheMapID == mapID and (now - self.QuestOfferCacheTime) < 2 then
         return self.QuestOfferCache
     end
-
+    
     local questOffers = {}
-
+    
     -- Get quest hubs for the map to filter out hub-related quests (unless toggled on)
     local questHubIds = {}
     local toggledHubs = Nx.Map and Nx.Map.QuestHubToggles or {}
@@ -12911,7 +12945,7 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
             end
         end
     end
-
+    
     -- Helper function to check if quest is related to any non-toggled hub
     -- If a hub is toggled on, we want to show its quests, so don't filter them out
     local function isQuestRelatedToNonToggledHub(questID)
@@ -12925,7 +12959,7 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
         end
         return false
     end
-
+    
     -- Get available quest lines for the map
     local questLines = C_QuestLine.GetAvailableQuestLines(mapID)
     if questLines then
@@ -12939,7 +12973,7 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
                     if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification then
                         questClassification = C_QuestInfoSystem.GetQuestClassification(info.questID)
                     end
-
+                    
                     -- Determine atlas icon
                     local atlas = "QuestNormal"
                     local priority = 1
@@ -12973,13 +13007,13 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
                         atlas = questOfferAtlas.Important
                         priority = 7
                     end
-
+                    
                     -- Check if quest should be hidden
                     local isHidden = false
                     if C_QuestLog and C_QuestLog.IsQuestTrivial then
                         isHidden = C_QuestLog.IsQuestTrivial(info.questID)
                     end
-
+                    
                     -- Skip hidden quests unless tracking them
                     local skipHidden = isHidden and C_Minimap and C_Minimap.IsTrackingHiddenQuests and not C_Minimap.IsTrackingHiddenQuests()
                     if not skipHidden then
@@ -13003,12 +13037,12 @@ function Nx.Quest:GetQuestOffersForMap(mapID)
             end
         end
     end
-
+    
     -- Cache the results
     self.QuestOfferCache = questOffers
     self.QuestOfferCacheMapID = mapID
     self.QuestOfferCacheTime = now
-
+    
     return questOffers
 end
 
@@ -13021,27 +13055,27 @@ function Nx.Quest:UpdateQuestOfferIcons(map)
     if not map or not Nx.qdb or not Nx.qdb.profile or not Nx.qdb.profile.Quest then
         return
     end
-
+    
     -- Check if quest offer display is enabled
     if not Nx.qdb.profile.Quest.ShowQuestOffers then
         return
     end
-
+    
     local mapID = map.MapId
     if not mapID then
         return
     end
-
+    
     local questOffers = self:GetQuestOffersForMap(mapID)
-
+    
     for questID, offer in pairs(questOffers) do
         if offer.x and offer.y then
             -- Get world position
             local wx, wy = map:GetWorldPos(mapID, offer.x * 100, offer.y * 100)
-
+            
             -- Get icon frame
             local icon = map:GetIcon(1)
-
+            
             if map:ClipFrameTL(icon, wx - 8, wy - 8, 16, 16, 0) then
                 -- Set atlas texture
                 if offer.atlas then
@@ -13050,14 +13084,14 @@ function Nx.Quest:UpdateQuestOfferIcons(map)
                     icon.texture:SetTexture("Interface\\Minimap\\ObjectIcons")
                     icon.texture:SetTexCoord(0.125, 0.25, 0, 0.25) -- Quest icon
                 end
-
+                
                 -- Alpha for hidden quests
                 if offer.isHidden then
                     icon.texture:SetVertexColor(1, 1, 1, 0.5)
                 else
                     icon.texture:SetVertexColor(1, 1, 1, 1)
                 end
-
+                
                 -- Set tooltip
                 local tipText = offer.questName or ("Quest " .. questID)
                 if offer.questLineName then
@@ -13070,7 +13104,7 @@ function Nx.Quest:UpdateQuestOfferIcons(map)
                 elseif offer.isLegendary then
                     tipText = "|cFFFF8000[Legendary]|r " .. tipText
                 end
-
+                
                 icon.NxTip = tipText
                 -- Use NXType 8500 range for quest offers (not 9000+ which is for active quests)
                 -- This prevents IconOnEnter from treating these as active quest icons

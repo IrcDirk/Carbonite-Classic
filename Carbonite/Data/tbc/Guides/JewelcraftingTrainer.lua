@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 
 Nx.GuideData[L["Jewelcrafting"] .. " " .. L["Trainer"]] = {
     ["Mode"] = 32,
-    [1453] = "1,49.83,74.82",
+    [1453] = "1,38.92,65.08",
     [1454] = "2,55.99,46.49",
     [1455] = "1,61.02,45.19",
     [1456] = "2,28.71,20.84",

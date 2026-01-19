@@ -7,7 +7,5 @@
 	<Include file="Quests31-40.lua"/>
 	<Include file="Quests41-50.lua"/>
 	<Include file="Quests51-60.lua"/>
-	<Include file="Quests61-70.lua"/>
-	<Include file="Quests71-80.lua"/>
 	<Include file="Units2Quests.lua"/>
 </Ui>

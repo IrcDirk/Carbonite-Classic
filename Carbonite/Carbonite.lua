@@ -113,6 +113,8 @@ Nx.BlobsAvailable = select(4, GetBuildInfo()) > 39999
 Nx.OldRidingSkill = select(4, GetBuildInfo()) < 40000
 Nx.MaxPlayerLevel = GetMaxLevelForExpansionLevel(LE_EXPANSION_LEVEL_CURRENT)
 
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+
 -------------------------------------------------------------------------------
 -- GLOBAL STATE VARIABLES
 -------------------------------------------------------------------------------

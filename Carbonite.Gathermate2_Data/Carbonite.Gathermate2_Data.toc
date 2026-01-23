@@ -1,0 +1,21 @@
+## Interface: 120000
+## Notes: Wowhead Data dump for GatherMate2
+## Title: Carbonite GatherMate2Data - Retail @project-version@
+## Version: @project-version@
+## Author: kagaro, Xinhuan, Rythal (repackaging for Carb), IrcDirk (new versions for Carb)
+## X-Category: Map
+## X-Email: sal.scotto@gmail.com
+## Dependencies: Carbonite
+## LoadOnDemand: 1
+## IconTexture: Interface\AddOns\Carbonite\Gfx\MMBut.tga
+
+## X-WoWI-ID: 22789
+## X-Curse-Project-ID: 75792
+
+Data\retail\MiningData.lua
+Data\retail\HerbalismData.lua
+Data\retail\GasData.lua
+Data\retail\FishData.lua
+Data\retail\TreasureData.lua
+Data\retail\TimberData.lua
+Data\retail\ArchaeologyData.lua

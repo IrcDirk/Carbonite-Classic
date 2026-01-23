@@ -1,5 +1,5 @@
 ## Interface: 50503
-## Title: Carbonite Maps - Classic @project-version@
+## Title: Carbonite Maps - Mists of Pandaria Classic @project-version@
 ## Version: @project-version@
 ## Author: No one
 ## Notes: Released Under GPL

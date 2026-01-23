@@ -1,0 +1,19 @@
+## Interface: 120000, 120001
+## Title: Carbonite Quest - Retail @project-version@
+## Version: @project-version@
+## Author: No One
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXQuest
+## RequiredDeps: Carbonite 
+## IconTexture: Interface\AddOns\Carbonite\Gfx\MMBut.tga
+
+## X-WoWI-ID: 23404
+## X-Curse-Project-ID: 87975
+
+Locales\locales.xml
+Data\shared\QuestCats.lua
+Data\retail\QuestNPC.lua
+Data\retail\QuestData.xml
+NxQuest.lua

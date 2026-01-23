@@ -295,9 +295,9 @@ function Nx.Map:Init()
         Nx.EmulateTomTom()
     end
 
-    -- Sync with Blizzard's world map
+    -- Sync with Blizzard's world map (skip during combat to avoid taint)
     Nx.Map.UpdateMapID = WorldMapFrame.mapID
-    if Nx.Map.UpdateMapID then
+    if Nx.Map.UpdateMapID and not InCombatLockdown() then
         WorldMapFrame:SetMapID(Nx.Map.UpdateMapID)
     end
 end
@@ -317,7 +317,10 @@ function Nx.Map:SetMapByID(zone)
         end
         -- Wrap in pcall to catch Blizzard VehicleDataProvider errors
         -- (their code doesn't handle nil from C_PvP.GetBattlefieldVehicles)
-        pcall(WorldMapFrame.SetMapID, WorldMapFrame, zone)
+        -- Skip during combat to avoid taint from Blizzard's quest data providers
+        if not InCombatLockdown() then
+            pcall(WorldMapFrame.SetMapID, WorldMapFrame, zone)
+        end
     end
 end
 
@@ -1869,8 +1872,11 @@ function Nx.Map:UpdateWorldMap()
     ]]--
 
     if f then
+        -- Hide WorldMapFrm for instance maps with NXInstanceMaps option enabled
+        -- These maps are rendered via MoveWorldMap instead to avoid duplicate textures
+        local isInstanceWithOverlay = (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps
 
-        if self.StepTime ~= 0 or self.Scrolling or IsShiftKeyDown() then
+        if self.StepTime ~= 0 or self.Scrolling or IsShiftKeyDown() or isInstanceWithOverlay then
             f:Hide()
         else
 
@@ -1900,12 +1906,15 @@ function Nx.Map:UpdateWorldMap()
         end
     end
     if not InCombatLockdown() and Nx.BlobsAvailable then
+        -- Skip blob drawing for instance maps as they cause rendering issues with UnitPositionFrame
+        local isInstanceMap = self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)
+        
         self.Arch:DrawNone();
         -- Hide arch blobs during zoom animation or manual scrolling to prevent position/scale mismatch
         -- Note: We check for scale change rather than StepTime != 0, because StepTime is also set
         -- when following the player (position change only), and we want blobs visible during that
         local isZooming = abs(self.ScaleDraw - self.Scale) > 0.001
-        if isZooming or self.Scrolling then
+        if isZooming or self.Scrolling or isInstanceMap then
             self.Arch:Hide()
         elseif Nx.db.char.Map.ShowArchBlobs then
             local digSites = C_ResearchInfo.GetDigSitesForMap(Nx.Map:GetCurrentMapAreaID());
@@ -1927,7 +1936,7 @@ function Nx.Map:UpdateWorldMap()
         local superTrackedQuestID = C_SuperTrack and C_SuperTrack.GetSuperTrackedQuestID and C_SuperTrack.GetSuperTrackedQuestID()
         local isWorldQuest = superTrackedQuestID and superTrackedQuestID > 0 and QuestUtils_IsQuestWorldQuest and QuestUtils_IsQuestWorldQuest(superTrackedQuestID)
 
-        if isWorldQuest then
+        if isWorldQuest and not isInstanceMap then
             self.QuestWin:DrawNone()
             if isZooming or self.Scrolling then
                 self.QuestWin:Hide()
@@ -1944,6 +1953,11 @@ function Nx.Map:UpdateWorldMap()
             end
             -- Mark that we're showing a world quest blob so NxQuest.lua doesn't interfere
             self.ShowingWorldQuestBlob = true
+        elseif isInstanceMap then
+            -- Hide QuestWin for instance maps to prevent world map rendering issues
+            self.QuestWin:DrawNone()
+            self.QuestWin:Hide()
+            self.ShowingWorldQuestBlob = false
         else
             -- Not tracking a world quest - clear the blob if we were showing one
             if self.ShowingWorldQuestBlob then
@@ -3957,7 +3971,11 @@ function Nx.Map:OnEvent (event, ...)
         if Nx.BlobsAvailable then
             map.Arch:SetParent(map.TextScFrm:GetScrollChild())
             map.QuestWin:SetParent(map.TextScFrm:GetScrollChild())
-            map.Arch:Show()
+            -- Don't show blobs on instance maps as they cause rendering issues
+            local isInstanceMap = Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)
+            if not isInstanceMap then
+                map.Arch:Show()
+            end
             map.QuestWin:Hide()
         end
     elseif event == "ZONE_CHANGED_NEW_AREA" then
@@ -4266,6 +4284,14 @@ local POI_Pool = {
     pPOIs = {},
     aPOIs = {},
     zPOIs = {},
+}
+
+-- POI cache to reduce API calls during zoom/scroll (refreshes every 0.5 seconds or on map change)
+local POI_Cache = {
+    mapID = nil,
+    time = 0,
+    data = nil,
+    refreshInterval = 0.5,  -- Refresh every 0.5 seconds
 }
 
 -- Per-frame cached values (set at start of Update)
@@ -4715,6 +4741,28 @@ function Nx.Map:UpdateWorld()
 
     self.NeedWorldUpdate = false
     local mapId
+    local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+
+    -- Quick early-out: if we have cached state, check if anything changed before expensive API calls
+    if self.CurWorldUpdateMapId and self.LastDungeonLevel == dungeonLevel then
+        -- Use cached map ID for quick check
+        mapId = self:GetCurrentMapId()
+        if self.CurWorldUpdateMapId == mapId then
+            -- Only check overlay count every 2 seconds (expensive API call)
+            local now = GetTime()
+            if not self.LastOverlayCheckTime or (now - self.LastOverlayCheckTime) > 2 then
+                self.LastOverlayCheckTime = now
+                local i = self:GetExploredOverlayNum()
+                if i == self.CurWorldUpdateOverlayNum then
+                    return  -- Nothing changed
+                end
+                self.CurWorldUpdateOverlayNum = i
+            else
+                return  -- Use cached overlay count, no update needed
+            end
+        end
+    end
+
     if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then
         --Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
         Nx.Map:SetToCurrentZone()
@@ -4735,22 +4783,23 @@ function Nx.Map:UpdateWorld()
         winfo = {}
     end
     if winfo.MapLevel then
-        if Nx.Map:GetCurrentMapDungeonLevel() ~= winfo.MapLevel then    -- Wrong level?
+        if dungeonLevel ~= winfo.MapLevel then    -- Wrong level?
             --SetDungeonMapLevel (winfo.MapLevel)
         end
     end
 
+    -- For full update path, refresh overlay count
     local i = self:GetExploredOverlayNum()
+    self.LastOverlayCheckTime = GetTime()
 
-    if self.CurWorldUpdateMapId == mapId and i == self.CurWorldUpdateOverlayNum and Nx.Map:GetCurrentMapDungeonLevel() == self.LastDungeonLevel then
+    if self.CurWorldUpdateMapId == mapId and i == self.CurWorldUpdateOverlayNum and dungeonLevel == self.LastDungeonLevel then
         return
     end
 
     self.CurWorldUpdateMapId = mapId
     self.CurWorldUpdateOverlayNum = i
-    self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
+    self.LastDungeonLevel = dungeonLevel
 
-    self.LastDungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
 --    local mapInfo = C_Map.GetMapInfo(mapId)
     local mapInfo = Nx.Map:GetMapInfo(mapId)
     local mapFileName = winfo.Overlay or (mapInfo.name and mapInfo.name:gsub(" ", "") or "")
@@ -4848,11 +4897,26 @@ function Nx.Map:Update (elapsed)
     local Nx = Nx
     local Map = Nx.Map
 
+    -- Debug profiling for stutter detection
+    local debugProfile = Nx.db.profile.Debug.DebugMap
+    local profileStart, profileSection
+    if debugProfile then
+        profileStart = debugprofilestop()
+    end
+
     self:MouseEnable (self.Win:IsSizeMax())
 
     --if self.NeedWorldUpdate then
         self:UpdateWorld()
     --end
+
+    if debugProfile then
+        local now = debugprofilestop()
+        if (now - profileStart) > 5 then -- More than 5ms
+            Nx.prt("Map:Update - UpdateWorld took %.2fms", now - profileStart)
+        end
+        profileSection = now
+    end
 
     self.MapW = self.Frm:GetWidth() - self.PadX * 2
     self.MapH = self.Frm:GetHeight() - self.TitleH
@@ -4889,6 +4953,16 @@ function Nx.Map:Update (elapsed)
             end
         end
         wqFrms.Next = 1
+
+        -- Clear quest offer cache on map change to prevent showing wrong quest titles
+        if Nx.Quest and Nx.Quest.ClearQuestOfferCache then
+            Nx.Quest:ClearQuestOfferCache()
+        end
+
+        -- Clear POI cache on map change (POI_Cache is accessed via local reference)
+        POI_Cache.mapID = nil
+        POI_Cache.data = nil
+        POI_Cache.time = 0
 
         Nx.Com.PlyrChange = GetTime()
     end
@@ -5345,12 +5419,31 @@ function Nx.Map:Update (elapsed)
 --    if not (IsAltKeyDown() and IsControlKeyDown()) then
 --    end
 
+    local zoneStart = debugProfile and debugprofilestop()
     self:UpdateZones()
+    local zoneTime = debugProfile and (debugprofilestop() - zoneStart) or 0
+    
+    local instStart = debugProfile and debugprofilestop()
     self:UpdateInstanceMap()
+    local instTime = debugProfile and (debugprofilestop() - instStart) or 0
 
+    local mmStart = debugProfile and debugprofilestop()
     self:MinimapUpdate()
+    local mmTime = debugProfile and (debugprofilestop() - mmStart) or 0
+    
 --    self.MMFrm:GetParent():SetAlpha(0)
+    local wmStart = debugProfile and debugprofilestop()
     self:UpdateWorldMap()
+    local wmTime = debugProfile and (debugprofilestop() - wmStart) or 0
+
+    if debugProfile then
+        local totalTime = zoneTime + instTime + mmTime + wmTime
+        if totalTime > 5 then
+            Nx.prt("Map:Update - Zone:%.1f Inst:%.1f MM:%.1f WM:%.1f = %.1fms", 
+                zoneTime, instTime, mmTime, wmTime, totalTime)
+        end
+        profileSection = debugprofilestop()
+    end
 
     self:DrawContinentsPOIs()
     self:DrawGarrisonPlots()
@@ -5399,55 +5492,81 @@ function Nx.Map:Update (elapsed)
     local txX1, txX2, txY1, txY2
 
     if not IsAltKeyDown() then
-        local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid) or {}
-        -- Reuse pooled tables instead of creating new ones every frame
-        local pPOIs = POI_Pool.pPOIs
-        wipe(pPOIs)
-        local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid) or {}
-        local aPOIs = POI_Pool.aPOIs
-        wipe(aPOIs)
-        local areaPOIIds = C_AreaPoiInfo.GetAreaPOIForMap(rid) or {}
-        for j, aPOIId in ipairs(areaPOIIds) do
-            aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
-        end
-        -- Add Delves POIs
-        if C_AreaPoiInfo.GetDelvesForMap then
-            local delvePOIIds = C_AreaPoiInfo.GetDelvesForMap(rid) or {}
-            local offset = #aPOIs
-            for j, delvePOIId in ipairs(delvePOIIds) do
-                aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, delvePOIId)
+        local zPOIs
+        local now = GetTime()
+        local isZoomingOrScrolling = self.StepTime ~= 0 or self.Scrolling
+        local cacheValid = POI_Cache.mapID == rid and POI_Cache.data and (now - POI_Cache.time) < POI_Cache.refreshInterval
+        
+        -- Use cached POI data during zoom/scroll to reduce stutter, or if cache is still valid
+        if isZoomingOrScrolling and POI_Cache.data and POI_Cache.mapID == rid then
+            zPOIs = POI_Cache.data
+        elseif cacheValid then
+            zPOIs = POI_Cache.data
+        else
+            -- Fetch fresh POI data
+            local tPOIs = C_TaxiMap.GetTaxiNodesForMap(rid) or {}
+            -- Reuse pooled tables instead of creating new ones every frame
+            local pPOIs = POI_Pool.pPOIs
+            wipe(pPOIs)
+            local dPOIs = C_ResearchInfo.GetDigSitesForMap(rid) or {}
+            local aPOIs = POI_Pool.aPOIs
+            wipe(aPOIs)
+            local areaPOIIds = C_AreaPoiInfo.GetAreaPOIForMap(rid) or {}
+            for j, aPOIId in ipairs(areaPOIIds) do
+                aPOIs[j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, aPOIId)
             end
-        end
-        -- Add Quest Hubs POIs
-        if C_AreaPoiInfo.GetQuestHubsForMap then
-            local hubPOIIds = C_AreaPoiInfo.GetQuestHubsForMap(rid) or {}
-            local offset = #aPOIs
-            for j, hubPOIId in ipairs(hubPOIIds) do
-                aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, hubPOIId)
+            -- Add Delves POIs
+            if C_AreaPoiInfo.GetDelvesForMap then
+                local delvePOIIds = C_AreaPoiInfo.GetDelvesForMap(rid) or {}
+                local offset = #aPOIs
+                for j, delvePOIId in ipairs(delvePOIIds) do
+                    aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, delvePOIId)
+                end
             end
-        end
-        -- Add Dragonriding Races POIs
-        if C_AreaPoiInfo.GetDragonridingRacesForMap then
-            local racePOIIds = C_AreaPoiInfo.GetDragonridingRacesForMap(rid) or {}
-            local offset = #aPOIs
-            for j, racePOIId in ipairs(racePOIIds) do
-                aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, racePOIId)
+            -- Add Quest Hubs POIs
+            if C_AreaPoiInfo.GetQuestHubsForMap then
+                local hubPOIIds = C_AreaPoiInfo.GetQuestHubsForMap(rid) or {}
+                local offset = #aPOIs
+                for j, hubPOIId in ipairs(hubPOIIds) do
+                    aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, hubPOIId)
+                end
             end
-        end
-        -- Add Events POIs
-        if C_AreaPoiInfo.GetEventsForMap then
-            local eventPOIIds = C_AreaPoiInfo.GetEventsForMap(rid) or {}
-            local offset = #aPOIs
-            for j, eventPOIId in ipairs(eventPOIIds) do
-                aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, eventPOIId)
+            -- Add Dragonriding Races POIs
+            if C_AreaPoiInfo.GetDragonridingRacesForMap then
+                local racePOIIds = C_AreaPoiInfo.GetDragonridingRacesForMap(rid) or {}
+                local offset = #aPOIs
+                for j, racePOIId in ipairs(racePOIIds) do
+                    aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, racePOIId)
+                end
             end
-        end
+            -- Add Events POIs
+            if C_AreaPoiInfo.GetEventsForMap then
+                local eventPOIIds = C_AreaPoiInfo.GetEventsForMap(rid) or {}
+                local offset = #aPOIs
+                for j, eventPOIId in ipairs(eventPOIIds) do
+                    aPOIs[offset + j] = C_AreaPoiInfo.GetAreaPOIInfo(rid, eventPOIId)
+                end
+            end
 
-        local bgPOIs = C_PvP.GetBattlefieldVehicles(rid) or {}
+            local bgPOIs = C_PvP.GetBattlefieldVehicles(rid) or {}
 
-        -- Use pooled table for concatenation
-        local zPOIs = POI_Pool.zPOIs
-        Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
+            -- Use pooled table for concatenation
+            zPOIs = POI_Pool.zPOIs
+            Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
+            
+            -- Cache the POI data
+            POI_Cache.mapID = rid
+            POI_Cache.time = now
+            POI_Cache.data = zPOIs
+            
+            if debugProfile then
+                local now2 = debugprofilestop()
+                if (now2 - profileSection) > 5 then
+                    Nx.prt("Map:Update - POI fetch took %.2fms", now2 - profileSection)
+                end
+                profileSection = now2
+            end
+        end
 
         for i, zPOI in ipairs(zPOIs) do
             local type = zPOI._type
@@ -6952,7 +7071,11 @@ end
 -- Shows world map background when enabled in options
 --
 function Nx.Map:MoveContinents()
-    if self.CurOpts and self.CurOpts.NXWorldShow then
+    -- Skip continent tiles for instance maps with NXInstanceMaps enabled
+    -- These maps are rendered via MoveWorldMap instead
+    local isInstanceWithOverlay = (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps
+    
+    if self.CurOpts and self.CurOpts.NXWorldShow and not isInstanceWithOverlay then
         -- Draw all continent tiles
         for contN = 1, Nx.Map.ContCnt do
             local lvl = contN <= 2 and self.Level or self.Level + 1
@@ -7214,7 +7337,12 @@ function Nx.Map:MoveCurZoneTiles (clear)
     if not wzone then
         wzone = {}
     end
-    if not clear and
+    
+    -- Skip drawing zone tiles for instance maps when NXInstanceMaps option is enabled
+    -- These maps are drawn by MoveWorldMap/UpdateWorldMap instead to avoid duplicate textures
+    local isInstanceWithOverlay = (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps
+    
+    if not clear and not isInstanceWithOverlay and
             (not wzone or wzone.City or (wzone.StartZone and Nx.Map.RMapId == mapId) or
             self:IsBattleGroundMap (Nx.Map.RMapId)) or self:IsMicroDungeon(Nx.Map.RMapId) then
 
@@ -7536,6 +7664,15 @@ function Nx.Map:UpdateZones()
     local s = self.LOpts.NXDetailScale
 
     local freeOrScale = self.ScaleDraw <= s
+    
+    -- Skip zone tile updates for instance maps when NXInstanceMaps option is enabled
+    -- These are rendered via MoveWorldMap to prevent duplicate moving textures
+    local isInstanceWithOverlay = (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps
+    if isInstanceWithOverlay then
+        self:MoveCurZoneTiles(true)  -- Clear tiles
+        self:UpdateMiniFrames()
+        return
+    end
 
     if freeOrScale or
         winfo.City or winfo.NoTilemap or
@@ -7711,6 +7848,10 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
         end
     end
     if self:IsBattleGroundMap(Nx.Map.UpdateMapID) then
+        return
+    end
+    -- Skip overlays for instance maps with NXInstanceMaps enabled
+    if self:IsInstanceMap(Nx.Map.RMapId) and self.CurOpts.NXInstanceMaps then
         return
     end
     if not overlays then    -- Not found? New stuff probably
@@ -9436,6 +9577,8 @@ function Nx.Map:ResetIcons()
 
     local data = self.IconWQFrms
     data.Used = data.Next - 1        -- Save last used
+    -- Track the maximum icons ever used (high-water mark) to ensure stale icons get hidden
+    data.MaxUsed = max(data.MaxUsed or 0, data.Used)
     data.Next = 1
 end
 
@@ -9472,6 +9615,15 @@ function Nx.Map:HideExtraIcons()
 
     for n = data.Next, data.Used do        -- Hide up to last used amount
         data[n]:Hide()
+    end
+    
+    -- Also hide any icons beyond Used that might be visible (fixes stale icons on window activation)
+    -- This covers edge cases where icons were shown outside the normal update cycle
+    local maxWQ = data.MaxUsed or data.Used
+    for n = data.Used + 1, maxWQ do
+        if data[n] then
+            data[n]:Hide()
+        end
     end
 end
 
@@ -9514,6 +9666,8 @@ function Nx.Map:GetIcon (levelAdd)
 
     f.texture:SetVertexColor (1, 1, 1, 1)
 --    f.texture:SetBlendMode ("BLEND")
+    -- Reset texture coordinates to prevent stretched textures from previous atlas use
+    f.texture:SetTexCoord (0, 1, 0, 1)
 
     f.NxTip = nil
     f.NXType = nil            -- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 8500 quest offer, 9000+ quest
@@ -9686,6 +9840,8 @@ function Nx.Map:GetIconNI (levelAdd)
 
     f.texture:SetVertexColor (1, 1, 1, 1)
     f.texture:SetBlendMode ("BLEND")
+    -- Reset texture coordinates to prevent stretched textures from previous atlas use
+    f.texture:SetTexCoord (0, 1, 0, 1)
 
     frms.Next = pos + 1
 
@@ -9732,6 +9888,8 @@ function Nx.Map:GetIconStatic (levelAdd)
 
     f.texture:SetVertexColor (1, 1, 1, 1)
 --    f.texture:SetBlendMode ("BLEND")
+    -- Reset texture coordinates to prevent stretched textures from previous atlas use
+    f.texture:SetTexCoord (0, 1, 0, 1)
 
     f.NxTip = nil
     f.NXType = nil            -- 1000 plyr, 2000 BG, 3000 POI, 8000 debug, 8500 quest offer, 9000+ quest
@@ -10364,6 +10522,12 @@ function Nx.Map:UpdateInstanceMap()
 
     local mapId = self.InstMapId
     if not mapId or not Nx.Initialized then
+        return
+    end
+    
+    -- Skip drawing tiles when NXInstanceMaps is enabled
+    -- MoveWorldMap() handles rendering in that case, so we don't want duplicates
+    if (self:IsInstanceMap(Nx.Map.RMapId) or self:IsBattleGroundMap(Nx.Map.RMapId)) and self.CurOpts.NXInstanceMaps then
         return
     end
 
@@ -14149,6 +14313,19 @@ end
 -- Creates texture tiles and positions them to display zone map
 -- Also handles player position frame setup
 --
+-- Cache for MoveWorldMap to avoid per-frame API calls
+local MoveWorldMap_Cache = {
+    mapId = nil,
+    mapInfo = nil,
+    layers = nil,
+    textures = nil,
+    rows = 0,
+    cols = 0,
+    numTiles = 0,
+    maxTiles = 0,
+    texturesSetup = false,
+}
+
 function Nx.Map.MoveWorldMap()
     local curId = Nx.Map:GetCurrentMapId()
     if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
@@ -14156,55 +14333,130 @@ function Nx.Map.MoveWorldMap()
     end
     Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
 
-    local mapInfo = C_Map.GetMapInfo(curId)
-    if not mapInfo.name then
-        return
+    -- Use cache if map hasn't changed
+    local cache = MoveWorldMap_Cache
+    local needsSetup = cache.mapId ~= curId
+    
+    if needsSetup then
+        -- Fetch fresh data only on map change
+        local mapInfo = C_Map.GetMapInfo(curId)
+        if not mapInfo or not mapInfo.name then
+            return
+        end
+        local layers = C_Map.GetMapArtLayers(curId)
+        if not layers or not layers[1] then
+            return
+        end
+        local textures = C_Map.GetMapArtLayerTextures(curId, 1)
+        if not textures then
+            return
+        end
+        
+        local layerInfo = layers[1]
+        local rows = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight)
+        local cols = math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
+        local numTiles = rows * cols
+        local maxTiles = math.max(numTiles, 12)
+        
+        -- Update cache
+        cache.mapId = curId
+        cache.mapInfo = mapInfo
+        cache.layers = layers
+        cache.textures = textures
+        cache.rows = rows
+        cache.cols = cols
+        cache.numTiles = numTiles
+        cache.maxTiles = maxTiles
+        cache.texturesSetup = false
     end
-    local layers = C_Map.GetMapArtLayers(curId)
-    local layerInfo = layers[1]
-    local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
+    
+    local rows = cache.rows
+    local cols = cache.cols
+    local numTiles = cache.numTiles
+    local maxTiles = cache.maxTiles
+    local textures = cache.textures
 
+    -- Create or update WMDF frame with enough textures
     if not Nx.Map.WMDF then
         Nx.Map.WMDF = CreateFrame("Frame", "WMDF")
         Nx.Map.WMDF:SetFrameStrata("BACKGROUND")
         Nx.Map.WMDT = {}
         Nx.Map.EJMB = {}
-        for i = 1,cols do
-            for j = 1, rows do
-                local index = (j - 1) * cols + i
-                Nx.Map.WMDT[index] = Nx.Map.WMDF:CreateTexture("WMDT" .. index)
+        cache.texturesSetup = false
+    end
+    
+    -- Only setup textures when cache was refreshed
+    if not cache.texturesSetup then
+        -- Ensure we have enough textures, create more if needed
+        for i = 1, maxTiles do
+            if not Nx.Map.WMDT[i] then
+                Nx.Map.WMDT[i] = Nx.Map.WMDF:CreateTexture("WMDT" .. i)
             end
         end
-        Nx.Map.WMDT[1]:SetPoint("TOPLEFT")
-        Nx.Map.WMDT[2]:SetPoint("TOPLEFT","WMDT1","TOPRIGHT")
-        Nx.Map.WMDT[3]:SetPoint("TOPLEFT","WMDT2","TOPRIGHT")
-        Nx.Map.WMDT[4]:SetPoint("TOPLEFT","WMDT3","TOPRIGHT")
-        Nx.Map.WMDT[5]:SetPoint("TOPLEFT","WMDT1","BOTTOMLEFT")
-        Nx.Map.WMDT[6]:SetPoint("TOPLEFT","WMDT5","TOPRIGHT")
-        Nx.Map.WMDT[7]:SetPoint("TOPLEFT","WMDT6","TOPRIGHT")
-        Nx.Map.WMDT[8]:SetPoint("TOPLEFT","WMDT7","TOPRIGHT")
-        Nx.Map.WMDT[9]:SetPoint("TOPLEFT","WMDT5","BOTTOMLEFT")
-        Nx.Map.WMDT[10]:SetPoint("TOPLEFT","WMDT9","TOPRIGHT")
-        Nx.Map.WMDT[11]:SetPoint("TOPLEFT","WMDT10","TOPRIGHT")
-        Nx.Map.WMDT[12]:SetPoint("TOPLEFT","WMDT11","TOPRIGHT")
+        
+        -- Position textures dynamically based on actual tile layout
+        for row = 0, rows - 1 do
+            for col = 0, cols - 1 do
+                local index = row * cols + col + 1
+                if Nx.Map.WMDT[index] then
+                    Nx.Map.WMDT[index]:ClearAllPoints()
+                    if col == 0 and row == 0 then
+                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT")
+                    elseif col == 0 then
+                        local prevRowIndex = (row - 1) * cols + 1
+                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT", "WMDT" .. prevRowIndex, "BOTTOMLEFT")
+                    else
+                        local prevColIndex = row * cols + col
+                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT", "WMDT" .. prevColIndex, "TOPRIGHT")
+                    end
+                end
+            end
+        end
+        cache.texturesSetup = true
     end
+    
     Nx.Map.WMDF:SetParent(Nx.Map:GetMap(1).Frm)
     Nx.Map.WMDF:SetFrameLevel(20)
     Nx.Map.WMDF:SetWidth(Nx.Map:GetMap(1).MapW)
     Nx.Map.WMDF:SetHeight(Nx.Map:GetMap(1).MapH)
     Nx.Map.WMDF:Show()
 
-    local textures = C_Map.GetMapArtLayerTextures(curId,1)
-
-    for i=1, 12 do
-        Nx.Map.WMDT[i]:SetWidth(Nx.Map.WMDF:GetWidth() / 3.9)
-        Nx.Map.WMDT[i]:SetHeight(Nx.Map.WMDF:GetHeight() / 2.6)
-        Nx.Map.WMDT[i]:SetTexture(textures[i])
+    -- Only update tile sizes when needed (map size changed or first setup)
+    local tileWidth = Nx.Map.WMDF:GetWidth() / cols
+    local tileHeight = Nx.Map.WMDF:GetHeight() / rows
+    local sizeChanged = (cache.lastTileWidth ~= tileWidth) or (cache.lastTileHeight ~= tileHeight)
+    
+    -- Set textures for valid tiles, hide unused ones - only when needed
+    if needsSetup or sizeChanged then
+        cache.lastTileWidth = tileWidth
+        cache.lastTileHeight = tileHeight
+        
+        for i = 1, maxTiles do
+            if Nx.Map.WMDT[i] then
+                if i <= numTiles and textures[i] then
+                    Nx.Map.WMDT[i]:SetWidth(tileWidth)
+                    Nx.Map.WMDT[i]:SetHeight(tileHeight)
+                    Nx.Map.WMDT[i]:SetTexture(textures[i])
+                    Nx.Map.WMDT[i]:Show()
+                else
+                    -- Hide unused textures to prevent garbage display
+                    Nx.Map.WMDT[i]:SetTexture(nil)
+                    Nx.Map.WMDT[i]:Hide()
+                end
+            end
+        end
     end
+    
     Nx.Map.WMDF:SetAllPoints()
-    NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
-    NXWorldMapUnitPositionFrame:SetAllPoints()
-    NXWorldMapUnitPositionFrame:SetFrameLevel(40)
+    
+    -- Only setup the UnitPositionFrame parent when map changes
+    if needsSetup then
+        NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
+        NXWorldMapUnitPositionFrame:SetAllPoints()
+        NXWorldMapUnitPositionFrame:SetFrameLevel(40)
+    end
+    
+    -- Only update player pins, not the full frame setup every frame
     Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
 
 --[[    local numEncounters = 0;

@@ -2040,7 +2040,7 @@ function Nx.Notes:RareScanner(mapId)
 
         for _,rspin in ipairs(rspins) do
             if rspin.POI then
-                if rspin.POI.mapID == map.MapId then
+                if rspin.POI.mapID == map.MapId and rspin.normalizedX and rspin.normalizedY then
                     local x = rspin.normalizedX * 100
                     local y = rspin.normalizedY * 100
                     local texture = rspin.Texture:GetTexture()

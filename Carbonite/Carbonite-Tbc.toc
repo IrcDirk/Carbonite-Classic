@@ -1,6 +1,6 @@
 ## Interface: 20505
-## Title: Carbonite Maps - tbc v5.5.0-00019
-## Version: v5.5.0-00019
+## Title: Carbonite Maps - TBC Classic @project-version@
+## Version: @project-version@
 ## Author: No one
 ## Notes: Released Under GPL
 ## DefaultState: Enabled

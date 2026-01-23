@@ -4509,7 +4509,7 @@ local function trackConfig()
 end
 function Nx:SetupConfig()
     AceConfig:RegisterOptionsTable("Carbonite", mainConfig)
-    Nx.optionsFrame = AceConfigDialog:AddToBlizOptions("Carbonite", "Carbonite",nil,"main")
+    Nx.optionsFrame, Nx.optionsPanelID = AceConfigDialog:AddToBlizOptions("Carbonite", "Carbonite",nil,"main")
     Nx:AddToConfig("General",generalOptions(),L["General"])
     -- Register all config sections with Blizzard options
     Nx:AddToConfig("Battlegrounds", BGConfig(), L["Battlegrounds"])
@@ -4677,11 +4677,7 @@ end
 function Nx.Opts:Open (pageName)
     -- Use the registered options frame
     if Settings and Settings.OpenToCategory then
-        -- In retail 11.0+, we need to find the category by name
-        local category = Settings.GetCategory and Settings.GetCategory("Carbonite")
-        if category then
-            Settings.OpenToCategory(category:GetID())
-        end
+        Settings.OpenToCategory(Nx.optionsPanelID)
     elseif InterfaceOptionsFrame_OpenToCategory then
         -- Classic fallback
         if Nx.optionsFrame then

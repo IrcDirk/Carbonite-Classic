@@ -1,5 +1,5 @@
 ## Interface: 20505
-## Title: Carbonite Quest - Classic @project-version@
+## Title: Carbonite Quest - TBC Classic @project-version@
 ## Version: @project-version@
 ## Author: No One
 ## Notes: Released Under GPL

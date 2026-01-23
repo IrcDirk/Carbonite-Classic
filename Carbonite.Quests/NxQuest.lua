@@ -3538,25 +3538,39 @@ function Nx.Quest:LoadQuestDB()
             Nx.ModQuests:Clear8()
         end
     end
-    if Nx.MaxPlayerLevel > 80 then
-        if Nx.qdb.profile.Quest.Load9 then
-            C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
-            timeDelay = timeDelay + 1
-            numQLoad = numQLoad + 1
-            maxQLoad = maxQLoad + 1
-        else
-            Nx.ModQuests:Clear9()
+    if Nx.isClassic then
+        if Nx.MaxPlayerLevel > 80 then
+            if Nx.qdb.profile.Quest.Load9 then
+                C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
+                timeDelay = timeDelay + 1
+                numQLoad = numQLoad + 1
+                maxQLoad = maxQLoad + 1
+            else
+                Nx.ModQuests:Clear9()
+            end
         end
-    end
-    if Nx.MaxPlayerLevel > 85 then
-        if Nx.qdb.profile.Quest.Load10 then
-            C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load10(); numQLoad = numQLoad - 1; end)
-            timeDelay = timeDelay + 1
-            numQLoad = numQLoad + 1
-            maxQLoad = maxQLoad + 1
-        else
-            Nx.ModQuests:Clear10()
+        if Nx.MaxPlayerLevel > 85 then
+            if Nx.qdb.profile.Quest.Load10 then
+                C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load10(); numQLoad = numQLoad - 1; end)
+                timeDelay = timeDelay + 1
+                numQLoad = numQLoad + 1
+                maxQLoad = maxQLoad + 1
+            else
+                Nx.ModQuests:Clear10()
+            end
         end
+    else
+        --[[ temporary disable this condition as we don't have quest database for the Midnight expansion yet
+        if Nx.MaxPlayerLevel > 80 then -- 
+            if Nx.qdb.profile.Quest.Load9 then
+                C_Timer.After(1, function() questTotal = questTotal + Nx.ModQuests:Load9(); numQLoad = numQLoad - 1; end)
+                timeDelay = timeDelay + 1
+                numQLoad = numQLoad + 1
+                maxQLoad = maxQLoad + 1
+            else
+                Nx.ModQuests:Clear9()
+            end
+        end ]]--
     end
     C_Timer.After(1, function() Nx.Units2Quests:Load(); end)
 

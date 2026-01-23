@@ -38,7 +38,7 @@ jobs:
 
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package and release
-        run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | sed 's/### Deploy the zipfile./zip -d \$archive CarboniteClassic\/\* CarboniteClassic/g' | bash -s -- -n "{package-name}-{project-version}"
+        run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | sed 's/### Deploy the zipfile./zip -d \$archive CarboniteAllinOneRetailClassic\/\* CarboniteAllinOneRetailClassic/g' | bash -s -- -n "{package-name}-{project-version}"
         shell: bash
         
         #uses: BigWigsMods/packager@v2

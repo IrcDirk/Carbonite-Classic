@@ -1,9 +1,7 @@
-# Carbonite-Classic
-Carbonite + Modules for WoW Classic
+# Carbonite-All-in-One-Retail-Classic
+Carbonite + Modules for WoW Retail and Classic
 
-Twitch/Curse: https://www.curseforge.com/wow/addons/carbonite-classic
-
-WoWInterface: https://www.wowinterface.com/downloads/fileinfo.php?id=25328
+Curse: [https://www.curseforge.com/wow/addons/carbonite-classic
 
 ### U can donate to help Carbonite Classic development here:
 

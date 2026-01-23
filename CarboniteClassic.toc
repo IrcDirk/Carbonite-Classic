@@ -1,5 +1,5 @@
 ## Interface: 50503, 11508, 20505, 120000, 120001
-## Title: Carbonite Maps - Classic
+## Title: Carbonite All in One (Retail & Classic)
 ## Version: @project-version@
 ## Notes: Released Under GPL
 ## DefaultState: Enabled

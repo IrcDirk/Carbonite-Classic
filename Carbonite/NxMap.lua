@@ -1051,13 +1051,19 @@ function Nx.Map:Create(index)
     m.MenuIShowMine = item
     item:SetChecked(Nx.db.char.Map, "ShowGatherM")
 
-    local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
-    m.MenuIShowTimber = item
-    item:SetChecked(Nx.db.char.Map, "ShowGatherL")
+    -- Timber is WoD+ only (Garrison Lumber Mill)
+    if Nx.isRetail then
+        local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
+        m.MenuIShowTimber = item
+        item:SetChecked(Nx.db.char.Map, "ShowGatherL")
+    end
 
-    local item = showMenu:AddItem(0, L["Show Artifact Locations"], func, m)
-    m.MenuIShowArt = item
-    item:SetChecked(Nx.db.char.Map, "ShowGatherA")
+    -- Archaeology/Artifacts are Cataclysm+ only
+    if Nx.CataMaps then
+        local item = showMenu:AddItem(0, L["Show Artifact Locations"], func, m)
+        m.MenuIShowArt = item
+        item:SetChecked(Nx.db.char.Map, "ShowGatherA")
+    end
 
     -- POI visibility toggles
     local function func(self)
@@ -1078,14 +1084,20 @@ function Nx.Map:Create(index)
     local item = showMenu:AddItem(0, L["Show Instance Raid Bosses"], func, m)
     item:SetChecked(Nx.db.char.Map, "ShowRaidBoss")
 
-    local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
-    item:SetChecked(Nx.db.char.Map, "ShowWorldQuest")
+    -- World Quests are Legion+ only
+    if Nx.LegionMaps then
+        local item = showMenu:AddItem(0, L["Show World Quests"], func, m)
+        item:SetChecked(Nx.db.char.Map, "ShowWorldQuest")
+    end
 
-    local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)
-    item:SetChecked(Nx.db.char.Map, "ShowArchBlobs")
+    -- Blobs are Cataclysm+ only
+    if Nx.BlobsAvailable then
+        local item = showMenu:AddItem(0, L["Show Archaeology Blobs"], func, m)
+        item:SetChecked(Nx.db.char.Map, "ShowArchBlobs")
 
-    local item = showMenu:AddItem(0, L["Show Quest Blobs"], func, m)
-    item:SetChecked(Nx.db.char.Map, "ShowQuestBlobs")
+        local item = showMenu:AddItem(0, L["Show Quest Blobs"], func, m)
+        item:SetChecked(Nx.db.char.Map, "ShowQuestBlobs")
+    end
 
     -- Unexplored areas toggle
     local function func(self, item)
@@ -3894,9 +3906,12 @@ end
 -- global func
 
 function Nx:NXMapKeyTogTimber()
+    if not Nx.isRetail then return end  -- Timber is WoD+ only
     local map = Nx.Map:GetMap (1)
     Nx.db.char.Map.ShowGatherL = not Nx.db.char.Map.ShowGatherL
-    map.MenuIShowTimber:SetChecked (Nx.db.char.Map, "ShowGatherL")
+    if map.MenuIShowTimber then
+        map.MenuIShowTimber:SetChecked (Nx.db.char.Map, "ShowGatherL")
+    end
     map.Guide:UpdateGatherFolders()
 end
 

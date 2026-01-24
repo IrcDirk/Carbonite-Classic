@@ -1726,7 +1726,8 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
                                         Nx.prt(showType)
                                     end
                                     local wx, wy = map:GetWorldPos(mapId, x, y)
-                                    if mapId == 625 or mapId == 627 then level = nil end -- Fixing Dalaran icons
+
+                                    if mapId == 627 then level = nil end -- Fixing Dalaran icons
                                     local icon
                                     --if showType == "Lightforged Beacon" then
                                     --    icon = map:AddIconPt (iconType, wx, wy, level, nil, "atlas:FlightMaster_Argus-TaxiNode_Neutral")
@@ -1738,9 +1739,10 @@ function Nx.Map.Guide:UpdateMapGeneralIcons (cont, showType, hideFac, tx, name, 
                                     --end
                                     if not map:GetMapNameByID(mapId) then
                                         Nx.prt("Guide Icon Err mapID: " .. mapId)
-                                    end
-                                    local str = format ("%s\n%s %.1f %.1f", name, map:GetMapNameByID(mapId), x, y)
-                                    map:SetIconTip (icon, str)
+                                    else
+                                        local str = format ("%s\n%s %.1f %.1f", name, map:GetMapNameByID(mapId), x, y)
+                                        map:SetIconTip (icon, str)
+                                    end 
                                 end
                             end
                         end
@@ -1767,10 +1769,10 @@ function Nx.Map.Guide:UpdateZonePOIIcons()
         local map = Map:GetMap (1)
     end
     local mapId = map.MapId
-    -- Legion Dalaran Fix
-    if mapId == 627 then
-        mapId = 625
-    end
+    -- Legion Dalaran Fix, not needed
+--    if mapId == 627 then
+--        mapId = 625
+--    end
     local atScale = map.LOpts.NXPOIAtScale
     local alphaRange = atScale * .25
     local s = atScale - alphaRange

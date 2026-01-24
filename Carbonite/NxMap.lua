@@ -5621,8 +5621,8 @@ function Nx.Map:Update (elapsed)
             local widgetSet = zPOI.tooltipWidgetSet
             local areaPoiID = zPOI.areaPoiID
 
-            local txW = 16
-            local txH = 16
+            local txW = 6
+            local txH = 6
 
             if zPOI.textureWidth  then txW = zPOI.textureWidth  end
             if zPOI.textureHeight then txH = zPOI.textureHeight end

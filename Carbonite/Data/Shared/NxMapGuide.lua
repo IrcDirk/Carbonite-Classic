@@ -1555,7 +1555,12 @@ function Nx.Map.Guide:UpdateMapIcons()
                         for n = 1, #qdata, 6 do
                             local qId = tonumber (strsub (qdata, n, n + 5), 16)
                             local quest = Nx.Quests[qId]
-                            local qname = C_QuestLog.GetQuestInfo(qId)
+                            local qname
+                            if C_QuestLog.GetTitleForQuestID then
+                                qname = C_QuestLog.GetTitleForQuestID(qId)
+                            else
+                                qname = C_QuestLog.GetQuestInfo(qId)
+                            end
                             local qnameorig, _, lvl, minlvl = Quest:Unpack (quest["Quest"])
                             if not qname then
                                 qname = qnameorig

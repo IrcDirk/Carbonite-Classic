@@ -852,7 +852,30 @@ Nx.BrokerMenuTemplate = {
     { text = L["Toggle Events"], func = function() Nx.UEvents.List:Open() end },
 }
 
-local menuFrame = CreateFrame("Frame", "CarboniteMenuFrame", UIParent, "UIDropDownMenuTemplate")
+-- Create dropdown frame for Classic/old retail (UIDropDownMenuTemplate doesn't exist in 11.0+)
+local menuFrame
+if C_AddOns and C_AddOns.GetAddOnMetadata then
+    -- Retail 11.0+ uses new menu system
+    menuFrame = nil
+else
+    menuFrame = CreateFrame("Frame", "CarboniteMenuFrame", UIParent, "UIDropDownMenuTemplate")
+end
+
+-- Helper function to show context menu (compatible with both old and new systems)
+local function ShowBrokerMenu(ownerRegion)
+    if MenuUtil and MenuUtil.CreateContextMenu then
+        -- Retail 11.0+ new menu system
+        MenuUtil.CreateContextMenu(ownerRegion, function(ownerRegion, rootDescription)
+            rootDescription:CreateTitle("Carbonite")
+            rootDescription:CreateButton(L["Options"], function() Nx.Opts:Open() end)
+            rootDescription:CreateButton(L["Toggle Map"], function() Nx.Map:ToggleSize(0) end)
+            rootDescription:CreateButton(L["Toggle Events"], function() Nx.UEvents.List:Open() end)
+        end)
+    elseif EasyMenu then
+        -- Classic/old retail
+        EasyMenu(Nx.BrokerMenuTemplate, menuFrame, "cursor", 0, 0, "MENU")
+    end
+end
 
 Nx.Broker = LibStub("LibDataBroker-1.1"):NewDataObject("Broker_Carbonite", {
     type = "data source",
@@ -880,7 +903,7 @@ Nx.Broker = LibStub("LibDataBroker-1.1"):NewDataObject("Broker_Carbonite", {
                 elseif msg == "MiddleButton" then
                     Nx.Map:GetMap(1).Guide:ToggleShow()
                 elseif msg == "RightButton" then
-                    EasyMenu(Nx.BrokerMenuTemplate, menuFrame, "cursor", 0, 0, "MENU")
+                    ShowBrokerMenu(frame)
                 end
             end,
 })

@@ -14426,19 +14426,6 @@ end
 -- Creates texture tiles and positions them to display zone map
 -- Also handles player position frame setup
 --
--- Cache for MoveWorldMap to avoid per-frame API calls
-local MoveWorldMap_Cache = {
-    mapId = nil,
-    mapInfo = nil,
-    layers = nil,
-    textures = nil,
-    rows = 0,
-    cols = 0,
-    numTiles = 0,
-    maxTiles = 0,
-    texturesSetup = false,
-}
-
 function Nx.Map.MoveWorldMap()
     local curId = Nx.Map:GetCurrentMapId()
     if not Nx.Map.NInstMapId or Nx.Map.NInstMapId ~= curId then
@@ -14446,130 +14433,55 @@ function Nx.Map.MoveWorldMap()
     end
     Nx.Map:SetCurrentMap (Nx.Map.NInstMapId)
 
-    -- Use cache if map hasn't changed
-    local cache = MoveWorldMap_Cache
-    local needsSetup = cache.mapId ~= curId
-    
-    if needsSetup then
-        -- Fetch fresh data only on map change
-        local mapInfo = C_Map.GetMapInfo(curId)
-        if not mapInfo or not mapInfo.name then
-            return
-        end
-        local layers = C_Map.GetMapArtLayers(curId)
-        if not layers or not layers[1] then
-            return
-        end
-        local textures = C_Map.GetMapArtLayerTextures(curId, 1)
-        if not textures then
-            return
-        end
-        
-        local layerInfo = layers[1]
-        local rows = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight)
-        local cols = math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
-        local numTiles = rows * cols
-        local maxTiles = math.max(numTiles, 12)
-        
-        -- Update cache
-        cache.mapId = curId
-        cache.mapInfo = mapInfo
-        cache.layers = layers
-        cache.textures = textures
-        cache.rows = rows
-        cache.cols = cols
-        cache.numTiles = numTiles
-        cache.maxTiles = maxTiles
-        cache.texturesSetup = false
+    local mapInfo = C_Map.GetMapInfo(curId)
+    if not mapInfo.name then
+        return
     end
-    
-    local rows = cache.rows
-    local cols = cache.cols
-    local numTiles = cache.numTiles
-    local maxTiles = cache.maxTiles
-    local textures = cache.textures
+    local layers = C_Map.GetMapArtLayers(curId)
+    local layerInfo = layers[1]
+    local rows, cols = math.ceil(layerInfo.layerHeight / layerInfo.tileHeight), math.ceil(layerInfo.layerWidth / layerInfo.tileWidth)
 
-    -- Create or update WMDF frame with enough textures
     if not Nx.Map.WMDF then
         Nx.Map.WMDF = CreateFrame("Frame", "WMDF")
         Nx.Map.WMDF:SetFrameStrata("BACKGROUND")
         Nx.Map.WMDT = {}
         Nx.Map.EJMB = {}
-        cache.texturesSetup = false
-    end
-    
-    -- Only setup textures when cache was refreshed
-    if not cache.texturesSetup then
-        -- Ensure we have enough textures, create more if needed
-        for i = 1, maxTiles do
-            if not Nx.Map.WMDT[i] then
-                Nx.Map.WMDT[i] = Nx.Map.WMDF:CreateTexture("WMDT" .. i)
+        for i = 1,cols do
+            for j = 1, rows do
+                local index = (j - 1) * cols + i
+                Nx.Map.WMDT[index] = Nx.Map.WMDF:CreateTexture("WMDT" .. index)
             end
         end
-        
-        -- Position textures dynamically based on actual tile layout
-        for row = 0, rows - 1 do
-            for col = 0, cols - 1 do
-                local index = row * cols + col + 1
-                if Nx.Map.WMDT[index] then
-                    Nx.Map.WMDT[index]:ClearAllPoints()
-                    if col == 0 and row == 0 then
-                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT")
-                    elseif col == 0 then
-                        local prevRowIndex = (row - 1) * cols + 1
-                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT", "WMDT" .. prevRowIndex, "BOTTOMLEFT")
-                    else
-                        local prevColIndex = row * cols + col
-                        Nx.Map.WMDT[index]:SetPoint("TOPLEFT", "WMDT" .. prevColIndex, "TOPRIGHT")
-                    end
-                end
-            end
-        end
-        cache.texturesSetup = true
+        Nx.Map.WMDT[1]:SetPoint("TOPLEFT")
+        Nx.Map.WMDT[2]:SetPoint("TOPLEFT","WMDT1","TOPRIGHT")
+        Nx.Map.WMDT[3]:SetPoint("TOPLEFT","WMDT2","TOPRIGHT")
+        Nx.Map.WMDT[4]:SetPoint("TOPLEFT","WMDT3","TOPRIGHT")
+        Nx.Map.WMDT[5]:SetPoint("TOPLEFT","WMDT1","BOTTOMLEFT")
+        Nx.Map.WMDT[6]:SetPoint("TOPLEFT","WMDT5","TOPRIGHT")
+        Nx.Map.WMDT[7]:SetPoint("TOPLEFT","WMDT6","TOPRIGHT")
+        Nx.Map.WMDT[8]:SetPoint("TOPLEFT","WMDT7","TOPRIGHT")
+        Nx.Map.WMDT[9]:SetPoint("TOPLEFT","WMDT5","BOTTOMLEFT")
+        Nx.Map.WMDT[10]:SetPoint("TOPLEFT","WMDT9","TOPRIGHT")
+        Nx.Map.WMDT[11]:SetPoint("TOPLEFT","WMDT10","TOPRIGHT")
+        Nx.Map.WMDT[12]:SetPoint("TOPLEFT","WMDT11","TOPRIGHT")
     end
-    
     Nx.Map.WMDF:SetParent(Nx.Map:GetMap(1).Frm)
     Nx.Map.WMDF:SetFrameLevel(20)
     Nx.Map.WMDF:SetWidth(Nx.Map:GetMap(1).MapW)
     Nx.Map.WMDF:SetHeight(Nx.Map:GetMap(1).MapH)
     Nx.Map.WMDF:Show()
 
-    -- Only update tile sizes when needed (map size changed or first setup)
-    local tileWidth = Nx.Map.WMDF:GetWidth() / cols
-    local tileHeight = Nx.Map.WMDF:GetHeight() / rows
-    local sizeChanged = (cache.lastTileWidth ~= tileWidth) or (cache.lastTileHeight ~= tileHeight)
-    
-    -- Set textures for valid tiles, hide unused ones - only when needed
-    if needsSetup or sizeChanged then
-        cache.lastTileWidth = tileWidth
-        cache.lastTileHeight = tileHeight
-        
-        for i = 1, maxTiles do
-            if Nx.Map.WMDT[i] then
-                if i <= numTiles and textures[i] then
-                    Nx.Map.WMDT[i]:SetWidth(tileWidth)
-                    Nx.Map.WMDT[i]:SetHeight(tileHeight)
-                    Nx.Map.WMDT[i]:SetTexture(textures[i])
-                    Nx.Map.WMDT[i]:Show()
-                else
-                    -- Hide unused textures to prevent garbage display
-                    Nx.Map.WMDT[i]:SetTexture(nil)
-                    Nx.Map.WMDT[i]:Hide()
-                end
-            end
-        end
+    local textures = C_Map.GetMapArtLayerTextures(curId,1)
+
+    for i=1, 12 do
+        Nx.Map.WMDT[i]:SetWidth(Nx.Map.WMDF:GetWidth() / 3.9)
+        Nx.Map.WMDT[i]:SetHeight(Nx.Map.WMDF:GetHeight() / 2.6)
+        Nx.Map.WMDT[i]:SetTexture(textures[i])
     end
-    
     Nx.Map.WMDF:SetAllPoints()
-    
-    -- Only setup the UnitPositionFrame parent when map changes
-    if needsSetup then
-        NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
-        NXWorldMapUnitPositionFrame:SetAllPoints()
-        NXWorldMapUnitPositionFrame:SetFrameLevel(40)
-    end
-    
-    -- Only update player pins, not the full frame setup every frame
+    NXWorldMapUnitPositionFrame:SetParent(Nx.Map.WMDF)
+    NXWorldMapUnitPositionFrame:SetAllPoints()
+    NXWorldMapUnitPositionFrame:SetFrameLevel(40)
     Nx.Map:NXWorldMapUnitPositionFrame_UpdatePlayerPins()
 
 --[[    local numEncounters = 0;

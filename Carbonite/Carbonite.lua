@@ -165,7 +165,7 @@ function Nx:GetGatherNodeName(typ, index)
     if not nodeData then
         return "Unknown"
     end
-    
+
     local itemId = nodeData[4]
     if itemId then
         -- Try to get localized name from game
@@ -179,7 +179,6 @@ function Nx:GetGatherNodeName(typ, index)
             return name
         end
     end
-    
     -- Fall back to the L["..."] localized name
     return nodeData[3] or "Unknown"
 end
@@ -854,7 +853,7 @@ Nx.BrokerMenuTemplate = {
 
 -- Create dropdown frame for Classic/old retail (UIDropDownMenuTemplate doesn't exist in 11.0+)
 local menuFrame
-if C_AddOns and C_AddOns.GetAddOnMetadata then
+if Nx.isRetail then
     -- Retail 11.0+ uses new menu system
     menuFrame = nil
 else

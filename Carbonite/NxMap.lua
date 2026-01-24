@@ -1051,6 +1051,14 @@ function Nx.Map:Create(index)
     m.MenuIShowMine = item
     item:SetChecked(Nx.db.char.Map, "ShowGatherM")
 
+    local item = showMenu:AddItem(0, L["Show Timber Locations"], func, m)
+    m.MenuIShowTimber = item
+    item:SetChecked(Nx.db.char.Map, "ShowGatherL")
+
+    local item = showMenu:AddItem(0, L["Show Artifact Locations"], func, m)
+    m.MenuIShowArt = item
+    item:SetChecked(Nx.db.char.Map, "ShowGatherA")
+
     -- POI visibility toggles
     local function func(self)
         self.Guide.POIDraw = nil
@@ -3882,6 +3890,17 @@ function Nx:NXMapKeyTogMine()
 end
 
 --------
+-- Key binding toggle timber
+-- global func
+
+function Nx:NXMapKeyTogTimber()
+    local map = Nx.Map:GetMap (1)
+    Nx.db.char.Map.ShowGatherL = not Nx.db.char.Map.ShowGatherL
+    map.MenuIShowTimber:SetChecked (Nx.db.char.Map, "ShowGatherL")
+    map.Guide:UpdateGatherFolders()
+end
+
+--------
 -- Enable or disable map mouse input
 
 function Nx.Map:MouseEnable (max)
@@ -6519,10 +6538,16 @@ function Nx.Map:UpdateGroup (plX, plY)
             inCombat = UnitAffectingCombat (unit)
 --PAIDE!
             local h = UnitHealth (unit)
+            if type(h) ~= "number" then
+                h = 0  -- Handle secret/hidden health values
+            end
             if UnitIsDeadOrGhost (unit) then
                 h = 0
             end
             local m = UnitHealthMax (unit)
+            if type(m) ~= "number" or m == 0 then
+                m = 1  -- Avoid division by zero or secret value
+            end
             local per = min (Nx.Util_NanToZero(h / m), 1)            -- Can overflow?
 
             if per > 0 then

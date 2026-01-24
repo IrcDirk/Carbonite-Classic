@@ -276,13 +276,12 @@ L["Delete Timber Gather Locations"] = "Удалить места сбора Др
 L["Small Timber"] = "Мало Древесины"
 L["Medium Timber"] = "Среднее количество Древесины"
 L["Large Timber"] = "Много Древесины"
-L["Show Timber Locations"] = "Показать места расположения Древесины"
 L["Lumbermill"] = "Лесорубка"
 L["Delete"] = "Удалить"
 L["Import"] = "Импортировать"
 L["Cancel"] = "Отменить"
-L["Enable All"] = true
-L["Disable All"] = true
+L["Enable All"] = "Включить все"
+L["Disable All"] = "Выключить все"
 
 -- Menu Options
 L["Menu Options"] = "Настройки меню"

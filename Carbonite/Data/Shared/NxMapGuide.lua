@@ -293,6 +293,11 @@ Nx.GuideInfo = {
             Tx = "INV_Ore_Copper_01",
             Persist = "ShowGatherM",
         },
+        {
+            Name = L["Timber"],
+            Tx = "INV_Tradeskillitem_03",
+            Persist = "ShowGatherL",
+        },
     },
     {
         Name = L["Instances"],
@@ -1021,32 +1026,61 @@ function Nx.Map.Guide:PatchFolder (folder, parent)
         end
         sort (folder, function (a, b) return a.Name < b.Name end)
     elseif folder.Name == L["Herb"] then
+        local idx = 1
         for a,b in pairs(Nx.GatherInfo["H"]) do
             local name, tx, skill = Nx:GetGather ("H", a)
             if not name then
                 break
             end
-            local f = {}
-            f.Name = name
-            f.Column2 = format ("%3d", skill)
-            f.T = "$H" .. a
-            f.Tx = tx
-            f.Id = a
-            folder[a] = f
+            -- Only show nodes appropriate for current game version
+            if Nx:ShouldShowGatherNode(skill) then
+                local f = {}
+                f.Name = name
+                f.Column2 = format ("%3d", skill)
+                f.T = "$H" .. a
+                f.Tx = tx
+                f.Id = a
+                folder[idx] = f
+                idx = idx + 1
+            end
         end
     elseif folder.Name == L["Ore"] then
+        local idx = 1
         for a,b in pairs(Nx.GatherInfo["M"]) do
             local name, tx, skill = Nx:GetGather ("M", a)
             if not name then
                 break
             end
-            local f = {}
-            f.Name = name
-            f.Column2 = format ("%3d", skill)
-            f.T = "$M" .. (a + 500)
-            f.Tx = tx
-            f.Id = a
-            folder[a] = f
+            -- Only show nodes appropriate for current game version
+            if Nx:ShouldShowGatherNode(skill) then
+                local f = {}
+                f.Name = name
+                f.Column2 = format ("%3d", skill)
+                f.T = "$M" .. (a + 500)
+                f.Tx = tx
+                f.Id = a
+                folder[idx] = f
+                idx = idx + 1
+            end
+        end
+    elseif folder.Name == L["Timber"] then
+        -- Timber is only available in WoD and later (Lumber Mill garrison building)
+        if Nx.WODMaps then
+            local idx = 1
+            for a,b in pairs(Nx.GatherInfo["L"]) do
+                local name, tx, skill = Nx:GetGather ("L", a)
+                if not name then
+                    break
+                end
+                local f = {}
+                f.Name = name
+                f.Column2 = format ("%3d", skill)
+                f.T = "$L" .. (a + 1000)
+                f.Tx = tx
+                f.Id = a
+                folder[idx] = f
+                idx = idx + 1
+            end
         end
     elseif folder.Map then
         local Map = Nx.Map
@@ -1204,6 +1238,14 @@ function Nx.Map.Guide:ClearShowFolders()
     end
     if Nx.db.char.Map.ShowGatherM then
         local folder = self:FindFolder (L["Ore"], gFolder)
+        self:AddShowFolders (folder)
+    end
+    if Nx.db.char.Map.ShowGatherL then
+        local folder = self:FindFolder (L["Timber"], gFolder)
+        self:AddShowFolders (folder)
+    end
+    if Nx.db.char.Map.ShowGatherA then
+        local folder = self:FindFolder (L["Artifacts"], gFolder)
         self:AddShowFolders (folder)
     end
     if Nx.db.char.Map.ShowQuestGivers > 1 then
@@ -1429,13 +1471,27 @@ function Nx.Map.Guide:UpdateMapIcons()
                 longType = "Herb"
             elseif typ == "M" then
                 longType = "Mine"
+            elseif typ == "L" then
+                longType = "Timber"
             end
             local fid = folder.Id
             local data = longType and Nx:GetData (longType) or Nx.db.profile.GatherData["Misc"]
             local carbMapId = mapId
             local zoneT = data[carbMapId]
             if zoneT then
-                if (typ == "M" and Nx.db.profile.Guide.ShowMines[fid]) or (typ == "H" and Nx.db.profile.Guide.ShowHerbs[fid]) then
+                -- Check if we should show this node type
+                local shouldShow = false
+                if typ == "M" then
+                    shouldShow = Nx.db.profile.Guide.ShowMines[fid]
+                elseif typ == "H" then
+                    shouldShow = Nx.db.profile.Guide.ShowHerbs[fid]
+                elseif typ == "L" then
+                    shouldShow = Nx.db.profile.Guide.ShowTimber[fid]
+                elseif typ == " " then
+                    -- Misc types (Artifacts, Gas, Everfrost) - always show if they exist in data
+                    shouldShow = true
+                end
+                if shouldShow then
                 local nodeT = zoneT[fid]
                 if nodeT then
                     local iconType = fid == "Art" and "!G" or "!Ga"
@@ -1943,6 +1999,8 @@ function Nx.Map.Guide:FindClosest (findType)
                     longType = "Herb"
                 elseif type == "M" then
                     longType = "Mine"
+                elseif type == "L" then
+                    longType = "Timber"
                 end
                 if longType then
                     local fid = folder.Id

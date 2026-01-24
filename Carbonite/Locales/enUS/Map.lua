@@ -23,6 +23,7 @@ L["Show..."] = true
 L["Show Player Zone"] = true
 L["Show Herb Locations"] = true
 L["Show Mining Locations"] = true
+L["Show Timber Locations"] = true
 L["Show Artifact Locations"] = true
 L["Show Guide POIs"] = true
 L["Show Custom Icons"] = true

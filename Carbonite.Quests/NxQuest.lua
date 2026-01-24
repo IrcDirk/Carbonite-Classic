@@ -4662,7 +4662,16 @@ end
 
 function Nx.Quest:QuestQueryTimer()
 
-    local qc = GetQuestsCompleted()
+    local qc
+
+    -- Retail uses C_QuestLog.GetAllCompletedQuestIDs (returns array)
+    -- Classic uses GetQuestsCompleted (returns table with quest IDs as keys)
+    if C_QuestLog and C_QuestLog.GetAllCompletedQuestIDs then
+        qc = C_QuestLog.GetAllCompletedQuestIDs()
+    elseif GetQuestsCompleted then
+        qc = GetQuestsCompleted()
+    end
+
     if not qc then
         Nx.prt (L["QuestQueryTimer wait"])
         return 1
@@ -4672,13 +4681,24 @@ function Nx.Quest:QuestQueryTimer()
 
     local cnt = 0
 
-    for id in pairs (qc) do
-
-        local qStatus = Nx.Quest:GetQuest (id)
-        if qStatus ~= "C" then
-
-            cnt = cnt + 1
-            Nx.Quest:SetQuest (id, "C", time())
+    -- Handle both array format (retail) and table format (classic)
+    if C_QuestLog and C_QuestLog.GetAllCompletedQuestIDs then
+        -- Retail: qc is an array of quest IDs
+        for _, id in ipairs(qc) do
+            local qStatus = Nx.Quest:GetQuest(id)
+            if qStatus ~= "C" then
+                cnt = cnt + 1
+                Nx.Quest:SetQuest(id, "C", time())
+            end
+        end
+    else
+        -- Classic: qc is a table with quest IDs as keys
+        for id in pairs(qc) do
+            local qStatus = Nx.Quest:GetQuest(id)
+            if qStatus ~= "C" then
+                cnt = cnt + 1
+                Nx.Quest:SetQuest(id, "C", time())
+            end
         end
     end
 

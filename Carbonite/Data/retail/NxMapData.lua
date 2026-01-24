@@ -139,7 +139,7 @@ Map.ContBlks = {
 Map.MapZones = {
      [0] = {12,13,101,113,948,424,572,619,905,875,876,1409,1550,1978,2274,2537,0,-1},
      [1] = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,85,86,88,89,97,103,106,198,199,249,327,338,460,461,462,463,468,1469,1527},
-     [2] = {14,15,17,18,21,22,23,25,26,27,32,36,37,42,47,48,49,50,51,52,56,84,87,90,124,179,201,202,204,205,203,210,217,218,224,241,244,245,425,427,465,469,1470,2537,2395,2393,2405,2413,2424,2437,2536},
+     [2] = {14,15,17,18,21,22,23,25,26,27,32,36,37,42,47,48,49,50,51,52,56,84,87,90,94,95,110,122,124,179,201,202,204,205,203,210,217,218,224,241,244,245,425,427,465,467,469,1470,2537,2395,2393,2405,2413,2424,2437,2536},
      [3] = {100,102,104,105,107,108,109,111},
      [4] = {114,115,116,117,118,119,120,121,123,125,127,170},
      [5] = {174,194,207,276,407},
@@ -716,7 +716,7 @@ Map.MapWorldInfo = {
         Y = 0,
         Short = "AB",
     },
---[[    [94] = {
+    [94] = {
         Scale = 9.85,
         X = 897.5,
         Y = -2208.333203125,
@@ -725,6 +725,7 @@ Map.MapWorldInfo = {
         XOff = Map.BloodelfXO,
         YOff = Map.BloodelfYO,
         MId = 94,
+        OldBloodElfZone = true,  -- Marks this as old starting zone version
     },
     [95] = {
         Scale = 6.6,
@@ -736,7 +737,8 @@ Map.MapWorldInfo = {
         YOff = Map.BloodelfYO,
         MId = 94,
         QAchievementIdH = 4908,
-    },]]--
+        OldBloodElfZone = true,
+    },
     [97] = {
         Scale = 8.141666015625,
         X = 2100,
@@ -833,7 +835,7 @@ Map.MapWorldInfo = {
         Name = L["Netherstorm"],
         QAchievementId = 1194,
     },
---[[    [110] = {
+    [110] = {
         Scale = 2.4229169921875,
         X = 1280.15,
         Y = -2030.741796875,
@@ -843,7 +845,8 @@ Map.MapWorldInfo = {
         YOff = Map.BloodelfYO,
         City = true,
         MId = 94,
-    },       ]]--
+        OldBloodElfZone = true,
+    },
     [111] = {
         Scale = 2.6125,
         X = -1227.0517578125,
@@ -941,6 +944,7 @@ Map.MapWorldInfo = {
         XOff = Map.BloodelfXO,
         YOff = Map.BloodelfYO,
         MId = 94,
+        OldBloodElfZone = true,
     },
     [123] = {
         Scale = 5.9499997558594,
@@ -1377,6 +1381,7 @@ Map.MapWorldInfo = {
         YOff = Map.BloodelfYO,
         MId = 94,
         StartZone = true,
+        OldBloodElfZone = true,
     },
     [468] = {
         Scale = 3.6375,
@@ -19325,7 +19330,7 @@ Map.MiniMapBlks = {
         Map.MapWorldInfo[2274].X + Map.MapInfo[15].X - 402, Map.MapWorldInfo[2274].Y + Map.MapInfo[15].Y - 215,
             "World\\Minimaps\\2601"
     },
---[[    [94] = {
+    [94] = {
         Map.BloodelfMapBlks,
         4111,
         41, 11,
@@ -19338,7 +19343,7 @@ Map.MiniMapBlks = {
         50, 33,
         Map.MapWorldInfo[13].X + Map.MapInfo[1].X + 1833.076104875 + 221.20 , Map.MapWorldInfo[13].Y + Map.MapInfo[1].Y + 656.598490125 - 325.10,
         "World\\Minimaps\\Expansion01"
-    },]]--
+    },
     [244] = {
         Map.TolBaradMapBlks,
         2731,

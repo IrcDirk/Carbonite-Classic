@@ -4742,7 +4742,7 @@ function Nx.Map:UpdateWorld()
     self.NeedWorldUpdate = false
     local mapId
     local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-
+    
     -- Quick early-out: if we have cached state, check if anything changed before expensive API calls
     if self.CurWorldUpdateMapId and self.LastDungeonLevel == dungeonLevel then
         -- Use cached map ID for quick check
@@ -4762,7 +4762,7 @@ function Nx.Map:UpdateWorld()
             end
         end
     end
-
+    
     if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then
         --Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
         Nx.Map:SetToCurrentZone()
@@ -4896,7 +4896,7 @@ function Nx.Map:Update (elapsed)
     end
     local Nx = Nx
     local Map = Nx.Map
-
+    
     -- Debug profiling for stutter detection
     local debugProfile = Nx.db.profile.Debug.DebugMap
     local profileStart, profileSection
@@ -4909,7 +4909,7 @@ function Nx.Map:Update (elapsed)
     --if self.NeedWorldUpdate then
         self:UpdateWorld()
     --end
-
+    
     if debugProfile then
         local now = debugprofilestop()
         if (now - profileStart) > 5 then -- More than 5ms
@@ -4958,7 +4958,7 @@ function Nx.Map:Update (elapsed)
         if Nx.Quest and Nx.Quest.ClearQuestOfferCache then
             Nx.Quest:ClearQuestOfferCache()
         end
-
+        
         -- Clear POI cache on map change (POI_Cache is accessed via local reference)
         POI_Cache.mapID = nil
         POI_Cache.data = nil
@@ -7203,7 +7203,10 @@ end
 function Nx.Map:CheckWorldHotspotsType (wx, wy, quad)
 
     for n, spot in ipairs (quad) do
-        if wx >= spot.WX1 and wx <= spot.WX2 and wy >= spot.WY1 and wy <= spot.WY2 then
+        -- Skip Quel'Thalas zones based on player location (old vs new)
+        if self:ShouldHideQuelThalasZone(spot.MapId) then
+            -- Skip this hotspot entirely
+        elseif wx >= spot.WX1 and wx <= spot.WX2 and wy >= spot.WY1 and wy <= spot.WY2 then
 
             local curId = self:GetCurrentMapId()
 
@@ -7834,6 +7837,12 @@ function Nx.Map:UpdateOverlay (mapId, bright, noUnexplored)
     if (mapId == nil or mapId == -1) then
         return
     end
+    
+    -- Skip Quel'Thalas zones based on player location (old vs new)
+    if self:ShouldHideQuelThalasZone(mapId) then
+        return
+    end
+    
     local wzone = self:GetWorldZone (mapId)
     if wzone and (wzone.City or self:IsMicroDungeon(mapId)) then
         return
@@ -8016,6 +8025,55 @@ end
 --------
 -- Update frames for mini map texture layer (detail layer)
 
+-- Old Blood Elf starting zones that should show old (BloodelfMapBlks) tiles
+local OldBloodElfZones = {
+    [94] = true,   -- Eversong Woods
+    [95] = true,   -- Ghostlands
+    [110] = true,  -- Silvermoon City
+    [122] = true,  -- Isle of Quel'Danas
+    [467] = true,  -- Sunstrider Isle
+}
+
+-- New Quel'Thalas zones (Midnight expansion) - hidden when player is in old zones
+local NewQuelThalasZones = {
+    [2537] = true,  -- Quel'Thalas sub-continent
+    [2395] = true,  -- New Eversong Woods
+    [2393] = true,  -- New Silvermoon City
+    [2437] = true,  -- New Zul'Aman
+    [2536] = true,  -- Atal'Aman
+    [2424] = true,  -- New Quel'Danas
+    [2405] = true,  -- Voidstorm
+    [2413] = true,  -- Harandar
+}
+
+-- Check if player is currently in an old Blood Elf zone
+function Nx.Map:IsPlayerInOldBloodElfZone()
+    local playerMapId = C_Map.GetBestMapForUnit("player")
+    return playerMapId and OldBloodElfZones[playerMapId]
+end
+
+-- Check if a zone should be hidden because player is in old Blood Elf zone
+function Nx.Map:ShouldHideNewQuelThalasZone(mapId)
+    if not NewQuelThalasZones[mapId] then
+        return false
+    end
+    return self:IsPlayerInOldBloodElfZone()
+end
+
+-- Check if old Blood Elf zone should be hidden because player is NOT in old zone
+function Nx.Map:ShouldHideOldBloodElfZone(mapId)
+    if not OldBloodElfZones[mapId] then
+        return false
+    end
+    -- Hide old zones when player is NOT in any old zone
+    return not self:IsPlayerInOldBloodElfZone()
+end
+
+-- Check if any Quel'Thalas zone (old or new) should be hidden based on player location
+function Nx.Map:ShouldHideQuelThalasZone(mapId)
+    return self:ShouldHideNewQuelThalasZone(mapId) or self:ShouldHideOldBloodElfZone(mapId)
+end
+
 function Nx.Map:UpdateMiniFrames()
 
 --[[
@@ -8063,7 +8121,22 @@ function Nx.Map:UpdateMiniFrames()
 --    local cont = self.Cont
 --    local zname, zx, zy
 
-    local miniT, basex, basey = self:GetMiniInfo (mapId)
+    -- Check if player is in an old Blood Elf zone - if so, use BloodelfMapBlks
+    local playerMapId = C_Map.GetBestMapForUnit("player")
+    local useBloodElfOverlay = playerMapId and OldBloodElfZones[playerMapId]
+    
+    -- If player is in old Blood Elf zone and we're viewing Eastern Kingdoms area,
+    -- use the BloodelfMapBlks (MiniMapBlks[94]) instead of normal EK blocks
+    local miniT, basex, basey
+    if useBloodElfOverlay and winfo and (winfo.Cont == 2 or OldBloodElfZones[mapId]) then
+        -- Try to get BloodelfMapBlks overlay
+        miniT, basex, basey = self:GetMiniInfo(94)
+    end
+    
+    -- If no Blood Elf overlay or not applicable, use normal lookup
+    if not miniT then
+        miniT, basex, basey = self:GetMiniInfo(mapId)
+    end
 --    basex = basex + (self.DebugPXOff or 0)
 --    basey = basey + (self.DebugPYOff or 0)
 

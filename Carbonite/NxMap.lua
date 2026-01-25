@@ -8088,6 +8088,9 @@ local NewQuelThalasZones = {
 
 -- Check if player is currently in an old Blood Elf zone
 function Nx.Map:IsPlayerInOldBloodElfZone()
+    if Nx.isClassic then
+        return true
+    end
     local playerMapId = C_Map.GetBestMapForUnit("player")
     return playerMapId and OldBloodElfZones[playerMapId]
 end

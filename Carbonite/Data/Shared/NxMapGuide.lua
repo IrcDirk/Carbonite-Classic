@@ -2388,7 +2388,23 @@ function Nx.Map.Guide:CaptureItems()
         links["T"] = time()
         links["R"] = self.VendorRepair
         for n = 1, GetMerchantNumItems() do
-            local name, tx, price, quantity, numAvail, usable, exCost = GetMerchantItemInfo (n)
+            local name, tx, price, quantity, numAvail, usable, exCost
+            if C_MerchantFrame and C_MerchantFrame.GetItemInfo then
+                mItemInfo = C_MerchantFrame.GetItemInfo(n)
+                if mItemInfo then
+                    name     = mItemInfo.name
+                    tx       = mItemInfo.texture
+                    price    = mItemInfo.price
+                    quantity = mItemInfo.stackCount
+                    numAvail = mItemInfo.numAvailable
+                    usable   = mItemInfo.isUsable
+                    exCost   = mItemInfo.hasExtendedCost
+                else
+                    return
+                end
+            else
+                name, tx, price, quantity, numAvail, usable, exCost = GetMerchantItemInfo (n)
+            end
             local link = GetMerchantItemLink (n)
             if not name then
                 return

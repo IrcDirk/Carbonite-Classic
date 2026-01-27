@@ -4546,8 +4546,9 @@ function Nx.Map.OnUpdate(this, elapsed)
             cursorLocStr = cursorLocXY
 
             -- Check for group members at cursor in instance/BG maps
-            local instanceOverlayActive = (Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)) and map.CurOpts.NXInstanceMaps
-            if instanceOverlayActive then
+            -- Show tooltips when in any instance/BG with group members, not just when NXInstanceMaps overlay is enabled
+            local inInstanceOrBG = Nx.Map:IsInstanceMap(Nx.Map.RMapId) or Nx.Map:IsBattleGroundMap(Nx.Map.RMapId)
+            if inInstanceOrBG and IsInGroup() then
                 local groupMember, groupUnit = map:GetGroupMemberAtCursor(x, y)
                 if groupMember and groupUnit then
                     -- Get class color for the player
@@ -5624,8 +5625,8 @@ function Nx.Map:Update (elapsed)
             local txW = 6
             local txH = 6
 
-            if zPOI.textureWidth  then txW = zPOI.textureWidth  end
-            if zPOI.textureHeight then txH = zPOI.textureHeight end
+            if zPOI.textureWidth  and not inBG then txW = zPOI.textureWidth  end
+            if zPOI.textureHeight and not inBG then txH = zPOI.textureHeight end
 
             local skip = false
 

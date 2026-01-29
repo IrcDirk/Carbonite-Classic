@@ -288,6 +288,111 @@ L["Warsong Camp, Wintergrasp"] = true
 L["Windrunner's Overlook, Crystalsong Forest"] = true
 L["Sunreaver's Command, Crystalsong Forest"] = true
 
+-- Cataclysm
+
+L["Grove of Aessina, Hyjal"] = true
+L["Sanctuary of Malorne, Hyjal"] = true
+L["Shrine of Aviana, Hyjal"] = true
+L["Nordrassil, Hyjal"] = true
+L["Gates of Sothann, Hyjal"] = true
+L["Smuggler's Scar, Vashj'ir"] = true
+L["Silver Tide Hollow, Vashj'ir"] = true
+L["Vermillion Redoubt, Twilight Highlands"] = true
+L["Schnottz's Landing, Uldum"] = true
+L["Oasis of Vir'sar, Uldum"] = true
+L["Ramkahen, Uldum"] = true
+
+L["Honor's Stand, Southern Barrens"] = true
+L["Fort Triumph, Southern Barrens"] = true
+L["Northwatch Hold, Southern Barrens"] = true
+L["Darkbreak Cove, Vashj'ir"] = true
+L["Tranquil Wash, Vashj'ir"] = true
+L["Voldrin's Hold, Vashj'ir"] = true
+L["Sandy Beach, Vashj'ir"] = true
+L["Booty Bay, Stranglethorn"] = true
+L["Explorers' League Digsite, Stranglethorn"] = true
+L["Victor's Point, Twilight Highlands"] = true
+L["Thundermar, Twilight Highlands"] = true
+L["Kirthaven, Twilight Highlands"] = true
+L["Firebeard's Patrol, Twilight Highlands"] = true
+L["Highbank, Twilight Highlands"] = true
+
+L["Hunter's Hill, Southern Barrens"] = true
+L["Desolation Hold, Southern Barrens"] = true
+L["Vendetta Point, Southern Barrens"] = true
+L["Tenebrous Cavern, Vashj'ir"] = true
+L["Legion's Rest, Vashj'ir"] = true
+L["Stygian Bounty, Vashj'ir"] = true
+L["Sandy Beach, Vashj'ir"] = true
+L["Hardwrench Hideaway, Stranglethorn"] = true
+L["Booty Bay, Stranglethorn"] = true
+L["Forsaken Forward Command, Gilneas"] = true
+L["The Gullet, Twilight Highlands"] = true
+L["Crushblow, Twilight Highlands"] = true
+L["Bloodgulch, Twilight Highlands"] = true
+L["Dragonmaw Port, Twilight Highlands"] = true
+L["The Krazzworks, Twilight Highlands"] = true
+
+-- Pandaria
+
+-- Neutral Pandaria
+L["Serpent's Overlook, Jade Forest"] = true
+L["Tian Monastery, Jade Forest"] = true
+L["Dawn's Blossom, Jade Forest"] = true
+L["Emperor's Omen, Jade Forest"] = true
+L["Jade Temple Grounds, Jade Forest"] = true
+L["Sri-La Village, Jade Forest"] = true
+L["The Arboretum, Jade Forest"] = true
+L["Stoneplow, Valley of the Four Winds"] = true
+L["Halfhill, Valley of the Four Winds"] = true
+L["Grassy Cline, Valley of the Four Winds"] = true
+L["Pang's Stead, Valley of the Four Winds"] = true
+L["Winter's Blossom, Kun-Lai Summit"] = true
+L["Kota Basecamp, Kun-Lai Summit"] = true
+L["Shado-Pan Fallback, Kun-Lai Summit"] = true
+L["One Keg, Kun-Lai Summit"] = true
+L["Zouchin Village, Kun-Lai Summit"] = true
+L["Temple of the White Tiger, Kun-Lai Summit"] = true
+L["Binan Village, Kun-Lai Summit"] = true
+L["Shado-Pan Garrison, Townlong Steppes"] = true
+L["Rensai's Watchpost, Townlong Steppes"] = true
+L["Longying Outpost, Townlong Steppes"] = true
+L["Gao-Ran Battlefront, Townlong Steppes"] = true
+L["Serpent's Spine, Vale of Eternal Blossoms"] = true
+L["Cradle of Chi-Ji, Krasarang Wilds"] = true
+L["Marista, Krasarang Wilds"] = true
+L["Zhu's Watch, Krasarang Wilds"] = true
+L["The Briny Muck, Dread Wastes"] = true
+L["The Sunset Brewgarden, Dread Wastes"] = true
+L["Klaxxi'vess, Dread Wastes"] = true
+L["Soggy's Gamble, Dread Wastes"] = true
+L["Tavern in the Mists, The Veiled Stair"] = true
+
+-- Alliance Pandaria
+L["Paw'Don Village, Jade Forest"] = true
+L["Pearlfin Village, Jade Forest"] = true
+L["Westwind Rest, Kun-Lai Summit"] = true
+L["Shrine of Seven Stars, Vale of Eternal Blossoms"] = true
+L["Sentinel Basecamp, Krasarang Wilds"] = true
+L["The Incursion, Krasarang Wilds"] = true
+L["Lion's Landing, Krasarang Wilds"] = true
+L["The Lion's Redoubt, Dread Wastes"] = true
+L["Beeble's Wreck, Isle of Giants"] = true
+L["Tushui Landing, Timeless Isle"] = true
+-- Horde Pandaria
+
+L["Honeydew Village, Jade Forest"] = true
+L["Grookin Hill, Jade Forest"] = true
+L["Eastwind Rest, Kun-Lai Summit"] = true
+L["Hellscream's Fist, Kun-Lai Summit"] = true
+L["Shrine of Two Moons, Vale of Eternal Blossoms"] = true
+L["Dawnchaser Retreat, Krasarang Wilds"] = true
+L["Domination Point, Krasarang Wilds"] = true
+L["Thunder Cleft, Krasarang Wilds"] = true
+L["Bozzle's Wreck, Isle of Giants"] = true
+L["Huojin Landing, Timeless Isle"] = true
+
+
 -- Portals, Boats, Zeppelins
 L["Tram to Stormwind City"] = true
 L["Tram to Ironforge"] = true

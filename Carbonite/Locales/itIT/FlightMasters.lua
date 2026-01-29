@@ -451,6 +451,46 @@ L["Thunder Totem, Highmountain"] = true
 L["Crimson Ticket, Suramar"] = true
 L["Meredil, Suramar"] = true
 L["Irongrove Retreat, Suramar"] = true
+-- Added Cataclysm/Pandaria locations
+
+L["Boat to Azuremyst Isle"] = "Boat to Azuremyst Isle"
+L["Boat to Borean Tundra"] = "Boat to Borean Tundra"
+L["Boat to Darkshore"] = "Boat to Darkshore"
+L["Boat to Dragonblight"] = "Boat to Dragonblight"
+L["Boat to Dustwallow Marsh"] = "Boat to Dustwallow Marsh"
+L["Boat to Howling Fjord"] = "Boat to Howling Fjord"
+L["Boat to Stormwind City"] = "Boat to Stormwind City"
+L["Boat to Stranglethorn Vale"] = "Boat to Stranglethorn Vale"
+L["Boat to Teldrassil"] = "Boat to Teldrassil"
+L["Boat to The Barrens"] = "Boat to The Barrens"
+L["Boat to Wetlands"] = "Boat to Wetlands"
+L["Domination Point, Krasarang Wilds"] = "Presidio del Dominio, Giungla di Krasarang"
+L["Hellfire Peninsula, The Dark Portal, Alliance"] = "Penisola del Fuoco Infernale, Portale Oscuro"
+L["Hellfire Peninsula, The Dark Portal, Horde"] = "Penisola del Fuoco Infernale, Portale Oscuro"
+L["Lion's Landing, Krasarang Wilds"] = "Approdo del Leone, Giungla di Krasarang"
+L["Portal to Blasted Lands"] = "Portal to Blasted Lands"
+L["Portal to Caverns of Time"] = "Portal to Caverns of Time"
+L["Portal to Dalaran"] = "Portal to Dalaran"
+L["Portal to Darnassus"] = "Portal to Darnassus"
+L["Portal to Exodar"] = "Portal to Exodar"
+L["Portal to Hellfire Peninsula"] = "Portal to Hellfire Peninsula"
+L["Portal to Ironforge"] = "Portal to Ironforge"
+L["Portal to Isle of Quel'Danas"] = "Portal to Isle of Quel'Danas"
+L["Portal to Orgrimmar"] = "Portal to Orgrimmar"
+L["Portal to Shattrath"] = "Portal to Shattrath"
+L["Portal to Silvermoon"] = "Portal to Silvermoon"
+L["Portal to Stormwind"] = "Portal to Stormwind"
+L["Portal to Teldrassil"] = "Portal to Teldrassil"
+L["Portal to Thunder Bluff"] = "Portal to Thunder Bluff"
+L["Portal to Undercity"] = "Portal to Undercity"
+L["Shatter Point, Hellfire Peninsula"] = "Presidio di Torre Infranta, Penisola del Fuoco Infernale"
+L["Tram to Ironforge"] = "Tram to Ironforge"
+L["Tram to Stormwind City"] = "Tram to Stormwind City"
+L["Zeppelin to Borean Tundra"] = "Zeppelin to Borean Tundra"
+L["Zeppelin to Orgrimmar"] = "Zeppelin to Orgrimmar"
+L["Zeppelin to Stranglethorn Vale"] = "Zeppelin to Stranglethorn Vale"
+L["Zeppelin to Undercity"] = "Zeppelin to Undercity"
+
 -- Translation for Flight_LOC
 L["Alliance Flight"] = true
 L["Horde Flight"] = true

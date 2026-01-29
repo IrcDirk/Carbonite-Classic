@@ -266,7 +266,7 @@ L["Fordragon Hold, Dragonblight"] = "폴드라곤 요새 (용의 안식처)"
 L["Wyrmrest Temple, Dragonblight"] = "고룡쉼터 사원 (용의 안식처)"
 L["Venomspite, Dragonblight"] = "원한의 초소 (용의 안식처)"
 L["Agmar's Hammer, Dragonblight"] = "아그마르의 망치 (용의 안식처)"
-L["Kor'koron Vanguard, Dragonblight"] = "코르크론 선봉기지 (용의 안식처)"
+L["Kor'kron Vanguard, Dragonblight"] = "코르크론 선봉기지 (용의 안식처)"
 L["Moa'ki, Dragonblight"] = "모아키 항구 (용의 안식처)"
 L["Camp Oneqwah, Grizzly Hills"] = "원크와 야영지 (회색 구릉지)"
 L["Conquest Hold, Grizzly Hills"] = "정복의 요새 (회색 구릉지)"
@@ -289,7 +289,7 @@ L["River's Heart, Sholazar Basin"] = "강의 심장부 (숄라자르 분지)"
 L["Nesingwary Base Camp, Sholazar Basin"] = "네싱워리 주둔지 (숄라자르 분지)"
 L["K3, The Storm Peaks"] = "K3 (폭풍우 봉우리)"
 L["Frosthold, The Storm Peaks"] = "서리요새 (폭풍우 봉우리)"
-L["Dun Nifflelem, The Storm Peaks"] = "던 니펠렘 (폭풍우 봉우리)"
+L["Dun Niffelem, The Storm Peaks"] = "던 니펠렘 (폭풍우 봉우리)"
 L["Grom'arsh Crash-Site, The Storm Peaks"] = "그롬마쉬 추락 지점 (폭풍우 봉우리)"
 L["Camp Tunka'lo, The Storm Peaks"] = "툰카로 야영지 (폭풍우 봉우리)"
 L["Ulduar, The Storm Peaks"] = "울두아르 (폭풍우 봉우리)"
@@ -304,46 +304,100 @@ L["Warsong Camp, Wintergrasp"] = "전쟁노래부족 야영지 (겨울손아귀)
 L["Windrunner's Overlook, Crystalsong Forest"] = "윈드러너 전망대 (수정노래 숲)"
 L["Sunreaver's Command, Crystalsong Forest"] = "선리버 지휘초소 (수정노래 숲)"
 
+-- Added Cataclysm/Pandaria locations
+
+L["Beeble's Wreck, Isle of Giants"] = "비블의 추락지, 괴수의 섬"
+L["Binan Village, Kun-Lai Summit"] = "빈안 마을 - 쿤라이 봉우리"
+L["Bozzle's Wreck, Isle of Giants"] = "보즐의 난파지, 괴수의 섬"
+L["Cradle of Chi-Ji, Krasarang Wilds"] = "츠지의 요람 - 크라사랑 밀림"
+L["Dawn's Blossom, Jade Forest"] = "새벽의 꽃 - 비취 숲"
+L["Dawnchaser Retreat, Krasarang Wilds"] = "돈체이서 은거처 - 크라사랑 밀림"
+L["Domination Point, Krasarang Wilds"] = "지배령 거점, 크라사랑 밀림"
+L["Eastwind Rest, Kun-Lai Summit"] = "동풍의 쉼터 - 쿤라이 봉우리"
+L["Emperor's Omen, Jade Forest"] = "황제의 예언 - 비취 숲"
+L["Gao-Ran Battlefront, Townlong Steppes"] = "가오란 최전선 - 탕랑 평원"
+L["Grassy Cline, Valley of the Four Winds"] = "잔디 언덕 - 네 바람의 계곡"
+L["Grookin Hill, Jade Forest"] = "그루끼끼 언덕 - 비취 숲"
+L["Halfhill, Valley of the Four Winds"] = "언덕골 - 네 바람의 계곡"
+L["Hellscream's Fist, Kun-Lai Summit"] = "Hellscream's Fist, Kun-Lai Summit"
+L["Honeydew Village, Jade Forest"] = "꿀이슬 마을 - 비취 숲"
+L["Huojin Landing, Timeless Isle"] = "후오진 상륙지, 영원의 섬"
+L["Jade Temple Grounds, Jade Forest"] = "옥룡사 정원 - 비취 숲"
+L["Klaxxi'vess, Dread Wastes"] = "클락시베스 - 공포의 황무지"
+L["Kota Basecamp, Kun-Lai Summit"] = "코타 주둔지 - 쿤라이 봉우리"
+L["Lion's Landing, Krasarang Wilds"] = "사자의 상륙지, 크라사랑 밀림"
+L["Longying Outpost, Townlong Steppes"] = "롱잉 전초기지 - 탕랑 평원"
+L["Marista, Krasarang Wilds"] = "마리스타 - 크라사랑 밀림"
+L["One Keg, Kun-Lai Summit"] = "맥주통 휴게소 - 쿤라이 봉우리"
+L["Pang's Stead, Valley of the Four Winds"] = "팡의 처소 - 네 바람의 계곡"
+L["Paw'Don Village, Jade Forest"] = "포우돈 마을 - 비취 숲"
+L["Pearlfin Village, Jade Forest"] = "진주지느러미 마을 - 비취 숲"
+L["Rensai's Watchpost, Townlong Steppes"] = "런싸이의 감시초소 - 탕랑 평원"
+L["Sentinel Basecamp, Krasarang Wilds"] = "파수꾼 주둔지 - 크라사랑 밀림"
+L["Serpent's Overlook, Jade Forest"] = "용의 전망대 - 비취 숲"
+L["Serpent's Spine, Vale of Eternal Blossoms"] = "용의 척추 - 쿤라이 봉우리"
+L["Shado-Pan Fallback, Kun-Lai Summit"] = "음영파 퇴각지 - 쿤라이 봉우리"
+L["Shado-Pan Garrison, Townlong Steppes"] = "음영파 주둔지 - 탕랑 평원"
+L["Shrine of Seven Stars, Vale of Eternal Blossoms"] = "일곱 별의 제단 - 영원꽃 골짜기"
+L["Shrine of Two Moons, Vale of Eternal Blossoms"] = "두 달의 제단 - 영원꽃 골짜기"
+L["Soggy's Gamble, Dread Wastes"] = "흠뻑이의 요행수 - 공포의 황무지"
+L["Sri-La Village, Jade Forest"] = "스리라 마을 - 비취 숲"
+L["Stoneplow, Valley of the Four Winds"] = "돌밭 - 네 바람의 계곡"
+L["Tavern in the Mists, The Veiled Stair"] = "안개 속의 주점 - 장막의 계단"
+L["Temple of the White Tiger, Kun-Lai Summit"] = "백호사 - 쿤라이 봉우리"
+L["The Arboretum, Jade Forest"] = "도원 - 비취 숲"
+L["The Briny Muck, Dread Wastes"] = "소금물 갯벌 - 공포의 황무지"
+L["The Incursion, Krasarang Wilds"] = "원정지 - 크라사랑 밀림"
+L["The Lion's Redoubt, Dread Wastes"] = "사자의 보루 - 공포의 황무지"
+L["The Sunset Brewgarden, Dread Wastes"] = "일몰 양조정원 - 공포의 황무지"
+L["Thunder Cleft, Krasarang Wilds"] = "천둥 틈새 - 크라사랑 밀림"
+L["Tian Monastery, Jade Forest"] = "티엔 수도원 - 비취 숲"
+L["Tushui Landing, Timeless Isle"] = "투슈이 상륙지, 영원의 섬"
+L["Westwind Rest, Kun-Lai Summit"] = "서풍의 쉼터 - 쿤라이 봉우리"
+L["Winter's Blossom, Kun-Lai Summit"] = "겨울의 꽃 - 쿤라이 봉우리"
+L["Zhu's Watch, Krasarang Wilds"] = "쥬의 감시초소 - 크라사랑 밀림"
+L["Zouchin Village, Kun-Lai Summit"] = "조우친 마을 - 쿤라이 봉우리"
+
 -- Portals, Boats, Zeppelins
-L["Tram to Stormwind City"] = true
-L["Tram to Ironforge"] = true
-L["Boat to Stranglethorn Vale"] = true
+L["Tram to Stormwind City"] = "스톰윈드행 지하철"
+L["Tram to Ironforge"] = "아이언포지행 지하철"
+L["Boat to Stranglethorn Vale"] = "가시덤불 골짜기행 배"
 
-L["Boat to Dustwallow Marsh"] = true
-L["Boat to Stormwind City"] = true
-L["Boat to Darkshore"] = true
-L["Boat to Teldrassil"] = true
-L["Boat to Azuremyst Isle"] = true
-L["Boat to Wetlands"] = true
-L["Boat to The Barrens"] = true
-L["Boat to Borean Tundra"] = true
-L["Boat to Howling Fjord"] = true
-L["Boat to Dragonblight"] = true
+L["Boat to Dustwallow Marsh"] = "먼지진흙 습지대행 배"
+L["Boat to Stormwind City"] = "스톰윈드행 배"
+L["Boat to Darkshore"] = "어둠의 해안행 배"
+L["Boat to Teldrassil"] = "텔드랏실행 배"
+L["Boat to Azuremyst Isle"] = "하늘안개 섬행 배"
+L["Boat to Wetlands"] = "저습지행 배"
+L["Boat to The Barrens"] = "불모의 땅행 배"
+L["Boat to Borean Tundra"] = "북풍의 땅행 배"
+L["Boat to Howling Fjord"] = "울부짖는 협만행 배"
+L["Boat to Dragonblight"] = "용의 안식처행 배"
 
-L["Portal to Darnassus"] = true
-L["Portal to Exodar"] = true
-L["Portal to Ironforge"] = true
-L["Portal to Isle of Quel'Danas"] = true
-L["Portal to Stormwind"] = true
-L["Portal to Teldrassil"] = true
+L["Portal to Darnassus"] = "다르나서스행 차원문"
+L["Portal to Exodar"] = "엑소다르행 차원문"
+L["Portal to Ironforge"] = "아이언포지행 차원문"
+L["Portal to Isle of Quel'Danas"] = "쿠엘다나스 섬행 차원문"
+L["Portal to Stormwind"] = "스톰윈드행 차원문"
+L["Portal to Teldrassil"] = "텔드랏실행 차원문"
 
-L["Portal to Thunder Bluff"] = true
-L["Portal to Orgrimmar"] = true
-L["Portal to Undercity"] = true
-L["Portal to Silvermoon"] = true
+L["Portal to Thunder Bluff"] = "썬더 블러프행 차원문"
+L["Portal to Orgrimmar"] = "오그리마행 차원문"
+L["Portal to Undercity"] = "언더시티행 차원문"
+L["Portal to Silvermoon"] = "실버문행 차원문"
 
-L["Portal to Blasted Lands"] = true
-L["Portal to Hellfire Peninsula"] = true
+L["Portal to Blasted Lands"] = "저주받은 땅행 차원문"
+L["Portal to Hellfire Peninsula"] = "지옥불 반도행 차원문"
 
-L["Portal to Dalaran"] = true
+L["Portal to Dalaran"] = "달라란행 차원문"
 
-L["Portal to Shattrath"] = true
-L["Portal to Caverns of Time"] = true
+L["Portal to Shattrath"] = "샤트라스행 차원문"
+L["Portal to Caverns of Time"] = "시간의 동굴행 차원문"
 
-L["Zeppelin to Stranglethorn Vale"] = true
-L["Zeppelin to Undercity"] = true
-L["Zeppelin to Orgrimmar"] = true
-L["Zeppelin to Borean Tundra"] = true
+L["Zeppelin to Stranglethorn Vale"] = "가시덤불 골짜기행 비행선"
+L["Zeppelin to Undercity"] = "언더시티행 비행선"
+L["Zeppelin to Orgrimmar"] = "오그리마행 비행선"
+L["Zeppelin to Borean Tundra"] = "북풍의 땅행 비행선"
 
 -- Translation for Flight_LOC
 

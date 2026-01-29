@@ -4777,7 +4777,7 @@ function Nx.Map:UpdateWorld()
     self.NeedWorldUpdate = false
     local mapId
     local dungeonLevel = Nx.Map:GetCurrentMapDungeonLevel()
-    
+
     -- Quick early-out: if we have cached state, check if anything changed before expensive API calls
     if self.CurWorldUpdateMapId and self.LastDungeonLevel == dungeonLevel then
         -- Use cached map ID for quick check
@@ -4797,7 +4797,7 @@ function Nx.Map:UpdateWorld()
             end
         end
     end
-    
+
     if not Nx.Map.MouseOver and not Nx.Util_IsMouseOver(self.MMFrm) then
         --Nx.Map:UnregisterEvent ("WORLD_MAP_UPDATE")
         Nx.Map:SetToCurrentZone()
@@ -5457,7 +5457,7 @@ function Nx.Map:Update (elapsed)
     local zoneStart = debugProfile and debugprofilestop()
     self:UpdateZones()
     local zoneTime = debugProfile and (debugprofilestop() - zoneStart) or 0
-    
+
     local instStart = debugProfile and debugprofilestop()
     self:UpdateInstanceMap()
     local instTime = debugProfile and (debugprofilestop() - instStart) or 0
@@ -5465,7 +5465,7 @@ function Nx.Map:Update (elapsed)
     local mmStart = debugProfile and debugprofilestop()
     self:MinimapUpdate()
     local mmTime = debugProfile and (debugprofilestop() - mmStart) or 0
-    
+
 --    self.MMFrm:GetParent():SetAlpha(0)
     local wmStart = debugProfile and debugprofilestop()
     self:UpdateWorldMap()
@@ -5531,7 +5531,7 @@ function Nx.Map:Update (elapsed)
         local now = GetTime()
         local isZoomingOrScrolling = self.StepTime ~= 0 or self.Scrolling
         local cacheValid = POI_Cache.mapID == rid and POI_Cache.data and (now - POI_Cache.time) < POI_Cache.refreshInterval
-        
+
         -- Use cached POI data during zoom/scroll to reduce stutter, or if cache is still valid
         if isZoomingOrScrolling and POI_Cache.data and POI_Cache.mapID == rid then
             zPOIs = POI_Cache.data
@@ -5588,12 +5588,12 @@ function Nx.Map:Update (elapsed)
             -- Use pooled table for concatenation
             zPOIs = POI_Pool.zPOIs
             Nx.ArrayConcatReuse(zPOIs, tPOIs, pPOIs, dPOIs, aPOIs, bgPOIs)
-            
+
             -- Cache the POI data
             POI_Cache.mapID = rid
             POI_Cache.time = now
             POI_Cache.data = zPOIs
-            
+
             if debugProfile then
                 local now2 = debugprofilestop()
                 if (now2 - profileSection) > 5 then
@@ -5814,22 +5814,11 @@ function Nx.Map:Update (elapsed)
                         f.texture:SetAtlas(atlasIcon)
                     else
                         pX, pY = self:GetWorldPos(self.MapId, pX, pY)
-                        if zPOI.facing then
-                            -- For rotated icons, show fully or hide entirely to avoid uneven clipping
-                            local iconSize = max(txW, txH) * self.ScaleDraw
-                            if self:ClipFrameWNoChop(f, pX, pY, iconSize, iconSize) then
-                                if atlasIcon then
-                                    f.texture:SetAtlas(atlasIcon)
-                                else
-                                    f.texture:SetTexture ("Interface\\Minimap\\POIIcons")
-                                    txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
-                                    f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
-                                    f.texture:SetVertexColor (1, 1, 1, 1)
-                                end
-                                f.texture:SetRotation(zPOI.facing)
-                            end
-                        else
-                            self:ClipFrameWChop(f, pX, pY, txW * self.ScaleDraw, txH * self.ScaleDraw)
+                        -- Use ClipFrameWNoChop for all POI icons to avoid squishing at map edges
+                        -- Parent frame clips overflow via SetClipsChildren(true)
+                        local iconW = txW * self.ScaleDraw
+                        local iconH = txH * self.ScaleDraw
+                        if self:ClipFrameWNoChop(f, pX, pY, iconW, iconH) then
                             if atlasIcon then
                                 f.texture:SetAtlas(atlasIcon)
                             else
@@ -5837,6 +5826,9 @@ function Nx.Map:Update (elapsed)
                                 txX1, txX2, txY1, txY2 = C_Minimap.GetPOITextureCoords (txIndex)
                                 f.texture:SetTexCoord (txX1 + .003, txX2 - .003, txY1 + .003, txY2 - .003)
                                 f.texture:SetVertexColor (1, 1, 1, 1)
+                            end
+                            if zPOI.facing then
+                                f.texture:SetRotation(zPOI.facing)
                             end
                         end
                     end

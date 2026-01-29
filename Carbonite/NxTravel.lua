@@ -37,6 +37,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Carbonite")
 -- Travel System Initialization
 ---------------------------------------------------------------------------------------
 
+local DoesSpellExist = C_Spell.DoesSpellExist or DoesSpellExist
+
 --- Initialize the travel system
 -- Sets up taxi hooks, flight master data, and flying skill detection
 function Nx.Travel:Init()
@@ -62,6 +64,8 @@ function Nx.Travel:Init()
     self.PandariaFlyName = C_Spell.GetSpellInfo(115913) and C_Spell.GetSpellInfo(115913).name or "" -- Wisdom of the Four Winds
     self.DraenorFlyName  = C_Spell.GetSpellInfo(191645) and C_Spell.GetSpellInfo(191645).name or "" -- Draenor Pathfinder
     self.LegionFlyName   = C_Spell.GetSpellInfo(233368) and C_Spell.GetSpellInfo(233368).name or "" -- Broken Isles Pathfinder
+    self.BattleFlyName   = C_Spell.GetSpellInfo(278833) and C_Spell.GetSpellInfo(278833).name or "" -- Battle for Azeroth Pathfinder
+    self.SkyRidingName   = C_Spell.GetSpellInfo(376027) and C_Spell.GetSpellInfo(376027).name or "" -- SkyRiding
 end
 
 ---------------------------------------------------------------------------------------
@@ -461,17 +465,48 @@ function Nx.Travel:MakePath(tracking, srcMapId, srcX, srcY, dstMapId, dstX, dstY
     if riding >= 225 then
         if cont1 == 1 or cont1 == 2 or cont1 == 5 then
             -- Kalimdor, Eastern Kingdoms, or Maelstrom
-            self.FlyingMount = C_Spell.GetSpellInfo(self.AzerothFlyName)
+            if DoesSpellExist(90267) then
+                self.FlyingMount = self.AzerothFlyName
+            end
         elseif cont1 == 3 then
             -- Outland - always flyable
             self.FlyingMount = true
         elseif cont1 == 4 then
             -- Northrend
-            self.FlyingMount = C_Spell.GetSpellInfo(self.WrathFlyName)
+            if DoesSpellExist(54197) then
+                self.FlyingMount = self.WrathFlyName
+            end
         elseif cont1 == 6 then
             -- Pandaria
-            self.FlyingMount = C_Spell.GetSpellInfo(self.PandariaFlyName)
+            if DoesSpellExist(15913) then
+                self.FlyingMount = self.PandariaFlyName
+            end
+        elseif cont1 == 7 then
+            local _,_,_,complete = GetAchievementInfo(10018)
+            if complete then
+                if DoesSpellExist(191645) then
+                    self.FlyingMount = self.DraenorFlyName
+                end
+            end
+        elseif cont1 == 8 then
+            local _,_,_,complete = GetAchievementInfo(11446)
+            if complete then
+                if DoesSpellExist(233368) then
+                    self.FlyingMount = self.LegionFlyName
+                end
+            end
+        elseif cont1 == 11 then
+            local _,_,_,complete = GetAchievementInfo(13250)
+            if complete then
+                if DoesSpellExist(278833) then
+                    self.FlyingMount = self.BattleFlyName
+                end
+            end
         end
+    end
+
+    if C_QuestLog.IsQuestFlaggedCompleted(68795) then
+        self.FlyingMount = self.SkyRidingName
     end
 
     -- Calculate travel speed based on riding skill

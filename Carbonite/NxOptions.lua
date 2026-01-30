@@ -3254,7 +3254,7 @@ end
 function Nx.Opts:Open (pageName)
     -- Use the registered options frame
     if Settings and Settings.OpenToCategory then
-        Settings.OpenToCategory(Nx.optionsPanelID)
+        Settings.OpenToCategory(AceConfigDialog.BlizOptionsIDMap["Carbonite"])
     elseif InterfaceOptionsFrame_OpenToCategory then
         -- Classic fallback
         if Nx.optionsFrame then

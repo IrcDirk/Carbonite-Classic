@@ -5308,7 +5308,10 @@ function Nx.List:FreeFrames (list)
     local frms = self.Frms
     for n, f in ipairs (list.UsedFrms) do
         if not InCombatLockdown() then
-            f:Hide()
+            -- Don't hide WatchItem frames to prevent blinking - they'll be reused immediately
+            if f.NXListFType ~= "WatchItem" then
+                f:Hide()
+            end
         else
             tinsert(visFrms, f)
         end
@@ -5352,6 +5355,7 @@ function Nx.List:GetFrame (list, typ)
             f = CreateFrame ("ColorSelect", nil, list.Frm)
         elseif typ == "WatchItem" then
                 f = CreateFrame ("Button", "NxListFrms" .. self.FrmsUniqueI, list.Frm, "NxWatchListItem")
+                f:RegisterForClicks("AnyUp", "AnyDown")
                 f:SetAttribute ("type1", "item")
         elseif typ == "Info" then
             f = Nx.Info:CreateFrame (list.Frm)
